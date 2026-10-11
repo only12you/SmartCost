@@ -2711,7 +2711,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v304',d:'2026.10.09'};
+const APPV={v:'v305',d:'2026.10.09'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -4174,7 +4174,7 @@ const dxSv=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
 const DXO={},DXD=['기본 정보','포장단위 / 혼합규격','도장 사양'];
 function dbxTags(p){const T=[p.us,p.d,p.g,p.cat].filter(Boolean).join(' '),R=[[/방청|녹\s*방지|부식\s*방지/,'방청'],[/내마모/,'내마모'],[/내충격/,'내충격'],[/내화학/,'내화학'],[/내열/,'내열'],[/내후/,'내후'],[/방수/,'방수'],[/무용제/,'무용제'],[/내화/,'내화'],[/바닥/,'바닥']];return R.filter(r=>r[0].test(T)).slice(0,2).map(r=>r[1]).join(' · ')}
 function dbxInfo(p){
- const m=mx(p),u=UN(p),two=m.b>0,fx=(l,v,o)=>{o=o||{};const e=v==null||v===''||v==='-';return `<div class="dxf${o.w?' w':''}"><span class="dxl">${l}</span><div class="dxv${e?' no':''}">${e?'-':(o.raw?v:esc(v))}${o.sfx&&!e?`<em>${o.sfx}</em>`:''}${o.cnt?`<i>${String(v||'').length}/${o.cnt}</i>`:''}</div></div>`},
+ const m=mx(p),u=UN(p),two=m.b>0,fx=(l,v,o)=>{o=o||{};const e=v==null||v===''||v==='-';return `<div class="dxf${o.w?' w':''}${o.s3?' s3':''}"><span class="dxl">${l}</span><div class="dxv${e?' no':''}">${e?'-':(o.raw?v:esc(v))}${o.sfx&&!e?`<em>${o.sfx}</em>`:''}${o.cnt?`<i>${String(v||'').length}/${o.cnt}</i>`:''}</div></div>`},
  sc=(ic,t,body,x)=>{const k=p.n+'|'+t,op=DXO[k]!==undefined?DXO[k]:DXD.includes(t);return `<details class="dxs" data-k="${esc(k)}" ${op?'open':''} ontoggle="DXO[this.dataset.k]=this.open"><summary class="dxh"><span class="dxi">${dxSv(ic)}</span><b>${t}</b>${DBX.chev.replace('<svg class="','<svg class="dxc ')}</summary><div class="dxg${x?' '+x:''}">${body}</div></details>`};
  const tn=p.tn&&p.tn!='무희석'?p.tn+(p.tc&&p.tc!=p.tn?' ('+p.tc+')':''):'무희석';
  const R=String(p.dry||'').split(/[;\n]/).map(x=>x.trim()).filter(Boolean).map(r=>r.split('/').map(x=>x.trim())).sort((a,b)=>dbxTv(a)-dbxTv(b)),mc=R.find(c=>dbxTv(c)==20)||R[0];
@@ -4185,8 +4185,8 @@ function dbxInfo(p){
  +sc('brush','표면처리',fx('표면처리',p.sp,{w:1}))
  +sc('box','포장단위 / 혼합규격',fx('포장단위 (주제:경화제)',two?F(m.a)+u+' : '+F(m.b)+u:(+p.pk?F(+p.pk)+u:''))+fx('혼합규격',two?F(m.a/m.b,2)+' : 1 ('+(u=='kg'?'무게비':'부피비')+')':'단액형')+(p.pks?fx('데이터시트 포장규격',p.pks,{w:1}):''))
  +sc('drop','기본 물성',fx('단위',u)+fx(u=='kg'?'비중 (kg)':'비중',p.sg?F(+p.sg,2):'')+fx('고형분용적비 (SVR)',p.svr?p.svr+'%':''),'g3')
- +sc('roller','도장 사양',fx('추천도막 (1회도장)',p.dft,{sfx:'μm'})+fx('희석제 (규격)',tn)+fx('희석율 (%)',+p.tr?F(p.tr*100,1)+'%':''),'g3')
- +sc('clock','건조/가사 시간',fx('건조시간 (지촉/경화)',dry)+fx('가사시간',p.pot)+(area?fx('이론 도장면적 (L·kg당 · 로스 제외)',area,{w:1}):'')+(R.length?`<details class="dxm w"><summary>온도별 건조시간 · 재도장 간격 보기</summary>${dbxDry(p)}</details>`:''))
+ +sc('roller','도장 사양',fx('추천도막 (1회도장)',p.dft,{sfx:'μm'})+fx('희석제 (규격)',tn)+fx('희석율 (%)',+p.tr?F(p.tr*100,1)+'%':'')+fx('이론 도장면적 (L·kg당 · 로스 제외)',area,{s3:1})+fx('혼합규격당 도장면적 (말당 면적)',cov1(p)?F(cov1(p),1)+'㎡':'',{s3:1}),'g3')
+ +sc('clock','건조/가사 시간',fx('건조시간 (지촉/경화)',dry)+fx('가사시간',p.pot)+(R.length?`<details class="dxm w"><summary>온도별 건조시간 · 재도장 간격 보기</summary>${dbxDry(p)}</details>`:''))
  +sc('layers','도장 시스템',fx('선행도장',p.pre)+fx('후속도장',p.nxt))
  +sc('doc','기타 정보',fx('출처',link||p.mf||'',{raw:!!link,w:1})+fx('TDS 개정일',p.rev)+fx('자료확인일',p.chk))
 }
@@ -4282,4 +4282,4 @@ html body #app #v1 .pdb{padding:5px 6px 6px!important}
 .dxm>summary{padding:6px 10px;font-size:11.5px}
 .dxm>.dtb,.dxm>.drc,.dxm>.dnt,.dxm>.qsg{margin:5px}
 html body #app #v1 .dxm{margin-top:0}
-</style></body></html>
+</style><style id=v305>.dxg.g3{grid-template-columns:repeat(6,minmax(0,1fr))!important}.dxg.g3 .dxf{grid-column:span 2}.dxg.g3 .dxf.s3{grid-column:span 3}.dxf.s3 .dxl{min-height:2.5em}</style></body></html>
