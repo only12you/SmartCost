@@ -3858,109 +3858,171 @@ function helpHtml(){
 
 /* v288: 기존 제품 1회 표준화 (백업 후 적용) */
 setTimeout(()=>{try{if(LS.nm288!=='1'&&DB.length){LS.dbbak288=JSON.stringify(DB);DB.forEach(pqNorm);sv();LS.nm288='1';try{dbl();cards()}catch(e){}tt('제품 '+DB.length+'개의 설명·용도·표면처리를 표준 형식으로 정리했습니다<br><small>정리 전 데이터는 기기에 백업해 두었습니다</small>')}else if(LS.nm288!=='1')LS.nm288='1'}catch(e){}},1200);
-</script><style id=fm289>.fm{display:flex;flex-direction:column;gap:10px;padding:12px 0 140px;font-size:13px;color:#14213d}.fm *{box-sizing:border-box}
-.fm .ft{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fm button{font:inherit;font-weight:700;border:1px solid #cfdcf0;background:#fff;color:#1f5fd0;border-radius:10px;padding:9px 10px;cursor:pointer}.fm .ft .on{background:#2f6fdc;color:#fff;border-color:#2f6fdc}
-.fm .fb{align-self:flex-start;padding:6px 10px}.fm .fh{font-weight:800;margin-top:4px}.fm .fc{background:#fff;border:1px solid #dbe5f4;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px}.fm .fx{display:flex;gap:8px;align-items:flex-end}
-.fm .fl{display:flex;flex-direction:column;gap:3px;min-width:0}.fm .fl>span{font-size:11px;color:#5a6b86}.fm .fl i{display:flex;align-items:center;border:1px solid #c9d6ec;border-radius:8px;background:#fff;padding:0 8px;font-style:normal}
-.fm input,.fm select{width:100%;min-width:0;border:0;outline:0;background:transparent;font:inherit;height:34px;color:#14213d}.fm .fl b{font-size:11px;color:#6b7b95;font-weight:600;flex:none}.fm .fnm{flex:1;border:1px solid #c9d6ec;border-radius:8px;padding:0 8px;font-weight:700}.fm .fx>select{width:auto;border:1px solid #c9d6ec;border-radius:8px;padding:0 6px}
-.fm .fa{border-style:dashed}.fm .fn{font-size:11.5px;color:#6b7b95;line-height:1.5}.fm .fo{position:sticky;bottom:70px;background:#eef4ff;border:1px solid #b9cdea;border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;box-shadow:0 4px 14px rgba(11,42,102,.15)}
-.fm .fk{display:flex;flex-direction:column}.fm .fk b{font-size:20px;color:#1f4fa8}.fm .fk span{font-size:11px;color:#5a6b86}.fm .fr{grid-column:1/-1;font-size:12px;color:#3a4a68}
-.fm{--u:calc(min(100vw,560px)/852)}
-.fm .fxs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;position:sticky;top:0;z-index:4;background:#f4f8fe}
-.fm .fxs button{flex:none;display:flex;align-items:center;gap:6px;padding:5px 12px 5px 5px;border-radius:999px;background:#fff;border:1px solid #d6e2f5;color:#3a4a68;font-size:12px}
-.fm .fxs button i{font-style:normal;width:24px;height:24px;border-radius:50%;background:#d3dbe9;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
-.fm .fxs button.on{background:linear-gradient(180deg,#f2f7ff,#e3eeff);border-color:#9ec0f5;color:#14213d}.fm .fxs button.on i{background:#2f6fdc}
-.fm .fxc{background:#fff;border:1px solid #dbe5f4;border-radius:14px;padding:12px;box-shadow:0 2px 8px rgba(11,42,102,.05);scroll-margin-top:52px}
-.fm .fxc h3{margin:0 0 10px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#0f2147}
-.fm .fxc h3 i{font-style:normal;background:#2f6fdc;color:#fff;border-radius:999px;padding:3px 10px;font-size:12px}
-.fm .fxadd{margin-left:auto;border-radius:999px;padding:6px 12px;font-size:12px}
-.fm .fxa{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fm .fxa .fxk{grid-column:1/-1}.fm .fxa>div:not(.fxk){display:flex;flex-direction:column;gap:8px;min-width:0}
-.fm .fx.lo{align-items:center;flex-wrap:wrap}.fm .lo button{padding:4px 10px;border-radius:999px;font-size:11.5px}.fm .lo button.on{background:#2f6fdc;color:#fff;border-color:#2f6fdc}.fm .lo small{font-size:10.5px;color:#6b7b95}
-.fm .fxk{display:flex;gap:12px;align-items:center;background:#eef4ff;border:1px solid #d3e0f7;border-radius:12px;padding:10px}.fm .fxk>div{width:44px;flex:none}.fm .fxk ul{list-style:none;margin:0;padding:0;font-size:12px;color:#14213d;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;flex:1}.fm .fxk li span{display:block;font-size:10.5px;color:#6b7b95}.fm .fxk li.h{grid-column:1/-1;color:#5a6b86}
-.fm .fxp2{margin:0 0 8px;font-size:11.5px;color:#6b7b95}
-.fm .fxr{display:grid;grid-template-columns:34% 1fr;gap:10px;border:1px solid #dbe5f4;border-radius:12px;padding:8px;margin-bottom:8px;background:#fbfdff}.fm .fxg{background:#eef3fb;border-radius:10px;padding:6px;display:flex;align-items:center}
-.fm .fxf{display:flex;flex-direction:column;gap:8px;min-width:0}.fm .fxh{display:flex;gap:6px;align-items:center}.fm .fxh select{width:auto;max-width:46%;border:1px solid #c9d6ec;border-radius:8px;padding:0 4px;font-size:11.5px;height:32px}.fm .fxh .fnm{min-width:0;height:32px}.fm .fxd{padding:4px 8px;border-color:#f0c4c8;color:#c9252f;background:#fff6f6}
-.fm .fxt2{font-size:11px;color:#5a6b86}.fm .fxt2 button{padding:2px 8px;border-radius:999px;font-size:11px}
-.fm .fxm{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fm .fxm>div{background:#f0f5ff;border:1px solid #d9e6fb;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:2px;position:relative}.fm .fxm i{position:absolute;right:10px;top:10px;width:20px;height:20px;color:#2f6fdc}.fm .fxm span{font-size:11.5px;color:#3a4a68}.fm .fxm b{font-size:22px;color:#1f5fd0}.fm .fxm u{text-decoration:none;font-size:12px;font-weight:700}.fm .fxm small{font-size:10.5px;color:#6b7b95}
-.fm .fxi{margin-top:8px;font-size:12px;color:#3a4a68;line-height:1.55;background:#f7faff;border-radius:10px;padding:8px 10px}.fm .fxi .bst{font-weight:800;color:#2f8a4f}.fm .fxw{background:#fff1d6;color:#9a6a00;border-radius:10px;padding:8px 10px;font-size:12px;margin-bottom:8px}
-.fm .fxt{overflow-x:auto;border:1px solid #dde5f2;border-radius:10px}.fm .fxt table{width:100%;border-collapse:collapse;font-size:11px;min-width:420px}.fm .fxt th{background:#eef2f8;padding:6px 4px;font-weight:800;color:#3a4a68}.fm .fxt td{padding:6px 4px;text-align:center;border-top:1px solid #e6ecf6;color:#3a4a68}.fm .fxp{width:62px;border:1px solid #cfdcf0;border-radius:6px;height:26px;text-align:right;padding:0 4px;font-size:11px}
-.fm .fxs2{margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#eef4ff;border:1px solid #d3e0f7;border-radius:12px;padding:10px 12px}.fm .fxs2 span{font-weight:800;color:#1f4fa8}.fm .fxs2 b{font-size:22px;color:#14213d}.fm .fxs2 u{text-decoration:none;font-size:13px}.fm .fxs2 small{font-size:10.5px;color:#6b7b95;flex:1 1 100%}
-.fm .fxl{margin-top:8px;font-size:12px;display:flex;flex-direction:column;gap:4px}.fm .fxl button{padding:1px 7px;border-radius:6px;font-size:11px}.fm .fxs3{font-weight:800;color:#1f4fa8}
-.fm .fxbar{position:sticky;bottom:64px;display:flex;gap:8px;z-index:3}.fm .fxbar button{height:46px;border-radius:14px;font-size:14px}.fm .fxbar .fbr{flex:1}.fm .fxbar .fbg{flex:2.2;background:linear-gradient(180deg,#3b82f0,#2563d4);color:#fff;border-color:#2563d4}
-.fm .fx.lo{flex-direction:row;flex-wrap:wrap}.fm .lo button{flex:none!important;width:auto!important}.fm .fxk>div{width:40px;flex:none;display:block}.fm .fxk svg{width:100%;height:auto;max-height:90px}
-html body #app .fm .fxs button{width:auto!important;flex:none!important}
-html body #app .fm .fl input,html body #app .fm .fl select{border:0!important;background:transparent!important;box-shadow:none!important;height:34px!important;font-size:12.5px!important;padding:0!important;border-radius:0!important;width:100%}
-html body #app .fm .fnm{border:1px solid #c9d6ec!important;border-radius:8px!important;padding:0 8px!important;height:32px!important;flex:1 1 70px!important;min-width:70px!important;font-size:12.5px!important;background:#fff!important}
-html body #app .fm .fxh select{border:1px solid #c9d6ec!important;border-radius:8px!important;height:32px!important;font-size:11.5px!important;padding:0 4px!important;width:auto!important;background:#fff!important}
-html body #app .fm .fxp{border:1px solid #cfdcf0!important;border-radius:6px!important;height:26px!important;width:62px!important;padding:0 4px!important;font-size:11px!important;background:#fff!important}
-.fm .fxc h3{white-space:nowrap}
-html body #app .fm .fxbar button{height:46px!important;min-height:0!important;margin:0}html body #app .fm .fxbar{align-items:stretch}
-.fm .fxpc{display:flex;gap:10px;align-items:center;border:1px solid #dbe5f4;border-radius:12px;padding:8px 10px;background:#fbfdff}.fm .fxpc b{display:block;font-size:13px;color:#14213d}.fm .fxpc small{display:block;font-size:11px;color:#6b7b95}
-.fm .fxn{display:flex;align-items:center;gap:6px;height:36px}.fm .fxn button{width:36px;height:36px;border-radius:10px;font-size:16px;padding:0}.fm .fxn b{flex:1;text-align:center;border:1px solid #cfdcf0;border-radius:10px;height:36px;line-height:34px;color:#14213d}.fm .fxn u{text-decoration:none;font-size:12px;color:#6b7b95}
-.fm .fxo{grid-column:1/-1;background:#eef4ff;border:1px solid #d3e0f7;border-radius:12px;padding:10px;display:grid;grid-template-columns:44% 1fr;gap:4px 10px;align-items:center}.fm .fxo>b{grid-column:1/-1;font-size:13px}.fm .fxo ol{margin:0;padding-left:16px;font-size:11.5px;color:#14213d;line-height:1.5}.fm .fxo small{color:#6b7b95}
-.fm .fxmr{border:1px solid #dbe5f4;border-radius:12px;padding:8px;margin-bottom:8px;background:#fbfdff;display:flex;flex-direction:column;gap:8px}.fm .fxref{background:#eef4ff;border-radius:12px;padding:10px 12px;font-size:12px;color:#3a4a68}.fm .fxref ul{margin:4px 0 0;padding-left:16px;line-height:1.6}.fm .fxm b.sm{font-size:15px}
-.fm .fxo svg{max-height:112px;width:100%}.fm .fxo ol{align-self:center}
-.fm .fxz{display:grid;grid-template-columns:46% 1fr;gap:8px;align-items:start;background:#f7faff;border-radius:10px;padding:8px}.fm .fxzs svg{display:block;background:#fff;border:1px solid #e1e8f4;border-radius:8px}
-.fm .fxzl{display:flex;flex-direction:column;gap:4px;min-width:0}.fm .fxzl>b{font-size:12px;color:#0f2147}.fm .fxzl>small{font-size:10.5px;color:#6b7b95}
-.fm .fzc{display:flex;align-items:center;gap:6px;border:1px solid #d6e2f5;border-radius:8px;padding:4px 6px;font-size:11px;background:#fff;cursor:pointer}.fm .fzc.on{border-color:#d85a30;background:#fff3ee}.fm .fzc input{width:15px!important;height:15px!important;flex:none;accent-color:#d85a30}.fm .fzc span{flex:1;min-width:0}.fm .fzc em{font-style:normal;color:#6b7b95;font-size:10.5px}
-.fm .fzp{display:flex;gap:4px;flex-wrap:wrap}.fm .fzp button{padding:3px 8px;border-radius:999px;font-size:10.5px}
-.fm .fzp button{width:auto!important;flex:none!important}.fm .fxzs{position:sticky;top:60px}.fm .fxzs .fzp{margin-top:8px;gap:4px;flex-wrap:nowrap;justify-content:center}.fm .fxht{cursor:pointer;user-select:none;-webkit-user-select:none}.fm .fxcv{margin-left:8px;color:#6b7b95;font-size:15px;transition:transform .15s;flex:none}.fm .fxadd+.fxcv{margin-left:8px}.fm .fxc.cl>.fxht .fxcv{transform:rotate(-90deg)}.fm .fxc.cl>*:not(h3){display:none}.fm .fxc.cl>h3{margin-bottom:0}
-html body .fm .fxchv{width:30px!important;min-width:30px!important;height:32px!important;flex:none!important;padding:0!important;border-radius:8px!important;font-size:14px!important;color:#6b7b95;transition:transform .15s}
-.fm .fxr.cl .fxchv,.fm .fxmr.cl .fxchv{transform:rotate(-90deg)}
-.fm .fxr.cl{grid-template-columns:1fr}.fm .fxr.cl .fxg{display:none}.fm .fxr.cl .fxf>:not(.fxh){display:none}.fm .fxmr.cl>:not(.fxh){display:none}
-.fm .fzc{gap:3px;padding:4px 3px}.fm .fzc span{white-space:nowrap;font-size:clamp(6.5px,2vw,10px);letter-spacing:-.03em;overflow:hidden;text-overflow:clip}.fm .fzc em{white-space:nowrap;font-size:clamp(6.5px,1.9vw,9.5px)}.fm .fxz{grid-template-columns:130px minmax(0,1fr);gap:5px;align-items:stretch}@media(min-width:390px){.fm .fxz{grid-template-columns:150px minmax(0,1fr)}}.fm .fxzs{position:static;top:auto;display:flex;flex-direction:column;gap:8px}.fm .fxzs svg{flex:1 1 0;min-height:0;height:auto}.fm .fxzs .fzp button{padding-top:8px;padding-bottom:8px}html body .fm .fxzs .fzp button{width:62px!important}
-</style><script id=fm289s>const FMD={tab:'fill',loss:10,pk:300,pu:'mL',pn:'카트리지',sg:'',price:5000,pid:-1,pname:'',packs:[{v:300,u:'mL',n:'카트리지'}],pi:0,rod:0,tape:0,saved:[],mq:1,mp:0,rows:[{k:'j',nm:'줄눈1',w:10,d:10,l:30,q:1}],t:'2',tf:14.2,ei:50,eo:50,ov:50,wr:1.5,lr:50,ml:10,gm:40,mem:[{nm:'기둥1',tf:14.2,l:3,q:1,H:253,B:254,tw:8.6,z:{A:1}}],jb:100};
-const FM=JSON.parse(JSON.stringify(FMD));
-try{Object.assign(FM,JSON.parse(localStorage['pqu:fm']||'{}'))}catch(e){}
-FM.mem.forEach(m=>{if(!m.H){m.H=253;m.B=254;m.tw=8.6}if(!m.z)m.z={A:1}});if(!+FM.jb)FM.jb=100;if(!+FM.wr)FM.wr=1.5;if(!+FM.lr)FM.lr=50;if(!Array.isArray(FM.packs)||!FM.packs.length)FM.packs=[{v:+FM.pk||300,u:'mL',n:'카트리지'}];if(!(FM.pi>=0&&FM.pi<FM.packs.length))FM.pi=0;
-const FMT={'1':4.9,'1.5':7.9,'2':10.8,'2.5':13.8},fq=id=>document.getElementById(id),fn=(x,d=1)=>(+x||0).toLocaleString('ko-KR',{maximumFractionDigits:d});
-const FMPRE=[['카트리지',300,'mL'],['소시지',500,'mL'],['소시지',600,'mL'],['통',12,'kg'],['통',20,'kg'],['말통',18,'L']];
-const fmDB=()=>{try{return Array.isArray(DB)?DB:[]}catch(e){return[]}};
-const fmIsSeal=p=>/실란트|실리콘|퍼티|코킹|씰|충진|sealant|putty/i.test([p.n,p.g,p.d,p.cat,p.us].join(' '));
-function fmParsePacks(p){const o=[],t=String(p.pks||'');for(const m of t.matchAll(/(\d+(?:\.\d+)?)\s*(ml|㎖|l|ℓ|리터|kg|㎏)/gi)){const u=/kg|㎏/i.test(m[2])?'kg':/ml|㎖/i.test(m[2])?'mL':'L',v=+m[1];if(!o.some(x=>x.v==v&&x.u==u))o.push({v,u,n:fmPn(v,u)})}if(!o.length&&+p.mk>0){const u=p.un=='kg'?'kg':'L';o.push({v:+p.mk,u,n:fmPn(+p.mk,u)})}return o}
-const fmPn=(v,u)=>u=='mL'?(v<=330?'카트리지':'소시지'):u=='L'?'말통':'통';
-const fmPl=k=>k.n+' '+k.v+k.u;
-const fmPv=(k,sg)=>k.u=='mL'?k.v:k.u=='L'?k.v*1000:(+sg>0?k.v/sg*1000:0);
-function fmSave(){try{localStorage['pqu:fm']=JSON.stringify(FM)}catch(e){}}
+</script><style id=fm289>.sc{--u:calc(min(100vw,560px)/852);display:flex;flex-direction:column;gap:12px;padding:8px 0 90px;color:#14213d;font-size:12.5px}.sc *{box-sizing:border-box}
+.sc button{font:inherit;cursor:pointer}.sc .scb{align-self:flex-start;border:1px solid #cfdcf0;background:#fff;color:#1f5fd0;border-radius:10px;padding:6px 10px;font-weight:700}
+.sc .scnav{display:grid;grid-template-columns:1fr 1fr;gap:8px}.sc .scn{display:flex;align-items:center;gap:9px;text-align:left;border:1px solid #dbe5f4;background:#fff;border-radius:14px;padding:10px;color:#14213d}
+.sc .scn i{width:34px;height:34px;flex:none;display:flex;align-items:center;justify-content:center;color:#2f6fdc}.sc .scn i svg{width:26px;height:26px}.sc .scn b{display:block;font-size:13.5px}.sc .scn small{display:block;font-size:10px;color:#6b7b95;line-height:1.3}
+.sc .scn.on{background:linear-gradient(135deg,#1b63d6,#0e4ab8);color:#fff;border-color:#0e4ab8;box-shadow:0 4px 12px rgba(20,90,200,.3)}.sc .scn.on i,.sc .scn.on small{color:#fff}
+.sc .scg{display:flex;flex-direction:column;gap:12px}
+.sc .scc,.sc .scres{background:#fff;border:1px solid #dbe5f4;border-radius:16px;padding:12px;box-shadow:0 2px 8px rgba(11,42,102,.05)}.sc .scres{background:#f4f8ff;display:flex;flex-direction:column;gap:10px}
+.sc .sch{display:flex;align-items:center;gap:9px;margin-bottom:8px}.sc .sch>i{width:34px;height:34px;border-radius:50%;background:linear-gradient(180deg,#2f7be8,#1458c8);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}.sc .sch>i svg{width:19px;height:19px}.sc .sch b{font-size:16px;color:#0f2147}.sc .sch em{margin-left:auto;font-style:normal;background:#e3ecff;color:#1f5fd0;border-radius:999px;padding:3px 12px;font-size:11.5px;font-weight:700}
+.sc .sbt{margin-left:auto;border:1px solid #cfdcf0;background:#fff;color:#1f5fd0;border-radius:999px;padding:4px 10px;font-size:11.5px;display:inline-flex;align-items:center;gap:3px;font-weight:700}.sc .sbt svg{width:12px;height:12px}
+.sc .sseg{display:flex;background:#eef2f8;border-radius:10px;padding:3px;gap:3px;margin:6px 0}.sc .sseg button{flex:1;border:0;background:transparent;border-radius:8px;padding:8px 4px;font-weight:700;color:#5a6b86}.sc .sseg button.on{background:linear-gradient(180deg,#2f7be8,#1458c8);color:#fff}
+.sc .sst{display:flex;align-items:center;gap:8px;margin:12px 0 6px}.sc .sst>i{font-style:normal;width:24px;height:24px;border-radius:50%;background:#1f66d6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}.sc .sst b{font-size:14px;color:#0f2147}
+.sc .sbox{border:1px solid #e1e8f4;border-radius:12px;padding:8px;background:#fbfdff;display:flex;flex-direction:column;gap:6px}
+.sc .sr{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:34px}.sc .sr>span{font-size:12px;color:#3a4a68;flex:1;min-width:0}.sc .sr>i{display:flex;align-items:center;border:1px solid #cfdcf0;border-radius:8px;background:#fff;padding:0 8px;font-style:normal;width:56%;flex:none}
+.sc .sr input,.sc .sr select{width:100%;min-width:0;border:0!important;outline:0;background:transparent!important;font-size:13px!important;height:32px!important;padding:0!important;color:#14213d;box-shadow:none!important;border-radius:0!important}.sc .sr b{font-size:11px;color:#6b7b95;font-weight:600;flex:none;margin-left:4px}
+.sc .sk>i select{width:auto;border-left:1px solid #dbe5f4!important;padding-left:6px!important;margin-left:6px}
+.sc .sch2{display:flex;flex-wrap:wrap;gap:5px}.sc .sch2 button{border:1px solid #d6e2f5;background:#fff;border-radius:999px;padding:4px 10px;font-size:11px;color:#3a4a68}.sc .sch2 button.on{background:#2f6fdc;color:#fff;border-color:#2f6fdc}
+.sc .sds{display:flex;flex-direction:column;gap:6px;background:#eef4ff;border:1px dashed #9db7e6;border-radius:12px;padding:10px;margin-bottom:6px}.sc .sds button{display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:linear-gradient(180deg,#2f7be8,#1458c8);color:#fff;border-radius:10px;height:38px;font-weight:700}.sc .sds button svg{width:16px;height:16px}.sc .sds small,.sc .sdm{font-size:11px;color:#5a6b86;line-height:1.5}.sc .sdm{background:#f1f9f4;color:#2f6a46;border-radius:8px;padding:6px 8px;margin-bottom:6px}
+.sc .sdia{background:#fff;border:1px solid #e1e8f4;border-radius:10px;padding:6px;margin-bottom:6px}
+.sc .spt{border:1px solid #dbe5f4;border-radius:12px;background:#fff;padding:8px;display:flex;flex-direction:column;gap:4px}.sc .sph{display:flex;gap:6px;align-items:center}.sc .sph input{flex:1;min-width:0;height:32px;border:1px solid #c9d6ec;border-radius:8px;padding:0 8px;font-weight:700;font-size:13px}.sc .sph button{border:1px solid #f0c4c8;background:#fff6f6;color:#c9252f;border-radius:8px;padding:5px 7px}.sc .sph svg{width:15px;height:15px;display:block}
+.sc .shn{font-size:10.5px;color:#6b7b95;text-align:right}.sc .shn button{border:1px solid #cfdcf0;background:#fff;color:#1f5fd0;border-radius:999px;padding:1px 8px;font-size:10.5px}
+.sc .sadd{border:1px dashed #9db7e6;background:#fff;color:#1f5fd0;border-radius:10px;padding:8px;font-weight:700}
+.sc .sdim{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}.sc .sdim .sr>i{width:62%}
+.sc .srun{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;margin-top:12px;border:0;border-radius:12px;background:linear-gradient(180deg,#2f7be8,#1458c8);color:#fff;font-size:15px;font-weight:800}.sc .srun svg{width:19px;height:19px}
+.sc .sc3{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid #d9e6fb;border-radius:14px;padding:10px 4px}.sc .sc3>div{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;border-right:1px solid #e1e8f4;padding:0 4px}.sc .sc3>div:last-child{border:0}.sc .sc3 span{font-size:10.5px;color:#1f4fa8;font-weight:700}.sc .sc3 b{font-size:21px;color:#1458c8}.sc .sc3 u{text-decoration:none;font-size:12px}.sc .sc3 em{font-style:normal;font-size:10px;color:#6b7b95;background:#eef4ff;border-radius:999px;padding:1px 8px}
+.sc .scw{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}.sc .scwl{display:flex;gap:8px;align-items:center}.sc .scwl i{width:34px;height:34px;border-radius:50%;background:#1f66d6;color:#fff;display:flex;align-items:center;justify-content:center;flex:none}.sc .scwl i svg{width:18px;height:18px}.sc .scwl span{display:block;font-size:11.5px;color:#3a4a68;font-weight:700}.sc .scwl b{font-size:22px;color:#14213d}.sc .scwl u{text-decoration:none;font-size:13px}
+.sc .scwr{display:flex;flex-direction:column;gap:4px}.sc .s2>i{width:60%}.sc .s2>span{font-size:11px}.sc .srr{display:flex;justify-content:space-between;font-size:12px;color:#3a4a68;border-top:1px solid #e1e8f4;padding-top:4px}.sc .srr b{color:#14213d}
+.sc .scp .scpn b{font-size:14px;display:block}.sc .scp .scpn small{font-size:11px;color:#6b7b95}.sc .scpg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.sc .scpg>div{background:#f4f8ff;border-radius:8px;padding:6px 8px;font-size:12px;font-weight:700}.sc .scpg span{display:block;font-size:10px;color:#6b7b95;font-weight:500}
+.sc .scx>b{font-size:12.5px}.sc .scxr{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:12px}.sc .scxr>i{display:flex;align-items:center;border:1px solid #cfdcf0;border-radius:8px;padding:0 8px;width:46%;font-style:normal}.sc .scxr input{width:100%;border:0!important;height:30px!important;background:transparent!important;font-size:12.5px!important;padding:0!important}.sc .scxr b{font-size:10.5px;color:#6b7b95;font-weight:600}
+.sc .scf summary{display:flex;align-items:center;gap:8px;cursor:pointer;list-style:none;color:#14213d}.sc .scf summary::-webkit-details-marker{display:none}.sc .scf summary svg{width:18px;height:18px;color:#2f6fdc}.sc .scf summary svg:last-child{margin-left:auto;width:15px;height:15px}.sc .scf b{font-size:13px}.sc .scfb{margin-top:8px;font-size:11.5px;color:#3a4a68;line-height:1.7;background:#f7faff;border-radius:8px;padding:8px}
+.sc .scs>b{font-size:13.5px;display:block;margin-bottom:6px}.sc .scsr{display:flex;gap:8px;border:1px solid #e1e8f4;border-radius:10px;padding:8px;margin-bottom:6px;background:#fbfdff}.sc .scsr>i{font-style:normal;width:22px;height:22px;border-radius:50%;background:#1f66d6;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex:none}.sc .scsr b{font-size:12px;display:block}.sc .scsr small{display:block;font-size:11px;color:#5a6b86;line-height:1.5}
+.sc .sw{background:#fff1d6;color:#9a6a00;border-radius:10px;padding:8px 10px;font-size:12px}
+.sc .scrh{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;border-top:1px solid #eef2f8;background:transparent;padding:8px 2px;color:#14213d}.sc .scrh>i{width:32px;height:32px;border-radius:8px;background:#eef4ff;color:#2f6fdc;display:flex;align-items:center;justify-content:center;flex:none}.sc .scrh>i svg{width:18px;height:18px}.sc .scrh div{flex:1;min-width:0}.sc .scrh b{display:block;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sc .scrh small{font-size:10.5px;color:#6b7b95}.sc .scrh em{font-style:normal;background:#e3ecff;color:#1f5fd0;border-radius:999px;padding:2px 10px;font-size:11.5px;font-weight:700;flex:none}.sc .scrh>svg{width:14px;height:14px;color:#9aa7bd;flex:none}
+.sc .scrw{display:flex;align-items:center}.sc .scrx{border:0;background:transparent;color:#c9252f;padding:6px}.sc .scrx svg{width:16px;height:16px}.sc .sce{font-size:12px;color:#6b7b95;padding:8px 2px}
+.sc .sz{display:grid;grid-template-columns:44% 1fr;gap:8px;background:#f7faff;border-radius:10px;padding:6px;align-items:start}.sc .szs svg{display:block;background:#fff;border:1px solid #e1e8f4;border-radius:8px}.sc .szl{display:flex;flex-direction:column;gap:4px;min-width:0}.sc .szl>b{font-size:12px}.sc .szl>small{font-size:10.5px;color:#6b7b95}
+.sc .szc{display:flex;align-items:center;gap:5px;border:1px solid #d6e2f5;border-radius:8px;padding:4px 6px;font-size:10.5px;background:#fff;cursor:pointer}.sc .szc.on{border-color:#d85a30;background:#fff3ee}.sc .szc input{width:14px!important;height:14px!important;flex:none;accent-color:#d85a30}.sc .szc span{flex:1;min-width:0}.sc .szc em{font-style:normal;color:#6b7b95;font-size:10px}
+.sc .szp{display:flex;gap:4px}.sc .szp button{border:1px solid #cfdcf0;background:#fff;color:#1f5fd0;border-radius:999px;padding:3px 10px;font-size:10.5px}
+@media(min-width:720px){.sc .scg{display:grid;grid-template-columns:1fr 1fr;align-items:start}}
+html body #app .sc .sch2 button,html body #app .sc .sbt,html body #app .sc .shn button,html body #app .sc .szp button{width:auto!important;flex:none}
+html body #app .sc .sst b{white-space:nowrap}html body #app .sc .sbt{margin-left:auto}
+html body #app .sc .sk>i select{width:58px!important;min-width:58px}
+html body #app .sc .sseg button,html body #app .sc .scn{width:auto}
+html body #app .sc .sseg button{flex:1}
+/* 간격·글꼴 축소 */
+html body #app .sc{gap:8px;padding:6px 0 80px;font-size:11px}.sc .scg{gap:8px}
+.sc .scnav{gap:6px}.sc .scn{padding:7px 8px;gap:7px;border-radius:12px}.sc .scn i{width:26px;height:26px}.sc .scn i svg{width:21px;height:21px}.sc .scn b{font-size:12px}.sc .scn small{font-size:9px}
+.sc .scc,.sc .scres{padding:9px;border-radius:14px}.sc .scres{gap:7px}
+.sc .sch{gap:7px;margin-bottom:5px}.sc .sch>i{width:28px;height:28px}.sc .sch>i svg{width:16px;height:16px}.sc .sch b{font-size:14px}.sc .sch em{font-size:10px;padding:2px 9px}
+.sc .sbt{font-size:10px;padding:3px 8px}
+.sc .sseg{margin:4px 0;padding:2px}.sc .sseg button{padding:6px 3px;font-size:11px}
+.sc .sst{margin:8px 0 4px;gap:6px}.sc .sst>i{width:20px;height:20px;font-size:11px}.sc .sst b{font-size:12.5px}
+.sc .sbox{padding:6px;gap:3px;border-radius:10px}
+.sc .sr{min-height:28px;gap:6px}.sc .sr>span{font-size:11px}.sc .sr>i{padding:0 6px;border-radius:7px}
+html body #app .sc .sr input,html body #app .sc .sr select{font-size:11.5px!important;height:26px!important}.sc .sr b{font-size:10px}
+html body #app .sc .sk>i select{width:52px!important;min-width:52px}
+.sc .sch2{gap:4px}.sc .sch2 button{padding:3px 8px;font-size:10px}
+.sc .sds{padding:7px;gap:4px}.sc .sds button{height:32px;font-size:11.5px}.sc .sds small,.sc .sdm{font-size:10px}
+.sc .spt{padding:6px;gap:2px;border-radius:10px}.sc .sph input{height:28px;font-size:12px}.sc .shn{font-size:9.5px}
+.sc .sadd{padding:6px;font-size:11px}
+.sc .srun{height:40px;margin-top:8px;font-size:13.5px}.sc .srun svg{width:17px;height:17px}
+.sc .sc3{padding:7px 2px}.sc .sc3 span{font-size:9.5px}.sc .sc3 b{font-size:18px}.sc .sc3 u{font-size:11px}.sc .sc3 em{font-size:9px}
+.sc .scwl i{width:28px;height:28px}.sc .scwl span{font-size:10.5px}.sc .scwl b{font-size:18px}.sc .scwl u{font-size:11px}.sc .srr{font-size:11px}
+.sc .scp .scpn b{font-size:12.5px}.sc .scp .scpn small{font-size:10px}.sc .scpg{gap:4px;margin-top:5px}.sc .scpg>div{padding:4px 6px;font-size:11px}.sc .scpg span{font-size:9px}
+.sc .scx>b{font-size:11.5px}.sc .scxr{font-size:11px;margin-top:4px}
+.sc .scf b{font-size:12px}.sc .scfb{font-size:10.5px;line-height:1.6;padding:6px}
+.sc .scs>b{font-size:12.5px;margin-bottom:4px}.sc .scsr{padding:6px;gap:6px;margin-bottom:4px}.sc .scsr>i{width:18px;height:18px;font-size:10px}.sc .scsr b{font-size:11px}.sc .scsr small{font-size:10px;line-height:1.4}
+.sc .sw{font-size:11px;padding:6px 8px}
+.sc .scrh{padding:6px 2px;gap:7px}.sc .scrh>i{width:26px;height:26px}.sc .scrh b{font-size:11.5px}.sc .scrh small{font-size:9.5px}.sc .scrh em{font-size:10.5px;padding:2px 8px}
+.sc .szl>b{font-size:11px}.sc .szl>small{font-size:9.5px}.sc .szc{padding:3px 5px;font-size:10px}.sc .szp button{font-size:10px;padding:2px 8px}
+/* 상단 고정 4버튼 (일자 배열, 색상 구분) */
+html body #app .sc .scnav{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;position:sticky;top:var(--scTop,96px);z-index:9;background:#f4f8fe;padding:6px 0}
+html body #app .sc .scn{flex-direction:column;justify-content:center;gap:2px;height:44px;padding:4px 2px;text-align:center;border-radius:11px;border:1.5px solid;display:flex;align-items:center}
+.sc .scn svg{width:17px;height:17px;flex:none}.sc .scn b{font-size:11px;font-weight:800;line-height:1}
+.sc .scn.c1{border-color:#9ec0f5;background:#eaf2ff;color:#1d5fd1}.sc .scn.c1.on{background:linear-gradient(180deg,#3b82f0,#1d5fd1);color:#fff;border-color:#1d5fd1}
+.sc .scn.c2{border-color:#9fd6b1;background:#e8f7ee;color:#1f8a4d}.sc .scn.c2.on{background:linear-gradient(180deg,#3fb877,#1f8a4d);color:#fff;border-color:#1f8a4d}
+.sc .scn.c3{border-color:#f0cf9a;background:#fff4e2;color:#c27200}.sc .scn.c3.on{background:linear-gradient(180deg,#f5a83a,#c27200);color:#fff;border-color:#c27200}
+.sc .scn.c4{border-color:#cdb8ee;background:#f4edfd;color:#6a3fb5}.sc .scn.c4.on{background:linear-gradient(180deg,#9b66e0,#6a3fb5);color:#fff;border-color:#6a3fb5}
+/* 모드 콤보 + LOAD */
+.sc .sld2{display:flex;gap:6px;margin:2px 0 4px}
+html body #app .sc .smode{flex:1;min-width:0;height:34px;border:1px solid #c9d6ec;border-radius:9px;background:#fff;font-size:12.5px;font-weight:700;color:#14213d;padding:0 8px}
+html body #app .sc .sloadb{flex:none;display:flex;align-items:center;gap:5px;height:34px;padding:0 12px;border:0;border-radius:9px;background:linear-gradient(180deg,#3b82f0,#1d5fd1);color:#fff;font-weight:800;font-size:12px;width:auto}
+.sc .sloadb svg{width:15px;height:15px}.sc .sloadb.sm{margin-left:auto;height:28px;font-size:11px;padding:0 10px}
+/* 일자 배열 입력 */
+.sc .sfr{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:5px}
+.sc .sf{display:flex;flex-direction:column;gap:2px;min-width:0}.sc .sf>span{font-size:9.5px;color:#5a6b86;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #app .sc .sf input,html body #app .sc .sf select{width:100%;min-width:0;height:30px;border:1px solid #cfdcf0!important;border-radius:7px!important;background:#fff!important;font-size:11.5px!important;padding:0 5px!important;color:#14213d;box-shadow:none!important}
+.sc .sprod{grid-template-columns:1.35fr .8fr 1.25fr;grid-auto-flow:row}
+.sc .spk{display:flex;gap:3px}html body #app .sc .spk select{flex:none;width:46px!important;padding:0 2px!important}
+/* 적용부위 + 추가 + 계산하기 */
+.sc .sadr{display:flex;gap:5px;margin-bottom:6px}
+html body #app .sc .sadr input{flex:1;min-width:0;height:32px;border:1px solid #c9d6ec;border-radius:8px;padding:0 8px;font-size:11.5px;background:#fff}
+html body #app .sc .sad{flex:none;width:auto;height:32px;padding:0 10px;border:1px solid #9ec0f5;border-radius:8px;background:#eaf2ff;color:#1d5fd1;font-weight:800;font-size:11.5px}
+html body #app .sc .srun2{flex:none;width:auto;height:32px;padding:0 10px;display:flex;align-items:center;gap:4px;border:0;border-radius:8px;background:linear-gradient(180deg,#2f7be8,#1458c8);color:#fff;font-weight:800;font-size:11.5px}.sc .srun2 svg{width:14px;height:14px}
+/* 작은 도면 + 빨간 표시 */
+.sc .sdg{width:128px;margin:0 auto 6px;background:#fff;border:1px solid #e1e8f4;border-radius:8px;padding:2px}.sc .sdg svg{display:block;width:100%}
+.sc .sdg g path{stroke:#e01e1e;fill:none;stroke-width:1.6}.sc .sdg g text{fill:#e01e1e;font-size:10px;font-weight:700;text-anchor:middle}
+.sc .sdg.f-w .hd,.sc .sdg.f-w .hl,.sc .sdg.f-d .hw,.sc .sdg.f-d .hl,.sc .sdg.f-l .hw,.sc .sdg.f-l .hd{opacity:.18}
+.sc .sdg.f-w .hw path,.sc .sdg.f-d .hd path,.sc .sdg.f-l .hl path{stroke-width:2.6}
+/* LOAD 시트 */
+.sld{position:fixed;inset:0;z-index:95;background:rgba(10,20,40,.45);display:flex;align-items:flex-end;justify-content:center}
+.sldb{width:100%;max-width:560px;max-height:80vh;overflow:auto;background:#fff;border-radius:18px 18px 0 0;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 14px);display:flex;flex-direction:column;gap:8px}
+.sldh{display:flex;align-items:center;justify-content:space-between}.sldh b{font-size:15px}.sldh button{border:0;background:#eef2f8;border-radius:8px;padding:5px 10px;font-weight:700}
+.sldo{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid #cfdcf0;background:#f7faff;border-radius:12px;padding:12px;color:#14213d}.sldo:disabled{opacity:.5}.sldo svg{width:24px;height:24px;color:#2f6fdc;flex:none}.sldo b{display:block;font-size:13.5px}.sldo small{font-size:11px;color:#6b7b95}
+.sldq{height:36px;border:1px solid #c9d6ec;border-radius:9px;padding:0 10px;font-size:13px}.sldl{display:flex;flex-direction:column;gap:5px;max-height:48vh;overflow:auto}.sldi{text-align:left;border:1px solid #e1e8f4;background:#fff;border-radius:10px;padding:8px 10px}.sldi b{display:block;font-size:12.5px}.sldi small{font-size:10.5px;color:#6b7b95}
+html body .sld{z-index:300}html body .sld .sldh button{width:auto!important;flex:none}.sldh b{white-space:nowrap}
+/* 일위대가표 상단 탭 스타일: 아이콘 앞, 한 줄, 알약형 */
+html body #app .sc .scn{flex-direction:row!important;height:32px!important;border-radius:999px!important;gap:4px!important;padding:0 6px!important;white-space:nowrap}
+.sc .scn svg{width:14px;height:14px}.sc .scn b{font-size:11px}
+html body #app .sc .scnav{padding:5px 0}
+</style><script id=fm289s>/* 충진·메쉬 소요량 (SmartCost 스타일) — 제조사 비종속: 직접 입력 또는 데이터시트 첨부 */
+const FD={tab:'fill',mode:'j',dm:'in',loss:10,pk:300,pu:'mL',pn:'카트리지',packs:[],sg:'',pname:'',pmaker:'',price:0,rodp:0,tapep:0,dsmsg:'',
+ parts:[],dia:0,
+ mesh:{dm:'in',name:'',open:'',gm:'',wr:'',lr:'',price:0,pu:'m²',ei:50,eo:50,ov:50,jb:100,mt:10,loss:10,mq:1,dsmsg:'',dia:0,mem:[{nm:'부재1',H:300,B:300,tw:10,tf:15,sz:3,l:6,q:10,z:{A:1}}]},
+ hist:[]};
+const FM=JSON.parse(JSON.stringify(FD));
+try{const o=JSON.parse(localStorage['pqu:fm2']||'{}');Object.keys(o).forEach(k=>{if(k=='mesh')Object.assign(FM.mesh,o.mesh);else FM[k]=o[k]})}catch(e){}
+try{if(!localStorage['pqu:fm316']){localStorage['pqu:fm316']=1;if(FM.parts.length<=1){FM.parts=[];fmSave()}}}catch(e){}
+const fq=id=>document.getElementById(id),fn=(x,d=1)=>(+x||0).toLocaleString('ko-KR',{maximumFractionDigits:d}),esc2=t=>String(t==null?'':t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+function fmSave(){try{localStorage['pqu:fm2']=JSON.stringify(FM)}catch(e){}}
+const MS=()=>FM.mesh;
+const ICN={pen:'<path d="M14 4l6 6-9 9H5v-6z"/><path d="M12 6l6 6"/>',grid:'<path d="M8 3L6 21M18 3l-2 18M3 8h18M2 16h18"/>',doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',folder:'<path d="M3 6h6l2 2h10v11H3z"/>',calc:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/>',clip:'<path d="M20.5 11.5l-8.2 8.2a5 5 0 0 1-7.1-7.1l8.8-8.8a3.3 3.3 0 0 1 4.7 4.7l-8.8 8.8a1.7 1.7 0 0 1-2.4-2.4l8-8"/>',chev:'<path d="M9 6l6 6-6 6"/>',won:'<path d="M5 8l3 10 4-8 4 8 3-10M3 12h18"/>',bars:'<path d="M5 20V10M12 20V4M19 20v-7"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICN[n]}</svg>`;
+const FSV={j:'<svg viewBox="0 0 220 124"><rect x="8" y="28" width="54" height="66" fill="#d3d1c7"/><rect x="158" y="28" width="54" height="66" fill="#d3d1c7"/><rect x="62" y="28" width="96" height="34" fill="#a9c8f8"/><circle cx="110" cy="77" r="12" fill="#f1efe8" stroke="#999"/><g class="hw"><path d="M62 18H158M62 14v8M158 14v8"/><text x="110" y="11">폭 W</text></g><g class="hd"><path d="M70 29V61M66 29h8M66 61h8"/><text x="76" y="49" style="text-anchor:start">깊이 D</text></g><g class="hl"><path d="M14 106H206M14 102v8M206 102v8"/><text x="110" y="120">길이 L</text></g></svg>',
+ f:'<svg viewBox="0 0 220 124"><rect x="8" y="70" width="204" height="30" fill="#d3d1c7"/><rect x="8" y="20" width="40" height="50" fill="#d3d1c7"/><path d="M48 70V32L86 70z" fill="#a9c8f8"/><g class="hw"><path d="M52 70H86M52 66v8M86 66v8"/><text x="69" y="86">변 a</text></g><g class="hl"><path d="M14 108H206M14 104v8M206 104v8"/><text x="110" y="121">길이 L</text></g></svg>',
+ a:'<svg viewBox="0 0 220 124"><rect x="8" y="70" width="204" height="30" fill="#d3d1c7"/><rect x="8" y="40" width="204" height="30" fill="#a9c8f8"/><g class="hd"><path d="M196 41V69M192 41h8M192 69h8"/><text x="190" y="58" style="text-anchor:end">두께 t</text></g><g class="hl"><path d="M14 112H206M14 108v8M206 108v8"/><text x="110" y="30">충진 면적 (길이 × 폭)</text></g></svg>'};
+/* ---------- 공통 입력 ---------- */
+const ri=(lab,val,on,u,ph)=>`<label class="sr"><span>${lab}</span><i><input type="number" inputmode="decimal" step="any" value="${val??''}" placeholder="${ph||''}" oninput="${on}">${u?'<b>'+u+'</b>':''}</i></label>`;
+const rt=(lab,val,on,ph)=>`<label class="sr"><span>${lab}</span><i><input type="text" value="${esc2(val)}" placeholder="${ph||''}" oninput="${on}"></i></label>`;
+const rs=(lab,opts,val,on)=>`<label class="sr"><span>${lab}</span><i><select onchange="${on}">${opts.map(([v,t])=>`<option value="${v}"${v==val?' selected':''}>${t}</option>`).join('')}</select></i></label>`;
 function fmSet(k,v){FM[k]=v;fmSave();fmOut()}
-function fmRow(a,i,k,v){FM[a][i][k]=v;fmSave();if(k=='k')fmRender();else fmOut()}
-function fmAdd(a){FM[a].push(a=='rows'?{k:'j',nm:'부위'+(FM.rows.length+1),w:10,d:10,l:10,q:1}:{nm:'부재'+(FM.mem.length+1),tf:14.2,l:3,q:1,H:253,B:254,tw:8.6,z:{A:1}});fmSave();fmRender()}
-function fmDel(a,i){if(FM[a].length>1){FM[a].splice(i,1);fmSave();fmRender()}}
-function fmTab(t){FM.tab=t;fmSave();fmRender()}
-function fmPick(v){if(v==''||v=='-1'){FM.pid=-1;FM.pname='';fmSave();return fmRender()}const p=fmDB()[+v];if(!p)return;FM.pid=+v;FM.pname=p.n;const k=fmParsePacks(p);if(k.length){FM.packs=k;FM.pi=0}if(+p.sg>0)FM.sg=p.sg;fmSave();fmRender()}
-function fmPack(v){if(v=='x'){const n=prompt('포장 용량과 단위를 입력하세요 (예: 0.5L, 12kg, 600mL)');const m=String(n||'').match(/(\d+(?:\.\d+)?)\s*(ml|l|kg)/i);if(!m)return fmRender();const u=/kg/i.test(m[2])?'kg':/ml/i.test(m[2])?'mL':'L',k={v:+m[1],u,n:fmPn(+m[1],u)};FM.packs.push(k);FM.pi=FM.packs.length-1}else if(v[0]=='p'){const q=FMPRE[+v.slice(1)],k={v:q[1],u:q[2],n:q[0]};let i=FM.packs.findIndex(x=>x.v==k.v&&x.u==k.u);if(i<0){FM.packs.push(k);i=FM.packs.length-1}FM.pi=i}else FM.pi=+v;fmSave();fmRender()}
-function fmReset(){const f=()=>{const t=FM.tab;Object.keys(FM).forEach(k=>delete FM[k]);Object.assign(FM,JSON.parse(JSON.stringify(FMD)),{tab:t,saved:[]});fmSave();fmRender()};if(typeof ask=='function')ask('입력한 내용을 모두 초기화할까요?',f);else if(confirm('입력한 내용을 모두 초기화할까요?'))f()}
-function fmGo(n){FM.step=n;const e=fq('fmc'+n);if(e&&e.classList.contains('cl'))fmFoldSet(FM.tab+':'+e.id,e,false);if(e)e.scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.fxs button').forEach((b,i)=>b.classList.toggle('on',i+1==n))}
+function fmMs(k,v){MS()[k]=v;fmSave();fmOut()}
+function fmPart(i,k,v){FM.parts[i][k]=v;fmSave();fmOut()}
+function fmAddPart(){const e=fq('fmnp'),nm=(e&&e.value.trim())||'부위'+(FM.parts.length+1);FM.parts.push({nm,w:10,d:10,l:10,q:1,lo:10});fmSave();fmRender()}
+function fmHi(k){const e=fq('fpv');if(e)e.className='fpv'+(k?' f-'+k:'')}
+function fmAct(i){if(FM.fpi!==i){FM.fpi=i;const p=fq('fpv');if(p)p.innerHTML=fmPrev()}}
+function fmDelPart(i){FM.parts.splice(i,1);fmSave();fmRender()}
+function fmTab(t){FM.tab=t;fmSave();fmRender();window.scrollTo&&0}
+function fmMode(m){FM.mode=m;fmSave();fmRender()}
+function fmDm(w,v){if(w=='fill')FM.dm=v;else MS().dm=v;fmSave();fmRender()}
+function fmFold(k){FM[k]=FM[k]?0:1;fmSave();fmRender()}
 const recD=w=>w<=0?0:w<12?6:w<=25?+(w/2).toFixed(1):13;
-const fi=(lab,val,on,u,w)=>`<label class="fl" style="flex:${w||1}"><span>${lab}</span><i><input type="number" inputmode="decimal" step="any" value="${val??''}" oninput="${on}">${u?'<b>'+u+'</b>':''}</i></label>`;
-const FMSV={m:'<svg viewBox="0 0 300 150" width="100%"><path d="M20 22H250V118H20" fill="none" stroke="#888" stroke-dasharray="4 3"/><rect x="20" y="60" width="200" height="20" fill="#b4b2a9"/><polyline points="110,100 235,100 235,40 150,40" fill="none" stroke="#d85a30" stroke-width="3"/><g fill="#444" font-size="12"><path d="M110 128H220M110 125v6M220 125v6" fill="none" stroke="#444"/><text x="165" y="144" text-anchor="middle">내면 50mm 이상</text><text x="30" y="52">에폭시 내화 도막</text><text x="30" y="75">플랜지</text><text x="150" y="34">외면 연장(가정)</text></g></svg>',
- cart:'<svg viewBox="0 0 60 150" width="100%"><rect x="20" y="4" width="20" height="16" rx="3" fill="#cfd6e4"/><path d="M24 20h12l6 14v92H18V34z" fill="#fff" stroke="#c9d3e6"/><rect x="18" y="52" width="24" height="64" fill="#1f4fb8"/><rect x="22" y="60" width="16" height="4" fill="#fff" opacity=".8"/><rect x="22" y="68" width="16" height="3" fill="#fff" opacity=".5"/><rect x="16" y="126" width="28" height="14" rx="3" fill="#e9eef8" stroke="#c9d3e6"/></svg>',
- j:'<svg viewBox="0 0 220 130" width="100%"><rect x="10" y="30" width="55" height="75" fill="#d3d1c7"/><rect x="155" y="30" width="55" height="75" fill="#d3d1c7"/><rect x="65" y="30" width="90" height="38" fill="#4b8bf0"/><circle cx="110" cy="86" r="14" fill="#f1efe8" stroke="#888"/><g fill="#1f3a6b" font-size="11" stroke="none"><path d="M65 20H155M65 17v6M155 17v6" fill="none" stroke="#1f3a6b"/><text x="110" y="14" text-anchor="middle">폭 W</text><path d="M72 32V66" fill="none" stroke="#fff"/><text x="78" y="52" fill="#fff">깊이 D</text><text x="110" y="124" text-anchor="middle">길이 L = 줄눈 연장</text></g></svg>',
- f:'<svg viewBox="0 0 220 130" width="100%"><rect x="10" y="70" width="200" height="40" fill="#d3d1c7"/><rect x="10" y="20" width="40" height="50" fill="#d3d1c7"/><path d="M50 70V35L85 70z" fill="#4b8bf0"/><g fill="#1f3a6b" font-size="11"><text x="100" y="52">변 길이 a (삼각 비드)</text><text x="100" y="124" text-anchor="middle">단면적 = a² ÷ 2</text></g></svg>',
- a:'<svg viewBox="0 0 220 130" width="100%"><rect x="10" y="80" width="200" height="30" fill="#d3d1c7"/><rect x="10" y="50" width="200" height="30" fill="#4b8bf0"/><g fill="#1f3a6b" font-size="11"><text x="20" y="70" fill="#fff">충진 두께 t</text><text x="110" y="30" text-anchor="middle">부피 = 면적 × 두께</text></g></svg>'};
-function fmCalc(){const sg=+FM.sg||0,L=1+(+FM.loss||0)/100,pk=FM.packs[FM.pi]||FM.packs[0],pv=fmPv(pk,sg);let V=0,area=0,rod=0,tape=0,j1=null;
- FM.rows.forEach(r=>{const q=+r.q||1,w=+r.w||0,d=+r.d||0,l=+r.l||0;if(r.k=='j'){V+=w*d*l*q;area+=l*(w+2*d)/1000*q;rod+=l*q;tape+=2*l*q;if(!j1&&w>0&&d>0)j1=r}else if(r.k=='f'){V+=w*w/2*l*q;area+=l*2*w/1000*q;tape+=2*l*q}else{V+=l*d*1000*q;area+=l*q}});
- const Vt=V*L,n=pv>0?Math.ceil(Vt/pv-1e-9):0,opts=FM.packs.map((k,i)=>{const v=fmPv(k,sg),c=v>0?Math.ceil(Vt/v-1e-9):0;return{k,i,c,waste:c*v-Vt}}).filter(o=>o.c>0);let best=opts.slice().sort((a,b)=>a.waste-b.waste||a.c-b.c)[0];return{sg,L,pk,pv,V,Vt,n,area,rod,tape,j1,opts,best}}
-function fmFillOut(){const c=fmCalc(),e3=fq('fmc3b'),e4=fq('fmc4b');if(!e3||!e4)return;const pk=c.pk;
- const need=pk.u=='kg'&&!(c.sg>0)?'<div class="fxw">kg 포장은 비중이 필요합니다 (제품 DB에서 불러오거나 아래에 입력)</div>':'';
- e3.innerHTML=need+`<div class="fxm"><div><i>${DBXI('flask')}</i><span>필요 충진량</span><b>${fn(c.V/1000,2)}<u> L</u></b><small>(순 부피)</small></div><div><i>${DBXI('box')}</i><span>필요 포장 수량</span><b>${fn(c.n,0)}<u> 개</u></b><small>(${fmPl(pk)} 기준)</small></div><div><i>${DBXI('cube')}</i><span>총 소요량</span><b>${fn(c.Vt/1000,2)}<u> L</u></b><small>(로스 ${FM.loss}% 포함)</small></div><div><i>${DBXI('area')}</i><span>시공(접착) 면적</span><b>${fn(c.area,2)}<u> m²</u></b><small>(길이×(W+2D))</small></div></div>`+(c.j1?`<div class="fxi">${pk.n} 1개당 시공 길이 약 <b>${fn(c.pv/(c.j1.w*c.j1.d*c.L),1)} m</b> (${c.j1.w}×${c.j1.d}mm 줄눈, 로스 포함)</div>`:'')+(c.opts.length>1?`<div class="fxi">포장별 필요 수량: ${c.opts.map(o=>`<span class="${c.best&&o.i==c.best.i?'bst':''}">${fmPl(o.k)} ${o.c}개 (잔량 ${fn(o.waste/1000,2)}L)</span>`).join(' · ')}${c.best?` → 낭비 최소: <b>${fmPl(c.best.k)}</b>`:''}</div>`:'')+(c.rod>0?`<div class="fxi">부자재: 백업재 약 <b>${fn(c.rod*1.05,1)} m</b> (직경 ≈ 줄눈폭×1.25), 마스킹 테이프 약 <b>${fn(c.tape*1.05,1)} m</b> (양쪽 +5%)</div>`:'');
- const pr=+FM.price||0,amt=c.n*pr,rod=Math.ceil(c.rod*1.05),tp=Math.ceil(c.tape*1.05),ra=rod*(+FM.rod||0),ta=tp*(+FM.tape||0),tot=amt+(c.rod>0?ra+ta:0),nm=FM.pname||'충진재 (직접 입력)',kind=/퍼티/.test(nm)?'퍼티':'실란트';
- const row=(a,b,c2,d,e,f,g)=>`<tr><td>${a}</td><td>${b}</td><td>${c2}</td><td>${d}</td><td>${e}</td><td>${f}</td><td>${g}</td></tr>`;
- e4.innerHTML=`<div class="fxt"><table><thead><tr><th>구분</th><th>규격</th><th>단위</th><th>수량</th><th>단가</th><th>금액</th><th>비고</th></tr></thead><tbody>${row(kind,esc2(nm),'개',fn(c.n,0),`<input class="fxp" type="number" inputmode="decimal" value="${pr}" oninput="fmSet('price',this.value)">`,fn(amt,0)+'원',fmPl(pk))}${c.rod>0?row('백업재','줄눈폭×1.25 직경','m',fn(rod,0),`<input class="fxp" type="number" inputmode="decimal" value="${FM.rod||0}" oninput="fmSet('rod',this.value)">`,fn(ra,0)+'원','줄눈 길이+5%')+row('마스킹테이프','—','m',fn(tp,0),`<input class="fxp" type="number" inputmode="decimal" value="${FM.tape||0}" oninput="fmSet('tape',this.value)">`,fn(ta,0)+'원','양쪽+5%'):''}</tbody></table></div><div class="fxs2"><span>재료비 합계</span><b>${fn(tot,0)}<u>원</u></b><small>※ 단가는 현장 조건에 따라 달라질 수 있습니다.</small></div>`+(FM.saved.length?`<div class="fxl"><b>생성된 충진 일위대가 (${FM.saved.length})</b>${FM.saved.map((s,i)=>`<div>${esc2(s.t)} · ${esc2(s.name)} · ${esc2(s.pack)} ${fn(s.n,0)}개 · ${fn(s.tot,0)}원 <button onclick="fmUndo(${i})">삭제</button></div>`).join('')}<div class="fxs3">합계 ${fn(FM.saved.reduce((a,s)=>a+s.tot,0),0)}원</div></div>`:'');
- FM._cur={name:nm,pack:fmPl(pk),n:c.n,tot,pr,rod,tp,ra,ta,kind}}
-const esc2=t=>String(t==null?'':t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-const DBXI=n=>({flask:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 10a1.5 1.5 0 0 0 1.4 2h11.2a1.5 1.5 0 0 0 1.4-2l-5-10V3"/></svg>',box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="3" width="8" height="5" rx="1"/><path d="M9 8v13h6V8"/></svg>',cube:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>',area:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M4 12h16M12 4v16"/></svg>'})[n];
-function fmUndo(i){FM.saved.splice(i,1);fmSave();fmFillOut()}
-function fmGen(){if(FM.tab=='mesh'){const m=FM._curM;if(!m||!(m.n>0))return alert('소요량이 0입니다.');FM.saved.push({t:new Date().toISOString().slice(0,10),name:m.name,pack:m.pack,n:m.n,tot:m.tot});fmSave();try{navigator.clipboard.writeText(['구분\t규격\t단위\t수량\t단가\t금액',[m.kind,m.name,'m²',m.n,m.pr,m.tot].join('\t')].join('\n'))}catch(e){}fmOut();if(typeof tt=='function')tt('일위대가 항목 생성 · 표가 복사되었습니다');return}const c=FM._cur;if(!c||!(c.n>0))return alert('소요량이 0입니다. 충진 부위를 입력하세요.');FM.saved.push({t:new Date().toISOString().slice(0,10),name:c.name,pack:c.pack,n:c.n,tot:c.tot});fmSave();const tsv=['구분\t규격\t단위\t수량\t단가\t금액\t비고',[c.kind,c.name,'개',c.n,c.pr,c.n*c.pr,c.pack].join('\t')].concat(c.rod>0?[['백업재','','m',Math.ceil(c.rod*1.05),FM.rod||0,c.ra,''].join('\t'),['마스킹테이프','','m',Math.ceil(c.tp),FM.tape||0,c.ta,''].join('\t')]:[]).join('\n');try{navigator.clipboard.writeText(tsv)}catch(e){}fmFillOut();if(typeof tt=='function')tt('일위대가 항목 생성 · 표가 복사되었습니다<br><small>엑셀에 붙여넣을 수 있습니다</small>')}
+/* ---------- 충진 계산 ---------- */
+function fmPv(){const v=+FM.pk||0;return FM.pu=='mL'?v:FM.pu=='L'?v*1000:(+FM.sg>0?v/FM.sg*1000:0)}
+function cF(){const pv=fmPv();let V=0,Vt=0,area=0,rod=0,tape=0;const ln=[];
+ FM.parts.forEach(r=>{const q=+r.q||1,w=+r.w||0,d=+r.d||0,l=+r.l||0,lo=1+(+(r.lo==null?FM.loss:r.lo)||0)/100;let v=0,x='';
+  if(FM.mode=='j'){v=w*d*l*q;area+=l*(w+2*d)/1000*q;rod+=l*q;tape+=2*l*q;x=`${fn(w,2)} × ${fn(d,2)} × ${fn(l,2)}${q>1?' × '+q:''}`}
+  else if(FM.mode=='f'){v=w*w/2*l*q;area+=l*2*w/1000*q;tape+=2*l*q;x=`(${fn(w,2)}² ÷ 2) × ${fn(l,2)}${q>1?' × '+q:''}`}
+  else if(FM.mode=='c'){v=Math.PI*w*w*l*q;area+=l*Math.PI*w/1000*q;x=`π × ${fn(w,2)}² × ${fn(l,2)}${q>1?' × '+q:''}`}
+  else if(FM.mode=='m'){v=w*l*q;area+=l*q*0;x=`${fn(w,2)} mm² × ${fn(l,2)}${q>1?' × '+q:''}`}
+  else{v=l*d*1000*q;area+=l*q;x=`${fn(l,2)} m² × ${fn(d,2)} mm × 1,000${q>1?' × '+q:''}`}
+  V+=v;Vt+=v*lo;ln.push([r.nm,x,v,lo])});
+ const L=V>0?Vt/V:1,n=pv>0?Math.ceil(Vt/pv-1e-9):0;return{L,pv,V,Vt,n,area,rod,tape,ln}}
+/* ---------- 메쉬 계산 ---------- */
 const FMZ={A:['플랜지 끝단',4],B:['웨브-플랜지 접합부',4],C:['플랜지 외면',2],D:['플랜지 내면',4],E:['웨브 양면',2]};
-const FMHB=[['H-150×150×7×10',150,150,7,10],['H-200×200×8×12',200,200,8,12],['H-250×250×9×14',250,250,9,14],['H-300×300×10×15',300,300,10,15],['H-350×350×12×19',350,350,12,19],['H-400×400×13×21',400,400,13,21],['H-300×150×6.5×9',300,150,6.5,9],['H-400×200×8×13',400,200,8,13],['H-500×200×10×16',500,200,10,16],['H-600×200×11×17',600,200,11,17],['W10x49 (KCC 인증 최소)',253,254,8.6,14.2]];
-function fmZw(m,k,t){const tf=+m.tf||0,B=+m.B||0,tw=+m.tw||0,H=+m.H||0;return k=='A'?(+FM.ei||0)+tf+(+FM.eo||0)+t:k=='B'?(+FM.jb||0):k=='C'?B:k=='D'?Math.max(0,(B-tw)/2):Math.max(0,H-2*tf)}
-function fmMeshCalc(){const t=FMT[FM.t],wr=+FM.wr,lr=+FM.lr,L=1+(+FM.ml||0)/100,mq=+FM.mq||1;let A=0,len=0,need=0,warn='';const lines=[];
- FM.mem.forEach(m=>{const q=(+m.q||1)*mq,l=+m.l||0;Object.keys(FMZ).forEach(k=>{if(!(m.z&&m.z[k]))return;const w=fmZw(m,k,t),n=FMZ[k][1];if(!(w>0))return;let ln=l*q*n;if(lr>0)ln+=((Math.ceil(l/lr-1e-9)-1)*n*q)*(+FM.ov||0)/1000;const a=ln*w/1000;len+=ln;A+=a;lines.push({m:m.nm,k,w,ln,a});if(wr>0&&lr>0){const s=Math.floor(wr*1000/w);if(s<1)warn='롤 폭이 띠 폭('+fn(w,0)+'mm)보다 좁습니다';else need+=ln*L/s}})});
- return{t,wr,lr,L,A,len,warn,lines,rolls:wr>0&&lr>0&&!warn&&need>0?Math.ceil(need/lr-1e-9):0,At:A*L}}
-function fmZ(i,k){const m=FM.mem[i];m.z=m.z||{};m.z[k]=m.z[k]?0:1;fmSave();fmRender()}
-function fmZset(i,mode){const m=FM.mem[i];m.z=mode=='kcc'?{A:1}:mode=='all'?{A:1,B:1,C:1,D:1,E:1}:{};fmSave();fmRender()}
-function fmSize(i,v){const m=FM.mem[i];if(v!='x'){const p=FMHB[+v];m.H=p[1];m.B=p[2];m.tw=p[3];m.tf=p[4];m.sz=+v}else m.sz='x';fmSave();fmRender()}
+const FMHB=[['H-150×150×7×10',150,150,7,10],['H-200×200×8×12',200,200,8,12],['H-250×250×9×14',250,250,9,14],['H-300×300×10×15',300,300,10,15],['H-350×350×12×19',350,350,12,19],['H-400×400×13×21',400,400,13,21],['H-300×150×6.5×9',300,150,6.5,9],['H-400×200×8×13',400,200,8,13],['H-500×200×10×16',500,200,10,16],['H-600×200×11×17',600,200,11,17]];
+function fmZw(m,k){const M=MS(),tf=+m.tf||0,B=+m.B||0,tw=+m.tw||0,H=+m.H||0;return k=='A'?(+M.ei||0)+tf+(+M.eo||0)+(+M.mt||0):k=='B'?(+M.jb||0):k=='C'?B:k=='D'?Math.max(0,(B-tw)/2):Math.max(0,H-2*tf)}
+function cM(){const M=MS(),wr=+M.wr,lr=+M.lr,L=1+(+M.loss||0)/100,mq=+M.mq||1;let A=0,len=0,need=0,warn='';const lines=[];
+ M.mem.forEach(m=>{const q=(+m.q||1)*mq,l=+m.l||0;Object.keys(FMZ).forEach(k=>{if(!(m.z&&m.z[k]))return;const w=fmZw(m,k),n=FMZ[k][1];if(!(w>0))return;let ln=l*q*n;if(lr>0)ln+=((Math.ceil(l/lr-1e-9)-1)*n*q)*(+M.ov||0)/1000;const a=ln*w/1000;len+=ln;A+=a;lines.push({m:m.nm,k,w,ln,a});if(wr>0&&lr>0){const s=Math.floor(wr*1000/w);if(s<1)warn='롤 폭('+fn(wr,2)+'m)이 띠 폭('+fn(w,0)+'mm)보다 좁습니다';else need+=ln*L/s}})});
+ const rolls=wr>0&&lr>0&&!warn&&need>0?Math.ceil(need/lr-1e-9):0;return{L,A,At:A*L,len,lines,rolls,warn,wr,lr}}
+function fmZ(i,k){const m=MS().mem[i];m.z=m.z||{};m.z[k]=m.z[k]?0:1;fmSave();fmRender()}
+function fmZset(i,mode){const m=MS().mem[i];m.z=mode=='all'?{A:1,B:1,C:1,D:1,E:1}:{};fmSave();fmRender()}
+function fmSize(i,v){const m=MS().mem[i];if(v!='x'){const p=FMHB[+v];m.H=p[1];m.B=p[2];m.tw=p[3];m.tf=p[4];m.sz=+v}else m.sz='x';fmSave();fmRender()}
+function fmMem(i,k,v){MS().mem[i][k]=v;fmSave();fmOut()}
+function fmMemDim(i,k,v){const m=MS().mem[i];m[k]=v;m.sz='x';fmSave();fmOut()}
+function fmAddMem(){const M=MS();M.mem.push({nm:'부재'+(M.mem.length+1),H:300,B:300,tw:10,tf:15,sz:3,l:6,q:1,z:{A:1}});fmSave();fmRender()}
+function fmDelMem(i){const M=MS();if(M.mem.length>1){M.mem.splice(i,1);fmSave();fmRender()}}
 function fmShape(m,i){const H=+m.H||250,B=+m.B||250,tw=+m.tw||9,tf=+m.tf||14,s=Math.min(130/H,150/B),w=B*s,h=H*s,x0=(200-w)/2,y0=(180-h)/2+4,tfs=Math.max(tf*s,5),tws=Math.max(tw*s,4),e=7,z=m.z||{};
  const c=k=>z[k]?'fill="#d85a30" opacity=".95"':'fill="#cfd6e4" opacity=".6" stroke="#8a97ad" stroke-width=".6" stroke-dasharray="2 1.5"',R=(k,x,y,ww,hh)=>`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(ww,2).toFixed(1)}" height="${Math.max(hh,2).toFixed(1)}" ${c(k)} style="cursor:pointer" onclick="fmZ(${i},'${k}')"/>`,wx=x0+(w-tws)/2,half=(w-tws)/2;
  const tx=(x,y,t)=>`<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-size="9" fill="#14213d" font-weight="700">${t}</text>`;
@@ -3971,42 +4033,232 @@ function fmShape(m,i){const H=+m.H||250,B=+m.B||250,tw=+m.tw||9,tf=+m.tf||14,s=M
  ${R('B',wx-8,y0+tfs,8,8)}${R('B',wx+tws,y0+tfs,8,8)}${R('B',wx-8,y0+h-tfs-8,8,8)}${R('B',wx+tws,y0+h-tfs-8,8,8)}
  ${R('E',wx-e,y0+tfs+9,e,h-2*tfs-18)}${R('E',wx+tws,y0+tfs+9,e,h-2*tfs-18)}
  ${tx(x0+w+e+2,y0+tfs/2+3,'A')}${tx(x0+w/2-3,y0-e-2,'C')}${tx(x0+w-half/2-4,y0+tfs+e+9,'D')}${tx(wx+tws+10,y0+tfs+18,'B')}${tx(wx-e-9,y0+h/2+3,'E')}</svg>`}
-function fmOut(){if(FM.tab=='fill')return fmFillOut();const c=fmMeshCalc(),e3=fq('fmc3b'),e4=fq('fmc4b');if(!e3||!e4)return;
- e3.innerHTML=(c.warn?'<div class="fxw">'+c.warn+'</div>':'')+(c.lines.length?'':'<div class="fxw">적용 부위가 선택되지 않았습니다. 도형에서 메쉬를 넣을 부위를 눌러 선택하세요.</div>')+`<div class="fxm"><div><i>${DBXI('area')}</i><span>필요 메쉬 면적</span><b>${fn(c.A,2)}<u> m²</u></b><small>(예상 소요량)</small></div><div><i>${DBXI('cube')}</i><span>메쉬 규격</span><b class="sm">11 mm × 11 mm</b><small>${fn(FM.gm,0)} g/m²</small></div><div><i>${DBXI('box')}</i><span>필요 롤 수량</span><b>${c.rolls?fn(c.rolls,0):'-'}<u> 롤</u></b><small>(${fn(c.wr,2)}m × ${fn(c.lr,0)}m 기준)</small></div><div><i>${DBXI('flask')}</i><span>총 소요량</span><b>${fn(c.At,2)}<u> m²</u></b><small>(로스 ${FM.ml}% 포함 · 약 ${fn(c.At*FM.gm,0)}g)</small></div></div>`+(c.lines.length?`<div class="fxt" style="margin-top:8px"><table style="min-width:0"><thead><tr><th>부재</th><th>적용 부위</th><th>띠 폭</th><th>길이</th><th>면적</th></tr></thead><tbody>${c.lines.map(x=>`<tr><td>${esc2(x.m)}</td><td>${x.k} ${FMZ[x.k][0]} ×${FMZ[x.k][1]}</td><td>${fn(x.w,0)}mm</td><td>${fn(x.ln,1)}m</td><td>${fn(x.a,2)}m²</td></tr>`).join('')}</tbody></table></div>`:'');
- const pr=+FM.mp||0,amt=c.At*pr;
- e4.innerHTML=`<div class="fxt"><table><thead><tr><th>구분</th><th>규격</th><th>단위</th><th>수량</th><th>단가</th><th>금액</th><th>비고</th></tr></thead><tbody><tr><td>내화 메쉬</td><td>NEXWEB<br><small>(11 × 11 mm / ${fn(FM.gm,0)} g/m²)</small></td><td>m²</td><td>${fn(c.At,1)}</td><td><input class="fxp" type="number" inputmode="decimal" value="${pr}" oninput="fmSet('mp',this.value)"></td><td>${fn(amt,0)}원</td><td>선택 부위 기준 · ${FM.t}시간</td></tr></tbody></table></div><div class="fxs2"><span>재료비 합계</span><b>${fn(amt,0)}<u>원</u></b><small>※ 단가는 현장 조건에 따라 달라질 수 있습니다.</small></div>`+(FM.saved.length?`<div class="fxl"><b>생성된 일위대가 (${FM.saved.length})</b>${FM.saved.map((s,i)=>`<div>${esc2(s.t)} · ${esc2(s.name)} · ${esc2(s.pack)} ${fn(s.n,1)} · ${fn(s.tot,0)}원 <button onclick="fmUndo(${i})">삭제</button></div>`).join('')}<div class="fxs3">합계 ${fn(FM.saved.reduce((a,s)=>a+s.tot,0),0)}원</div></div>`:'');
- FM._curM={name:'NEXWEB (11×11mm/'+FM.gm+'g/m²)',pack:'m²',n:+c.At.toFixed(2),tot:amt,pr,kind:'내화 메쉬'}}
-function fmMq(d){FM.mq=Math.max(1,(+FM.mq||1)+d);fmSave();fmRender()}
-function fmRoll(v){if(v=='x'){const n=prompt('롤 규격을 입력하세요 (폭 x 길이, 예: 1.5 x 50)');const m=String(n||'').match(/(\d+(?:\.\d+)?)\s*[x×*]\s*(\d+(?:\.\d+)?)/i);if(m){FM.wr=+m[1];FM.lr=+m[2]}}fmSave();fmRender()}
-function fmFillHtml(){const db=fmDB(),sg=+FM.sg||0,pk=FM.packs[FM.pi]||FM.packs[0],sel=FM.pid>=0?db[FM.pid]:null;
- const idx=db.map((p,i)=>[p,i]),sea=idx.filter(([p])=>fmIsSeal(p)),oth=idx.filter(([p])=>!fmIsSeal(p));
- const opt=([p,i])=>`<option value="${i}"${FM.pid==i?' selected':''}>${esc2(p.n)}${p.mf?' · '+esc2(p.mf):''}</option>`;
- const pkOpts=FM.packs.map((k,i)=>`<option value="${i}"${i==FM.pi?' selected':''}>${esc2(fmPl(k))}</option>`).join('')+FMPRE.map((q,i)=>FM.packs.some(x=>x.v==q[1]&&x.u==q[2])?'':`<option value="p${i}">${q[0]} ${q[1]}${q[2]}</option>`).join('')+'<option value="x">직접 입력…</option>';
- const info=sel?`<div class="fxk"><div>${FMSV.cart}</div><ul><li><span>제조사</span>${esc2(sel.mf||'-')}</li><li><span>비중</span>${sel.sg||'-'}</li><li><span>용도</span>${esc2(sel.us||sel.g||'-')}</li><li><span>포장</span>${esc2(sel.pks||fmPl(pk))}</li></ul></div>`:`<div class="fxk"><div>${FMSV.cart}</div><ul><li class="h">제품 DB에서 제품을 선택하면 포장 규격·비중이 자동으로 채워집니다.</li></ul></div>`;
- const steps=['제품 및 포장','충진 부위 입력','소요량 계산','일위대가표'].map((t,i)=>`<button type="button" class="${(FM.step||1)==i+1?'on':''}" onclick="fmGo(${i+1})"><i>${i+1}</i><span>${t}</span></button>`).join('');
- const rows=FM.rows.map((r,i)=>`<div class="fxr"><div class="fxg">${FMSV[r.k]}</div><div class="fxf"><div class="fxh"><input class="fnm" value="${esc2(r.nm||'')}" oninput="fmRow('rows',${i},'nm',this.value)"><select onchange="fmRow('rows',${i},'k',this.value)"><option value="j"${r.k=='j'?' selected':''}>줄눈 (W×D)</option><option value="f"${r.k=='f'?' selected':''}>삼각 비드 (a²/2)</option><option value="a"${r.k=='a'?' selected':''}>면 충진</option></select><button class="fxd" onclick="fmDel('rows',${i})" aria-label="삭제">🗑</button></div><div class="fx">${r.k=='j'?fi('폭 (W)',r.w,`fmRow('rows',${i},'w',this.value)`,'mm')+fi('깊이 (D)',r.d,`fmRow('rows',${i},'d',this.value)`,'mm'):r.k=='f'?fi('변 길이 (a)',r.w,`fmRow('rows',${i},'w',this.value)`,'mm'):fi('두께',r.d,`fmRow('rows',${i},'d',this.value)`,'mm')}</div><div class="fx">${r.k=='a'?fi('면적',r.l,`fmRow('rows',${i},'l',this.value)`,'m²'):fi('길이 (L)',r.l,`fmRow('rows',${i},'l',this.value)`,'m')}${fi('개소',r.q,`fmRow('rows',${i},'q',this.value)`,'개')}</div>${r.k=='j'&&+r.w>0?`<div class="fxt2">권장 깊이 ${recD(+r.w)}mm (폭의 1/2, 6~13mm) <button onclick="fmRow('rows',${i},'d',${recD(+r.w)});fmRender()">적용</button></div>`:''}</div></div>`).join('');
- return `<div class="fxs">${steps}</div>
-<section class="fxc" id="fmc1"><h3><i>01</i>제품 및 포장 선택</h3><div class="fxa"><div><label class="fl"><span>제품 선택 (제품 DB)</span><i><select onchange="fmPick(this.value)"><option value="-1">직접 입력 / 제품 선택 안 함</option>${sea.length?'<optgroup label="실란트·실리콘·퍼티">'+sea.map(opt).join('')+'</optgroup>':''}${oth.length?'<optgroup label="전체 제품">'+oth.map(opt).join('')+'</optgroup>':''}</select></i></label><div class="fx">${fi('비중 (kg/L)',FM.sg,"fmSet('sg',this.value)",'')}${fi('로스',FM.loss,"fmSet('loss',this.value)",'%')}</div></div><div><label class="fl"><span>포장 규격</span><i><select onchange="fmPack(this.value)">${pkOpts}</select></i></label>${fi('포장 단가 (원/개)',FM.price,"fmSet('price',this.value)",'원')}</div>${info}</div></section>
-<section class="fxc" id="fmc2"><h3><i>02</i>충진 부위 입력<button class="fxadd" onclick="fmAdd('rows')">+ 부위 추가</button></h3><p class="fxp2">줄눈 규격(폭 × 깊이 × 길이)과 개소를 입력하세요. 삼각 비드·면 충진도 선택할 수 있습니다.</p>${rows}</section>
-<section class="fxc" id="fmc3"><h3><i>03</i>소요량 계산 결과</h3><div id="fmc3b"></div></section>
-<section class="fxc" id="fmc4"><h3><i>04</i>일위대가표</h3><div id="fmc4b"></div></section>
-<div class="fxbar"><button class="fbr" onclick="fmReset()">↻ 초기화</button><button class="fbg" onclick="fmGo(4);fmGen()">일위대가표 생성하기 →</button></div>`}
-function fmMeshHtml(){const steps=['제품 및 포장 선택','메쉬 시공 조건','소요량 계산','일위대가표'].map((t,i)=>`<button type="button" class="${(FM.step||1)==i+1?'on':''}" onclick="fmGo(${i+1})"><i>${i+1}</i><span>${t}</span></button>`).join('');
- const tcur=FMT[FM.t],mem=FM.mem.map((m,i)=>`<div class="fxmr"><div class="fxh"><input class="fnm" value="${esc2(m.nm||'')}" oninput="fmRow('mem',${i},'nm',this.value)">${FM.mem.length>1?`<button class="fxd" onclick="fmDel('mem',${i})" aria-label="삭제">🗑</button>`:''}</div><label class="fl"><span>형강 사이즈 (H × B × tw × tf)</span><i><select onchange="fmSize(${i},this.value)">${FMHB.map((p,j)=>`<option value="${j}"${m.sz===j?' selected':''}>${p[0]}</option>`).join('')}<option value="x"${m.sz===undefined||m.sz==='x'?' selected':''}>직접 입력</option></select></i></label><div class="fx">${fi('H',m.H,`fmRow('mem',${i},'H',this.value);fmRow('mem',${i},'sz','x')`,'mm')}${fi('B',m.B,`fmRow('mem',${i},'B',this.value);fmRow('mem',${i},'sz','x')`,'mm')}${fi('tw',m.tw,`fmRow('mem',${i},'tw',this.value);fmRow('mem',${i},'sz','x')`,'mm')}${fi('tf',m.tf,`fmRow('mem',${i},'tf',this.value);fmRow('mem',${i},'sz','x')`,'mm')}</div><div class="fx">${fi('길이 (L)',m.l,`fmRow('mem',${i},'l',this.value)`,'m')}${fi('수량',m.q,`fmRow('mem',${i},'q',this.value)`,'개')}</div><div class="fxz"><div class="fxzs">${fmShape(m,i)}<div class="fzp"><button onclick="fmZset(${i},'all')">전체</button><button onclick="fmZset(${i},'none')">해제</button></div></div><div class="fxzl"><b>메쉬 적용 부위 선택</b><small>도형 또는 아래 항목을 눌러 선택</small>${Object.keys(FMZ).map(k=>`<label class="fzc ${m.z&&m.z[k]?'on':''}"><input type="checkbox" ${m.z&&m.z[k]?'checked':''} onchange="fmZ(${i},'${k}')"><span><b>${k}</b> ${FMZ[k][0]} ×${FMZ[k][1]}</span><em>${fn(fmZw(m,k,tcur),0)}mm</em></label>`).join('')}</div></div></div>`).join('');
- const ov='<svg viewBox="0 0 200 150" width="100%"><rect x="30" y="38" width="90" height="12" fill="#b4b2a9"/><rect x="30" y="112" width="90" height="12" fill="#b4b2a9"/><rect x="69" y="50" width="12" height="62" fill="#b4b2a9"/><path d="M24 32H126V56H86V106H126V130H24V106H64V56H24z" fill="none" stroke="#889" stroke-dasharray="3 2"/><path d="M126 38V50M126 112V124" stroke="#d85a30" stroke-width="3"/><path d="M100 56H126V44" fill="none" stroke="#d85a30" stroke-width="2" stroke-dasharray="3 2"/><g font-size="10" fill="#fff" text-anchor="middle"><circle cx="150" cy="42" r="9" fill="#2f6fdc"/><text x="150" y="46">1</text><circle cx="150" cy="82" r="9" fill="#2f6fdc"/><text x="150" y="86">2</text><circle cx="150" cy="118" r="9" fill="#2f6fdc"/><text x="150" y="122">3</text></g><path d="M130 42H141M110 82H141M104 55L141 116" stroke="#2f6fdc" stroke-width=".8" fill="none"/></svg>';
- return `<div class="fxs">${steps}</div>
-<section class="fxc" id="fmc1"><h3><i>01</i>제품 및 포장 선택</h3><div class="fxa"><div style="grid-column:1/-1;flex-direction:row!important;align-items:flex-end;gap:10px"><label class="fl" style="flex:1"><span>포장 규격</span><i><select onchange="fmRoll(this.value)"><option>1롤 (${fn(FM.wr,2)}m × ${fn(FM.lr,0)}m)</option><option value="x">직접 입력…</option></select></i></label><div class="fl" style="flex:1"><span>수량 (동일 구조 반복)</span><div class="fxn"><button onclick="fmMq(-1)">−</button><b>${fn(FM.mq||1,0)}</b><u>개</u><button onclick="fmMq(1)">+</button></div></div></div><div class="fxo"><b>시공 개요도</b>${ov}<ol><li>플랜지 끝단 메쉬 겹침 <small>(최소 50mm)</small></li><li>도막 중간 깊이에 매립</li><li>플랜지 내면 연장 <small>(최소 50mm)</small></li></ol></div></div></section>
-<section class="fxc" id="fmc2"><h3><i>02</i>메쉬 시공 조건 입력<button class="fxadd" onclick="fmAdd('mem')">+ 부재 추가</button></h3><p class="fxp2">ⓘ KCC FIREMASK 3500 · UL1709 XR648 기준 · 외면 연장은 인증서에 값이 없어 가정값입니다.</p>${mem}<div class="fxmr"><div class="fx">${fi('내면 연장',FM.ei,"fmSet('ei',this.value)",'mm')}${fi('외면 연장 (가정)',FM.eo,"fmSet('eo',this.value)",'mm')}${fi('겹침 길이',FM.ov,"fmSet('ov',this.value)",'mm')}</div><div class="fx">${fi('접합부(B) 띠 폭',FM.jb,"fmSet('jb',this.value);fmRender()",'mm')}</div><div class="fx"><label class="fl"><span>내화 시간 (도막 ${FMT[FM.t]}mm)</span><i><select onchange="FM.t=this.value;fmSave();fmRender()">${Object.keys(FMT).map(k=>`<option value="${k}"${FM.t==k?' selected':''}>${k}시간</option>`).join('')}</select></i></label>${fi('로스',FM.ml,"fmSet('ml',this.value)",'%')}${fi('메쉬 중량',FM.gm,"fmSet('gm',this.value);fmRender()",'g/m²')}</div></div><div class="fxref"><b>ⓘ 시공 조건 참고</b><ul><li>메쉬는 플랜지 끝단에 겹침 시공합니다.</li><li>최소 겹침 길이 50mm 이상 적용</li><li>메쉬는 내화도료 내부에 매립하여 사용합니다.</li></ul></div></section>
-<section class="fxc" id="fmc3"><h3><i>03</i>소요량 계산 결과</h3><div id="fmc3b"></div></section>
-<section class="fxc" id="fmc4"><h3><i>04</i>일위대가표</h3><div id="fmc4b"></div></section>
-<div class="fxbar"><button class="fbr" onclick="fmReset()">↻ 초기화</button><button class="fbg" onclick="fmGo(4);fmGen()">일위대가표 생성하기 →</button></div>`}
+/* ---------- LOAD (데이터시트 / 저장 DB) ---------- */
+let LD='',LDQ='';
+const fmDB=()=>{try{return Array.isArray(DB)?DB:[]}catch(e){return[]}};
+const fmPn=(v,u)=>u=='mL'?(v<=330?'카트리지':'소시지'):u=='L'?'말통':'통';
+function fmParsePacks(p){const o=[];for(const m of String(p.pks||'').matchAll(/(\d+(?:\.\d+)?)\s*(ml|㎖|l|ℓ|리터|kg|㎏)/gi)){const u=/kg|㎏/i.test(m[2])?'kg':/ml|㎖/i.test(m[2])?'mL':'L',v=+m[1];if(!o.some(x=>x.v==v&&x.u==u))o.push({v,u,n:fmPn(v,u)})}if(!o.length&&+p.mk>0){const u=p.un=='kg'?'kg':'L';o.push({v:+p.mk,u,n:fmPn(+p.mk,u)})}return o}
+function fmLoad(w,st){LD=st?w+':'+st:'';LDQ='';fmRender()}
+function fmLq(v){LDQ=v;const e=fq('sldl');if(e)e.innerHTML=ldList(LD.split(':')[0])}
+function fmFromDB(w,i){const p=fmDB()[i];if(!p)return;if(w=='fill'){FM.pname=p.n;FM.pmaker=p.mf||'';if(+p.sg>0)FM.sg=+p.sg;const k=fmParsePacks(p);if(k.length){FM.packs=k;FM.pk=k[0].v;FM.pu=k[0].u;FM.pn=k[0].n}FM.dsmsg='저장된 DB에서 불러왔습니다: '+p.n}else{MS().name=p.n;MS().maker=p.mf||'';MS().dsmsg='저장된 DB에서 불러왔습니다: '+p.n}LD='';fmSave();fmRender()}
+function ldList(w){const q=LDQ.trim().toLowerCase(),db=fmDB();const r=db.map((p,i)=>[p,i]).filter(([p])=>!q||(p.n+' '+(p.mf||'')+' '+(p.g||'')).toLowerCase().includes(q)).slice(0,80);return r.length?r.map(([p,i])=>`<button class="sldi" onclick="fmFromDB('${w}',${i})"><b>${esc2(p.n)}</b><small>${esc2(p.mf||'')}${p.sg?' · 비중 '+p.sg:''}${p.pks?' · '+esc2(p.pks):''}</small></button>`).join(''):'<div class="sce">'+(db.length?'검색 결과가 없습니다.':'저장된 DB가 없습니다.')+'</div>'}
+function ldSheet(){if(!LD)return'';const [w,st]=LD.split(':');const hasDb=fmDB().length>0;
+ return `<div class="sld" onclick="fmLoad('')"><div class="sldb" onclick="event.stopPropagation()"><div class="sldh"><b>첨부</b><button onclick="fmLoad('')">닫기</button></div>${st=='db'?`<input class="sldq" placeholder="제품명·제조사 검색" oninput="fmLq(this.value)"><div id="sldl" class="sldl">${ldList(w)}</div><button class="sldo" onclick="fmLoad('${w}','menu')">← 뒤로</button>`:`<button class="sldo" onclick="fmLoad('');fmPickDs('${w}')">${ic('clip')}<div><b>데이터시트 첨부</b><small>PDF에서 ${w=='fill'?'제품명·제조사·비중·포장 규격':'메쉬 규격·중량·롤 규격'}을 읽어 자동 입력</small></div></button><button class="sldo" ${hasDb?`onclick="fmLoad('${w}','db')"`:'disabled'}>${ic('folder')}<div><b>저장된 DB에서 선택</b><small>${hasDb?'제품 DB에 저장된 제품을 불러옵니다':'이 화면에서는 DB를 사용할 수 없습니다 (앱에서 사용)'}</small></div></button>`}</div></div>`}
+/* ---------- 데이터시트 첨부 ---------- */
+function fmPickDs(w){let i=fq('fmdsf');if(!i){i=document.createElement('input');i.type='file';i.id='fmdsf';i.accept='application/pdf,.pdf';i.style.cssText='position:fixed;left:-9999px;opacity:0';document.body.appendChild(i)}i.value='';i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)fmReadDs(w,f)};i.click()}
+const fmUnit=u=>/kg|㎏/i.test(u)?'kg':/ml|㎖/i.test(u)?'mL':'L';
+async function fmReadDs(w,f){const set=m=>{(w=='fill'?FM:MS()).dsmsg=m;fmSave();fmRender()};
+ if(typeof pdfLines!='function')return set('이 화면에서는 데이터시트 읽기를 사용할 수 없습니다. 직접 입력하세요.');
+ set('데이터시트를 읽는 중…');let L=[];try{L=await pdfLines(f,null,false,true)}catch(e){return set('읽기 실패: 인터넷 연결(PDF 도구)을 확인하거나 직접 입력하세요.')}
+ const T=L.join('\n'),got=[];
+ let nm='';try{nm=(parseHead(L)||{}).name||''}catch(e){}if(!nm)nm=(L.find(x=>x.trim().length>1)||'').trim().slice(0,40);
+ if(w=='fill'){let mk='';try{mk=parseMaker(L)||''}catch(e){}if(nm){FM.pname=nm;got.push('제품명')}if(mk){FM.pmaker=mk;got.push('제조사')}
+  const sg=T.match(/비중[^\d\n]{0,14}(\d+(?:\.\d+)?)/);if(sg&&+sg[1]>0.3&&+sg[1]<5){FM.sg=+sg[1];got.push('비중')}
+  const pk=[];L.filter(x=>/포장|용량|규격|packing|package|cartridge|카트리지|소시지|sausage|통/i.test(x)).forEach(x=>{for(const m of x.matchAll(/(\d+(?:\.\d+)?)\s*(ml|㎖|l|ℓ|리터|kg|㎏)(?![a-z])/gi)){const u=fmUnit(m[2]),v=+m[1];if(v>0&&!pk.some(p=>p.v==v&&p.u==u))pk.push({v,u,n:u=='mL'?(v<=330?'카트리지':'소시지'):u=='L'?'말통':'통'})}});
+  if(pk.length){FM.packs=pk.slice(0,6);FM.pk=pk[0].v;FM.pu=pk[0].u;FM.pn=pk[0].n;got.push('포장 규격 '+pk.length+'개')}
+  set(got.length?'불러온 항목: '+got.join(', ')+' — 확인 후 수정하세요.':'읽을 수 있는 항목을 찾지 못했습니다. 직접 입력하세요.')}
+ else{const M=MS();if(nm){M.name=nm;got.push('제품명')}
+  const op=T.match(/(\d+(?:\.\d+)?)\s*(?:mm)?\s*[x×*]\s*(\d+(?:\.\d+)?)\s*mm/i);if(op){M.open=op[1]+' × '+op[2]+' mm';got.push('규격')}
+  const gm=T.match(/(\d+(?:\.\d+)?)\s*g\s*\/\s*(?:m2|m²|㎡)/i);if(gm){M.gm=+gm[1];got.push('중량')}
+  const rl=T.match(/(\d+(?:\.\d+)?)\s*m\s*[x×*]\s*(\d+(?:\.\d+)?)\s*m(?![a-z])/i);if(rl){M.wr=Math.min(+rl[1],+rl[2]);M.lr=Math.max(+rl[1],+rl[2]);got.push('롤 규격')}
+  set(got.length?'불러온 항목: '+got.join(', ')+' — 확인 후 수정하세요.':'읽을 수 있는 항목을 찾지 못했습니다. 직접 입력하세요.')}}
 
-function fmFoldSet(k,el,v){FM.fold=FM.fold||{};if(v)FM.fold[k]=1;else delete FM.fold[k];fmSave();el.classList.toggle('cl',!!v)}
-function fmFoldInit(root){const T=FM.tab,F=FM.fold||{};
- root.querySelectorAll('.fxc').forEach(sec=>{const k=T+':'+sec.id,h=sec.querySelector('h3');if(!h)return;sec.classList.toggle('cl',!!F[k]);h.classList.add('fxht');if(!h.querySelector('.fxcv')){const c=document.createElement('span');c.className='fxcv';c.textContent='▾';h.appendChild(c)}h.onclick=ev=>{if(ev.target.closest('button'))return;fmFoldSet(k,sec,!sec.classList.contains('cl'))}});
- root.querySelectorAll('.fxr,.fxmr').forEach((it,i)=>{const h=it.querySelector('.fxh');if(!h||!h.querySelector('.fnm'))return;const k=T+':i'+i;it.classList.toggle('cl',!!F[k]);if(!h.querySelector('.fxchv')){const b=document.createElement('button');b.type='button';b.className='fxchv';b.setAttribute('aria-label','접기/펼치기');b.textContent='▾';b.onclick=()=>fmFoldSet(k,it,!it.classList.contains('cl'));h.insertBefore(b,h.firstChild)}})}
-function fmRender(){const e=fq('v8');if(!e)return;const T=FM.tab;e.innerHTML=`<div class="fm"><button class="fb" onclick="if(window.T)T(0)">← 일위대가표</button><div class="ft"><button class="${T=='fill'?'on':''}" onclick="fmTab('fill')">충진 (실란트·실리콘·퍼티)</button><button class="${T=='mesh'?'on':''}" onclick="fmTab('mesh')">내화 메쉬</button></div>${T=='fill'?fmFillHtml():fmMeshHtml()}</div>`;fmFoldInit(e);fmOut()}
-</script><style id=pd290>html body #pqtv.pqs{position:fixed!important;inset:0!important;z-index:70!important;display:block!important;padding:0!important;background:#f4f8fe!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
+/* ---------- v311 단면 프로파일 카드 + 대화형 투시도 ---------- */
+const fsec=(k,n,t,sub,ex,body)=>{const o=!(FM.fo&&FM.fo[k]);return `<details class="fsd k${n}" ${o?'open':''} ontoggle="fmFo('${k}',this.open)"><summary class="sst fps"><i>${n}</i><b>${t}</b>${sub?`<em>${sub}</em>`:''}${ex||''}${ic('chev').replace('<svg ','<svg class="fcv" ')}</summary><div class="fsb">${body}</div></details>`};
+function fmFo(k,o){if(!FM.fo)FM.fo={};if(FM.fo[k]===!o)return;FM.fo[k]=!o;fmSave()}
+const fstep=(n,t,sub)=>`<div class="sst fps"><i>${n}</i><b>${t}</b>${sub?`<em>${sub}</em>`:''}</div>`;
+const FPI={
+ j:'<svg viewBox="0 0 48 48"><path d="M10 8h28" stroke="currentColor" stroke-opacity=".6" stroke-width="2" stroke-dasharray="3 2"/><rect x="14" y="14" width="20" height="20" rx="2" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="2.6"/></svg>',
+ f:'<svg viewBox="0 0 48 48"><path d="M13 10L36 33H13z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg>',
+ c:'<svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="12" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="2.6"/><path d="M14 24h20" stroke="currentColor" stroke-opacity=".6" stroke-width="2" stroke-dasharray="2 2"/></svg>',
+ a:'<svg viewBox="0 0 48 48"><rect x="8" y="18" width="32" height="9" rx="1.5" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="2.6"/><rect x="8" y="27" width="32" height="11" fill="none" stroke="currentColor" stroke-opacity=".6" stroke-width="2" stroke-dasharray="3 2"/></svg>',
+ m:'<svg viewBox="0 0 48 48"><path d="M12 13q12 5 24 0l-2 18q-10 5-20 0z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/></svg>'};
+const FPT=[['j','직사각형','W × D'],['f','삼각 코너','½ × a²'],['c','원형 비드','π × r²'],['m','임의 단면','A (mm²)'],['a','면 충진','t × 면적']];
+function fprofBody(m){return `<div class="fpg">${FPT.map(([k,t,f])=>`<div class="fpc${m==k?' on':''}" role="button" tabindex="0" onclick="fmMode('${k}')">${FPI[k]}<b>${t}</b><code>${f}</code></div>`).join('')}</div>`}
+function fmPrev(){const m=FM.mode,P=FM.parts[Math.min(FM.fpi||0,FM.parts.length-1)]||{},w=Math.max(+P.w||0,0),d=Math.max(+P.d||0,0),L=Math.max(+P.l||0,0),lo=+(P.lo==null?FM.loss:P.lo)||0;
+ const OR='#c47a12',OL='#c47a12',BL='#1f9d74',BK='url(#fph)',ST='#8da2c8',SK='#3c8fb8',NEON='#ee9dc3',NF='rgba(238,157,195,.28)',MO='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
+ const f1=v=>(+v).toFixed(1),T=(x,y,t,c,a,fs)=>`<text x="${x}" y="${y}" fill="${c}" text-anchor="${a||'middle'}" font-family="${MO}" font-size="${fs||13}" font-weight="700" stroke="#fff" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round">${t}</text>`;
+ const fl=(x1,y1,x2,y2,c,wd)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${c}" stroke-width="${wd||2}" fill="none"/>`;
+ const nl=(x1,y1,x2,y2,wd)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${NEON}" stroke-width="${wd||3.5}" stroke-linecap="round" fill="none"/>`;
+ const hdim=(xa,xb,y,c)=>fl(xa,y,xb,y,c)+fl(xa,y-5,xa,y+5,c)+fl(xb,y-5,xb,y+5,c),vdim=(x,ya,yb,c)=>fl(x,ya,x,yb,c)+fl(x-5,ya,x+5,ya,c)+fl(x-5,yb,x+5,yb,c);
+ const blk=(x,y,wd,h)=>`<rect x="${x}" y="${y}" width="${wd}" height="${h}" fill="${BK}" stroke="${ST}" stroke-width="1.5"/>`;
+ const ov=(k,c)=>`<g class="ov o${k}" filter="url(#fpn)">${c}</g>`;
+ const prism=(st,fi)=>{const x=334,y=8;return `<rect x="${x}" y="${y+8}" width="26" height="16" fill="${fi}" stroke="${st}" stroke-width="1.6"/><path d="M${x} ${y+8}L${x+12} ${y}L${x+38} ${y}L${x+26} ${y+8}Z" fill="${fi}" stroke="${st}" stroke-width="1.6"/><path d="M${x+26} ${y+8}L${x+38} ${y}L${x+38} ${y+16}L${x+26} ${y+24}Z" fill="${fi}" stroke="${st}" stroke-width="1.6"/>`};
+ const lenIc=`<g class="hl2">${prism(ST,'#eef4ff')}<text x="352" y="46" fill="#6b7a99" text-anchor="middle" font-family="${MO}" font-size="11" font-weight="700">길이 L ${fn(L,1)} m</text></g>`;
+ let A=0,sc='-',body='',unit='mL per linear meter',badge='',ok=true;const cx=200;
+ if(m=='j'){A=w*d;ok=A>0;if(ok){const s=Math.min(14,150/w,130/(d+1.05*w)),W=w*s,D=d*s,x0=cx-W/2,x1=cx+W/2,yT=60,yB=yT+D,r=Math.max(W*.58,9),rc=yB+r*.8;sc=s.toFixed(1)+'×';
+  const sp=`M${x0} ${yT}Q${cx} ${yT+Math.min(9,D*.4)} ${x1} ${yT}L${x1} ${yB}Q${cx} ${yB-Math.min(7,D*.3)} ${x0} ${yB}Z`;
+  body=blk(x0-112,yT,112,rc+r+16-yT)+blk(x1,yT,112,rc+r+16-yT)+`<circle cx="${cx}" cy="${rc}" r="${r}" fill="#fff" stroke="#8da2c8" stroke-width="1.6" stroke-dasharray="4 3"/>`+`<text x="${cx}" y="${rc+4}" fill="#6b7a99" text-anchor="middle" font-family="${MO}" font-size="${Math.min(12,r*.42).toFixed(1)}" font-weight="700">Backer Rod</text>`+
+  `<path d="${sp}" fill="#bfe6f5" fill-opacity=".9" stroke="${SK}" stroke-width="2.4" stroke-linejoin="round"/>`+
+  `<g class="hw">${hdim(x0,x1,yT-16,OR)}${T(cx,yT-24,'폭 W '+f1(w)+' mm',OL)}</g><g class="hd">${vdim(x1+12,yT,yB,BL)}${T(x1+20,(yT+yB)/2+4,'깊이 D '+f1(d)+' mm',BL,'start')}</g>`+lenIc+
+  ov('w',`<rect x="${x0}" y="${yT}" width="${W}" height="${D}" fill="${NF}"/>${nl(x0,yT-16,x1,yT-16,4.5)}${nl(x0,yT,x0,yB,3)}${nl(x1,yT,x1,yB,3)}`)+
+  ov('d',`<rect x="${x0}" y="${yT}" width="${W}" height="${D}" fill="${NF}"/>${nl(x1+12,yT,x1+12,yB,4.5)}${nl(x0,yT,x1,yT,3)}${nl(x0,yB,x1,yB,3)}`)+
+  ov('q',`<path d="${sp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5" stroke-linejoin="round"/>`)+
+  ov('l',`<g>${prism(NEON,NF)}</g>`);badge='A = '+f1(A)+' mm²'}}
+ else if(m=='f'){A=w*w/2;ok=A>0;if(ok){const s=Math.min(14,95/w),a=w*s,x0=cx-a/2-10,Y=128;sc=s.toFixed(1)+'×';
+  const sp=`M${x0} ${Y}L${x0+a} ${Y}Q${x0+a*.34} ${Y-a*.34} ${x0} ${Y-a}Z`;
+  body=blk(x0-110,Y-a-22,110,a+22)+blk(x0-110,Y,a+230,34)+`<path d="${sp}" fill="#bfe6f5" fill-opacity=".9" stroke="${SK}" stroke-width="2.4" stroke-linejoin="round"/>`+
+  `<g class="hw">${hdim(x0,x0+a,Y+17,OR)}${T(x0+a/2,Y+31,'변 a '+f1(w)+' mm',OL)}</g><g class="hd">${vdim(x0+a+14,Y-a,Y,BL)}${T(x0+a+22,Y-a/2+4,'변 a '+f1(w)+' mm',BL,'start')}</g>`+lenIc+
+  ov('w',`<path d="${sp}" fill="${NF}"/>${nl(x0,Y,x0+a,Y,4.5)}${nl(x0,Y-a,x0,Y,4.5)}${nl(x0,Y+17,x0+a,Y+17,3)}${nl(x0+a+14,Y-a,x0+a+14,Y,3)}`)+
+  ov('q',`<path d="${sp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5" stroke-linejoin="round"/>`)+
+  ov('l',`<g>${prism(NEON,NF)}</g>`);badge='A = '+f1(A)+' mm²'}}
+ else if(m=='c'){A=Math.PI*w*w;ok=A>0;if(ok){const s=Math.min(14,55/w),rp=w*s,Y=150,cy=Y-rp;sc=s.toFixed(1)+'×';
+  body=blk(40,Y,320,34)+`<circle cx="${cx}" cy="${cy}" r="${rp}" fill="#bfe6f5" fill-opacity=".9" stroke="${SK}" stroke-width="2.4"/><path d="M${cx-rp} ${cy}H${cx+rp}" stroke="#3c8fb8" stroke-width="1.6" stroke-dasharray="3 3"/>`+
+  `<g class="hw">${hdim(cx-rp,cx+rp,cy-rp-14,OR)}${T(cx,cy-rp-22,'지름 2r '+f1(2*w)+' mm',OL)}</g><g class="hd">${fl(cx,cy,cx+rp,cy,BL,2.4)}${T(cx+rp+10,cy+4,'반지름 r '+f1(w)+' mm',BL,'start')}</g>`+lenIc+
+  ov('w',`<circle cx="${cx}" cy="${cy}" r="${rp}" fill="${NF}" stroke="${NEON}" stroke-width="3"/>${nl(cx,cy,cx+rp,cy,4.5)}<circle cx="${cx}" cy="${cy}" r="3.5" fill="${NEON}"/>`)+
+  ov('q',`<circle cx="${cx}" cy="${cy}" r="${rp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5"/>`)+
+  ov('l',`<g>${prism(NEON,NF)}</g>`);badge='A = '+f1(A)+' mm²'}}
+ else if(m=='m'){A=w;ok=A>0;if(ok){const z=Math.min(112,Math.max(44,Math.sqrt(A)*9)),W=z*1.3,H=z*.72,x0=cx-W/2,x1=cx+W/2,yT=70,yB=yT+H;
+  const sp=`M${x0} ${yT}Q${cx} ${yT+10} ${x1} ${yT}L${x1-5} ${yB}Q${cx} ${yB+9} ${x0+5} ${yB}Z`;
+  body=blk(x0-112,yT-6,112,H+34)+blk(x1,yT-6,112,H+34)+`<path d="${sp}" fill="#bfe6f5" fill-opacity=".9" stroke="${SK}" stroke-width="2.4" stroke-linejoin="round"/>`+
+  `<g class="hw">${T(cx,yT-16,'단면적 A '+f1(A)+' mm²',OL)}</g>`+lenIc+
+  ov('w',`<path d="${sp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5" stroke-linejoin="round"/>`)+
+  ov('q',`<path d="${sp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5" stroke-linejoin="round"/>`)+
+  ov('l',`<g>${prism(NEON,NF)}</g>`);badge='A = '+f1(A)+' mm²'}}
+ else{unit='mL per m²';A=d*1000;ok=d>0;if(ok){const tp=Math.min(70,Math.max(8,d*9)),Y=140;sc=(tp/d).toFixed(1)+'×';
+  const plan=(st,fi)=>`<rect x="338" y="12" width="34" height="24" fill="${fi}" stroke="${st}" stroke-width="1.6"/>`;
+  body=blk(40,Y,320,40)+`<rect x="40" y="${Y-tp}" width="320" height="${tp}" fill="#bfe6f5" fill-opacity=".9" stroke="${SK}" stroke-width="2.4"/>`+`<g class="hd">${vdim(340,Y-tp,Y,BL)}${T(332,Y-tp/2+4,'두께 t '+f1(d)+' mm',BL,'end')}</g><g class="hw">${T(cx,Y-tp-12,'1 m² 기준 (면적 × 두께)',OL)}</g>`+
+  `<g class="hl2">${plan(ST,'#eef4ff')}<text x="355" y="50" fill="#6b7a99" text-anchor="middle" font-family="${MO}" font-size="11" font-weight="700">면적 ${fn(L,1)} m²</text></g>`+
+  ov('d',`<rect x="40" y="${Y-tp}" width="320" height="${tp}" fill="${NF}"/>${nl(340,Y-tp,340,Y,4.5)}${nl(40,Y-tp,360,Y-tp,3)}${nl(40,Y,360,Y,3)}`)+
+  ov('l',`<rect x="40" y="${Y-tp}" width="320" height="${tp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5"/>${plan(NEON,NF)}`)+
+  ov('q',`<rect x="40" y="${Y-tp}" width="320" height="${tp}" fill="${NF}" stroke="${NEON}" stroke-width="3.5"/>`);badge='t × 1,000 = '+fn(A,0)+' mL/m²'}}
+ const DF='<defs><pattern id="fph" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V7" stroke="#c3cfe6" stroke-width="1.3"/></pattern><filter id="fpn" x="-25%" y="-25%" width="150%" height="150%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>',
+ bw=badge.length*7.2+20,svg=ok?`<svg viewBox="0 0 400 210" role="img" aria-label="줄눈 단면 투시도">${DF}${body}<rect x="10" y="10" width="${bw}" height="24" rx="12" fill="#eef4ff" stroke="#c5d6f2" stroke-width="1.2"/>${T(10+bw/2,26,badge,'#31568f')}</svg>`:`<svg viewBox="0 0 400 76">${DF}<text x="200" y="43" fill="#8b96ad" text-anchor="middle" font-size="14">${FM.parts.length?'치수를 입력하면 단면이 그려집니다':'부위를 추가하면 단면이 그려집니다'}</text></svg>`;
+ const pi0=FM.parts[Math.min(FM.fpi||0,FM.parts.length-1)]||{},lA=A*(1+lo/100),U=unit.replace(' per linear meter','/m').replace('mL per m²','mL/m²');
+ return `<div class="fph"><span class="fpe">${ic('eye')}</span><em>${esc2(pi0.nm||'')} · 배율 ${sc}</em></div><div class="fpd">${svg}</div><div class="fpst"><div><span>${m=='a'?'두께':'단면적'}</span><b>${m=='a'?f1(d)+' mm':fn(A,1)+' mm²'}</b></div><div><span>이론 원단위</span><b>${fn(A,1)}<small> ${U}</small></b></div><div class="hl"><span>로스 ${fn(lo,1)}% 포함</span><b>${fn(lA,1)}<small> ${U}</small></b></div></div>`}
+/* ---------- 계산 결과 / 계산하기 ---------- */
+function fmOut(){const o=fq('scR');if(o)o.innerHTML=FM.tab=='fill'?outFill():outMesh();const pv=fq('fpv');if(pv&&FM.tab=='fill')pv.innerHTML=fmPrev()}
+function outFill(){const c=cF(),pr=+FM.price||0,amt=c.n*pr,rA=Math.ceil(c.rod*1.05),tA=Math.ceil(c.tape*1.05),ex=FM.mode=='j'&&c.rod>0?rA*(+FM.rodp||0)+tA*(+FM.tapep||0):0,tot=amt+ex,pl=FM.pk?`${fn(FM.pk,2)}${FM.pu}`:'-';
+ const warn=FM.pu=='kg'&&!(+FM.sg>0)?'<div class="sw">kg 포장은 비중이 필요합니다. 1 제품 정보에 비중을 입력하세요.</div>':'';
+ const stp=[`<b>순수 충진량</b><small>${c.ln.map(x=>`${esc2(x[0])}: ${x[1]} = ${fn(x[2],0)} mL`).join('<br>')}${c.ln.length>1?`<br>합계 ${fn(c.V,0)} mL`:''}</small>`,`<b>로스 적용</b><small>${c.ln.map(x=>`${esc2(x[0])}: ${fn(x[2],0)} × ${fn(x[3],2)} = ${fn(x[2]*x[3],0)} mL`).join('<br>')}${c.ln.length>1?`<br>합계 ${fn(c.Vt,0)} mL`:''}</small>`,`<b>포장 수량</b><small>${fn(c.Vt,0)} ÷ ${fn(c.pv,0)} = ${c.pv>0?fn(c.Vt/c.pv,2):'-'} → 올림 ${fn(c.n,0)} 개</small>`,`<b>재료비</b><small>${fn(c.n,0)} × ${fn(pr,0)} = ${fn(amt,0)} 원${ex?` + 부자재 ${fn(ex,0)} 원`:''}</small>`];
+ return warn+`<div class="sc3"><div><span>순수 충진량</span><b>${fn(c.V/1000,2)}<u> L</u></b></div><div><span>로스 포함 소요량</span><b>${fn(c.Vt/1000,2)}<u> L</u></b><em>+${fn((c.L-1)*100,1)}%</em></div><div><span>필요 포장 수량</span><b>${fn(c.n,0)}<u> 개</u></b><em>(${pl})</em></div></div>
+<div class="scc scw"><div class="scwl"><i>${ic('won')}</i><div><span>예상 재료비</span><b>${fn(tot,0)}<u> 원</u></b></div></div><div class="scwr"><label class="sr s2"><span>포장 단가</span><i><input type="number" inputmode="decimal" value="${pr||''}" placeholder="0" oninput="fmSet('price',this.value)"><b>원</b></i></label><div class="srr"><span>총 금액</span><b>${fn(amt,0)} 원</b></div></div></div>
+<div class="scc scp"><div class="scpn"><b>${esc2(FM.pname||'충진재')}</b><small>${esc2(FM.pmaker||'제조사 자동')} | ${pl}${FM.pn?' '+esc2(FM.pn):''}</small></div><div class="scpg"><div><span>비중</span>${+FM.sg>0?fn(FM.sg,2)+' kg/L':'-'}</div><div><span>로스율</span>${fn((c.L-1)*100,1)}%</div><div><span>포장 단가</span>${fn(pr,0)} 원</div></div></div>`+
+ (FM.mode=='j'&&c.rod>0?`<div class="scc scx"><b>부자재 (줄눈)</b><div class="scxr"><span>백업재 약 ${fn(rA,0)} m</span><i><input type="number" inputmode="decimal" value="${FM.rodp||''}" placeholder="단가" oninput="fmSet('rodp',this.value)"><b>원/m</b></i></div><div class="scxr"><span>마스킹 테이프 약 ${fn(tA,0)} m</span><i><input type="number" inputmode="decimal" value="${FM.tapep||''}" placeholder="단가" oninput="fmSet('tapep',this.value)"><b>원/m</b></i></div></div>`:'')+
+ `<details class="scc scf"><summary>${ic('calc')}<b>계산식 보기</b>${ic('chev')}</summary><div class="scfb">${FM.mode=='j'?'줄눈: 폭(mm) × 깊이(mm) × 길이(m) = mL':FM.mode=='c'?'원형 비드: π × 반지름(mm)² × 길이(m) = mL':FM.mode=='m'?'임의 단면: 단면적(mm²) × 길이(m) = mL':FM.mode=='f'?'삼각 비드: 변길이(mm)² ÷ 2 × 길이(m) = mL':'면 충진: 면적(m²) × 두께(mm) × 1,000 = mL'}<br>소요량 = 순수 충진량 × (1 + 로스율)<br>포장 수량 = 소요량 ÷ 포장 용량 (올림)<br>kg 포장은 비중으로 L 환산 (용량 = kg ÷ 비중)</div></details>
+<div class="scc scs"><b>계산 요약</b>${stp.map((t,i)=>`<div class="scsr"><i>${i+1}</i><div>${t}</div></div>`).join('')}</div>`}
+function outMesh(){const M=MS(),c=cM(),pr=+M.price||0,amt=M.pu=='롤'?c.rolls*pr:c.At*pr;
+ const stp=[`<b>띠 폭</b><small>${c.lines.length?c.lines.map(x=>`${esc2(x.m)} ${x.k}: ${fn(x.w,0)} mm × ${fn(x.ln,1)} m = ${fn(x.a,2)} m²`).join('<br>'):'적용 부위를 선택하세요'}</small>`,`<b>면적 합계</b><small>${fn(c.A,2)} m² (끝단 길이 합계 ${fn(c.len,1)} m)</small>`,`<b>로스 적용</b><small>${fn(c.A,2)} × ${fn(c.L,2)} = ${fn(c.At,2)} m²</small>`,`<b>롤 수량</b><small>${c.rolls?`롤 ${fn(c.wr,2)}m × ${fn(c.lr,0)}m 기준 ${fn(c.rolls,0)} 롤`:'롤 규격(폭·길이)을 입력하면 계산됩니다'}</small>`];
+ return (c.warn?'<div class="sw">'+c.warn+'</div>':'')+(c.lines.length?'':'<div class="sw">적용 부위가 선택되지 않았습니다. 도형에서 메쉬를 넣을 부위를 눌러 선택하세요.</div>')+`<div class="sc3"><div><span>필요 메쉬 면적</span><b>${fn(c.A,2)}<u> m²</u></b></div><div><span>로스 포함 소요량</span><b>${fn(c.At,2)}<u> m²</u></b><em>+${M.loss}%</em></div><div><span>필요 롤 수량</span><b>${c.rolls?fn(c.rolls,0):'-'}<u> 롤</u></b><em>${c.wr&&c.lr?`(${fn(c.wr,2)}×${fn(c.lr,0)}m)`:'롤 규격 입력'}</em></div></div>
+<div class="scc scw"><div class="scwl"><i>${ic('won')}</i><div><span>예상 재료비</span><b>${fn(amt,0)}<u> 원</u></b></div></div><div class="scwr"><label class="sr s2"><span>단가 (${M.pu})</span><i><input type="number" inputmode="decimal" value="${pr||''}" placeholder="0" oninput="fmMs('price',this.value)"><b>원</b></i></label><div class="srr"><span>수량</span><b>${M.pu=='롤'?fn(c.rolls,0)+' 롤':fn(c.At,2)+' m²'}</b></div></div></div>
+<div class="scc scp"><div class="scpn"><b>${esc2(M.name||'내화 메쉬')}</b><small>${esc2(M.open||'개구 규격 미입력')} | ${M.gm?fn(M.gm,0)+' g/m²':'중량 미입력'}</small></div><div class="scpg"><div><span>롤 폭</span>${M.wr?fn(M.wr,2)+' m':'-'}</div><div><span>롤 길이</span>${M.lr?fn(M.lr,0)+' m':'-'}</div><div><span>중량</span>${M.gm?fn(c.At*M.gm/1000,2)+' kg':'-'}</div></div></div>
+<details class="scc scf"><summary>${ic('calc')}<b>계산식 보기</b>${ic('chev')}</summary><div class="scfb">띠 폭 A = 내면 연장 + 플랜지 두께(tf) + 외면 연장 + 도막 두께<br>B = 접합부 띠 폭(입력), C = 플랜지 폭, D = (B − tw) ÷ 2, E = H − 2·tf<br>길이 = 부재 길이 × 수량 × 개소 (+ 롤 이음 겹침)<br>면적 = Σ(길이 × 띠 폭), 소요량 = 면적 × (1 + 로스율)<br>롤 수 = Σ(길이 ÷ 롤 폭 줄 수) ÷ 롤 길이 (올림)</div></details>
+<div class="scc scs"><b>계산 요약</b>${stp.map((t,i)=>`<div class="scsr"><i>${i+1}</i><div>${t}</div></div>`).join('')}</div>`}
+function fmRun(){let h;if(FM.tab=='fill'){const c=cF();if(!(c.n>0)){return typeof tt=='function'?tt('소요량이 0입니다. 값을 입력하세요.'):alert('소요량이 0입니다.')}h={k:'충진',nm:(FM.pname||'충진재')+' · '+({j:'줄눈',f:'삼각',c:'원형',m:'임의',a:'면'})[FM.mode],val:fn(c.Vt/1000,2)+' L',snap:JSON.stringify({mode:FM.mode,parts:FM.parts,pk:FM.pk,pu:FM.pu,pn:FM.pn,sg:FM.sg,pname:FM.pname,pmaker:FM.pmaker,price:FM.price,loss:FM.loss})}}
+ else{const c=cM();if(!(c.A>0)){return typeof tt=='function'?tt('적용 부위를 선택하세요.'):alert('적용 부위를 선택하세요.')}h={k:'메쉬',nm:(MS().name||'메쉬')+' · '+MS().mem.map(m=>m.nm).join(','),val:fn(c.At,1)+' m²',snap:JSON.stringify(MS())}}
+ h.t=new Date().toISOString();FM.hist.unshift(h);FM.hist=FM.hist.slice(0,30);fmSave();fmOut();const r=fq('scR');if(r)r.scrollIntoView({behavior:'smooth',block:'start'});if(typeof tt=='function')tt('계산 결과가 작업 내역에 저장되었습니다')}
+function fmRestore(i){const h=FM.hist[i];if(!h)return;try{const s=JSON.parse(h.snap);if(h.k=='충진'){Object.assign(FM,s);FM.tab='fill'}else{Object.assign(FM.mesh,s);FM.tab='mesh'}}catch(e){}fmSave();fmRender()}
+function fmDelHist(i){FM.hist.splice(i,1);fmSave();fmRender()}
+const fmDt=s=>{try{const d=new Date(s);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}catch(e){return''}};
+const recent=(n)=>FM.hist.slice(0,n).map((h,i)=>`<button class="scrh" onclick="fmRestore(${i})"><i>${ic(h.k=='충진'?'pen':'grid')}</i><div><b>${esc2(h.nm)}</b><small>${fmDt(h.t)}</small></div><em>${esc2(h.val)}</em>${ic('chev')}</button>`).join('')||'<div class="sce">저장된 작업이 없습니다. "계산하기"를 누르면 저장됩니다.</div>';
+/* ---------- 화면 ---------- */
+function nav(){const T=FM.tab,c=(k,cl,i,t,on)=>`<button class="scn ${cl}${T==k?' on':''}" onclick="${on}">${ic(i)}<b>${t}</b></button>`;
+ return `<div class="scnav">${c('fill','c1','pen','충진',"fmTab('fill')")}${c('mesh','c2','grid','메쉬',"fmTab('mesh')")}${c('x','c3','doc','일위대가',"if(window.T)T(0)")}${c('hist','c4','folder','내역',"fmTab('hist')")}</div>`}
+const step=(n,t,extra)=>`<div class="sst"><i>${n}</i><b>${t}</b>${extra||''}</div>`;
+const fi1=(lab,val,on,fk)=>`<label class="sf"><span>${lab}</span><input type="number" inputmode="decimal" step="any" value="${val??''}" oninput="${on}"${fk?` onfocus="fmHi('${fk}')" onblur="fmHi('')"`:''}></label>`;
+function fillHtml(){const m=FM.mode;
+ const parts=FM.parts.map((r,i)=>{const lo=r.lo==null?FM.loss:r.lo,P=(k,v)=>`fmPart(${i},'${k}',${v?'':'this.value'})`;
+  const row=m=='j'?fi1('폭(mm)',r.w,P('w'),'w')+fi1('깊이(mm)',r.d,P('d'),'d')+fi1('길이(m)',r.l,P('l'),'l'):m=='c'?fi1('반지름 r(mm)',r.w,P('w'),'w')+fi1('길이(m)',r.l,P('l'),'l'):m=='m'?fi1('단면적(mm²)',r.w,P('w'),'w')+fi1('길이(m)',r.l,P('l'),'l'):m=='f'?fi1('변 a(mm)',r.w,P('w'),'w')+fi1('길이(m)',r.l,P('l'),'l'):fi1('면적(m²)',r.l,P('l'),'l')+fi1('두께(mm)',r.d,P('d'),'d');
+  return `<div class="spt" onfocusin="fmAct(${i})"><div class="sph"><input value="${esc2(r.nm)}" oninput="fmPart(${i},'nm',this.value)"><button onclick="fmDelPart(${i})" aria-label="삭제">${ic('trash')}</button></div><div class="sfr">${row}${fi1('충진갯수',r.q,P('q'),'q')}${fi1('로스율(%)',lo,P('lo'),'lo')}</div>${m=='j'&&+r.w>0&&+r.d!=recD(+r.w)?`<div class="shn">권장 깊이 ${recD(+r.w)}mm (폭의 1/2, 6~13mm) <button onclick="fmPart(${i},'d',${recD(+r.w)});fmRender()">적용</button></div>`:''}</div>`}).join('');
+ return nav()+`<div class="scg"><section class="scc scin"><div class="sch"><i>${ic('pen')}</i><b>충진 소요량 계산</b></div>
+${fsec('s1',1,'제품 정보','',`<button class="fpa" onclick="event.preventDefault();event.stopPropagation();fmLoad('fill','menu')">${ic('clip')}첨부</button>`,`<div class="sfr sprod"><label class="sf sn"><span>제품명</span><input type="text" value="${esc2(FM.pname)}" placeholder="제품명 입력" oninput="fmSet('pname',this.value)"></label>${fi1('비중(kg/L)',FM.sg,"fmSet('sg',this.value)")}<label class="sf sp"><span>포장 규격</span><div class="spk"><input type="number" inputmode="decimal" step="any" value="${FM.pk}" oninput="fmSet('pk',this.value)"><select onchange="fmSet('pu',this.value)"><option${FM.pu=='mL'?' selected':''}>mL</option><option${FM.pu=='L'?' selected':''}>L</option><option${FM.pu=='kg'?' selected':''}>kg</option></select></div></label></div>
+<div class="sdm">${FM.pmaker?'제조사(자동): '+esc2(FM.pmaker):'제조사: 데이터시트·DB를 불러오면 자동 입력됩니다'}${FM.dsmsg?'<br>'+esc2(FM.dsmsg):''}</div>`)}
+${fsec('s2',2,'단면 프로파일 선택','',``,fprofBody(m))}
+${fsec('s4',3,'단면 투시도','','',`<div id="fpv" class="fpv">${fmPrev()}</div>`)}
+${fsec('s3',4,'충진 부위 입력','치수 · 연장','',`<div class="sadr"><input id="fmnp" placeholder="적용 부위 입력 (예: 외벽 줄눈)"><button class="sad" onclick="fmAddPart()">+ 추가</button><button class="srun2" onclick="fmRun()">${ic('calc')}계산하기</button></div>
+${parts||'<div class="fpe0">부위 이름을 입력하고 <b>+ 추가</b>를 누르세요.</div>'}`)}</section>
+<section class="scres"><div class="sch"><i>${ic('bars')}</i><b>계산 결과</b><em>충진</em></div><div id="scR"></div></section></div>
+<section class="scc screc"><div class="sch"><i>${ic('clock')}</i><b>최근 작업 현황</b><button class="sbt" onclick="fmTab('hist')">더보기 ${ic('chev')}</button></div>${recent(4)}</section>`}
+function meshHtml(){const M=MS(),tcur=M.mt,
+ mem=M.mem.map((m,i)=>`<div class="spt"><div class="sph"><input value="${esc2(m.nm||'')}" oninput="fmMem(${i},'nm',this.value)">${M.mem.length>1?`<button onclick="fmDelMem(${i})" aria-label="삭제">${ic('trash')}</button>`:''}</div>
+ <label class="sr"><span>형강 규격 선택</span><i><select onchange="fmSize(${i},this.value)">${FMHB.map((p,j)=>`<option value="${j}"${m.sz===j?' selected':''}>${p[0]}</option>`).join('')}<option value="x"${m.sz===undefined||m.sz==='x'?' selected':''}>직접 입력</option></select></i></label>
+ <div class="sdim">${ri('H',m.H,`fmMemDim(${i},'H',this.value)`,'')}${ri('B',m.B,`fmMemDim(${i},'B',this.value)`,'')}${ri('tw',m.tw,`fmMemDim(${i},'tw',this.value)`,'')}${ri('tf',m.tf,`fmMemDim(${i},'tf',this.value)`,'')}</div>
+ ${ri('부재 길이',m.l,`fmMem(${i},'l',this.value)`,'m')}${ri('부재 수량',m.q,`fmMem(${i},'q',this.value)`,'개')}
+ <div class="sz"><div class="szs">${fmShape(m,i)}</div><div class="szl"><b>메쉬 적용 부위 선택</b><small>도형 또는 항목을 눌러 선택</small>${Object.keys(FMZ).map(k=>`<label class="szc ${m.z&&m.z[k]?'on':''}"><input type="checkbox" ${m.z&&m.z[k]?'checked':''} onchange="fmZ(${i},'${k}')"><span><b>${k}</b> ${FMZ[k][0]} ×${FMZ[k][1]}</span><em>${fn(fmZw(m,k),0)}mm</em></label>`).join('')}<div class="szp"><button onclick="fmZset(${i},'all')">전체</button><button onclick="fmZset(${i},'none')">해제</button></div></div></div></div>`).join('');
+ return nav()+`<div class="scg"><section class="scc scin"><div class="sch"><i>${ic('grid')}</i><b>메쉬 소요량 계산</b></div>
+${fsec('m1',1,'메쉬 정보','',`<button class="fpa" onclick="event.preventDefault();event.stopPropagation();fmLoad('mesh','menu')">${ic('clip')}첨부</button>`,`${M.maker||M.dsmsg?`<div class="sdm">${M.maker?'제조사(자동): '+esc2(M.maker)+'<br>':''}${esc2(M.dsmsg||'')}</div>`:''}
+<div class="sbox">${rt('메쉬 명칭',M.name,"fmMs('name',this.value)",'예) 내화용 유리섬유 메쉬')}${rt('개구 규격',M.open,"fmMs('open',this.value)",'예) 11 × 11 mm')}${ri('중량',M.gm,"fmMs('gm',this.value)",'g/m²')}${ri('롤 폭',M.wr,"fmMs('wr',this.value)",'m','예) 1.5')}${ri('롤 길이',M.lr,"fmMs('lr',this.value)",'m','예) 50')}</div>
+`)}
+${fsec('m2',2,'형강 부재 입력','',`<button class="fpa" onclick="event.preventDefault();event.stopPropagation();fmAddMem()">+ 부재 추가</button>`,`<div class="sbox">${mem}</div>`)}
+${fsec('m3',3,'시공 조건','','',`<div class="sbox">${ri('플랜지 내면 연장',M.ei,"fmMs('ei',this.value)",'mm')}${ri('플랜지 외면 연장',M.eo,"fmMs('eo',this.value)",'mm')}${ri('도막 두께',M.mt,"fmMs('mt',this.value)",'mm')}${ri('겹침 길이',M.ov,"fmMs('ov',this.value)",'mm')}${ri('접합부(B) 띠 폭',M.jb,"fmMs('jb',this.value);fmRender()",'mm')}${ri('동일 구조 반복',M.mq,"fmMs('mq',this.value)",'세트')}${ri('로스율',M.loss,"fmMs('loss',this.value)",'%')}${rs('단가 기준',[['m²','m² 단위'],['롤','롤 단위']],M.pu,"fmMs('pu',this.value);fmRender()")}</div>`)}
+<button class="srun" onclick="fmRun()">${ic('calc')}계산하기</button></section>
+<section class="scres"><div class="sch"><i>${ic('bars')}</i><b>계산 결과</b><em>메쉬</em></div><div id="scR"></div></section></div>
+<section class="scc screc"><div class="sch"><i>${ic('clock')}</i><b>최근 작업 현황</b><button class="sbt" onclick="fmTab('hist')">더보기 ${ic('chev')}</button></div>${recent(4)}</section>`}
+function histHtml(){return nav()+`<section class="scc screc"><div class="sch"><i>${ic('folder')}</i><b>작업 내역</b>${FM.hist.length?`<button class="sbt" onclick="if(confirm('작업 내역을 모두 지울까요?')){FM.hist=[];fmSave();fmRender()}">전체 삭제</button>`:''}</div>${FM.hist.length?FM.hist.map((h,i)=>`<div class="scrw"><button class="scrh" onclick="fmRestore(${i})"><i>${ic(h.k=='충진'?'pen':'grid')}</i><div><b>${esc2(h.nm)}</b><small>${fmDt(h.t)} · 눌러서 다시 열기</small></div><em>${esc2(h.val)}</em></button><button class="scrx" onclick="fmDelHist(${i})" aria-label="삭제">${ic('trash')}</button></div>`).join(''):'<div class="sce">저장된 작업이 없습니다. 충진·메쉬 화면에서 "계산하기"를 누르면 저장됩니다.</div>'}</section>`}
+function fmRender(){const e=fq('v8');if(!e)return;const T=FM.tab;document.querySelectorAll('body>.sld').forEach(x=>x.remove());e.innerHTML=`<div class="sc">${T=='mesh'?meshHtml():T=='hist'?histHtml():fillHtml()}</div>${ldSheet()}`;const sl=e.querySelector('.sld');if(sl)document.body.appendChild(sl);fmOut()}
+</script><style id=pf311>
+.sc .fsd{--p:#e8f1ff;--d:#2a5bd7;--bd:#cfe0fb;border:1px solid var(--bd);border-radius:14px;background:#fff;margin:8px 0;overflow:hidden}
+.sc .fsd.k2,.sc .fsd.m2{--p:#e6f6ee;--d:#1f8a5b;--bd:#c6e8d6}.sc .fsd.k4{--p:#fff0e2;--d:#c26a1b;--bd:#f6dcc2}.sc .fsd.k3{--p:#f0ebfb;--d:#6a4cc0;--bd:#dcd2f3}
+.sc .fsd.m3{--p:#fff0e2;--d:#c26a1b;--bd:#f6dcc2}
+.sc .fsd>summary.fps{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;margin:0;padding:8px 10px;background:var(--p);-webkit-tap-highlight-color:transparent}
+.sc .fsd>summary::-webkit-details-marker{display:none}
+.sc .fsd>summary>i{flex:none;width:22px;height:22px;border-radius:50%;background:#fff;color:var(--d);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sc .fsd>summary b{flex:1;min-width:0;font-size:13.5px;color:var(--d);white-space:nowrap}
+.sc .fsd>summary em{font-style:normal;font-size:10.5px;color:#7a88a6;white-space:nowrap;margin:0}
+.sc .fsd>summary>svg.fcv{flex:none;width:16px;height:16px;color:var(--d);transition:transform .15s}
+.sc .fsd[open]>summary>svg.fcv{transform:rotate(90deg)}
+.sc .fsb{padding:8px 10px 10px}.sc .fsb>.sbox,.sc .fsb>.sfr:first-child{margin-top:0}
+html body .sc .fpa{flex:none;width:auto!important;height:26px;display:inline-flex;align-items:center;gap:4px;padding:0 11px!important;margin:0;border-radius:13px!important;background:#fff!important;border:1px solid var(--d)!important;color:var(--d)!important;font-size:12px!important;font-weight:800;line-height:1}
+html body .sc .fpa svg{width:14px;height:14px}
+.sc .fpg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid #cfe6d9;border-radius:12px;overflow:hidden;background:#fbfffd}
+.sc .fpc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 1px 7px;text-align:center;cursor:pointer;color:#5b7a6b;-webkit-tap-highlight-color:transparent;transition:background .15s,color .15s}
+.sc .fpc+.fpc{border-left:1px solid #dcefe4}
+.sc .fpc svg{width:30px;height:30px}.sc .fpc b{font-size:clamp(10px,2.9vw,12px);font-weight:800;line-height:1.2;white-space:nowrap}.sc .fpc code{font:600 9px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;opacity:.75;white-space:nowrap}
+.sc .fpc.on{background:#d7f0e3;color:#17694a;box-shadow:inset 0 -3px 0 #6fc29a}
+.sc .fpv{background:transparent}.sc .fph{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 0 6px}.sc .fph .fpe{color:#7a6ac0;display:flex}.sc .fph .fpe svg{width:16px;height:16px}.sc .fph em{font-style:normal;font-size:10.5px;color:#7a88a6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.sc .fpd{border-radius:12px;overflow:hidden;border:1px solid #dcd2f3;background:transparent}.sc .fpd svg{display:block;width:100%;height:auto}
+.sc .fpst{display:grid;grid-template-columns:1fr 1.2fr 1.2fr;gap:6px;margin-top:8px}
+.sc .fpst>div{background:#eef4ff;border-radius:10px;padding:6px 8px;min-width:0;display:flex;flex-direction:column;gap:1px}.sc .fpst>div:nth-child(2){background:#e6f6ee}.sc .fpst .hl{background:#fff0e2}
+.sc .fpst span{font-size:10px;color:#6b7a99;white-space:nowrap}.sc .fpst b{font:800 14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#2a3350;white-space:nowrap;font-variant-numeric:tabular-nums}.sc .fpst b small{font-size:9.5px;font-weight:600;color:#7a88a6}
+.sc .fpv.f-w .hd,.sc .fpv.f-d .hw{opacity:.25}.sc .fpv.f-l .hw,.sc .fpv.f-l .hd{opacity:.5}
+html body .sc .sph button{flex:none!important;width:30px!important;height:28px!important;min-width:0;padding:0!important;display:inline-flex;align-items:center;justify-content:center;border-radius:8px!important}html body .sc .sph input{flex:1 1 auto!important;width:auto!important;min-width:0!important}
+@media(max-width:360px){.sc .fpc svg{width:26px;height:26px}.sc .fpst b{font-size:12.5px}}
+/* v315: 간격 축소 + 메쉬 폼 통일 */
+html body .sc .scin{padding:7px}
+html body .sc .sch{margin-bottom:3px}
+html body .sc .fsd{margin:4px 0;border-radius:11px}
+html body .sc .fsd>summary.fps{padding:4px 8px;gap:6px}
+html body .sc .fsd>summary>i{width:19px;height:19px;font-size:10.5px}
+html body .sc .fsd>summary b{font-size:12.5px}
+html body .sc .fsd>summary em{font-size:10px}
+html body .sc .fsd>summary>svg.fcv{width:14px;height:14px}
+html body .sc .fpa{height:21px;font-size:11px!important;padding:0 8px!important}
+html body .sc .fpa svg{width:12px;height:12px}
+html body .sc .fsb{padding:4px 7px 6px}
+html body .sc .fsb .sdm{margin:3px 0 0;padding:3px 7px}
+html body .sc .fsb .sadr{margin-bottom:3px}
+html body .sc .fsb .sadr input{height:28px}
+html body .sc .fsb .spt{margin-top:3px;padding:5px;gap:2px}
+html body .sc .fsb .sph input{height:26px}
+html body .sc .fpc{padding:5px 1px 4px}html body .sc .fpc svg{width:24px;height:24px}
+html body .sc .fph{margin:0 0 2px}
+html body .sc .fpst{margin-top:4px;gap:4px}html body .sc .fpst>div{padding:4px 7px}
+html body .sc .fsb .sbox{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3px 5px;border:0;background:transparent;padding:0}
+html body .sc .fsb .sbox>.spt{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:3px 5px;margin-top:0}
+html body .sc .fsb .spt>.sph,html body .sc .fsb .spt>.sdim,html body .sc .fsb .spt>.sz,html body .sc .fsb .spt>label.sr:nth-of-type(1){grid-column:1/-1}
+html body .sc .fsb .sbox>.sr{grid-column:span 2}
+html body .sc .fsb .sbox>.sr:has(input[type=text]){grid-column:span 3}
+html body .sc .fsb .sbox>.sr,html body .sc .fsb .spt>.sr{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:2px;min-height:0}
+html body .sc .fsb .sbox>.sr>span,html body .sc .fsb .spt>.sr>span{flex:none;font-size:9.5px;color:#5a6b86;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #app .sc .fsb .sbox>.sr>i,html body #app .sc .fsb .spt>.sr>i{display:flex;align-items:center;width:100%!important;height:30px;border:1px solid #cfdcf0;border-radius:7px;background:#fff;padding:0 6px}
+html body .sc .fsb .sprod{grid-template-columns:1.05fr .8fr 1.65fr}
+html body .sc .fsb .spk input{min-width:0;padding:0 4px!important}
+html body .sc .fsb .sph input{border:1px solid #c9d6ec!important;height:32px!important;font-size:14px;background:#fff}
+html body .sc .fsb .spt{border-color:#c9d6ec}
+.sc .fpe0{font-size:11px;color:#8b96ad;text-align:center;padding:8px 4px;border:1px dashed #c9d6ec;border-radius:8px}.sc .fpe0 b{color:#c26a1b}
+/* v318: 입력칸 포커스 네온 */
+.sc .fpv .ov{opacity:0;pointer-events:none}
+.sc .fpv.f-w .ow,.sc .fpv.f-d .od,.sc .fpv.f-l .ol,.sc .fpv.f-q .oq{opacity:1;animation:fpp 2s ease-in-out infinite}
+@keyframes fpp{50%{opacity:.7}}
+.sc .fpv.f-w .hd,.sc .fpv.f-w .hl2,.sc .fpv.f-d .hw,.sc .fpv.f-d .hl2,.sc .fpv.f-l .hw,.sc .fpv.f-l .hd,.sc .fpv.f-q .hw,.sc .fpv.f-q .hd,.sc .fpv.f-q .hl2{opacity:.3}
+.sc .fpv.f-lo .fpst .hl{box-shadow:0 0 0 2px #ee9dc3,0 0 8px rgba(238,157,195,.55)}
+@media (prefers-reduced-motion:reduce){.sc .fpv .ov{animation:none!important}}
+/* 제품 DB 제품보기: 줄바꿈 대신 한 줄 */
+html body .dxf:not(.w) .dxv{flex-wrap:nowrap!important;white-space:nowrap!important;word-break:keep-all!important;overflow:hidden;min-width:0}
+html body .dxf:not(.w) .dxv em{flex:none}
+</style><script>(function(){function fit(){try{document.querySelectorAll('.dxf:not(.w) .dxv').forEach(function(e){if(!e.clientWidth)return;e.style.removeProperty('font-size');var f=12.5,g=0;while(e.scrollWidth>e.clientWidth+1&&f>8&&g++<10){f-=.5;e.style.setProperty('font-size',f+'px','important')}})}catch(x){}}var t=0;function q(){clearTimeout(t);t=setTimeout(fit,60)}document.addEventListener('toggle',q,true);window.addEventListener('resize',q);try{new MutationObserver(q).observe(document.documentElement,{childList:true,subtree:true})}catch(x){}q()})()</script>
+
+<style id=pd290>html body #pqtv.pqs{position:fixed!important;inset:0!important;z-index:70!important;display:block!important;padding:0!important;background:#f4f8fe!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
 html body #pqtv .pqsb.pdf2{width:100%!important;max-width:560px!important;min-height:100%;margin:0 auto!important;padding:0!important;border:0!important;border-radius:0!important;background:#f4f8fe!important;max-height:none!important;overflow:visible!important;box-shadow:none!important;color:#14213d;font-size:12.5px}
 #pqtv.pqs *{box-sizing:border-box}
 #pqtv .pfh{display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 14px) 14px 14px;background:linear-gradient(135deg,#0b2f7a,#1a5fd0);color:#fff;position:sticky;top:0;z-index:5}
