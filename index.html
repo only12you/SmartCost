@@ -4809,6 +4809,70 @@ parseAll=function(L){const J=joinL(L||[]),s=P0(J);
  s.ocr=L&&L.ocr;return s};
 window.__joinL=joinL;
 })();
+/* v325: KCC형 표 — 한 글자씩 띄운 라벨 · 2줄 라벨 · 칸 안 값 줄 → 용어 사전과 매칭 */
+(function(){
+const sqz=s=>String(s==null?'':s).replace(/\s+/g,'').toLowerCase();
+const FULL=new Set(),PRE=new Set(),SUF=new Set();
+const addL=w=>{const s=sqz(w);if(s.length<2||/^[a-z0-9.\-\/()]+$/.test(s)&&s.length<4)return;FULL.add(s);if(/[가-힣]/.test(s)&&s.length>=4)for(let i=2;i<s.length;i++){PRE.add(s.slice(0,i));SUF.add(s.slice(i))}};
+TERMS.forEach(t=>{[t.k,t.r].concat(t.v).forEach(x=>{if(x&&!/[()\/:]/.test(x))addL(x)})});
+['용도','마감상태','색상','광택','비중','고형분','고형분용적비','용적고형분','이론도포율','이론도포량','인화점','점도','표면처리','도장방법','도장횟수','희석','희석제','희석율','도장조건','도막두께','건조시간','후속도장','선행도장','가사시간','재도장간격','재도장시간','재료','저장기간','저장방법','포장단위','포장규격','비고','발행일','개정일','혼합비','일반명','제품명','제품특성','도장간격','사용법','사용방법'].forEach(addL);
+const SEC=/^(?:일반적성질|도장사양|보관및포장조건|보관및포장|주의사항및비고|주의사항|물리적성질|제품특성|제품정보|기본물성|시공조건|도장시스템|건조시간표)$/;
+function lead(line){const tk=String(line).trim().replace(/^[■□●○▪·]\s*/,'').replace(/([가-힣A-Za-z)])\s*[:：]\s*/,'$1 : ').split(/\s+/);let best=null,s='';for(let j=0;j<Math.min(tk.length,9);j++){if(/^[:：]$/.test(tk[j]))break;s+=sqz(tk[j]);if(FULL.has(s))best={s,j,t:'F'};else if(PRE.has(s))best=best&&best.t=='F'&&best.j>j-0?best:{s,j,t:'P'};else if(SUF.has(s)&&!best)best={s,j,t:'S'}}
+ if(!best)return null;/* 라벨 뒤의 값 */const rest=tk.slice(best.j+1).join(' ').replace(/^[:：]\s*/,'');return {s:best.s,t:best.t,rest}}
+function fixLabel(l){const x=lead(l);if(!x||x.t=='S'&&!/[가-힣]/.test(x.s))return l;return x.s+(x.rest?' '+x.rest:'')}
+function cellify(L){const out=[],cells=[];let cur=null,prev=null;
+ const close=()=>{if(!cur)return;if(cur.k==null){/* 미완성 조각: 이전 칸의 값으로 되돌림 */const raw=cur.raw.join(' ');if(prev){prev.parts.push(raw)}else out.push(raw)}else{prev=cur}cur=null};
+ const emit=c=>{const v=c.parts.join(' ').replace(/\s+/g,' ').trim();c.v=v;cells.push({k:c.k,v});return c.k+(v?' : '+v:'')};
+ const slots=[];
+ for(const raw of L){const z=sqz(raw);
+  if(SEC.test(z)){close();prev=null;slots.push({txt:raw});continue}
+  const x=lead(raw);
+  if(x&&cur&&cur.k!=null&&x.s!==cur.k&&FULL.has(cur.k+x.s)){cur.k=cur.k+x.s;if(x.rest)cur.parts.push(x.rest);continue}
+  if(x&&cur&&cur.k==null&&FULL.has(cur.frag+x.s)){cur.k=cur.frag+x.s;if(x.rest)cur.parts.push(x.rest);cur.raw.push(raw);continue}
+  if(x&&x.t=='F'){close();cur={k:x.s,parts:x.rest?[x.rest]:[],raw:[raw]};slots.push(cur);continue}
+  if(x&&x.t=='P'){close();cur={k:null,frag:x.s,parts:x.rest?[x.rest]:[],raw:[raw]};slots.push(cur);continue}
+  if(/^[A-Za-z][A-Za-z .\/()]{2,28}\s*[:：]\s*\S/.test(String(raw).trim())){close();prev=null;slots.push({txt:raw});continue}
+  if(cur){cur.parts.push(raw);cur.raw.push(raw)}else if(prev){prev.parts.push(raw)}else slots.push({txt:raw})}
+ close();
+ const lines=[];for(const s of slots){if(s.txt!=null)lines.push(s.txt);else if(s.k!=null)lines.push(emit(s))}
+ lines.ocr=L.ocr;return {lines,cells}}
+const rng=t=>{const m=String(t).match(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?/);return m?{a:+m[1],b:m[2]?+m[2]:null}:null};
+const stdOut=t=>String(t).replace(/\(?\s*(?:ISO|ASTM|KS|JIS|DIN|EN)\s*[A-Z]?\s*[\d\-:.]+[^)\s]*\s*\)?/gi,' ');
+const CODE=[/#\s*(\d{2,5}[A-Z]?)/,/(?:No\.?|번호)\s*(\d{1,5}[A-Z]?)/i,/\b([A-Z]{1,5}-\d{2,5}[A-Z]?)\b/,/\b([A-Z]{1,4}\d{2,5}[A-Z]?)\b/,/(\d{2,5})\s*번/,/\b(0\d{4})\b/];
+function thinCell(T){const o={};T=String(T).replace(/\s+/g,' ');
+ const mc=T.match(/희석제\s*(?:코드|code)\s*[:：]?\s*([A-Za-z0-9#\-]+)/i),mn=T.match(/(?:희석제|신나|시너|신너)\s*(?:명|종류)\s*[:：]?\s*(.+?)(?=\s*(?:희석\s*율|희석제|$))/);if(mc)o.tc=mc[1].replace(/^#/,'');if(mn)o.tn=mn[1].replace(/\s*\d+(?:\.\d+)?\s*(?:[~～\-–]\s*\d+)?\s*%.*$/,'').trim();
+
+ const mp=T.match(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?\s*%/);if(mp){const v=Math.max(+mp[1],+(mp[2]||0));if(v>=0&&v<=50)o.tr=+(v/100).toFixed(3)}else if(/무희석|희석\s*불필요/.test(T))o.tr=0;
+ const km=T.match(/(?:희석제|신나|신너|시너|thinner)/i);
+ if(km){const i=km.index,pre=T.slice(Math.max(0,i-14),i),post=T.slice(i+km[0].length,i+km[0].length+60).replace(/^(?:\s*[\/·]\s*[가-힣]{2,5})*\s*(?:명|종류)?\s*[:：]\s*/,'');
+  let nm=post.replace(/^\s*(?:\(|:|：|는|은|로|\s)+/,'').replace(/\s*\d+(?:\.\d+)?\s*(?:[~～\-–]\s*\d+)?\s*%.*$/,'').split(/\s*(?:를|을|으로|로\s|사용|희석|,|;|\.|\)\s)/)[0].replace(/\)$/,'').trim();
+  if(!nm||nm.length>26||/^\d+\s*[~%]/.test(nm)||/^#?\d{2,5}$/.test(nm)){const b=pre.match(/((?:[A-Za-z가-힣]+\s*)?(?:전용\s*)?)$/);nm=((b?b[1]:'')+km[0]).trim()}
+  else if(/전용/.test(pre)&&!/전용/.test(nm))nm='전용 '+nm;
+  let c='';const win=post.slice(0,40);for(const r of CODE){const k=win.match(r);if(k){c=k[1];break}}
+  if(c){nm=nm.replace(new RegExp('[\\s(\\[]*(?:#\\s*|No\\.?\\s*)?'+c.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&')+'\\s*(?:번)?[\\s)\\]]*','i'),' ').replace(/\s+/g,' ').trim()}
+  if(!nm||/^[\s()\-:]*$/.test(nm))nm=/[A-Za-z]/.test(c)?c:'전용 희석제';
+  if(!/^무희석/.test(nm)){if(!o.tn)o.tn=nm.replace(/[\s,;:·\-]+$/,'');if(c&&!o.tc)o.tc=c}}
+ return o}
+function overlay(s,cells){
+ const get=re=>cells.filter(c=>re.test(c.k)).map(c=>c.v).filter(Boolean);
+ try{let g=get(/^(?:고형분용적비|용적고형분|체적고형분|부피고형분|용적비|고형분)$/);for(const t0 of g){const t=stdOut(t0);let m=t.match(/(?:용적|체적|부피|vol)[^\d\n]{0,12}?(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?/i);let v;if(m)v=m[2]?(+m[1]+ +m[2])/2:+m[1];else if(!/중량|wt|weight/i.test(t)){const r=rng(t);if(r)v=r.b?(r.a+r.b)/2:r.a}if(v>=1&&v<=100){s.svr=v;break}}}catch(e){}
+ try{for(const t of get(/^(?:비중|밀도|중량)$/)){const v=(t.replace(/\([^)]*\)/g,' ').match(/\d+(?:\.\d+)?/g)||[]).map(Number).find(x=>x>=.5&&x<=5);if(v){s.sg=v;break}}}catch(e){}
+ try{for(const t of get(/^(?:이론도포율|이론도포량|이론도포면적|이론살포율|이론소요면적)$/)){const v=(t.replace(/\([^)]*\)/g,' ').match(/\d+(?:\.\d+)?/g)||[]).map(Number).find(x=>x>=.5&&x<=200);if(v){s.th=v;break}}}catch(e){}
+ try{for(const t0 of get(/^(?:도막두께|건조도막두께|추천도막두께|추천도막|권장도막두께|권장도막|표준도막두께)$/)){const t=t0.replace(/\([^)]*(?:습|wet)[^)]*\)/gi,' ');for(const m of t.matchAll(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?\s*(㎛|μm|µm|um|㎜|mm)/gi)){if(/습윤|wet/i.test(t.slice(Math.max(0,m.index-8),m.index)))continue;const k=/mm|㎜/i.test(m[3])?1000:1,a=+m[1]*k,b=m[2]?+m[2]*k:0,v=Math.round(b>a?(a+b)/2:a);if(v>=5&&v<=20000){s.dft=v;break}}if(s.dft)break}}catch(e){}
+ try{const th=cells.filter(c=>/^(?:희석|희석제|신나|신너|시너|희석율|희석비율|희석률)$/.test(c.k)).map(c=>(c.k=='희석'?'':c.k+' ')+c.v).join(' ');if(th){const o=thinCell(th);if(o.tn){s.tn=o.tn;if(o.tc)s.tc=o.tc}if(o.tr!=null)s.tr=o.tr}}catch(e){}
+ try{const pk=get(/^(?:포장단위|포장규격|포장|출고규격|포장용량|공급단위|판매단위)$/).join(' ');if(pk){const a=[...pk.matchAll(/(\d+(?:\.\d+)?)\s*(ℓ|L|리터|㎏|kg)(?![a-z])/gi)].filter(x=>+x[1]>0&&+x[1]<=1000).map(x=>({v:+x[1],u:/kg|㎏/i.test(x[2])?'㎏':'ℓ'}));if(a.length){const mx=a.reduce((p,q)=>q.v>p.v?q:p),us=[...new Set(a.filter(x=>x.u==mx.u).map(x=>x.v))].sort((p,q)=>p-q);s.pack=mx.v;s.pun=mx.u;s.pks=us.map(v=>v+(mx.u=='㎏'?'kg':'L')).join(' · ')}}}catch(e){}
+ try{const u=get(/^(?:용도|적용대상|적용부위|사용처)$/)[0];if(u){s.use=sumU(u);if(typeof exUse=='function'){const x=exUse(s.use);if(x)s.us=x;else s.us=s.use}else s.us=s.use}}catch(e){}
+ try{const q=get(/^(?:표면처리|소지조정|바탕처리|전처리|사용법|사용방법)$/)[0];if(q&&typeof exSp=='function'){const x=exSp(q);if(x)s.sp=x}}catch(e){}
+ try{const ex=typeof exPre=='function'?exPre:null;const n=get(/^(?:후속도장|후속도료)$/)[0],p=get(/^(?:선행도장|선행도료|전도장)$/)[0];if(ex){if(n)s.nxt=ex(n);if(p)s.pre=ex(p)}}catch(e){}
+ return s}
+const P1=parseAll;
+parseAll=function(L){L=L||[];let C;try{C=cellify(L.map(x=>String(x==null?'':x)))}catch(e){C=null}
+ const src=C?C.lines.concat(L.map(fixLabel)):L,s=P1(src);
+ try{if(C)overlay(s,C.cells)}catch(e){}
+ s.ocr=L.ocr;return s};
+{const D=parseDry,P=parsePot,F=L=>{const o=(L||[]).map(x=>{try{return fixLabel(x)}catch(e){return x}});o.ocr=L&&L.ocr;return o};parseDry=L=>D(F(L));parsePot=L=>P(F(L))}
+window.__cellify=cellify;window.__fixLabel=fixLabel;
+})();
 </script>
 <style id=pf323>
 .sc .sdt{font-size:12px;font-weight:800;color:#1f9d55;margin:8px 0 0}.sc .sdt small{font-weight:400;color:#6b7b95;font-size:10.5px;margin-left:4px}.sc .ztt{margin-top:0}
