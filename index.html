@@ -4010,7 +4010,8 @@ const ri=(lab,val,on,u,ph)=>`<label class="sr"><span>${lab}</span><i><input type
 const rt=(lab,val,on,ph)=>`<label class="sr"><span>${lab}</span><i><input type="text" value="${esc2(val)}" placeholder="${ph||''}" oninput="${on}"></i></label>`;
 const rs=(lab,opts,val,on)=>`<label class="sr"><span>${lab}</span><i><select onchange="${on}">${opts.map(([v,t])=>`<option value="${v}"${v==val?' selected':''}>${t}</option>`).join('')}</select></i></label>`;
 function fmSet(k,v){FM[k]=v;fmSave();fmOut()}
-function fmMs(k,v){MS()[k]=v;fmSave();fmOut()}
+function fmMs(k,v){const M=MS();M[k]=v;if(k=='price'){}else if(+M.rp>0&&(k=='rp'||k=='pu'||k=='wr'||k=='lr')){const a=(+M.wr||0)*(+M.lr||0);M.price=M.pu=='롤'?+M.rp:(a>0?Math.round(M.rp/a):M.price)}fmSave();fmOut()}
+function fmMPrice(v){const M=MS();M.price=v;M.rp='';fmSave();fmOut()}
 function fmPart(i,k,v){FM.parts[i][k]=v;fmSave();fmOut()}
 function fmAddPart(){const e=fq('fmnp'),nm=(e&&e.value.trim())||'부위'+(FM.parts.length+1);FM.parts.push({nm,w:10,d:10,l:10,q:1,lo:10});fmSave();fmRender()}
 function fmHi(k){const e=fq('fpv');if(e)e.className='fpv'+(k?' f-'+k:'')}
@@ -4053,8 +4054,8 @@ function fmShape(m,i){const H=+m.H||250,B=+m.B||250,tw=+m.tw||9,tf=+m.tf||14,s=M
   lb=(x,y,t)=>`<text x="${f(x)}" y="${f(y)}" font-size="10" fill="${G}" font-weight="800" text-anchor="middle" paint-order="stroke" stroke="#fff" stroke-width="3">${t}</text>`,
   ap=(x,y,d)=>d=='v'?`<path d="M${f(x-3)} ${f(y)}h6" stroke="${G}" stroke-width="1.4"/>`:`<path d="M${f(x)} ${f(y-3)}v6" stroke="${G}" stroke-width="1.4"/>`,
   xh=x0-e-11,xr=x0+w+e+14,yb=y0+h+e+10,ym=y0+h/2;
- const gH=`<g class="gd" data-k="H"><rect x="${f(x0)}" y="${f(y0)}" width="${f(w)}" height="${f(h)}" fill="rgba(31,157,85,.10)" stroke="${G}" stroke-width="1.6" stroke-dasharray="3 2"/><rect x="${f(wx)}" y="${f(y0)}" width="${f(tws)}" height="${f(h)}" fill="${GF}"/>${ln(x0-3,y0,x0+w+3,y0)}${ln(x0-3,y0+h,x0+w+3,y0+h)}${ln(xh,y0,xh,y0+h)}${ap(xh,y0,'v')}${ap(xh,y0+h,'v')}${lb(xh,ym+3,'H')}</g>`,
-  gB=`<g class="gd" data-k="B"><rect x="${f(x0)}" y="${f(y0)}" width="${f(w)}" height="${f(h)}" fill="rgba(31,157,85,.10)" stroke="${G}" stroke-width="1.6" stroke-dasharray="3 2"/><rect x="${f(x0)}" y="${f(y0)}" width="${f(w)}" height="${f(tfs)}" fill="${GF}"/><rect x="${f(x0)}" y="${f(y0+h-tfs)}" width="${f(w)}" height="${f(tfs)}" fill="${GF}"/>${ln(x0,y0-3,x0,y0+h+3)}${ln(x0+w,y0-3,x0+w,y0+h+3)}${ln(x0,yb,x0+w,yb)}${ap(x0,yb,'h')}${ap(x0+w,yb,'h')}${lb(x0+w/2,yb-3,'B')}</g>`,
+ const gH=`<g class="gd" data-k="H">${ln(xh-3,y0,x0+w,y0)}${ln(xh-3,y0+h,x0+w,y0+h)}${ln(xh,y0,xh,y0+h)}${ap(xh,y0,'v')}${ap(xh,y0+h,'v')}${lb(xh,ym+3,'H')}</g>`,
+  gB=`<g class="gd" data-k="B">${ln(x0,y0+h,x0,yb+3)}${ln(x0+w,y0+h,x0+w,yb+3)}${ln(x0,yb,x0+w,yb)}${ap(x0,yb,'h')}${ap(x0+w,yb,'h')}${lb(x0+w/2,yb-3,'B')}</g>`,
   gw=`<g class="gd" data-k="tw"><rect x="${f(wx)}" y="${f(y0+tfs)}" width="${f(tws)}" height="${f(h-2*tfs)}" fill="${GF}" stroke="${G}" stroke-width="1.2"/>${ln(wx-4,ym,wx+tws+4,ym)}${ap(wx,ym,'h')}${ap(wx+tws,ym,'h')}${lb(wx+tws+e+9,ym+3,'tw')}</g>`,
   gf=`<g class="gd" data-k="tf"><rect x="${f(x0)}" y="${f(y0)}" width="${f(w)}" height="${f(tfs)}" fill="${GF}" stroke="${G}" stroke-width="1.2"/><rect x="${f(x0)}" y="${f(y0+h-tfs)}" width="${f(w)}" height="${f(tfs)}" fill="${GF}" stroke="${G}" stroke-width="1.2"/>${ln(xr,y0,xr,y0+tfs)}${ap(xr,y0,'v')}${ap(xr,y0+tfs,'v')}${lb(xr+2,y0+tfs+11,'tf')}</g>`;
  return `<svg viewBox="2 0 200 180" width="100%" preserveAspectRatio="xMidYMid meet"><g fill="#b4b2a9"><rect x="${f(x0)}" y="${f(y0)}" width="${f(w)}" height="${f(tfs)}"/><rect x="${f(x0)}" y="${f(y0+h-tfs)}" width="${f(w)}" height="${f(tfs)}"/><rect x="${f(wx)}" y="${f(y0+tfs)}" width="${f(tws)}" height="${f(h-2*tfs)}"/></g>
@@ -4075,7 +4076,8 @@ function fmLq(v){LDQ=v;const e=fq('sldl');if(e)e.innerHTML=ldList(LD.split(':')[
 function fmFromDB(w,i){const p=fmDB()[i];if(!p)return;if(w=='fill'){FM.pname=p.n;FM.pmaker=p.mf||'';if(+p.sg>0)FM.sg=+p.sg;const k=fmParsePacks(p);if(k.length){FM.packs=k;FM.pk=k[0].v;FM.pu=k[0].u;FM.pn=k[0].n}FM.dsmsg='저장된 DB에서 불러왔습니다: '+p.n}else{MS().name=p.n;MS().maker=p.mf||'';MS().dsmsg='저장된 DB에서 불러왔습니다: '+p.n}LD='';fmSave();fmRender()}
 function ldList(w){const q=LDQ.trim().toLowerCase(),db=fmDB();const r=db.map((p,i)=>[p,i]).filter(([p])=>!q||(p.n+' '+(p.mf||'')+' '+(p.g||'')).toLowerCase().includes(q)).slice(0,80);return r.length?r.map(([p,i])=>`<button class="sldi" onclick="fmFromDB('${w}',${i})"><b>${esc2(p.n)}</b><small>${esc2(p.mf||'')}${p.sg?' · 비중 '+p.sg:''}${p.pks?' · '+esc2(p.pks):''}</small></button>`).join(''):'<div class="sce">'+(db.length?'검색 결과가 없습니다.':'저장된 DB가 없습니다.')+'</div>'}
 function ldSheet(){if(!LD)return'';const [w,st]=LD.split(':');const hasDb=fmDB().length>0;
- return `<div class="sld" onclick="fmLoad('')"><div class="sldb" onclick="event.stopPropagation()"><div class="sldh"><b>첨부</b><button onclick="fmLoad('')">닫기</button></div>${st=='db'?`<input class="sldq" placeholder="제품명·제조사 검색" oninput="fmLq(this.value)"><div id="sldl" class="sldl">${ldList(w)}</div><button class="sldo" onclick="fmLoad('${w}','menu')">← 뒤로</button>`:`<button class="sldo" onclick="fmLoad('');fmPickDs('${w}')">${ic('clip')}<div><b>데이터시트 첨부</b><small>PDF에서 ${w=='fill'?'제품명·제조사·비중·포장 규격':'메쉬 규격·중량·롤 규격'}을 읽어 자동 입력</small></div></button><button class="sldo" ${hasDb?`onclick="fmLoad('${w}','db')"`:'disabled'}>${ic('folder')}<div><b>저장된 DB에서 선택</b><small>${hasDb?'제품 DB에 저장된 제품을 불러옵니다':'이 화면에서는 DB를 사용할 수 없습니다 (앱에서 사용)'}</small></div></button>`}</div></div>`}
+ const card=(ico,t,sub,body)=>`<div class="bkc"><div class="bkh"><i>${ic(ico)}</i><div><b>${t}</b><small>${sub}</small></div></div><div class="bkb">${body}</div></div>`;
+ return `<div class="sld bk" onclick="fmLoad('')"><div class="sldb" onclick="event.stopPropagation()"><div class="sldh"><b>첨부</b><button onclick="fmLoad('')">닫기</button></div>${st=='db'?card('folder','저장된 DB에서 선택','제품 DB에 저장된 제품을 불러옵니다',`<input class="sldq" placeholder="제품명·제조사 검색" oninput="fmLq(this.value)"><div id="sldl" class="sldl">${ldList(w)}</div><button class="bko" onclick="fmLoad('${w}','menu')">← 뒤로</button>`):card('clip','데이터시트 첨부','TDS PDF에서 제품 정보를 자동 입력',`<p>PDF에서 ${w=='fill'?'제품명·제조사·비중·포장 규격':'메쉬 규격·중량·롤 규격'}을 읽어 자동 입력합니다. TDS 원본은 저장되지 않습니다.</p><button class="bkp" onclick="fmLoad('');fmPickDs('${w}')">PDF 파일 선택</button>`)+card('folder','저장된 DB에서 선택',hasDb?'제품 DB에 저장된 제품을 불러옵니다':'저장된 제품이 없습니다',`<p>${hasDb?'제품 DB에 등록된 제품의 값을 그대로 가져옵니다.':'이 화면에서는 DB를 사용할 수 없습니다 (앱에서 사용).'}</p><button class="bko" ${hasDb?`onclick="fmLoad('${w}','db')"`:'disabled'}>DB에서 선택</button>`)}</div></div>`}
 /* ---------- 데이터시트 첨부 ---------- */
 function fmPickDs(w){let i=fq('fmdsf');if(!i){i=document.createElement('input');i.type='file';i.id='fmdsf';i.accept='application/pdf,.pdf';i.style.cssText='position:fixed;left:-9999px;opacity:0';document.body.appendChild(i)}i.value='';i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)fmReadDs(w,f)};i.click()}
 const fmUnit=u=>/kg|㎏/i.test(u)?'kg':/ml|㎖/i.test(u)?'mL':'L';
@@ -4108,7 +4110,7 @@ const FPI={
 const FPT=[['j','직사각형','W × D'],['f','삼각 코너','½ × a²'],['c','원형 비드','π × r²'],['m','임의 단면','A (mm²)'],['a','면 충진','t × 면적']];
 function fprofBody(m){return `<div class="fpg">${FPT.map(([k,t,f])=>`<div class="fpc${m==k?' on':''}" role="button" tabindex="0" onclick="fmMode('${k}')">${m==k?'<s class="fck">✓</s>':''}${FPI[k]}<b>${t}</b><code>${f}</code></div>`).join('')}</div>`}
 function fmPrev(){const m=FM.mode,P=FM.parts[Math.min(FM.fpi||0,FM.parts.length-1)]||{},w=Math.max(+P.w||0,0),d=Math.max(+P.d||0,0),L=Math.max(+P.l||0,0),lo=+(P.lo==null?FM.loss:P.lo)||0;
- const OR='#c47a12',OL='#c47a12',BL='#1f9d74',BK='url(#fph)',ST='#8da2c8',SK='#3c8fb8',NEON='#2f6fdc',NF='rgba(47,111,220,.12)',MO='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
+ const OR='#c47a12',OL='#c47a12',BL='#1f9d74',BK='url(#fph)',ST='#8da2c8',SK='#3c8fb8',NEON='#1f9d55',NF='rgba(31,157,85,.14)',MO='ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
  const f1=v=>(+v).toFixed(1),T=(x,y,t,c,a,fs)=>`<text x="${x}" y="${y}" fill="${c}" text-anchor="${a||'middle'}" font-family="${MO}" font-size="${fs||13}" font-weight="700" stroke="#fff" stroke-width="3.5" paint-order="stroke" stroke-linejoin="round">${t}</text>`;
  const fl=(x1,y1,x2,y2,c,wd)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${c}" stroke-width="${wd||2}" fill="none"/>`;
  const nl=(x1,y1,x2,y2,wd)=>`<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${NEON}" stroke-width="${wd||3.5}" stroke-linecap="round" fill="none"/>`;
@@ -4159,7 +4161,7 @@ function fmPrev(){const m=FM.mode,P=FM.parts[Math.min(FM.fpi||0,FM.parts.length-
  const pi0=FM.parts[Math.min(FM.fpi||0,FM.parts.length-1)]||{},lA=A*(1+lo/100),U=unit.replace(' per linear meter','/m').replace('mL per m²','mL/m²');
  return `<div class="fph"><span class="fpe">${ic('eye')}</span><em>${esc2(pi0.nm||'')} · 배율 ${sc}</em></div><div class="fpd">${svg}</div><div class="fpst"><div><span>${m=='a'?'두께':'단면적'}</span><b>${m=='a'?f1(d)+' mm':fn(A,1)+' mm²'}</b></div><div><span>이론 원단위</span><b>${fn(A,1)}<small> ${U}</small></b></div><div class="hl"><span>로스 ${fn(lo,1)}% 포함</span><b>${fn(lA,1)}<small> ${U}</small></b></div></div>`}
 /* ---------- 계산 결과 / 계산하기 ---------- */
-function fmOut(){const o=fq('scR');if(o)o.innerHTML=FM.tab=='fill'?outFill():outMesh();const pv=fq('fpv');if(pv&&FM.tab=='fill')pv.innerHTML=fmPrev()}
+function fmOut(){const o=fq('scR');let ix=-1;try{const a=document.activeElement;if(o&&a&&a.tagName=='INPUT'&&o.contains(a))ix=[...o.querySelectorAll('input')].indexOf(a)}catch(e){}if(o)o.innerHTML=FM.tab=='fill'?outFill():outMesh();if(ix>=0){try{const n=o.querySelectorAll('input')[ix];if(n)n.focus({preventScroll:true})}catch(e){}}const pv=fq('fpv');if(pv&&FM.tab=='fill')pv.innerHTML=fmPrev()}
 function outFill(){const c=cF(),pr=+FM.price||0,amt=c.n*pr,rA=Math.ceil(c.rod*1.05),tA=Math.ceil(c.tape*1.05),ex=FM.mode=='j'&&c.rod>0?rA*(+FM.rodp||0)+tA*(+FM.tapep||0):0,tot=amt+ex,pl=FM.pk?`${fn(FM.pk,2)}${FM.pu}`:'-';
  const warn=FM.pu=='kg'&&!(+FM.sg>0)?'<div class="sw">kg 포장은 비중이 필요합니다. 1 제품 정보에 비중을 입력하세요.</div>':'';
  const stp=[`<b>순수 충진량</b><small>${c.ln.map(x=>`${esc2(x[0])}: ${x[1]} = ${fn(x[2],0)} mL`).join('<br>')}${c.ln.length>1?`<br>합계 ${fn(c.V,0)} mL`:''}</small>`,`<b>로스 적용</b><small>${c.ln.map(x=>`${esc2(x[0])}: ${fn(x[2],0)} × ${fn(x[3],2)} = ${fn(x[2]*x[3],0)} mL`).join('<br>')}${c.ln.length>1?`<br>합계 ${fn(c.Vt,0)} mL`:''}</small>`,`<b>포장 수량</b><small>${fn(c.Vt,0)} ÷ ${fn(c.pv,0)} = ${c.pv>0?fn(c.Vt/c.pv,2):'-'} → 올림 ${fn(c.n,0)} 개</small>`,`<b>재료비</b><small>${fn(c.n,0)} × ${fn(pr,0)} = ${fn(amt,0)} 원${ex?` + 부자재 ${fn(ex,0)} 원`:''}</small>`];
@@ -4172,7 +4174,7 @@ function outFill(){const c=cF(),pr=+FM.price||0,amt=c.n*pr,rA=Math.ceil(c.rod*1.
 function outMesh(){const M=MS(),c=cM(),pr=+M.price||0,amt=M.pu=='롤'?c.rolls*pr:c.At*pr;
  const stp=[`<b>띠 폭</b><small>${c.lines.length?c.lines.map(x=>`${esc2(x.m)} ${x.k}: ${fn(x.w,0)} mm × ${fn(x.ln,1)} m = ${fn(x.a,2)} m²`).join('<br>'):'적용 부위를 선택하세요'}</small>`,`<b>면적 합계</b><small>${fn(c.A,2)} m² (끝단 길이 합계 ${fn(c.len,1)} m)</small>`,`<b>로스 적용</b><small>${fn(c.A,2)} × ${fn(c.L,2)} = ${fn(c.At,2)} m²</small>`,`<b>롤 수량</b><small>${c.rolls?`롤 ${fn(c.wr,2)}m × ${fn(c.lr,0)}m 기준 ${fn(c.rolls,0)} 롤`:'롤 규격(폭·길이)을 입력하면 계산됩니다'}</small>`];
  return (c.warn?'<div class="sw">'+c.warn+'</div>':'')+(c.lines.length?'':'<div class="sw">적용 부위가 선택되지 않았습니다. 도형에서 메쉬를 넣을 부위를 눌러 선택하세요.</div>')+`<div class="sc3m"><div><div class="tlh"><i class="tic2">${ic('area')}</i><span>필요 메쉬 면적</span></div><b>${fn(c.A,2)}<u> m²</u></b><em>(예상 소요량)</em></div><div><div class="tlh"><i class="tic2">${ic('area')}</i><span>로스 포함 소요량</span></div><b>${fn(c.At,2)}<u> m²</u></b><em>+${M.loss}%</em></div><div><div class="tlh"><i class="tic2">${ic('roll')}</i><span>필요 롤 수량</span></div><b>${c.rolls?fn(c.rolls,0):'-'}<u> 롤</u></b><em>${c.wr&&c.lr?`(${fn(c.wr,2)}×${fn(c.lr,0)}m)`:'롤 규격 입력'}</em></div></div>
-<div class="scc scw"><div class="scwl"><i>${ic('won')}</i><div><span>예상 재료비</span><b>${fn(amt,0)}<u> 원</u></b></div></div><div class="scwr"><label class="sr s2"><span>단가 (${M.pu})</span><i><input type="number" inputmode="decimal" value="${pr||''}" placeholder="0" oninput="fmMs('price',this.value)"><b>원</b></i></label><div class="srr"><span>수량</span><b>${M.pu=='롤'?fn(c.rolls,0)+' 롤':fn(c.At,2)+' m²'}</b></div></div></div>
+<div class="scc scw"><div class="scwl"><i>${ic('won')}</i><div><span>예상 재료비</span><b>${fn(amt,0)}<u> 원</u></b></div></div><div class="scwr"><label class="sr s2"><span>롤 단가</span><i><input type="number" inputmode="decimal" value="${M.rp||''}" placeholder="롤당 가격" oninput="fmMs('rp',this.value)"><b>원/롤</b></i></label><label class="sr s2"><span>단가 (${M.pu}) ${+M.rp>0?'<small>자동</small>':''}</span><i><input type="number" inputmode="decimal" value="${pr||''}" placeholder="0" oninput="fmMPrice(this.value)"><b>원</b></i></label><div class="srr"><span>수량</span><b>${M.pu=='롤'?fn(c.rolls,0)+' 롤':fn(c.At,2)+' m²'}</b></div></div></div>
 <div class="scc scp"><div class="scpn"><b>${esc2(M.name||'내화 메쉬')}</b><small>${esc2(M.open||'개구 규격 미입력')} | ${M.gm?fn(M.gm,0)+' g/m²':'중량 미입력'}</small></div><div class="scpg"><div><span>롤 폭</span>${M.wr?fn(M.wr,2)+' m':'-'}</div><div><span>롤 길이</span>${M.lr?fn(M.lr,0)+' m':'-'}</div><div><span>중량</span>${M.gm?fn(c.At*M.gm/1000,2)+' kg':'-'}</div></div></div>
 <details class="scc scf"><summary>${ic('calc')}<b>계산식 보기</b>${ic('chev')}</summary><div class="scfb">띠 폭 A = 내면 연장 + 플랜지 두께(tf) + 외면 연장 + 도막 두께<br>B = 접합부 띠 폭(입력), C = 플랜지 폭, D = (B − tw) ÷ 2, E = H − 2·tf<br>길이 = 부재 길이 × 수량 × 개소 (+ 롤 이음 겹침)<br>면적 = Σ(길이 × 띠 폭), 소요량 = 면적 × (1 + 로스율)<br>롤 수 = Σ(길이 ÷ 롤 폭 줄 수) ÷ 롤 길이 (올림)</div></details>
 <div class="scc scs"><b>계산 요약</b>${stp.map((t,i)=>`<div class="scsr"><i>${i+1}</i><div>${t}</div></div>`).join('')}</div>`}
@@ -4204,6 +4206,15 @@ ${fsec('s4',4,'단면 투시도','','',`<div id="fpv" class="fpv">${fmPrev()}</d
 <section class="scc screc"><div class="sch"><i>${ic('clock')}</i><b>최근 작업 현황</b><button class="sbt" onclick="fmTab('hist')">더보기 ${ic('chev')}</button></div>${recent(4)}</section>`}
 const mf=(lab,val,on,u,ph)=>`<label class="sf"><span>${lab}</span><div class="sfi"><input type="number" inputmode="decimal" step="any" value="${val??''}" placeholder="${ph||''}" oninput="${on}">${u?'<b>'+u+'</b>':''}</div></label>`;
 const mt=(lab,val,on,ph)=>`<label class="sf"><span>${lab}</span><div class="sfi"><input type="text" value="${esc2(val)}" placeholder="${ph||''}" oninput="${on}"></div></label>`;
+const MI=(()=>{const B='<rect x="4" y="4" width="16" height="4" rx=".6" fill="#8d98ad"/><rect x="10.5" y="8" width="3" height="8" fill="#8d98ad"/><rect x="4" y="16" width="16" height="4" rx=".6" fill="#8d98ad"/>',O='#e0662f',w=(b)=>`<svg class="mi" viewBox="0 0 24 24" aria-hidden="true">${b}</svg>`;
+ return {in:w(B+`<rect x="4" y="8" width="6.5" height="3" fill="${O}"/><rect x="13.5" y="8" width="6.5" height="3" fill="${O}"/><rect x="4" y="13" width="6.5" height="3" fill="${O}"/><rect x="13.5" y="13" width="6.5" height="3" fill="${O}"/>`),
+ out:w(B+`<rect x="4" y="1" width="16" height="3" fill="${O}"/><rect x="4" y="20" width="16" height="3" fill="${O}"/>`),
+ mt:w(`<path d="M4 4h16v4h-5.5v8H20v4H4v-4h5.5V8H4z" fill="#d7dce6" stroke="${O}" stroke-width="2" stroke-linejoin="round"/>`),
+ ov:w(`<rect x="2" y="5" width="12" height="6" rx="1" fill="#c9d3e6"/><rect x="10" y="13" width="12" height="6" rx="1" fill="#c9d3e6"/><rect x="10" y="5" width="4" height="14" fill="${O}" opacity=".85"/>`),
+ jb:w(B+`<rect x="7.5" y="8" width="3" height="3" fill="${O}"/><rect x="13.5" y="8" width="3" height="3" fill="${O}"/><rect x="7.5" y="13" width="3" height="3" fill="${O}"/><rect x="13.5" y="13" width="3" height="3" fill="${O}"/>`),
+ mq:w(`<g fill="#8d98ad"><rect x="1.5" y="6" width="6" height="2"/><rect x="3.5" y="8" width="2" height="4"/><rect x="1.5" y="12" width="6" height="2"/><rect x="9" y="6" width="6" height="2"/><rect x="11" y="8" width="2" height="4"/><rect x="9" y="12" width="6" height="2"/><rect x="16.5" y="6" width="6" height="2"/><rect x="18.5" y="8" width="2" height="4"/><rect x="16.5" y="12" width="6" height="2"/></g><path d="M5 17h14M16 15l3 2-3 2" fill="none" stroke="${O}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`),
+ ls:w(`<path d="M18 6L6 18" stroke="${O}" stroke-width="2" stroke-linecap="round"/><circle cx="7.5" cy="7.5" r="2.4" fill="none" stroke="${O}" stroke-width="2"/><circle cx="16.5" cy="16.5" r="2.4" fill="none" stroke="${O}" stroke-width="2"/>`),
+ pu:w(`<rect x="3" y="4" width="14" height="16" rx="2" fill="#c9d3e6"/><path d="M6.5 8h7M6.5 12h7" stroke="#fff" stroke-width="1.5"/><circle cx="17.5" cy="16.5" r="5" fill="${O}"/><path d="M15.3 14.5l1 4 1.2-3 1.2 3 1-4" fill="none" stroke="#fff" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>`)}})();
 const mdim=(lab,val,on,i,k)=>`<label class="sdl2"><span>${lab}</span><div class="sfi"><input id="md${i}${k}" type="number" inputmode="decimal" step="any" value="${val??''}" oninput="${on}" onfocus="fmMHi(${i},'${k}')" onblur="fmMHi(${i},'')"></div></label>`;
 function fmMHi(i,k){const z=document.querySelector('.sz[data-i="'+i+'"]');if(!z)return;z.classList.toggle('hasg',!!k);z.querySelectorAll('.gd').forEach(g=>g.classList.toggle('on',g.dataset.k==k));z.querySelectorAll('.gchip').forEach(g=>g.classList.toggle('on',g.dataset.k==k))}
 function fmMFocus(i,k){const e=document.getElementById('md'+i+k);if(e){e.focus();try{e.select()}catch(_){}}}
@@ -4214,7 +4225,7 @@ function meshHtml(){const M=MS(),multi=M.mem.length>1,
  <div class="sdt">단면 치수 <small>H · B · tw · tf</small></div><div class="sd4">${mdim('H',m.H,`fmMemDim(${i},'H',this.value)`,i,'H')}${mdim('B',m.B,`fmMemDim(${i},'B',this.value)`,i,'B')}${mdim('tw',m.tw,`fmMemDim(${i},'tw',this.value)`,i,'tw')}${mdim('tf',m.tf,`fmMemDim(${i},'tf',this.value)`,i,'tf')}</div>
  <div class="sfr2">${mf('부재 길이',m.l,`fmMem(${i},'l',this.value)`,'m')}${mf('부재 수량',m.q,`fmMem(${i},'q',this.value)`,'개')}</div>
  <div class="sz" data-i="${i}"><div class="szs">${fmShape(m,i)}</div><div class="szl"><b class="ztt">메쉬 적용 부위 <small>도형 또는 항목을 눌러 선택</small></b>${Object.keys(FMZ).map(k=>`<label class="szc ${m.z&&m.z[k]?'on':''}"><input type="checkbox" ${m.z&&m.z[k]?'checked':''} onchange="fmZ(${i},'${k}')"><span><b>${k}</b> ${FMZ[k][0]} ×${FMZ[k][1]}</span><em>${fn(fmZw(m,k),0)}mm</em></label>`).join('')}<div class="szp"><button onclick="fmZset(${i},'all')">전체</button><button onclick="fmZset(${i},'none')">해제</button></div></div></div></div>`).join('');
- const cond=`<details class="fsub"><summary>${ic('calc')}<b>시공 조건 · 로스 · 단가 기준</b>${ic('chev').replace('<svg ','<svg class="fcv" ')}</summary><div class="sfr2">${mf('플랜지 내면 연장',M.ei,"fmMs('ei',this.value)",'mm')}${mf('플랜지 외면 연장',M.eo,"fmMs('eo',this.value)",'mm')}${mf('도막 두께',M.mt,"fmMs('mt',this.value)",'mm')}${mf('겹침 길이',M.ov,"fmMs('ov',this.value)",'mm')}${mf('접합부(B) 띠 폭',M.jb,"fmMs('jb',this.value);fmRender()",'mm')}${mf('동일 구조 반복',M.mq,"fmMs('mq',this.value)",'세트')}${mf('로스율',M.loss,"fmMs('loss',this.value)",'%')}<label class="sf"><span>단가 기준</span><div class="sfi sel"><select onchange="fmMs('pu',this.value);fmRender()"><option value="m²"${M.pu=='m²'?' selected':''}>m² 단위</option><option value="롤"${M.pu=='롤'?' selected':''}>롤 단위</option></select></div></label></div></details>`;
+ const cond=`<details class="fsub"><summary><span class="cgi"><em title="시공 조건">${ic('area')}<small>시공</small></em><em title="로스율"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18"/><circle cx="7.5" cy="7.5" r="2.3"/><circle cx="16.5" cy="16.5" r="2.3"/></svg><small>로스</small></em><em title="단가 기준">${ic('won')}<small>단가</small></em></span><b class="cgt">세부 조건</b>${ic('chev').replace('<svg ','<svg class="fcv" ')}</summary><div class="sfr2">${mf(`${MI.in}플랜지 내면 연장`,M.ei,"fmMs('ei',this.value)",'mm')}${mf(`${MI.out}플랜지 외면 연장`,M.eo,"fmMs('eo',this.value)",'mm')}${mf(`${MI.mt}도막 두께`,M.mt,"fmMs('mt',this.value)",'mm')}${mf(`${MI.ov}겹침 길이`,M.ov,"fmMs('ov',this.value)",'mm')}${mf(`${MI.jb}접합부(B) 띠 폭`,M.jb,"fmMs('jb',this.value);fmRender()",'mm')}${mf(`${MI.mq}동일 구조 반복`,M.mq,"fmMs('mq',this.value)",'세트')}${mf(`${MI.ls}로스율`,M.loss,"fmMs('loss',this.value)",'%')}<label class="sf"><span>${MI.pu}단가 기준</span><div class="sfi sel"><select onchange="fmMs('pu',this.value);fmRender()"><option value="m²"${M.pu=='m²'?' selected':''}>m² 단위</option><option value="롤"${M.pu=='롤'?' selected':''}>롤 단위</option></select></div></label></div></details>`;
  return nav()+`<div class="scg"><section class="scc scin"><div class="sch"><i>${ic('grid')}</i><b>메쉬 소요량 계산</b></div>
 ${fsec('m1',1,'메쉬 정보','',`<button class="fpa" onclick="event.preventDefault();event.stopPropagation();fmLoad('mesh','menu')">${ic('clip')}첨부</button>`,`${M.maker||M.dsmsg?`<div class="sdm"><i class="sdl">${ic('leaf')}</i><span>${M.maker?'제조사(자동): '+esc2(M.maker)+'<br>':''}${esc2(M.dsmsg||'')}</span></div>`:''}
 <div class="sfr2">${mt('메쉬 명칭',M.name,"fmMs('name',this.value)",'예) 내부용 유리섬유 메쉬')}${mt('규격',M.open,"fmMs('open',this.value)",'예) 11 × 11 mm')}</div>
@@ -4294,7 +4305,7 @@ html body .sc .fsb .spt{border-color:#c9d6ec}
 .sc .fpv .ov{opacity:0;pointer-events:none}
 .sc .fpv.f-w .ow,.sc .fpv.f-d .od,.sc .fpv.f-l .ol,.sc .fpv.f-q .oq{opacity:1}
 .sc .fpv.f-w .hd,.sc .fpv.f-w .hl2,.sc .fpv.f-d .hw,.sc .fpv.f-d .hl2,.sc .fpv.f-l .hw,.sc .fpv.f-l .hd,.sc .fpv.f-q .hw,.sc .fpv.f-q .hd,.sc .fpv.f-q .hl2{opacity:.3}
-.sc .fpv.f-lo .fpst .hl{box-shadow:0 0 0 2px #2f6fdc}
+.sc .fpv.f-lo .fpst .hl{box-shadow:0 0 0 2px #1f9d55}
 /* 제품 DB 제품보기: 줄바꿈 대신 한 줄 */
 html body .dxf:not(.w) .dxv{flex-wrap:nowrap!important;white-space:nowrap!important;word-break:keep-all!important;overflow:hidden;min-width:0}
 html body .dxf:not(.w) .dxv em{flex:none}
@@ -4727,8 +4738,10 @@ html body #app .sc .screc .scrh{border:0!important}
  window.fmPvDraw=function(){var p=document.getElementById('fpv');if(!p||typeof FM=='undefined'||FM.tab!='fill')return;var n=fmPrev();if(p._s===n)return;
   var h=Math.ceil(p.getBoundingClientRect().height);if(h>(p._mh||0))p._mh=h;p.style.minHeight=(p._mh||0)+'px';p.innerHTML=n;p._s=n};
  window.fmAct=function(i){if(FM.fpi!==i){FM.fpi=i;fmPvDraw()}};
- window.fmOut=function(){var y=window.scrollY,o=document.getElementById('scR');
+ window.fmOut=function(){var y=window.scrollY,o=document.getElementById('scR'),ix=-1;
+  try{var ae=document.activeElement;if(o&&ae&&ae.tagName=='INPUT'&&o.contains(ae))ix=Array.prototype.indexOf.call(o.querySelectorAll('input'),ae)}catch(e){}
   if(o){var h=Math.ceil(o.getBoundingClientRect().height);o.style.minHeight=h+'px';o.innerHTML=FM.tab=='fill'?outFill():outMesh();
+   if(ix>=0){try{var nn=o.querySelectorAll('input')[ix];if(nn){var vv0=nn.value;nn.focus({preventScroll:true});nn.value='';nn.value=vv0}}catch(e){}}
    requestAnimationFrame(function(){requestAnimationFrame(function(){o.style.minHeight=''})})}
   fmPvDraw();
   if(Math.abs(window.scrollY-y)>1)window.scrollTo({top:y,left:0,behavior:'instant'})};
@@ -4874,7 +4887,35 @@ parseAll=function(L){L=L||[];let C;try{C=cellify(L.map(x=>String(x==null?'':x)))
 window.__cellify=cellify;window.__fixLabel=fixLabel;
 })();
 </script>
+<script id=kb326>
+(function(){let y0=0;const inV=e=>e&&e.closest&&e.closest('#v8');
+document.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchmove',e=>{const a=document.activeElement;if(a&&inV(a)&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&Math.abs(e.touches[0].clientY-y0)>16&&e.target!==a){try{a.blur()}catch(_){}}},{passive:true});
+})();
+</script>
 <style id=pf323>
+.sc .sf>span,.sc .sf>span *{white-space:nowrap}.sc .mi{width:24px;height:24px;vertical-align:-7px;margin-right:4px;flex:none}
+html body #app .sc .scwr .sr.s2{display:flex!important;flex-wrap:nowrap!important;align-items:center;gap:8px}
+html body #app .sc .scwr .sr.s2>span{white-space:nowrap!important;flex:none}
+html body #app .sc .scwr .sr.s2>i{flex:1 1 auto;min-width:0}
+
+html body .sld.bk .sldb{background:#f3f7fe!important;padding:14px 14px calc(16px + env(safe-area-inset-bottom,0px))!important}
+html body .sld.bk .sldh{margin-bottom:10px}
+html body .sld.bk .bkc{background:#fff;border:1px solid #cfdcf3;border-radius:14px;overflow:hidden;margin-bottom:12px}
+html body .sld.bk .bkh{display:flex;align-items:center;gap:10px;background:#e6effc;padding:10px 12px}
+html body .sld.bk .bkh>i{width:36px;height:36px;border-radius:10px;background:linear-gradient(160deg,#3b7be8,#1f55c4);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+html body .sld.bk .bkh>i svg{width:20px;height:20px}
+html body .sld.bk .bkh b{display:block;font-size:16px;color:#0f1d3a}
+html body .sld.bk .bkh small{display:block;font-size:12px;color:#6b7b95;margin-top:1px}
+html body .sld.bk .bkb{padding:10px 12px 12px}
+html body .sld.bk .bkb p{margin:0 0 10px;font-size:13px;color:#6b7b95;line-height:1.5}
+html body .sld.bk .bkp{height:48px;width:100%!important;border-radius:12px!important;border:0!important;background:linear-gradient(180deg,#1f55c4,#0b3a9e)!important;color:#fff!important;font-weight:800!important;font-size:15px!important;box-shadow:0 2px 6px rgba(11,58,158,.3)}
+html body .sld.bk .bko{height:46px;width:100%!important;border-radius:12px!important;border:1px solid #b9cdf0!important;background:#fff!important;color:#0b4fd0!important;font-weight:800!important;font-size:14px!important}
+html body .sld.bk .bko:disabled{opacity:.45}
+
+.sc .fsub>summary{display:flex;align-items:center;gap:8px}.sc .cgi{display:flex;gap:6px}.sc .cgi em{font-style:normal;display:flex;flex-direction:column;align-items:center;gap:1px;color:#2a5bd7;background:#eef4ff;border-radius:10px;padding:3px 8px;min-width:38px}.sc .cgi em svg{width:18px;height:18px}.sc .cgi small{font-size:9px;color:#5a6b86}.sc .cgt{font-size:12px;color:#3a4a68;flex:1}
+.sc .sr small{color:#1f9d55;font-weight:700;font-size:10px}
+
 .sc .sdt{font-size:12px;font-weight:800;color:#1f9d55;margin:8px 0 0}.sc .sdt small{font-weight:400;color:#6b7b95;font-size:10.5px;margin-left:4px}.sc .ztt{margin-top:0}
 .sc .sd4{grid-template-columns:repeat(4,1fr)!important;gap:6px!important}
 .sc .sdl2{flex-direction:column!important;align-items:stretch!important;gap:2px!important;min-width:0}
