@@ -2711,7 +2711,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v303',d:'2026.10.09'};
+const APPV={v:'v304',d:'2026.10.09'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -4171,10 +4171,11 @@ const DXI={
  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
  calc:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/>'};
 const dxSv=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${DXI[n]}</svg>`;
+const DXO={},DXD=['기본 정보','포장단위 / 혼합규격','도장 사양'];
 function dbxTags(p){const T=[p.us,p.d,p.g,p.cat].filter(Boolean).join(' '),R=[[/방청|녹\s*방지|부식\s*방지/,'방청'],[/내마모/,'내마모'],[/내충격/,'내충격'],[/내화학/,'내화학'],[/내열/,'내열'],[/내후/,'내후'],[/방수/,'방수'],[/무용제/,'무용제'],[/내화/,'내화'],[/바닥/,'바닥']];return R.filter(r=>r[0].test(T)).slice(0,2).map(r=>r[1]).join(' · ')}
 function dbxInfo(p){
  const m=mx(p),u=UN(p),two=m.b>0,fx=(l,v,o)=>{o=o||{};const e=v==null||v===''||v==='-';return `<div class="dxf${o.w?' w':''}"><span class="dxl">${l}</span><div class="dxv${e?' no':''}">${e?'-':(o.raw?v:esc(v))}${o.sfx&&!e?`<em>${o.sfx}</em>`:''}${o.cnt?`<i>${String(v||'').length}/${o.cnt}</i>`:''}</div></div>`},
- sc=(ic,t,body,x)=>`<section class="dxs"><div class="dxh"><span class="dxi">${dxSv(ic)}</span><b>${t}</b></div><div class="dxg${x?' '+x:''}">${body}</div></section>`;
+ sc=(ic,t,body,x)=>{const k=p.n+'|'+t,op=DXO[k]!==undefined?DXO[k]:DXD.includes(t);return `<details class="dxs" data-k="${esc(k)}" ${op?'open':''} ontoggle="DXO[this.dataset.k]=this.open"><summary class="dxh"><span class="dxi">${dxSv(ic)}</span><b>${t}</b>${DBX.chev.replace('<svg class="','<svg class="dxc ')}</summary><div class="dxg${x?' '+x:''}">${body}</div></details>`};
  const tn=p.tn&&p.tn!='무희석'?p.tn+(p.tc&&p.tc!=p.tn?' ('+p.tc+')':''):'무희석';
  const R=String(p.dry||'').split(/[;\n]/).map(x=>x.trim()).filter(Boolean).map(r=>r.split('/').map(x=>x.trim())).sort((a,b)=>dbxTv(a)-dbxTv(b)),mc=R.find(c=>dbxTv(c)==20)||R[0];
  const dry=mc?[mc[1],mc[3]].filter(x=>x&&x!='-').join(' / '):'';
@@ -4254,4 +4255,31 @@ html body #app #v1 details.pdc>summary.pdh{display:grid!important;grid-template-
 html body #app #v1 details.pdc>summary.pdh::before{content:none!important;display:none!important}
 html body #app #v1 details.pdc>summary.pdh .dxmid .pd1,html body #app #v1 details.pdc>summary.pdh .dxmid .pd2{grid-column:auto!important}
 html body #app #v1 details.pdc{border-radius:14px}
+</style><style id=v304>
+/* 제품정보 보기: 간격·글꼴 축소, 항목별 접기/펼치기 */
+html body #app #v1 details.pdc>summary.pdh{padding:8px 10px!important;column-gap:9px!important}
+.dxth{width:42px;height:42px;border-radius:10px}.dxth svg{width:30px;height:30px}
+html body #app #v1 .dxmid .pdn{font-size:14px!important;line-height:1.2}
+html body #app #v1 .dxmid .pdm,html body #app #v1 .dxmid .pdv,html body #app #v1 .dxmid .qtdp{font-size:9.5px!important;padding:3px 8px!important}
+html body #app #v1 .dxmid .pd1{gap:3px 6px!important}
+html body #app #v1 .dxmid .pd2{margin-top:3px!important}
+html body #app #v1 .dxd{font-size:11px!important;line-height:1.4!important}
+.dxtg{font-size:9.5px;padding:3px 8px;max-width:92px}
+html body #app #v1 .pdb{padding:5px 6px 6px!important}
+.dxs{margin:0 0 4px!important;padding:0!important;border-radius:9px!important}
+.dxs>summary.dxh{display:flex;align-items:center;gap:7px;margin:0!important;padding:6px 9px;list-style:none;cursor:pointer}
+.dxs>summary.dxh::-webkit-details-marker{display:none}
+.dxi{width:22px!important;height:22px!important;border-radius:7px!important}.dxi svg{width:13px!important;height:13px!important}
+.dxh b{font-size:12.5px!important;flex:1}
+.dxc{width:15px;height:15px;color:#5a6c8f;flex:none;transition:transform .2s}.dxs[open]>summary .dxc{transform:rotate(180deg)}
+.dxs[open]>summary.dxh{border-bottom:1px solid #edf2fa}
+.dxg{gap:5px 7px!important;padding:7px 9px 8px}
+.dxl{font-size:10.5px!important}
+.dxv{min-height:28px!important;padding:5px 8px!important;font-size:12.5px!important;border-radius:6px!important;line-height:1.35!important}
+.dxv em{font-size:10px}.dxv i{font-size:9px;bottom:2px}
+.dxf.w .dxv:has(i){padding-bottom:14px!important}
+.dxf{gap:2px!important}
+.dxm>summary{padding:6px 10px;font-size:11.5px}
+.dxm>.dtb,.dxm>.drc,.dxm>.dnt,.dxm>.qsg{margin:5px}
+html body #app #v1 .dxm{margin-top:0}
 </style></body></html>
