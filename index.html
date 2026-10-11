@@ -4765,6 +4765,50 @@ function exApply(s,h,L){var desc=h.desc||'',use=s.use||'',head=(L||[]).slice(0,6
  var sp=s.sp||'';try{var i=L.findIndex(function(r){return /표면\s*처리|소지\s*조정|바탕\s*처리|표면\s*준비|전\s*처리/.test(r)});if(i>=0)sp=L.slice(i,i+7).join(' ')}catch(e){}
  var x=exSp(sp);if(x)s.sp=x;
  if(s.pre!=null)s.pre=exPre(s.pre);if(s.nxt!=null)s.nxt=exPre(s.nxt)}
+/* v324: TDS 보완 — 라벨/값 줄바꿈 병합, SVR·희석제·희석제코드 추가 인식 */
+(function(){
+const SQ=l=>String(l==null?'':l).replace(/(?<=[가-힣])[ \t]+(?=[가-힣])/g,'').replace(/[ \t]+/g,' ').trim();
+const LAB=/^[■□●○▪·\-\d.)(\s]*(?:전용\s*)?(?:고형분\s*용적비|용적\s*고형분|체적\s*고형분|부피\s*고형분|고형분|희석제|신나|신너|시너|희석율|희석\s*비율|희석률|비중|건조\s*도막\s*두께|권장\s*도막|추천\s*도막|도막\s*두께|혼합비|volume\s*solids|solids\s*by\s*volume|thinner|thinning|specific\s*gravity|dry\s*film\s*thickness|mixing\s*ratio)(?:\s*[\/·]\s*(?:세척제|세척\s*용제|시너|신나|신너|희석제))*\s*(?:\([^)]*\))?\s*(?:명|종류|코드|code|name)?\s*[:：]?\s*$/i;
+const NUMLAB=/고형분|희석율|희석\s*비율|희석률|비중|도막|혼합비|volume|solids|thinning|gravity|film|mixing/i;
+function joinL(L){const o=[];for(let i=0;i<L.length;i++){const a=SQ(L[i]);const n=L[i+1]!=null?String(L[i+1]).replace(/\s+/g,' ').trim():'';
+ if(a&&a.length<=34&&LAB.test(a)&&n&&n.length<=70&&!(LAB.test(n)&&!/전용|\(/.test(n))){const num=NUMLAB.test(a);if(num?/^[\d(~±<>]/.test(n):!/^(?:희석|고형|비중|도막|건조|혼합|색상|광택|용도)/.test(n)){o.push(a.replace(/\s*[:：]\s*$/,'')+' : '+n);i++;continue}}
+ o.push(L[i])}
+ o.ocr=L.ocr;return o}
+const stripStd=t=>t.replace(/\(?\s*(?:ISO|ASTM|KS|JIS|DIN|EN)\s*[A-Z]?\s*[\d\-:.]+[^)\s]*\s*\)?/gi,' ');
+function svrOf(L){for(const raw of L){const l=stripStd(SQ(raw));
+ let m=l.match(/(?:volume\s*solids|solids\s*by\s*vol(?:ume)?|vol\.?\s*solids|solid\s*content\s*by\s*vol)[^\d\n]{0,24}?(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?/i)
+  ||l.match(/(?:고형분\s*용적비?|용적\s*고형분|체적\s*고형분|부피\s*고형분|고형분\s*\(?\s*(?:용적|체적|부피|V\/V|vol)[^)\d]{0,10}\)?)[^\d\n]{0,24}?(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?/i)
+  ||(/고형분/.test(l)&&/(?:용적|체적|부피)/.test(l)&&l.replace(/.*(?:용적|체적|부피)[^\d\n]{0,12}?(?=\d)/,'').match(/^(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?/));
+ if(m){const v=m[2]?(+m[1]+ +m[2])/2:+m[1];if(v>=1&&v<=100)return v}}return null}
+const CODE=[/#\s*(\d{2,5}[A-Z]?)/,/(?:No\.?|번호|NO\.)\s*(\d{1,5}[A-Z]?)/i,/\b([A-Z]{1,5}-\d{2,5}[A-Z]?)\b/,/\b([A-Z]{1,4}\d{2,5}[A-Z]?)\b/,/(\d{2,5})\s*번/,/\b(0\d{4})\b/,/\b(\d{4,6})\b/];
+function thinOf(L){let tn='',tc='',tr=null;
+ for(const raw of L){const ci=String(raw).search(/[:：]/),l=ci>0?SQ(String(raw).slice(0,ci))+' : '+String(raw).slice(ci+1).replace(/\s+/g,' ').trim():SQ(raw);if(/희석\s*율|희석\s*비율|희석률|thinning\s*(?:rate|ratio)/i.test(l)&&!/^(?:전용\s*)?(?:희석제|신나|신너|시너|thinner)/i.test(l))continue;
+  const m=l.match(/^[■□●○▪·\-\d.)(\s]*(?:전용\s*)?(?:희석제|신나|신너|시너|thinner|recommended\s*thinner)(?:\s*[\/·]\s*(?:세척제|세척\s*용제|시너|신나|신너|희석제|cleaner))*\s*(명|종류|코드|code|name)?\s*[:：]?\s*(.*)$/i);
+  if(!m)continue;let v=m[2].trim();const suf=(m[1]||'').toLowerCase();
+  v=v.replace(/^(?:코드|code|명|name|종류)\s*[:：]?\s*/i,'');
+  if(!v||/^\d+(?:\.\d+)?\s*%/.test(v)||/^(?:희석|비중|고형|도막)/.test(v))continue;
+  if(/^(?:no|none|무희석|불필요|not\s*required)/i.test(v)&&!tn){tn='무희석';continue}
+  const mx=v.match(/(?:max\.?|최대|이내)\s*(\d+(?:\.\d+)?)\s*%/i);if(mx&&tr==null)tr=+(+mx[1]/100).toFixed(3);
+  v=v.replace(/\([^)]*%[^)]*\)/g,' ').replace(/\s*[\/,;]\s*(?:세척제|세척|cleaner|cleaning).*$/i,'').replace(/\s*(?:희석\s*율|희석\s*비율|thinning|max\.?|최대).*$/i,'').replace(/\s*(?:저장\s*기간|포장\s*규격|색상|인화점|비중|건조).*$/,'').trim();
+  if(!v)continue;
+  let c='';for(const r of CODE){const k=v.match(r);if(k){c=k[1];break}}
+  if(suf=='코드'||suf=='code'){if(c||v.length<=14)tc=tc||(c||v);continue}
+  if(!tn||tn=='무희석'){tn=v;if(c&&!tc)tc=c}}
+ if(tn&&tn!='무희석'){let n=tn;if(tc){const re=new RegExp('[\\s(\\[]*(?:#\\s*|No\\.?\\s*|NO\\.?\\s*)?'+tc.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&')+'\\s*(?:번)?[\\s)\\]]*','i');n=tn.replace(re,' ').replace(/\s{2,}/g,' ').trim()}
+  if(!n||/^[-/·,:\s]*$/.test(n))n=/[A-Za-z]/.test(tc||'')?tc:'전용 희석제';tn=n.replace(/[\s,;:·\-]+$/,'')}
+ return {tn,tc,tr}}
+const P0=parseAll;
+parseAll=function(L){const J=joinL(L||[]),s=P0(J);
+ try{if(!s.svr){const v=svrOf(J);if(v)s.svr=v}
+  const t=thinOf(J);
+  if(t.tn){s.tn=t.tn;if(t.tc)s.tc=t.tc;else if(s.tc&&!/[A-Za-z#\d]/.test(String(t.tn+s.tc)))delete s.tc}
+  else if(s.tn){s.tn=String(s.tn).replace(/^(?:코드|명|종류)\s*[:：]\s*/,'').trim()}
+  if(t.tc&&!s.tc)s.tc=t.tc;
+  if(s.tr==null&&t.tr!=null)s.tr=t.tr;
+ }catch(e){}
+ s.ocr=L&&L.ocr;return s};
+window.__joinL=joinL;
+})();
 </script>
 <style id=pf323>
 .sc .sdt{font-size:12px;font-weight:800;color:#1f9d55;margin:8px 0 0}.sc .sdt small{font-weight:400;color:#6b7b95;font-size:10.5px;margin-left:4px}.sc .ztt{margin-top:0}
