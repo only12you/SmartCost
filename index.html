@@ -2393,7 +2393,19 @@ return IC('k1','제품설명',p.d)+IC('k2','용도',p.us||(p.g?'일반명: '+p.g
 +`</div></details>`};
 const PJ='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
 const lp=()=>window.pdfjsLib?Promise.resolve():new Promise((o,e)=>{const s=document.createElement('script');s.src=PJ+'pdf.min.js';s.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc=PJ+'pdf.worker.min.js';o()};s.onerror=()=>e(new Error('PDF 읽기 도구를 불러오지 못했습니다(온라인 1회 필요)'));document.head.append(s)});
-async function pdfText(f,mp){await lp();const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,L=[];try{for(let p=1;p<=Math.min(doc.numPages,mp||40);p++){const pg=await doc.getPage(p),c=await pg.getTextContent(),m={};c.items.forEach(it=>{const y=Math.round(it.transform[5]/3);(m[y]=m[y]||[]).push([it.transform[4],it.str])});try{pg.cleanup()}catch(e){}Object.keys(m).map(Number).sort((a,b)=>b-a).forEach(y=>L.push(m[y].sort((a,b)=>a[0]-b[0]).map(x=>x[1]).join(' ').replace(/\s+/g,' ').trim()))}}finally{try{await doc.destroy()}catch(e){}}return L.filter(Boolean)}
+async function pdfRules(pg){const O=pdfjsLib.OPS,ol=await pg.getOperatorList();let m=[1,0,0,1,0,0];const st=[],hs=[];
+ const pm=(A,B)=>[A[0]*B[0]+A[1]*B[2],A[0]*B[1]+A[1]*B[3],A[2]*B[0]+A[3]*B[2],A[2]*B[1]+A[3]*B[3],A[4]*B[0]+A[5]*B[2]+B[4],A[4]*B[1]+A[5]*B[3]+B[5]],P=(x,y)=>[x*m[0]+y*m[2]+m[4],x*m[1]+y*m[3]+m[5]];
+ const rect=(x,y,w,h)=>{const a=P(x,y),b=P(x+w,y+h),W=Math.abs(b[0]-a[0]),H=Math.abs(b[1]-a[1]),x1=Math.min(a[0],b[0]),y1=Math.min(a[1],b[1]);if(H<=2.5){if(W>=30)hs.push({y:y1+H/2,x1:x1,x2:x1+W})}else if(W>=60){hs.push({y:y1,x1:x1,x2:x1+W});hs.push({y:y1+H,x1:x1,x2:x1+W})}};
+ const seg=(a,b)=>{if(Math.abs(a[1]-b[1])<=1&&Math.abs(a[0]-b[0])>=30)hs.push({y:(a[1]+b[1])/2,x1:Math.min(a[0],b[0]),x2:Math.max(a[0],b[0])})};
+ for(let i=0;i<ol.fnArray.length;i++){const f=ol.fnArray[i],a=ol.argsArray[i];
+  if(f===O.save)st.push(m.slice());else if(f===O.restore){if(st.length)m=st.pop()}else if(f===O.transform)m=pm(a,m);
+  else if(f===O.constructPath){let cur=null;
+   if(Array.isArray(a[0])){const ops=a[0],c=a[1];let k=0;for(const o of ops){if(o===O.moveTo){cur=P(c[k],c[k+1]);k+=2}else if(o===O.lineTo){const q=P(c[k],c[k+1]);if(cur)seg(cur,q);cur=q;k+=2}else if(o===O.rectangle){rect(c[k],c[k+1],c[k+2],c[k+3]);k+=4}else if(o===O.curveTo)k+=6;else if(o===O.curveTo2||o===O.curveTo3)k+=4}}
+   else{const d=a[1]&&a[1][0]!==undefined?(a[1].length==1&&a[1][0]&&a[1][0].length!==undefined?a[1][0]:a[1]):[];let k=0,first=null;while(k<d.length){const o=d[k++];if(o===0){cur=P(d[k],d[k+1]);first=cur;k+=2}else if(o===1){const q=P(d[k],d[k+1]);if(cur)seg(cur,q);cur=q;k+=2}else if(o===2)k+=6;else if(o===3)k+=4;else if(o===4){if(cur&&first)seg(cur,first)}else break}
+    /* v6: 사각형은 moveTo+lineTo*3+close 로 들어옴 → 위 seg 로 처리, 채워진 얇은 사각형은 아래에서 */
+    if(d.length>=13&&d[0]===0&&d[3]===1&&d[6]===1&&d[9]===1){const xs=[d[1],d[4],d[7],d[10]],ys=[d[2],d[5],d[8],d[11]];rect(Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys))}}}}
+ if(!hs.length)return [];const mw=Math.max(...hs.map(h=>h.x2-h.x1)),ys=hs.filter(h=>h.x2-h.x1>=mw*.4).map(h=>h.y).sort((a,b)=>b-a),o=[];for(const y of ys)if(!o.length||o[o.length-1]-y>1.5)o.push(y);return o}
+async function pdfText(f,mp){await lp();const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,L=[],YS=[],RID=[];try{for(let p=1;p<=Math.min(doc.numPages,mp||40);p++){const pg=await doc.getPage(p),c=await pg.getTextContent(),m={};let RL=[];try{RL=await pdfRules(pg)}catch(e){RL=[]}c.items.forEach(it=>{const y=Math.round(it.transform[5]/3);(m[y]=m[y]||[]).push([it.transform[4],it.str,it.transform[5]])});try{pg.cleanup()}catch(e){}Object.keys(m).map(Number).sort((a,b)=>b-a).forEach(y=>{const t=m[y].sort((a,b)=>a[0]-b[0]).map(x=>x[1]).join(' ').replace(/\s+/g,' ').trim();if(t){L.push(t);YS.push(y*3-(p-1)*1e5);const y0=m[y][0][2];RID.push(RL.length>=3?p*1000+RL.filter(r=>r>y0).length:-1)}})}}finally{try{await doc.destroy()}catch(e){}}const R=L;R.y=YS;R.rid=RID;return R}
 function recoat(J){const MX='(\\d+(?:\\s*~\\s*\\d+)?\\s*(?:시간|분|일|주일|주|개월)|무제한|제한\\s*없음|없음)',Z=x=>(x||'').replace(/\s/g,''),out=[],A=new RegExp('(\\d+)\\s*[℃°]\\s*C?[^\\n]{0,15}?최소\\s*[:：]?\\s*'+MX+'(?:[^\\n]{0,8}?최대\\s*[:：]?\\s*'+MX+')?','g');let m;
 while(m=A.exec(J))out.push([m[1]+'℃',Z(m[2]),Z(m[3])]);
 if(!out.length)J.split('\n').forEach(l=>{if(!/(재도장|도장\s*간격)/.test(l))return;const a=l.match(new RegExp('최소\\s*[:：]?\\s*'+MX)),b=l.match(new RegExp('최대\\s*[:：]?\\s*'+MX)),tp=l.match(/(\d+)\s*[℃°]/);if(a)out.push([tp?tp[1]+'℃':'',Z(a[1]),Z(b&&b[1])])});
@@ -4799,6 +4811,7 @@ function thinOf(L){let tn='',tc='',tr=null;
   const m=l.match(/^[■□●○▪·\-\d.)(\s]*(?:전용\s*)?(?:희석제|신나|신너|시너|thinner|recommended\s*thinner)(?:\s*[\/·]\s*(?:세척제|세척\s*용제|시너|신나|신너|희석제|cleaner))*\s*(명|종류|코드|code|name)?\s*[:：]?\s*(.*)$/i);
   if(!m)continue;let v=m[2].trim();const suf=(m[1]||'').toLowerCase();
   v=v.replace(/^(?:코드|code|명|name|종류)\s*[:：]?\s*/i,'');
+  if(window.__thinCell&&(/[를을]\s|사용|하며|하여|합니다/.test(v)||/^(?:는|은)\s/.test(v))){const o2=window.__thinCell('희석제 '+String(raw).replace(/^.*?(?:희\s*석\s*제|신\s*나|신\s*너|시\s*너)/,'').replace(/\s+/g,' '));if(o2.tn){tn=o2.tn;if(o2.tc)tc=o2.tc;if(o2.tr!=null&&tr==null)tr=o2.tr;continue}}
   if(!v||/^\d+(?:\.\d+)?\s*%/.test(v)||/^(?:희석|비중|고형|도막)/.test(v))continue;
   if(/^(?:no|none|무희석|불필요|not\s*required)/i.test(v)&&!tn){tn='무희석';continue}
   const mx=v.match(/(?:max\.?|최대|이내)\s*(\d+(?:\.\d+)?)\s*%/i);if(mx&&tr==null)tr=+(+mx[1]/100).toFixed(3);
@@ -4833,22 +4846,30 @@ const SEC=/^(?:일반적성질|도장사양|보관및포장조건|보관및포�
 function lead(line){const tk=String(line).trim().replace(/^[■□●○▪·]\s*/,'').replace(/([가-힣A-Za-z)])\s*[:：]\s*/,'$1 : ').split(/\s+/);let best=null,s='';for(let j=0;j<Math.min(tk.length,9);j++){if(/^[:：]$/.test(tk[j]))break;s+=sqz(tk[j]);if(FULL.has(s))best={s,j,t:'F'};else if(PRE.has(s))best=best&&best.t=='F'&&best.j>j-0?best:{s,j,t:'P'};else if(SUF.has(s)&&!best)best={s,j,t:'S'}}
  if(!best)return null;/* 라벨 뒤의 값 */const rest=tk.slice(best.j+1).join(' ').replace(/^[:：]\s*/,'');return {s:best.s,t:best.t,rest}}
 function fixLabel(l){const x=lead(l);if(!x||x.t=='S'&&!/[가-힣]/.test(x.s))return l;return x.s+(x.rest?' '+x.rest:'')}
-function cellify(L){const out=[],cells=[];let cur=null,prev=null;
- const close=()=>{if(!cur)return;if(cur.k==null){/* 미완성 조각: 이전 칸의 값으로 되돌림 */const raw=cur.raw.join(' ');if(prev){prev.parts.push(raw)}else out.push(raw)}else{prev=cur}cur=null};
- const emit=c=>{const v=c.parts.join(' ').replace(/\s+/g,' ').trim();c.v=v;cells.push({k:c.k,v});return c.k+(v?' : '+v:'')};
- const slots=[];
- for(const raw of L){const z=sqz(raw);
-  if(SEC.test(z)){close();prev=null;slots.push({txt:raw});continue}
-  const x=lead(raw);
-  if(x&&cur&&cur.k!=null&&x.s!==cur.k&&FULL.has(cur.k+x.s)){cur.k=cur.k+x.s;if(x.rest)cur.parts.push(x.rest);continue}
-  if(x&&cur&&cur.k==null&&FULL.has(cur.frag+x.s)){cur.k=cur.frag+x.s;if(x.rest)cur.parts.push(x.rest);cur.raw.push(raw);continue}
-  if(x&&x.t=='F'){close();cur={k:x.s,parts:x.rest?[x.rest]:[],raw:[raw]};slots.push(cur);continue}
-  if(x&&x.t=='P'){close();cur={k:null,frag:x.s,parts:x.rest?[x.rest]:[],raw:[raw]};slots.push(cur);continue}
-  if(/^[A-Za-z][A-Za-z .\/()]{2,28}\s*[:：]\s*\S/.test(String(raw).trim())){close();prev=null;slots.push({txt:raw});continue}
-  if(cur){cur.parts.push(raw);cur.raw.push(raw)}else if(prev){prev.parts.push(raw)}else slots.push({txt:raw})}
- close();
- const lines=[];for(const s of slots){if(s.txt!=null)lines.push(s.txt);else if(s.k!=null)lines.push(emit(s))}
- lines.ocr=L.ocr;return {lines,cells}}
+function cellify(L){const Y=L.y&&L.y.length==L.length?L.y:null;
+ /* 1) y 간격으로 칸(블록) 나누기: 칸 안 줄간격 < 칸 사이 간격 */
+ const RID=L.rid&&L.rid.length==L.length&&L.rid.filter(r=>r>=0).length>=L.length*.5?L.rid:null;
+ const blocks=[];if(RID){let cur=[];for(let i=0;i<L.length;i++){if(cur.length&&(RID[i]!==RID[i-1]||RID[i]<0)){blocks.push(cur);cur=[]}cur.push(i)}if(cur.length)blocks.push(cur)}else{let cur=[];const gaps=[];if(Y)for(let i=1;i<L.length;i++)gaps.push(Y[i-1]-Y[i]);const sg0=gaps.filter(g=>g>0).sort((a,b)=>a-b),md=sg0.length?sg0[Math.floor(sg0.length/2)]:0,sg=sg0.filter(g=>g>=md*.6),base=sg.length?sg[Math.floor(sg.length*.25)]:0;
+  for(let i=0;i<L.length;i++){if(Y&&i>0&&cur.length&&(Y[i-1]-Y[i])>base*1.35+0.5){blocks.push(cur);cur=[]}cur.push(i)}if(cur.length)blocks.push(cur)}
+ const cells=[],out=[];let prev=null;
+ const fin=c=>{const v=c.parts.join(' ').replace(/\s+/g,' ').trim();c.v=v;cells.push({k:c.k,v,p:c.parts.slice()});return c.k+(v?' : '+v:'')};
+ for(const bl of blocks){const slots=[];let cur=null,pre=[],blkPrev=null;
+  const close=()=>{if(!cur)return;if(cur.k==null){const raw=cur.raw.join(' ');if(blkPrev)blkPrev.parts.push(raw);else if(prev)prev.parts.push(raw);else slots.push({txt:raw})}else blkPrev=cur;cur=null};
+  const give=c=>{if(pre.length){if(RID)c.parts=pre.concat(c.parts);else if(prev)prev.parts.push(pre.join(' '));else pre.forEach(t=>slots.push({txt:t}));pre=[]}};
+  for(const ix of bl){const raw=L[ix],z=sqz(raw);
+   if(SEC.test(z)){close();pre.forEach(t=>slots.push({txt:t}));pre=[];prev=null;blkPrev=null;slots.push({txt:raw});continue}
+   const x=lead(raw);
+   if(x&&cur&&cur.k!=null&&x.s!==cur.k&&FULL.has(cur.k+x.s)){cur.k=cur.k+x.s;if(x.rest)cur.parts.push(x.rest);continue}
+   if(x&&cur&&cur.k==null&&FULL.has(cur.frag+x.s)){cur.k=cur.frag+x.s;if(x.rest)cur.parts.push(x.rest);cur.raw.push(raw);give(cur);continue}
+   if(x&&x.t=='F'){close();cur={k:x.s,parts:x.rest?[x.rest]:[],raw:[raw]};give(cur);slots.push(cur);continue}
+   if(x&&x.t=='P'){close();cur={k:null,frag:x.s,parts:x.rest?[x.rest]:[],raw:[raw]};slots.push(cur);continue}
+   if(/^[A-Za-z][A-Za-z .\/()]{2,28}\s*[:：]\s*\S/.test(String(raw).trim())){close();pre.forEach(t=>slots.push({txt:t}));pre=[];slots.push({txt:raw});blkPrev=null;continue}
+   if(cur){cur.parts.push(raw);cur.raw.push(raw)}else if(blkPrev){blkPrev.parts.push(raw)}else pre.push(raw)}
+  close();
+  if(pre.length){if(prev&&!blkPrev&&!slots.some(s=>s.k!=null))prev.parts.push(pre.join(' '));else pre.forEach(t=>slots.push({txt:t}))}
+  const first=slots.find(s=>s.k!=null);if(first)prev=first;
+  for(const s of slots){if(s.txt!=null)out.push(s.txt);else if(s.k!=null)out.push(fin(s))}}
+ out.ocr=L.ocr;return {lines:out,cells}}
 const rng=t=>{const m=String(t).match(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?/);return m?{a:+m[1],b:m[2]?+m[2]:null}:null};
 const stdOut=t=>String(t).replace(/\(?\s*(?:ISO|ASTM|KS|JIS|DIN|EN)\s*[A-Z]?\s*[\d\-:.]+[^)\s]*\s*\)?/gi,' ');
 const CODE=[/#\s*(\d{2,5}[A-Z]?)/,/(?:No\.?|번호)\s*(\d{1,5}[A-Z]?)/i,/\b([A-Z]{1,5}-\d{2,5}[A-Z]?)\b/,/\b([A-Z]{1,4}\d{2,5}[A-Z]?)\b/,/(\d{2,5})\s*번/,/\b(0\d{4})\b/];
@@ -4874,17 +4895,17 @@ function overlay(s,cells){
  try{for(const t0 of get(/^(?:도막두께|건조도막두께|추천도막두께|추천도막|권장도막두께|권장도막|표준도막두께)$/)){const t=t0.replace(/\([^)]*(?:습|wet)[^)]*\)/gi,' ');for(const m of t.matchAll(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?\s*(㎛|μm|µm|um|㎜|mm)/gi)){if(/습윤|wet/i.test(t.slice(Math.max(0,m.index-8),m.index)))continue;const k=/mm|㎜/i.test(m[3])?1000:1,a=+m[1]*k,b=m[2]?+m[2]*k:0,v=Math.round(b>a?(a+b)/2:a);if(v>=5&&v<=20000){s.dft=v;break}}if(s.dft)break}}catch(e){}
  try{const th=cells.filter(c=>/^(?:희석|희석제|신나|신너|시너|희석율|희석비율|희석률)$/.test(c.k)).map(c=>(c.k=='희석'?'':c.k+' ')+c.v).join(' ');if(th){const o=thinCell(th);if(o.tn){s.tn=o.tn;if(o.tc)s.tc=o.tc}if(o.tr!=null)s.tr=o.tr}}catch(e){}
  try{const pk=get(/^(?:포장단위|포장규격|포장|출고규격|포장용량|공급단위|판매단위)$/).join(' ');if(pk){const a=[...pk.matchAll(/(\d+(?:\.\d+)?)\s*(ℓ|L|리터|㎏|kg)(?![a-z])/gi)].filter(x=>+x[1]>0&&+x[1]<=1000).map(x=>({v:+x[1],u:/kg|㎏/i.test(x[2])?'㎏':'ℓ'}));if(a.length){const mx=a.reduce((p,q)=>q.v>p.v?q:p),us=[...new Set(a.filter(x=>x.u==mx.u).map(x=>x.v))].sort((p,q)=>p-q);s.pack=mx.v;s.pun=mx.u;s.pks=us.map(v=>v+(mx.u=='㎏'?'kg':'L')).join(' · ')}}}catch(e){}
- try{const u=get(/^(?:용도|적용대상|적용부위|사용처)$/)[0];if(u){s.use=sumU(u);if(typeof exUse=='function'){const x=exUse(s.use);if(x)s.us=x;else s.us=s.use}else s.us=s.use}}catch(e){}
+ try{const uc=cells.find(c=>/^(?:용도|적용대상|적용부위|사용처)$/.test(c.k)),u=uc?((uc.p||[]).filter(t=>!/^\s*[*·•※\-]/.test(t)).join(' ').trim()||uc.v):'';if(u){s.use=sumU(u);if(typeof exUse=='function'){const x=exUse(s.use);if(x)s.us=x;else s.us=s.use}else s.us=s.use}}catch(e){}
  try{const q=get(/^(?:표면처리|소지조정|바탕처리|전처리|사용법|사용방법)$/)[0];if(q&&typeof exSp=='function'){const x=exSp(q);if(x)s.sp=x}}catch(e){}
- try{const ex=typeof exPre=='function'?exPre:null;const n=get(/^(?:후속도장|후속도료)$/)[0],p=get(/^(?:선행도장|선행도료|전도장)$/)[0];if(ex){if(n)s.nxt=ex(n);if(p)s.pre=ex(p)}}catch(e){}
+ try{const ex=typeof exPre=='function'?exPre:null;const gp=re=>{const c=cells.find(c=>re.test(c.k));return c?((c.p||[c.v]).map(t=>String(t).trim()).filter(Boolean).join(', ')):''},n=gp(/^(?:후속도장|후속도료)$/),p=gp(/^(?:선행도장|선행도료|전도장)$/);if(ex){if(n)s.nxt=ex(n);if(p)s.pre=ex(p)}}catch(e){}
  return s}
 const P1=parseAll;
-parseAll=function(L){L=L||[];let C;try{C=cellify(L.map(x=>String(x==null?'':x)))}catch(e){C=null}
+parseAll=function(L){L=L||[];let C;try{const L2=L.map(x=>String(x==null?'':x));L2.y=L.y;L2.rid=L.rid;L2.ocr=L.ocr;C=cellify(L2)}catch(e){C=null}
  const src=C?C.lines.concat(L.map(fixLabel)):L,s=P1(src);
  try{if(C)overlay(s,C.cells)}catch(e){}
  s.ocr=L.ocr;return s};
 {const D=parseDry,P=parsePot,F=L=>{const o=(L||[]).map(x=>{try{return fixLabel(x)}catch(e){return x}});o.ocr=L&&L.ocr;return o};parseDry=L=>D(F(L));parsePot=L=>P(F(L))}
-window.__cellify=cellify;window.__fixLabel=fixLabel;
+window.__cellify=cellify;window.__thinCell=thinCell;window.__fixLabel=fixLabel;
 })();
 </script>
 <script id=kb326>
