@@ -2405,7 +2405,15 @@ async function pdfRules(pg){const O=pdfjsLib.OPS,ol=await pg.getOperatorList();l
     /* v6: 사각형은 moveTo+lineTo*3+close 로 들어옴 → 위 seg 로 처리, 채워진 얇은 사각형은 아래에서 */
     if(d.length>=13&&d[0]===0&&d[3]===1&&d[6]===1&&d[9]===1){const xs=[d[1],d[4],d[7],d[10]],ys=[d[2],d[5],d[8],d[11]];rect(Math.min(...xs),Math.min(...ys),Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys))}}}}
  if(!hs.length)return [];const mw=Math.max(...hs.map(h=>h.x2-h.x1)),ys=hs.filter(h=>h.x2-h.x1>=mw*.4).map(h=>h.y).sort((a,b)=>b-a),o=[];for(const y of ys)if(!o.length||o[o.length-1]-y>1.5)o.push(y);return o}
-async function pdfText(f,mp){await lp();const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,L=[],YS=[],RID=[];try{for(let p=1;p<=Math.min(doc.numPages,mp||40);p++){const pg=await doc.getPage(p),c=await pg.getTextContent(),m={};let RL=[];try{RL=await pdfRules(pg)}catch(e){RL=[]}c.items.forEach(it=>{const y=Math.round(it.transform[5]/3);(m[y]=m[y]||[]).push([it.transform[4],it.str,it.transform[5]])});try{pg.cleanup()}catch(e){}Object.keys(m).map(Number).sort((a,b)=>b-a).forEach(y=>{const t=m[y].sort((a,b)=>a[0]-b[0]).map(x=>x[1]).join(' ').replace(/\s+/g,' ').trim();if(t){L.push(t);YS.push(y*3-(p-1)*1e5);const y0=m[y][0][2];RID.push(RL.length>=3?p*1000+RL.filter(r=>r>y0).length:-1)}})}}finally{try{await doc.destroy()}catch(e){}}const R=L;R.y=YS;R.rid=RID;return R}
+function ddLine(t){let k=String(t).split(' ');
+ /* 굵게(겹쳐 찍은) 글자: 한 글자씩 두 번 → 한 번 */
+ const one=x=>x.length==1&&/[가-힣一-鿿]/.test(x);let i=0;const o=[];
+ while(i<k.length){if(one(k[i])&&k[i+1]===k[i]&&i<24){o.push(k[i]);i+=2}else{o.push(k[i]);i++}}
+ /* 같은 덩어리가 연달아 두 번 → 한 번 (제목·라벨·값) */
+ let r=o;for(let pass=0;pass<3;pass++){let ch=false;for(let n=Math.min(12,Math.floor(r.length/2));n>=1;n--){for(let a=0;a+2*n<=r.length;a++){let same=true;for(let q=0;q<n;q++)if(r[a+q]!==r[a+n+q]){same=false;break}
+   if(same&&r.slice(a,a+n).some(x=>/[가-힣A-Za-z一-鿿]/.test(x))&&!(n==1&&/^\d+$/.test(r[a]))){r=r.slice(0,a+n).concat(r.slice(a+2*n));ch=true;break}}if(ch)break}if(!ch)break}
+ return r.join(' ')}
+async function pdfText(f,mp){await lp();const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,L=[],YS=[],RID=[];try{for(let p=1;p<=Math.min(doc.numPages,mp||40);p++){const pg=await doc.getPage(p),c=await pg.getTextContent(),m={};let RL=[];try{RL=await pdfRules(pg)}catch(e){RL=[]}c.items.forEach(it=>{const y=Math.round(it.transform[5]/3);(m[y]=m[y]||[]).push([it.transform[4],it.str,it.transform[5]])});try{pg.cleanup()}catch(e){}Object.keys(m).map(Number).sort((a,b)=>b-a).forEach(y=>{const t=ddLine(m[y].sort((a,b)=>a[0]-b[0]).map(x=>x[1]).join(' ').replace(/\s+/g,' ').trim());if(t){L.push(t);YS.push(y*3-(p-1)*1e5);const y0=m[y][0][2];RID.push(RL.length>=3?p*1000+RL.filter(r=>r>y0).length:-1)}})}}finally{try{await doc.destroy()}catch(e){}}const R=L;R.y=YS;R.rid=RID;return R}
 function recoat(J){const MX='(\\d+(?:\\s*~\\s*\\d+)?\\s*(?:시간|분|일|주일|주|개월)|무제한|제한\\s*없음|없음)',Z=x=>(x||'').replace(/\s/g,''),out=[],A=new RegExp('(\\d+)\\s*[℃°]\\s*C?[^\\n]{0,15}?최소\\s*[:：]?\\s*'+MX+'(?:[^\\n]{0,8}?최대\\s*[:：]?\\s*'+MX+')?','g');let m;
 while(m=A.exec(J))out.push([m[1]+'℃',Z(m[2]),Z(m[3])]);
 if(!out.length)J.split('\n').forEach(l=>{if(!/(재도장|도장\s*간격)/.test(l))return;const a=l.match(new RegExp('최소\\s*[:：]?\\s*'+MX)),b=l.match(new RegExp('최대\\s*[:：]?\\s*'+MX)),tp=l.match(/(\d+)\s*[℃°]/);if(a)out.push([tp?tp[1]+'℃':'',Z(a[1]),Z(b&&b[1])])});
@@ -2416,7 +2424,7 @@ for(let i=0;i<L.length&&!rows.length;i++){const tm=[...L[i].matchAll(T)].map(m=>
 recoat(L.join('\n')).forEach(([t,mn,mx])=>{const r=rows.find(x=>x[0]==t)||(!t&&rows.length==1?rows[0]:0);if(r){if(!r[4]){r[4]=mn;r[5]=mx}}else rows.push([t,'','','',mn,mx])});
 return rows.map(r=>r.join('/')).join(';')}
 function parsePot(L){for(let i=0;i<L.length;i++){const l=L[i];if(!/가사\s*시간/.test(l))continue;const a=l.match(/(\d+)\s*[℃°]\s*C?[^\d]{0,6}?(\d+(?:\.\d+)?)\s*(시간|분)/);if(a)return a[1]+'℃ '+a[2]+a[3];const v=[...l.matchAll(/(\d+(?:\.\d+)?)\s*(시간|분)/g)].map(m=>m[1]+m[2]),tm=[...L.slice(Math.max(0,i-4),i).join(' ').matchAll(/(\d+)\s*[℃°]\s*C?/g)].map(m=>m[1]+'℃').slice(-v.length);if(v.length&&tm.length==v.length)return tm.map((x,k)=>x+' '+v[k]).join(' / ');if(v.length)return v.join(' / ')}return ''}
-const tdsNm=(f,sp)=>{const h=String((sp&&sp.hname)||'').replace(/\s+/g,' ').trim(),ok=h.length>=2&&h.length<=30&&!/(합니다|입니다|됩니다|적합|사용|있습니다|바랍니다|것)/.test(h)&&!/[.。]$/.test(h),b=fb(f.name).replace(/_+/g,' ').replace(/\b(TDS|PDS|MSDS|datasheet|technical data sheet)\b/ig,' ').replace(/기술자료집?|데이터\s*시트|최신|최종|수정본|복사본|\(\d+\)|rev\.?\s*\d*|ver\.?\s*\d*/ig,' ').replace(/\s+/g,' ').trim();return (ok?h:b).slice(0,40)};
+const tdsNm=(f,sp)=>{const h=String((sp&&sp.hname)||'').replace(/\([^)]*\)|（[^）]*）/g,' ').replace(/\s+/g,' ').trim(),ok=h.length>=2&&h.length<=30&&!/(합니다|입니다|됩니다|적합|사용|있습니다|바랍니다|것)/.test(h)&&!/[.。]$/.test(h),b=fb(f.name).replace(/_+/g,' ').replace(/\b(TDS|PDS|MSDS|datasheet|technical data sheet)\b/ig,' ').replace(/기술자료집?|데이터\s*시트|최신|최종|수정본|복사본|\(\d+\)|rev\.?\s*\d*|ver\.?\s*\d*/ig,' ').replace(/\s+/g,' ').trim();return (ok?h:b).slice(0,40)};
 async function extC(key,ci,f){try{tt('TDS에서 기술자료를 읽는 중…');const L=await pdfLines(f,tt,false,true),sp=parseAll(L),c=S.coats[ci];if(!c)return;
 const m=!(c.n||'').trim()&&(findP(fb(f.name))||(sp.hname&&findP(sp.hname)));
 const mv=async nk=>{if(nk===key)return;const r=await idb('get',key).catch(()=>0);if(r){await idb('put',nk,r);await idb('del',key).catch(()=>0)}};
@@ -4846,13 +4854,14 @@ const SEC=/^(?:일반적성질|도장사양|보관및포장조건|보관및포�
 function lead(line){const tk=String(line).trim().replace(/^[■□●○▪·]\s*/,'').replace(/([가-힣A-Za-z)])\s*[:：]\s*/,'$1 : ').split(/\s+/);let best=null,s='';for(let j=0;j<Math.min(tk.length,9);j++){if(/^[:：]$/.test(tk[j]))break;s+=sqz(tk[j]);if(FULL.has(s))best={s,j,t:'F'};else if(PRE.has(s))best=best&&best.t=='F'&&best.j>j-0?best:{s,j,t:'P'};else if(SUF.has(s)&&!best)best={s,j,t:'S'}}
  if(!best)return null;/* 라벨 뒤의 값 */const rest=tk.slice(best.j+1).join(' ').replace(/^[:：]\s*/,'');return {s:best.s,t:best.t,rest}}
 function fixLabel(l){const x=lead(l);if(!x||x.t=='S'&&!/[가-힣]/.test(x.s))return l;return x.s+(x.rest?' '+x.rest:'')}
+const jw=a=>{let r='';for(const t0 of a){const t=String(t0).trim();if(!t)continue;if(!r)r=t;else r+=(/[가-힣]$/.test(r)&&/^[가-힣]\s/.test(t)?'':' ')+t}return r};
 function cellify(L){const Y=L.y&&L.y.length==L.length?L.y:null;
  /* 1) y 간격으로 칸(블록) 나누기: 칸 안 줄간격 < 칸 사이 간격 */
  const RID=L.rid&&L.rid.length==L.length&&L.rid.filter(r=>r>=0).length>=L.length*.5?L.rid:null;
  const blocks=[];if(RID){let cur=[];for(let i=0;i<L.length;i++){if(cur.length&&(RID[i]!==RID[i-1]||RID[i]<0)){blocks.push(cur);cur=[]}cur.push(i)}if(cur.length)blocks.push(cur)}else{let cur=[];const gaps=[];if(Y)for(let i=1;i<L.length;i++)gaps.push(Y[i-1]-Y[i]);const sg0=gaps.filter(g=>g>0).sort((a,b)=>a-b),md=sg0.length?sg0[Math.floor(sg0.length/2)]:0,sg=sg0.filter(g=>g>=md*.6),base=sg.length?sg[Math.floor(sg.length*.25)]:0;
   for(let i=0;i<L.length;i++){if(Y&&i>0&&cur.length&&(Y[i-1]-Y[i])>base*1.35+0.5){blocks.push(cur);cur=[]}cur.push(i)}if(cur.length)blocks.push(cur)}
  const cells=[],out=[];let prev=null;
- const fin=c=>{const v=c.parts.join(' ').replace(/\s+/g,' ').trim();c.v=v;cells.push({k:c.k,v,p:c.parts.slice()});return c.k+(v?' : '+v:'')};
+ const fin=c=>{const v=jw(c.parts).replace(/\s+/g,' ').trim();c.v=v;cells.push({k:c.k,v,p:c.parts.slice()});return c.k+(v?' : '+v:'')};
  for(const bl of blocks){const slots=[];let cur=null,pre=[],blkPrev=null;
   const close=()=>{if(!cur)return;if(cur.k==null){const raw=cur.raw.join(' ');if(blkPrev)blkPrev.parts.push(raw);else if(prev)prev.parts.push(raw);else slots.push({txt:raw})}else blkPrev=cur;cur=null};
   const give=c=>{if(pre.length){if(RID)c.parts=pre.concat(c.parts);else if(prev)prev.parts.push(pre.join(' '));else pre.forEach(t=>slots.push({txt:t}));pre=[]}};
@@ -4876,16 +4885,19 @@ const CODE=[/#\s*(\d{2,5}[A-Z]?)/,/(?:No\.?|번호)\s*(\d{1,5}[A-Z]?)/i,/\b([A-Z
 function thinCell(T){const o={};T=String(T).replace(/\s+/g,' ');
  const mc=T.match(/희석제\s*(?:코드|code)\s*[:：]?\s*([A-Za-z0-9#\-]+)/i),mn=T.match(/(?:희석제|신나|시너|신너)\s*(?:명|종류)\s*[:：]?\s*(.+?)(?=\s*(?:희석\s*율|희석제|$))/);if(mc)o.tc=mc[1].replace(/^#/,'');if(mn)o.tn=mn[1].replace(/\s*\d+(?:\.\d+)?\s*(?:[~～\-–]\s*\d+)?\s*%.*$/,'').trim();
 
- const mp=T.match(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?\s*%/);if(mp){const v=Math.max(+mp[1],+(mp[2]||0));if(v>=0&&v<=50)o.tr=+(v/100).toFixed(3)}else if(/무희석|희석\s*불필요/.test(T))o.tr=0;
+ const mp=T.match(/희석\s*(?:율|비율|률)[^%\d]{0,8}(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?\s*%/)||T.match(/(\d+(?:\.\d+)?)(?:\s*[~～\-–]\s*(\d+(?:\.\d+)?))?\s*%/);if(mp){const v=Math.max(+mp[1],+(mp[2]||0));if(v>=0&&v<=100)o.tr=+(v/100).toFixed(3)}else if(/무희석|희석\s*불필요/.test(T))o.tr=0;
  const km=T.match(/(?:희석제|신나|신너|시너|thinner)/i);
  if(km){const i=km.index,pre=T.slice(Math.max(0,i-14),i),post=T.slice(i+km[0].length,i+km[0].length+60).replace(/^(?:\s*[\/·]\s*[가-힣]{2,5})*\s*(?:명|종류)?\s*[:：]\s*/,'');
-  let nm=post.replace(/^\s*(?:\(|:|：|는|은|로|\s)+/,'').replace(/\s*\d+(?:\.\d+)?\s*(?:[~～\-–]\s*\d+)?\s*%.*$/,'').split(/\s*(?:를|을|으로|로\s|사용|희석|,|;|\.|\)\s)/)[0].replace(/\)$/,'').trim();
-  if(!nm||nm.length>26||/^\d+\s*[~%]/.test(nm)||/^#?\d{2,5}$/.test(nm)){const b=pre.match(/((?:[A-Za-z가-힣]+\s*)?(?:전용\s*)?)$/);nm=((b?b[1]:'')+km[0]).trim()}
+  const cm0=post.match(/^\s*(?:\(|:|：|는|은)?\s*(?:No\.?|NO\.?|#|번호)\s*([A-Za-z0-9\-]{2,8})/);
+  if(cm0){if(!o.tc)o.tc=cm0[1];if(!o.tn)o.tn=/KCC|케이씨씨|조광|삼화|노루|강남|제비스코/.test(pre)?(pre.match(/KCC|케이씨씨|조광|삼화|노루|강남|제비스코/)[0]+' '+km[0]):((/전용/.test(pre)?'전용 ':'')+km[0])}
+  else{
+  let nm=post.replace(/^\s*(?:\(|:|：|는|은|로|\s)+/,'').replace(/\s*\d+(?:\.\d+)?\s*(?:[~～\-–]\s*\d+)?\s*%.*$/,'').split(/\s*(?:를|을|으로|로\s|사용|희석|,|;|\.\s|\)\s)/)[0].replace(/\)$/,'').trim();
+  if(!nm||nm.length>26||/^\d+\s*[~%]/.test(nm)||/^#?\d{2,5}$/.test(nm)){const b=pre.match(/(KCC|케이씨씨|조광|삼화|노루|강남제비스코|제비스코|[A-Za-z]{2,})\s*(?:전용\s*)?$/);nm=b?(b[1]+' 전용 '+km[0]):''}
   else if(/전용/.test(pre)&&!/전용/.test(nm))nm='전용 '+nm;
   let c='';const win=post.slice(0,40);for(const r of CODE){const k=win.match(r);if(k){c=k[1];break}}
-  if(c){nm=nm.replace(new RegExp('[\\s(\\[]*(?:#\\s*|No\\.?\\s*)?'+c.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&')+'\\s*(?:번)?[\\s)\\]]*','i'),' ').replace(/\s+/g,' ').trim()}
-  if(!nm||/^[\s()\-:]*$/.test(nm))nm=/[A-Za-z]/.test(c)?c:'전용 희석제';
-  if(!/^무희석/.test(nm)){if(!o.tn)o.tn=nm.replace(/[\s,;:·\-]+$/,'');if(c&&!o.tc)o.tc=c}}
+  if(c&&nm){nm=nm.replace(new RegExp('[\\s(\\[]*(?:#\\s*|No\\.?\\s*)?'+c.replace(/[.*+?^${}()|[\]\\-]/g,'\\$&')+'\\s*(?:번)?[\\s)\\]]*','i'),' ').replace(/\s+/g,' ').trim()}
+  if(c&&(!nm||/^[\s()\-:]*$/.test(nm)))nm=/[A-Za-z]/.test(c)?c:'희석제';
+  if(nm&&!/^무희석/.test(nm)){if(!o.tn)o.tn=nm.replace(/[\s,;:·\-]+$/,'');if(c&&!o.tc)o.tc=c}}}
  return o}
 function overlay(s,cells){
  const get=re=>cells.filter(c=>re.test(c.k)).map(c=>c.v).filter(Boolean);
@@ -4898,11 +4910,24 @@ function overlay(s,cells){
  try{const uc=cells.find(c=>/^(?:용도|적용대상|적용부위|사용처)$/.test(c.k)),u=uc?((uc.p||[]).filter(t=>!/^\s*[*·•※\-]/.test(t)).join(' ').trim()||uc.v):'';if(u){s.use=sumU(u);if(typeof exUse=='function'){const x=exUse(s.use);if(x)s.us=x;else s.us=s.use}else s.us=s.use}}catch(e){}
  try{const q=get(/^(?:표면처리|소지조정|바탕처리|전처리|사용법|사용방법)$/)[0];if(q&&typeof exSp=='function'){const x=exSp(q);if(x)s.sp=x}}catch(e){}
  try{const ex=typeof exPre=='function'?exPre:null;const gp=re=>{const c=cells.find(c=>re.test(c.k));return c?((c.p||[c.v]).map(t=>String(t).trim()).filter(Boolean).join(', ')):''},n=gp(/^(?:후속도장|후속도료)$/),p=gp(/^(?:선행도장|선행도료|전도장)$/);if(ex){if(n)s.nxt=ex(n);if(p)s.pre=ex(p)}}catch(e){}
+ try{const c=cells.find(c=>/^(?:비중|밀도)$/.test(c.k));if(c){const t=c.v.replace(/\([^)]*\)/g,' ');const m=t.match(/(\d+(?:\.\d+)?)\s*[~～\-–]\s*(\d+(?:\.\d+)?)/);if(m&&+m[1]>=.5&&+m[2]<=5&&+m[2]>=+m[1])s.sg=+((+m[1]+ +m[2])/2).toFixed(3)}}catch(e){}
+ try{const c=cells.find(c=>/^(?:포장단위|포장규격|포장|출고규격|포장용량)$/.test(c.k));if(c){const t=c.v,P=[];for(const m of t.matchAll(/(\d+(?:\.\d+)?)\s*(ℓ|L|리터|㎏|kg)\s*포장\s*시?\s*\(?\s*주제\s*[:：]?\s*경화제\s*[=:：]?\s*(\d+(?:\.\d+)?)\s*(?:ℓ|L|㎏|kg)?\s*[:：]\s*(\d+(?:\.\d+)?)/gi))P.push({t:+m[1],u:/kg|㎏/i.test(m[2])?'㎏':'ℓ',a:+m[3],b:+m[4]});
+  if(P.length){const mx=P.reduce((p,q)=>q.t>p.t?q:p);s.pk=mx.a;s.mk=+(mx.a+mx.b).toFixed(2);s.pun=mx.u;s.mixa=mx.a;s.mixb=mx.b;s.pack=mx.t;s.pks=[...new Set(P.map(x=>x.t))].sort((a,b)=>a-b).map(v=>v+(mx.u=='㎏'?'kg':'L')).join(' · ')}}}catch(e){}
  return s}
+function headOf(L){const out=[];for(const raw of L){const z=sqz(raw);if(SEC.test(z))break;const x=lead(raw);if(x&&x.t=='F')break;out.push(String(raw).trim());if(out.length>8)break}return out}
+function descOf(L,s){try{const H=headOf(L);if(!H.length)return;let t=String(H[0]).replace(/(?:데이터\s*시트|기술\s*자료집?|TDS)/gi,' ').replace(/\([^)]*\)/g,' ').replace(/\b[A-Z]{1,4}-?\d{2,}[A-Z0-9]*\b/g,' ').replace(/\s+/g,' ').trim(),tk=t.split(' ').filter(Boolean);
+  if(tk.length>=3)tk=tk.slice(1);const g=tk.join(' ');if(g.length>=2&&g.length<=30)s.g=g;
+  let d=jw(H.slice(1));d=d.replace(/^(?:[가-힣A-Za-z0-9() ]{2,40}?\s)?[A-Z]{1,4}-?\d{2,}[A-Z0-9]*\s*(?:은|는|이|가)\s+/,'').replace(/(?:됩니다|합니다|입니다)\.?$/,m=>/경화|건조|형성/.test(d)?'':m).replace(/\.$/,'').trim();
+  if(d.length>100){const k=d.lastIndexOf(',',100);d=(k>40?d.slice(0,k):d.slice(0,100)).trim()}if(d.length>=6)s.d=d}catch(e){}}
+
 const P1=parseAll;
 parseAll=function(L){L=L||[];let C;try{const L2=L.map(x=>String(x==null?'':x));L2.y=L.y;L2.rid=L.rid;L2.ocr=L.ocr;C=cellify(L2)}catch(e){C=null}
  const src=C?C.lines.concat(L.map(fixLabel)):L,s=P1(src);
  try{if(C)overlay(s,C.cells)}catch(e){}
+ try{descOf(L.map(x=>String(x==null?'':x)),s)}catch(e){}
+ try{if(s.mf)s.mf=String(s.mf).replace(/\([^)]*\)|（[^）]*）/g,' ').replace(/\s+/g,' ').trim()}catch(e){}
+ try{if(s.sp)s.sp=String(s.sp).replace(/용제\s*크리닝/g,'용제세정')}catch(e){}
+ try{if(!s.mf&&L.some(x=>/080-?022-?8200/.test(String(x))))s.mf='KCC'}catch(e){}
  s.ocr=L.ocr;return s};
 {const D=parseDry,P=parsePot,F=L=>{const o=(L||[]).map(x=>{try{return fixLabel(x)}catch(e){return x}});o.ocr=L&&L.ocr;return o};parseDry=L=>D(F(L));parsePot=L=>P(F(L))}
 window.__cellify=cellify;window.__thinCell=thinCell;window.__fixLabel=fixLabel;
