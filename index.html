@@ -3360,18 +3360,23 @@ let TP={tab:'file',file:null},TV=null;
 const pqType=t=>{t=String(t||'').toLowerCase();const o=[];[[/하도|프라이머|primer|방청|숍프라이머/,'하도'],[/중도|intermediate|미스트코트/,'중도'],[/상도|top\s*coat|finish|마감/,'상도'],[/방오|antifoul/,'방오도료'],[/내화|intumescent|fire/,'내화도료'],[/징크|zinc|아연/,'징크'],[/퍼티|putty/,'퍼티'],[/실러|sealer/,'실러'],[/희석제|신너|시너|thinner/,'희석제'],[/에폭시|epoxy/,'에폭시'],[/우레탄|urethane/,'우레탄'],[/아크릴|acrylic/,'아크릴'],[/락카|lacquer/,'락카']].forEach(([r,l])=>{if(r.test(t)&&!o.includes(l))o.push(l)});return o.slice(0,3).join('·')};
 function tpRender(){
  const e=document.getElementById('v4');if(!e)return;
- const rc=pqRc().filter(x=>/TDS|등록/.test(x.t)).slice(0,4);
- e.innerHTML=`<div class="pq"><div class="pqc"><div class="pqh"><span class="pqi">${PQI.tds}</span><div><b>TDS 등록</b><small>링크 또는 PDF로 분석하고, 검토 후 등록합니다</small></div></div>
- <div class="pqtabs"><button id="tpt_link" class="${TP.tab=='link'?'on':''}" onclick="tpTab('link')">링크 등록</button><button id="tpt_file" class="${TP.tab=='file'?'on':''}" onclick="tpTab('file')">파일 첨부</button></div>
- <div id="tp_link" ${TP.tab=='link'?'':'hidden'}><label class="pql">제조사 홈페이지 TDS URL</label><input id="tp_url" class="pqin" placeholder="https://..." inputmode="url"><div class="pqn">일부 사이트는 로그인·접근 제한 때문에 자동으로 내려받을 수 없습니다. 이 경우 PDF를 직접 첨부하면 URL은 출처로 기록됩니다.</div></div>
- <div id="tp_file" ${TP.tab=='file'?'':'hidden'}><label class="pql">PDF 또는 이미지 파일 (최대 20MB)</label><label class="tdsfb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h6M9 17h6"/></svg><span>TDS 첨부 (PDF · 이미지)</span><input id="tp_f" type="file" accept=".pdf,application/pdf,image/*" onchange="tpPick(this)"></label><div id="tp_fn" class="pqn"></div>
- <label class="pql">출처 URL (선택)</label><input id="tp_src" class="pqin" placeholder="https://..." inputmode="url"><label class="pql">TDS 개정일 (선택)</label><input id="tp_rev" class="pqin" placeholder="예: 2025-05-14"></div>
- <label class="pqk"><input type="checkbox" id="tp_keep"><span>원본 PDF를 이 기기에 보관합니다 (기본: 분석 후 보관하지 않음)</span></label>
- <label class="pqk"><input type="checkbox" id="tp_ok"><span>이 자료를 이용할 권한이 있으며, 제조사의 이용조건을 확인했습니다.</span></label>
- <button class="pqb" onclick="tpStart()">분석 시작</button><div id="tp_st"></div></div>
- <div class="pqc pqnote">${PQI.shield}<div><b>저장 정책</b><small>TDS 원문의 설명 문구·표·이미지는 저장하지 않고, 계산에 필요한 값(DFT·SVR·비중·혼합비 등)만 검토 후 등록합니다. 분석 결과는 바로 저장되지 않습니다.</small></div></div>
- <div class="pqc"><b class="pqsec">최근 등록</b>${rc.length?rc.map(x=>`<div class="dsl"><span class="dsb">${esc(x.t)}</span><span class="dsn">${esc(x.n)}</span><span class="dsd">${esc(x.d)}</span></div>`).join(''):'<div class="dsl none">등록 내역이 없습니다</div>'}</div></div>`;
+ const all=pqRc().filter(x=>/TDS|등록/.test(x.t)),rc=TP.all?all.slice(0,10):all.slice(0,3);
+ const I=(d,w)=>`<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none">${d}</svg>`;
+ const DOC='<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',LINK='<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',CAL='<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h.01M12 14h.01M16 14h.01"/>';
+ e.innerHTML=`<div class="pq tx"><div class="tx-tabs"><button id="tpt_link" class="${TP.tab=='link'?'on':''}" onclick="tpTab('link')">${I(DOC,22)}<span>링크 등록</span></button><button id="tpt_file" class="${TP.tab=='file'?'on':''}" onclick="tpTab('file')">${I(DOC,22)}<span>파일 첨부</span></button></div>
+ <div class="tx-card">
+ <div id="tp_link" ${TP.tab=='link'?'':'hidden'}><div class="tx-h"><i>1</i><b>제조사 홈페이지 TDS URL</b></div><div class="tx-in"><input id="tp_url" class="pqin" placeholder="https://..." inputmode="url"></div><div class="tx-n">일부 사이트는 로그인·접근 제한 때문에 자동으로 내려받을 수 없습니다. 이 경우 PDF를 직접 첨부하면 URL은 출처로 기록됩니다.</div></div>
+ <div id="tp_file" ${TP.tab=='file'?'':'hidden'}><div class="tx-h"><i>1</i><b>PDF 또는 이미지 파일 (최대 20MB)</b></div>
+ <label class="tx-drop tdsfb"><span class="tx-di">${I('<path d="M6 3h9l4 4v6"/><path d="M15 3v4h4"/><path d="M6 3v18h7"/><circle cx="17.5" cy="17.5" r="4"/><path d="M17.5 15.5v4M15.5 17.5h4"/>',44)}</span><span class="tx-dt"><b>TDS 첨부 (PDF · 이미지)</b><small>파일을 선택하거나 드래그하여 업로드하세요.</small></span><input id="tp_f" type="file" accept=".pdf,application/pdf,image/*" onchange="tpPick(this)"></label><div id="tp_fn" class="tx-fn"></div>
+ <label class="tx-lb" for="tp_src">${I(LINK,20)}<b>출처 URL (선택)</b></label><div class="tx-in"><input id="tp_src" class="pqin" placeholder="https://..." inputmode="url"></div>
+ <label class="tx-lb" for="tp_rev">${I(CAL,20)}<b>TDS 개정일 (선택)</b></label><div class="tx-in"><input id="tp_rev" class="pqin" placeholder="예: 2025-05-14"><span class="tx-ic" onclick="document.getElementById('tp_rev').focus()">${I(CAL,22)}</span></div></div>
+ <label class="tx-ck"><input type="checkbox" id="tp_keep"><i></i><span>원본 PDF를 이 기기에 보관합니다 (기본: 분석 후 보관하지 않음)</span></label>
+ <label class="tx-ck"><input type="checkbox" id="tp_ok"><i></i><span>이 자료를 이용할 권한이 있으며, 제조사의 이용조건을 확인했습니다.</span></label>
+ <button class="tx-go" onclick="tpStart()">${I('<path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="M21 3 10 13"/>',22)}<b>분석 시작</b>${I('<path d="M9 6l6 6-6 6"/>',22)}</button><div id="tp_st"></div></div>
+ <div class="tx-pol">${I('<path d="M12 3 4.5 6v5.5c0 4.5 3 8 7.5 9.5 4.5-1.5 7.5-5 7.5-9.5V6z"/><path d="M9 12l2.2 2.2L15.5 10"/>',40)}<div><b>저장 정책</b><small>TDS 원문의 설명 문구·표·이미지는 저장하지 않고, 계산에 필요한 값(DFT·SVR·비중·혼합비 등)만 검토 후 등록합니다. 분석 결과는 바로 저장되지 않습니다.</small></div></div>
+ <div class="tx-card tx-rc"><div class="tx-rh">${I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',28)}<b>최근 등록</b>${all.length>3||TP.all?`<a onclick="TP.all=!TP.all;tpRender()">${TP.all?'접기':'전체보기'} ${I('<path d="M9 6l6 6-6 6"/>',16)}</a>`:''}</div>${rc.length?rc.map(x=>`<div class="tx-r" onclick="tpGoRc(this.dataset.n)" data-n="${esc(x.n)}"><span class="tx-ri">${I(DOC,20)}</span><span class="tx-rb">${esc(x.t)}</span><span class="tx-rn">${esc(x.n)}</span><span class="tx-rd">${esc(x.d)}</span>${I('<path d="M9 6l6 6-6 6"/>',18)}</div>`).join(''):'<div class="tx-none">등록 내역이 없습니다</div>'}</div></div>`;
 }
+function tpGoRc(n){try{T(1);setTimeout(()=>{const q=document.getElementById('q');if(q){q.value=n;if(typeof dbl=='function')dbl()}},120)}catch(e){}}
 function tpTab(t){TP.tab=t;['link','file'].forEach(k=>{const a=document.getElementById('tp_'+k),b=document.getElementById('tpt_'+k);if(a)a.hidden=k!=t;if(b)b.classList.toggle('on',k==t)})}
 function tpPick(i){const f=i.files[0];TP.file=f||null;const n=document.getElementById('tp_fn');if(n)n.textContent=f?f.name+' · '+(f.size/1048576).toFixed(1)+'MB':''}
 function tpSay(m,err){const e=document.getElementById('tp_st');if(!e)return;e.innerHTML=m?`<div class="pqst ${err?'er':''}">${err?'':'<i class="pqbar"></i>'}<span>${m}</span></div>`:''}
@@ -5097,6 +5102,75 @@ parseAll=function(L){const s=prev(L)||{};let o={};try{o=fix(L,s)}catch(e){consol
  return r};
 })();
 </script>
+<style id=tds327>
+html body.pg4 #hx{height:calc(var(--u)*323)!important}
+html body.pg4 #hx .hxbk{top:calc(var(--u)*106)!important;left:calc(var(--u)*33)!important;width:calc(var(--u)*68)!important;height:calc(var(--u)*68)!important;font-size:calc(var(--u)*30)!important}
+html body.pg4 #hx .hxtt{top:calc(var(--u)*120)!important;left:calc(var(--u)*124)!important}
+html body.pg4 #hx .hxs1{font-size:calc(var(--u)*18.2)!important}
+html body.pg4 #hx #ttl{font-size:calc(var(--u)*46)!important;line-height:1.1!important;margin-top:calc(var(--u)*17)}
+html body.pg4 #hx .hxbar{display:none!important}
+html body.pg4 #hx .hxs2{font-size:calc(var(--u)*18.2)!important;line-height:1.55!important;white-space:pre-line!important;margin-top:calc(var(--u)*14)!important;max-width:calc(var(--u)*700)}
+html body.pg4 #v4.pn{margin-top:calc(var(--u)*-6)!important;margin-left:0!important;margin-right:0!important;width:100%!important;max-width:none!important;padding:calc(var(--u)*28) calc(var(--u)*30) 110px!important;background:#fff!important;border-radius:calc(var(--u)*56) calc(var(--u)*56) 0 0!important}
+.tx{display:flex;flex-direction:column;gap:calc(var(--u)*24);background:none!important;padding:0!important;border:0!important;box-shadow:none!important;font-family:"Noto Sans KR",system-ui,sans-serif}
+.tx svg{flex:none}
+.tx-tabs{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*6);padding:calc(var(--u)*4);height:calc(var(--u)*82);background:linear-gradient(180deg,#f4f8ff,#eaf1fd);border:1px solid #dfe9f9;border-radius:99px;box-shadow:0 4px 14px rgba(40,90,200,.08);margin-bottom:calc(var(--u)*11)}
+.tx-tabs button{display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*14);height:100%;border:0!important;border-radius:99px!important;background:transparent!important;color:#1d4fc4!important;font:700 calc(var(--u)*22.5)/1 "Noto Sans KR",system-ui,sans-serif!important;box-shadow:none!important;padding:0!important}
+.tx-tabs button.on{background:linear-gradient(180deg,#1f6fe5,#0d4fc4)!important;color:#fff!important;box-shadow:0 6px 16px rgba(20,90,220,.35)!important}
+.tx-tabs svg{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important}
+.tx-card{display:flex;flex-direction:column;gap:calc(var(--u)*20);padding:calc(var(--u)*25);background:#fff;border:1px solid #e3ebf8;border-radius:calc(var(--u)*32);box-shadow:0 6px 22px rgba(30,80,180,.07)}
+.tx-card>#tp_link[hidden],.tx-card>#tp_file[hidden]{display:none!important}
+.tx-card>#tp_link:not([hidden]),.tx-card>#tp_file:not([hidden]){display:flex;flex-direction:column;gap:calc(var(--u)*14)}
+.tx-h{display:flex;align-items:center;gap:calc(var(--u)*18);margin-bottom:calc(var(--u)*8)}
+.tx-h i{flex:none;width:calc(var(--u)*48);height:calc(var(--u)*48);border-radius:50%;background:linear-gradient(180deg,#1f6fe5,#0d4fc4);color:#fff;font:700 calc(var(--u)*22)/1 "Noto Sans KR",system-ui,sans-serif;display:flex;align-items:center;justify-content:center;font-style:normal}
+.tx-h b{font:700 calc(var(--u)*22.7)/1.3 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+.tx-drop{position:relative;display:flex!important;align-items:center;justify-content:center;gap:calc(var(--u)*18);height:calc(var(--u)*132)!important;min-height:0;padding:0 calc(var(--u)*18)!important;border:2px dashed #9dbdf0!important;border-radius:calc(var(--u)*28)!important;background:linear-gradient(180deg,#f7faff,#eef4ff)!important;color:#1d5bd6;cursor:pointer;box-shadow:none!important;margin-bottom:calc(var(--u)*10)}
+.tx-drop input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.tx-di{color:#1d5bd6;display:flex}
+.tx-di svg{width:calc(var(--u)*62)!important;height:calc(var(--u)*62)!important}
+.tx-dt{display:flex;flex-direction:column;gap:calc(var(--u)*6);text-align:left}
+.tx-dt b{font:700 calc(var(--u)*23.5)/1.2 "Noto Sans KR",system-ui,sans-serif;color:#1555d0}
+.tx-dt small{font:400 calc(var(--u)*16)/1.3 "Noto Sans KR",system-ui,sans-serif;color:#7d8aa3}
+.tx-fn{font:500 calc(var(--u)*16)/1.3 "Noto Sans KR",system-ui,sans-serif;color:#1555d0;word-break:break-all}
+.tx-fn:empty{display:none}
+.tx-lb{display:flex;align-items:center;gap:calc(var(--u)*16);margin-top:calc(var(--u)*4);color:#1d4fc4}
+.tx-lb b{font:700 calc(var(--u)*22)/1.2 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+.tx-lb svg{width:calc(var(--u)*32)!important;height:calc(var(--u)*32)!important}
+.tx-in{position:relative;display:flex}
+.tx-in input{width:100%;height:calc(var(--u)*62)!important;padding:0 calc(var(--u)*48)!important;border:1.5px solid #d3e0f6!important;border-radius:99px!important;background:#fff!important;font:400 calc(var(--u)*22)/1 "Noto Sans KR",system-ui,sans-serif!important;color:#10264f;box-shadow:none!important;margin:0!important}
+.tx-in input::placeholder{color:#a3aec4}
+.tx-ic{position:absolute;right:calc(var(--u)*26);top:50%;transform:translateY(-50%);color:#10264f;display:flex}
+.tx-ic svg{width:calc(var(--u)*32)!important;height:calc(var(--u)*32)!important}
+.tx-n{font:400 calc(var(--u)*16)/1.5 "Noto Sans KR",system-ui,sans-serif;color:#7d8aa3}
+.tx-ck{display:flex!important;align-items:center;gap:calc(var(--u)*18);font:500 calc(var(--u)*20)/1.35 "Noto Sans KR",system-ui,sans-serif;color:#10264f;cursor:pointer;margin-top:calc(var(--u)*4)}
+.tx-ck input{position:absolute;opacity:0;width:0;height:0}
+.tx-ck i{flex:none;width:calc(var(--u)*36);height:calc(var(--u)*36);border-radius:calc(var(--u)*10);border:2px solid #b9cff2;background:#fff;display:flex;align-items:center;justify-content:center;transition:.15s}
+.tx-ck input:checked+i{background:linear-gradient(180deg,#1f6fe5,#0d4fc4);border-color:#0d4fc4}
+.tx-ck input:checked+i::after{content:'';width:34%;height:58%;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-8%,-8%)}
+.tx-ck span{white-space:normal!important;min-width:0;flex:1;font-size:calc(var(--u)*20)!important}
+.tx-go{display:flex!important;align-items:center;justify-content:center;gap:calc(var(--u)*16);height:calc(var(--u)*84)!important;margin-top:calc(var(--u)*8);border:0!important;border-radius:99px!important;background:linear-gradient(180deg,#1f6fe5,#0b49b8)!important;color:#fff!important;box-shadow:0 10px 24px rgba(20,90,220,.38)!important;font:700 calc(var(--u)*22.7)/1 "Noto Sans KR",system-ui,sans-serif!important;width:100%;padding:0!important}
+.tx-go b{font:inherit;color:inherit}
+.tx-go svg{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important}
+.tx-pol{display:flex;gap:calc(var(--u)*22);align-items:flex-start;padding:calc(var(--u)*26) calc(var(--u)*28);border:1px solid #dfe9f9;border-radius:calc(var(--u)*30);background:linear-gradient(180deg,#f6f9ff,#eef4fe);color:#1d5bd6}
+.tx-pol>div{display:flex;flex-direction:column;gap:calc(var(--u)*8);min-width:0}
+.tx-pol>svg{width:calc(var(--u)*54)!important;height:calc(var(--u)*54)!important}
+.tx-pol b{font:700 calc(var(--u)*21.7)/1.2 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+.tx-pol small{font:400 calc(var(--u)*20)/1.55 "Noto Sans KR",system-ui,sans-serif;color:#6b7893}
+.tx-rc{gap:calc(var(--u)*14)!important;padding:calc(var(--u)*22) calc(var(--u)*25)}
+.tx-rh{display:flex;align-items:center;gap:calc(var(--u)*14);color:#1d5bd6;margin-bottom:calc(var(--u)*2)}
+.tx-rh svg{width:calc(var(--u)*40)!important;height:calc(var(--u)*40)!important}
+.tx-rh b{font:700 calc(var(--u)*22)/1 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+.tx-rh a{margin-left:auto;display:flex;align-items:center;gap:2px;font:600 calc(var(--u)*17.5)/1 "Noto Sans KR",system-ui,sans-serif;color:#1d5bd6;cursor:pointer}
+.tx-rh a svg{width:calc(var(--u)*24)!important;height:calc(var(--u)*24)!important}
+.tx-r{display:flex;align-items:center;gap:calc(var(--u)*14);height:calc(var(--u)*70);padding:0 calc(var(--u)*18) 0 calc(var(--u)*16);border:1px solid #e3ebf8;border-radius:calc(var(--u)*24);background:#fff;box-shadow:0 3px 10px rgba(30,80,180,.06);color:#9aa7c0;cursor:pointer}
+.tx-ri{flex:none;width:calc(var(--u)*42);height:calc(var(--u)*42);border-radius:50%;background:linear-gradient(180deg,#2a78ea,#0d4fc4);color:#fff;display:flex;align-items:center;justify-content:center}
+.tx-ri svg{width:calc(var(--u)*24)!important;height:calc(var(--u)*24)!important}
+.tx-rb{flex:none;padding:calc(var(--u)*7) calc(var(--u)*16);border-radius:99px;background:#e6efff;color:#1d5bd6;font:600 calc(var(--u)*16)/1 "Noto Sans KR",system-ui,sans-serif}
+.tx-rn{flex:1;min-width:0;font:600 calc(var(--u)*20)/1.2 "Noto Sans KR",system-ui,sans-serif;color:#10264f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-rd{flex:none;font:400 calc(var(--u)*20)/1 "Noto Sans KR",system-ui,sans-serif;color:#8693ad}
+.tx-r>svg{width:calc(var(--u)*26)!important;height:calc(var(--u)*26)!important}
+.tx-none{text-align:center;color:#8693ad;font:400 calc(var(--u)*18)/1.4 "Noto Sans KR",system-ui,sans-serif;padding:calc(var(--u)*14) 0}
+</style>
+<script id=kb327>{const _h=hdr;hdr=function(n){_h(n);document.body.classList.toggle('pg4',n==4);if(n==4){const e=document.getElementById('hs2');if(e)e.textContent='TDS 원문의 설명 문구·표·이미지는\n저장하지 않고, 계산에 필요한 값만 검토 후 등록합니다.'}}}</script>
 <script id=kb326>
 (function(){let y0=0;const inV=e=>e&&e.closest&&e.closest('#v8');
 document.addEventListener('touchstart',e=>{y0=e.touches[0].clientY},{passive:true});
