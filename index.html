@@ -2233,10 +2233,10 @@ function undo(){if(UNDO){const o=JSON.parse(UNDO);S=o.S;DB=o.DB;sv();cards();dbl
 let AFILE=null,EDN=null;const alv=s=>String(s).split(/[,，;；\n]/).map(x=>x.trim()).filter(Boolean);
 function saveP(){const g=k=>{const v=$('#a_'+k).value.trim();return ['d','us','sp'].includes(k)?sm20(v):v},n=g('n');if(!n)return tt('제품명을 입력하세요');
 const ed=EDN?DB.findIndex(q=>q.n==EDN):-1;
-if(ed>=0){if(n!=EDN&&DB.some(q=>q.n==n))return tt('같은 이름의 제품이 이미 있습니다<br><small>'+esc(n)+'</small>');const o=DB[ed],p={...o,n};['g','mf','us','pks','d','sp','un','tn','tc','dry','pot','pre','nxt','src','rev','chk','memo','mixt'].forEach(k=>p[k]=g(k));p.ver=$('#a_ver').value=='1'?1:0;['pk','mk','svr','dft','sg','th','ts'].forEach(k=>{if(g(k))p[k]=+g(k);else delete p[k]});p.tr=g('tr')?+g('tr')/100:0;p.al=alv(g('al'));p.un=UN(p);p.ts=p.ts||(p.tn&&p.tn!='무희석'?18:0);p.pk=p.pk||p.mk||18;p.mk=p.mk||p.pk||18;if(p.svr&&p.dft)p.th=+(p.svr*10/p.dft).toFixed(4);if(p.dry!==o.dry||p.pot!==o.pot)delete p.dsrc;
+if(ed>=0){if(n!=EDN&&DB.some(q=>q.n==n))return tt('같은 이름의 제품이 이미 있습니다<br><small>'+esc(n)+'</small>');const o=DB[ed],p={...o,n};['g','mf','us','pks','d','sp','un','tn','tc','dry','pot','pre','nxt','src','rev','chk','memo','mixt'].forEach(k=>p[k]=g(k));p.ver=$('#a_ver').value=='1'?1:0;['pk','mk','svr','dft','sg','th','ts'].forEach(k=>{if(g(k))p[k]=+g(k);else delete p[k]});p.tr=g('tr')?+g('tr')/100:0;p.al=alv(g('al'));p.un=UN(p);p.ts=p.ts||(p.tn&&p.tn!='무희석'?18:0);p.pk=p.pk||p.mk||'';p.mk=p.mk||p.pk||'';if(p.svr&&p.dft)p.th=+(p.svr*10/p.dft).toFixed(4);if(p.dry!==o.dry||p.pot!==o.pot)delete p.dsrc;
 pqNorm(p);const old=EDN,af=AFILE;DB[ed]=p;if(n!=old)S.coats.forEach(c=>{if(c.n==old)c.n=n});sv();AFILE=null;EDN=null;document.querySelectorAll('#af input:not([type=file])').forEach(x=>x.value='');
 (async()=>{if(n!=old){const f=await idb('get',old).catch(()=>0);if(f){await idb('put',n,f).catch(()=>0);await idb('del',old).catch(()=>0)}}if(af)await idb('put',n,af).catch(()=>0);await mark();dbl();cards();$('#af').hidden=true;tt('제품 정보를 수정하고 저장했습니다<br><small>'+esc(n)+'</small>')})();return}
-const p={n};['g','mf','us','pks','d','sp','un','tn','tc','dry','pot','pre','nxt','src','rev','chk','memo','mixt'].forEach(k=>{if(g(k))p[k]=g(k)});if($('#a_ver').value=='1')p.ver=1;['pk','mk','svr','dft','sg','th','ts'].forEach(k=>{if(g(k))p[k]=+g(k)});if(g('tr'))p.tr=+g('tr')/100;if(g('al'))p.al=alv(g('al'));if(p.svr&&p.dft)p.th=+(p.svr*10/p.dft).toFixed(4);pqNorm(p);const af=AFILE;if(af&&p.dry)p.dsrc='TDS';const j=DB.findIndex(q=>q.n==n);if(j<0)DB.push({d:'',tc:'',ts:18,url:'',un:'ℓ',...p,pk:p.pk||p.mk||18,mk:p.mk||p.pk||18});else DB[j]={...DB[j],...p};sv();AFILE=null;document.querySelectorAll('#af input:not([type=file])').forEach(x=>x.value='');(async()=>{if(af)await idb('put',n,af).catch(()=>0);await mark();dbl();cards();$('#af').hidden=true;const a=await autoLink();tt('제품이 저장되었습니다'+(af?'<br>기술자료(TDS)도 함께 등록했습니다':'')+(a?'<br>대기 중이던 기술자료 '+a+'개를 자동 연결했습니다':''))})()}
+const p={n};['g','mf','us','pks','d','sp','un','tn','tc','dry','pot','pre','nxt','src','rev','chk','memo','mixt'].forEach(k=>{if(g(k))p[k]=g(k)});if($('#a_ver').value=='1')p.ver=1;['pk','mk','svr','dft','sg','th','ts'].forEach(k=>{if(g(k))p[k]=+g(k)});if(g('tr'))p.tr=+g('tr')/100;if(g('al'))p.al=alv(g('al'));if(p.svr&&p.dft)p.th=+(p.svr*10/p.dft).toFixed(4);pqNorm(p);const af=AFILE;if(af&&p.dry)p.dsrc='TDS';const j=DB.findIndex(q=>q.n==n);if(j<0)DB.push({d:'',tc:'',ts:18,url:'',un:'ℓ',...p,pk:p.pk||p.mk||'',mk:p.mk||p.pk||''});else DB[j]={...DB[j],...p};sv();AFILE=null;document.querySelectorAll('#af input:not([type=file])').forEach(x=>x.value='');(async()=>{if(af)await idb('put',n,af).catch(()=>0);await mark();dbl();cards();$('#af').hidden=true;const a=await autoLink();tt('제품이 저장되었습니다'+(af?'<br>기술자료(TDS)도 함께 등록했습니다':'')+(a?'<br>대기 중이던 기술자료 '+a+'개를 자동 연결했습니다':''))})()}
 function clrForm(){document.querySelectorAll('#af input:not([type=file])').forEach(x=>x.value='');AFILE=null;EDN=null;$('#af_t').textContent='제품 추가'}
 function newP(){pdOpen(-1)}
 function cancelP(){clrForm();$('#af').hidden=true}
@@ -2344,7 +2344,7 @@ for(const f of files){i++;const pre=files.length>1?'('+i+'/'+files.length+') ':'
 if(!isImg(f)&&!/pdf/i.test(f.type+f.name)){R.push({f:f.name,err:'PDF·이미지가 아님'});continue}
 try{const say=m=>tt(pre+m);say('기술자료에서 제품 정보를 읽는 중…');let L=isImg(f)?await ocrImg(f,say):await pdfLines(f,say),sp=parseAll(L);
 const pt=parsePot(L),d=isImg(f)?'':parseDry(L),b=fb(f.name).trim()||sp.hname||'제품',ex=findP(b),isNew=!ex;
-const p=ex||{n:b,g:'',d:'',tc:'',ts:18,url:'',un:'ℓ',pk:18,mk:18,tr:0,tn:''};
+const p=ex||{n:b,g:'',d:'',tc:'',ts:0,url:'',un:'ℓ',pk:'',mk:'',tr:0,tn:''};
 const up=applySpec(p,sp,true);if(pt){p.pot=pt;up.push('가사시간')}if(d){p.dry=d;up.push('건조시간')}else if(L.length){const d2=parseDry(L);if(d2){p.dry=d2;up.push('건조시간')}}if(up.length)p.dsrc='TDS';
 if(isNew)DB.push(p);await idb('put',p.n,{name:f.name,type:ft(f),buf:await f.arrayBuffer()}).catch(()=>0);sv();let oc='';
 if(!isImg(f)&&!L.ocr&&(!sp.svr||!sp.sg||!sp.d)){try{say('글자 인식(OCR)으로 빠진 항목을 보완하는 중… (최대 1~2분)');const O=await ocrLines(f,say),s2=parseAll(O),t={};for(const k in s2)if(!p[k]&&s2[k]!=null&&s2[k]!=='')t[k]=s2[k];if(+p.mk){delete t.pack;delete t.pk;delete t.mk;delete t.mixa;delete t.mixb}const u2=applySpec(p,t,false);if(u2.length)up.push('OCR 보완: '+u2.join('·'));L=L.concat(O)}catch(e){oc=e.message}}
@@ -3398,7 +3398,7 @@ async function tdsExtract(f,say){
  let L=isImg?await ocrImg(f,say):await pdfLines(f,say),sp=parseAll(L);
  const pt=parsePot(L),dry=isImg?'':parseDry(L);
  if(!isImg&&!L.ocr&&(!sp.svr||!sp.sg)){try{say('글자 인식(OCR)으로 빠진 항목을 보완하는 중… (최대 1~2분)');const O=await ocrLines(f,say),s2=parseAll(O);for(const k in s2)if((sp[k]==null||sp[k]==='')&&s2[k]!=null&&s2[k]!=='')sp[k]=s2[k];L=L.concat(O)}catch(e){}}
- const p={n:((typeof fb=='function'?fb(f.name):f.name.replace(/\.[^.]+$/,''))||'').trim()||sp.hname||'',tc:'',ts:18,un:'ℓ',pk:18,mk:18,tr:0,tn:''};
+ const p={n:((typeof fb=='function'?fb(f.name):f.name.replace(/\.[^.]+$/,''))||'').trim()||sp.hname||'',tc:'',ts:18,un:'ℓ',pk:'',mk:'',tr:0,tn:''};
  applySpec(p,sp,true);
  if(pt)p.pot=pt;if(dry)p.dry=dry;
  if(!p.g)p.g=pqType((sp.g||'')+' '+(sp.us||'')+' '+(sp.hname||'')+' '+p.n);   /* 일반명: 수지 조성 + 역할 요약 */
@@ -3440,7 +3440,7 @@ function tvSave(){
  if(bad.length)return tt('⚠ 오류가 있어 등록할 수 없습니다<br><small>'+bad.join('<br>')+'</small>');
  if(p.pk&&p.mk&&p.mk<p.pk)rw.push('혼합규격이 출고규격(주제)보다 작습니다');
  const mt=g('mixt');if(mt)p.mixt=mt;
- p.pk=p.pk||p.mk||18;p.mk=p.mk||p.pk||18;p.ts=p.ts||(p.tn&&p.tn!='무희석'?18:0);if(p.svr&&p.dft)p.th=+(p.svr*10/p.dft).toFixed(4);
+ p.pk=p.pk||p.mk||'';p.mk=p.mk||p.pk||'';p.ts=p.ts||(p.tn&&p.tn!='무희석'?18:0);if(p.svr&&p.dft)p.th=+(p.svr*10/p.dft).toFixed(4);
  const warn=rw.map(x=>'범위 벗어남: '+x);if(p.un=='kg'&&!p.sg)warn.push('kg 단위인데 비중이 없습니다 (L 기준으로 계산됩니다)');
  p.src=document.getElementById('tv_src').value.trim();p.rev=document.getElementById('tv_rev').value.trim();p.chk=document.getElementById('tv_chk').value.trim();if(!TV.ctx.mode){p.ext=pqToday();p.dsrc='TDS'}p.ver=document.getElementById('tv_ok').checked?1:0;
  pqNorm(p);
@@ -3555,7 +3555,7 @@ function csvPrevRender(){
 function csvApply(){
  const P=CS.prev;if(!P||!P.rows)return;const ok=P.rows.filter(r=>r.st!='err');let a=0,u=0,s=0;
  ok.forEach(({p,st})=>{pqNorm(p);const j=DB.findIndex(q=>q.n==p.n);
-  if(j<0){DB.push({d:'',tc:'',ts:18,url:'',un:'ℓ',...p,pk:p.pk||p.mk||18,mk:p.mk||p.pk||18,ext:pqToday()});a++}
+  if(j<0){DB.push({d:'',tc:'',ts:18,url:'',un:'ℓ',...p,pk:p.pk||p.mk||'',mk:p.mk||p.pk||'',ext:pqToday()});a++}
   else if(CS.mode=='skip')s++;
   else{const o=DB[j];Object.keys(p).forEach(k=>{if(p[k]!==''&&p[k]!==undefined)o[k]=p[k]});o.ext=pqToday();if(+o.svr&&+o.dft)o.th=+(o.svr*10/o.dft).toFixed(4);u++}});
  sv();pqRcAdd('CSV 가져오기',P.file||'CSV');CS.prev=null;dbl();cards();csvRender();
