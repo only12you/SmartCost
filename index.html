@@ -4961,6 +4961,19 @@ function sect(L,keys,max,skip){
   if(txt.length>=8&&!/^요약\s*테이블/.test(txt))return txt}
  return ''}
 const rng=(a,b)=>+((+a+ +b)/2).toFixed(4);
+
+/* 제품설명 핵심 요약(50자 이내) */
+function sum50(t,g){t=String(t||'').replace(/\s+/g,' ').trim();g=String(g||'');if(!t)return'';
+ const N=(t.match(/(\d)\s*액\s*형/)||[])[1],RSR=/(아크릴\s*우레탄|폴리우레탄|에폭시|우레탄|아크릴|실리콘|불소|알키드|염화고무|(?<![가-힣])비닐|합성수지|징크|무기)/,RS=(t.match(RSR)||g.match(RSR)||[])[1],
+  CLR=/(워시\s*프라이[머마]|프라이[머마]|상도|중도|하도|방수재|방수|코팅제|퍼티|실란트)/,CL=(t.match(/(워시\s*프라이[머마])/)||g.match(CLR)||t.match(CLR)||[])[1];
+ const F=[[/무용제/,'무용제'],[/속건/,'속건'],[/고\s*\(?高?\)?\s*고형분/,'고고형분'],[/후도막/,'후도막'],[/고탄성/,'고탄성'],[/탄성/,'탄성'],[/방청/,'방청'],[/인산/,'인산'],[/자기\s*평활/,'자기평활'],[/이음매\s*없/,'무이음매'],[/내수성/,'내수성'],[/내약품성/,'내약품성'],[/내후성/,'내후성'],[/내한성/,'내한성'],[/내마모성/,'내마모성'],[/내구성/,'내구성'],[/부착(?:성|력)/,'부착성'],[/작업성/,'작업성'],[/은폐\s*력/,'은폐력'],[/친환경/,'친환경']];
+ let ft=F.filter(([re])=>re.test(t)).map(x=>x[1]);if(ft.includes('고탄성'))ft=ft.filter(x=>x!=='탄성');
+ const cls=CL?CL.replace(/\s+/g,' ').replace('프라이마','프라이머'):'';
+ const head=[N?N+'액형':'',RS?RS.replace(/\s+/g,''):'',cls].filter(Boolean).join(' ');
+ if(!head){const f=t.split(/(?<=[.다])\s/)[0];return f.length>50?f.slice(0,49)+'…':f}
+ let k=Math.min(3,ft.length),out='';
+ const hd=head+' 도료';for(;k>=0;k--){out=(k?ft.slice(0,k).join('·')+' ':'')+hd;if(out.length<=50)break}
+ return out.length>50?hd.slice(-50):out}
 function fix(L,s){
  L=L||[];s=s||{};const o={};
  const t0=L.findIndex(x=>x&&!/^[A-Z0-9 &.\-+]+$/.test(String(x).trim()));
@@ -4976,9 +4989,10 @@ function fix(L,s){
  if(!d||d.length<12){const u=L.findIndex(x=>{const q=getLab(x);return q&&q.k==='용도'});const st=sub?si+1:t0+1;const arr=[];
   for(let i=st;i<(u>0?u:Math.min(L.length,st+8));i++){const x=String(L[i]);if(/^\s*[▣+★※]/.test(x)||/^[+\-\d ]+$/.test(x))break;if(getLab(x)&&arr.length)break;arr.push(x)}
   const dd=clean(arr.join(' '));if(dd.length>=12)d=dd}
- if(d&&d.length>=12)o.d=d;
- if(!g&&o.d){const r=o.d.match(/(아크릴우레탄|폴리우레탄|에폭시|우레탄|아크릴|실리콘|불소|알키드|염화고무|비닐|징크|무기)/),l=o.d.match(/(하도|중도|상도|프라이머|프라이마)(?:용|로서|로|입니다|\s*도료)/);if(r&&l)g=r[1]+' '+l[1]}
+ if(d&&d.length>=12)o.dRaw=d;
+ if(!g&&d){const r=d.match(/(아크릴우레탄|폴리우레탄|에폭시|우레탄|아크릴|실리콘|불소|알키드|염화고무|비닐|징크|무기)/),l=d.match(/(하도|중도|상도|프라이머|프라이마)(?:용|로서|로|입니다|\s*도료)/);if(r&&l)g=r[1]+' '+l[1]}
  if(g)o.g=g;else if(s.g)o.g='';
+ if(o.dRaw){o.d=sum50(o.dRaw,g);delete o.dRaw}
  // 용도 · 표면처리
  const us=sect(L,['용도'],3);if(us)o.us=us;
  const sp=sect(L,['표면처리'],4,/^\s*소지\s*최소\s*추천\s*$/);if(sp)o.sp=sp;
