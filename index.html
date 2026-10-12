@@ -4974,6 +4974,25 @@ function sum50(t,g){t=String(t||'').replace(/\s+/g,' ').trim();g=String(g||'');i
  let k=Math.min(3,ft.length),out='';
  const hd=head+' 도료';for(;k>=0;k--){out=(k?ft.slice(0,k).join('·')+' ':'')+hd;if(out.length<=50)break}
  return out.length>50?hd.slice(-50):out}
+
+/* 용도·표면처리 요약(50자 이내) */
+const cut50=t=>{t=String(t||'').trim();if(t.length<=50)return t;const k=t.lastIndexOf(' ',49);return t.slice(0,k>20?k:49)+'…'};
+function sumUse(t){t=String(t||'').replace(/\s+/g,' ').trim();if(!t)return'';
+ const sn=t.split(/(?<=[.。])\s+|\s*(?=\d\)\s)/).map(x=>x.trim()).filter(Boolean);
+ const one=x=>{x=x.replace(/\s*소재\s*[:：].*$/,'');const m=x.match(/^(.+?)(?:(?:으)?로\s*사용(?:하며|하고|합니다|할 수)|에\s*사용|(?:이|입)?니다|에\s*적합|\s*사용하며|\s*적용하며)/);if(m&&m[1].length>=6)x=m[1];return x.replace(/[.。,\s]+$/,'').replace(/(?:용으로|으로|에)$/,'').trim()};
+ let out=one(sn[0]||t);
+ for(let i=1;i<sn.length&&i<3;i++){const n=one(sn[i]);if(n&&(out+' / '+n).length<=50&&n.length>=6)out+=' / '+n;else break}
+ return cut50(out)}
+function sumSurf(t){t=String(t||'').replace(/\s+/g,' ').trim();if(!t)return'';
+ const C=[[/레이턴스|laitance/i,'레이턴스'],[/그리스/,'그리스'],[/오일/,'오일'],[/유분|기름때/,'유분'],[/수분|물기/,'수분'],[/모래/,'모래'],[/시멘트\s*가루/,'시멘트가루'],[/먼지/,'먼지'],[/흙/,'흙'],[/녹/,'녹'],[/염분/,'염분'],[/구도막|노화된\s*도막/,'구도막'],[/오염\s*물질?|오염물|이물질|오물/,'오염물']];
+ const M=[[/고압\s*(?:청수\s*)?(?:수세|세척)/,'고압수세'],[/용제\s*세(?:척|정)/,'용제세척'],[/(?<!고압)청수\s*세척/,'청수세척'],[/블라스팅|blasting|Sa\s*2/i,'블라스팅'],[/그라인딩/,'그라인딩'],[/샌드\s*페이퍼|샌딩/,'샌딩'],[/산\s*세척|염산/,'산세척'],[/스크래핑/,'스크래핑'],[/퍼티/,'퍼티']];
+ const S=[[/깨끗/,'깨끗'],[/건조/,'건조'],[/평탄/,'평탄'],[/양생/,'양생']];
+ const pick=(R,n)=>{const f=[];for(const [re,l] of R){const m=t.match(re);if(m)f.push([m.index,l])}return f.sort((a,b)=>a[0]-b[0]).map(x=>x[1]).slice(0,n)};
+ const c=pick(C,3).filter((x,i,a)=>!(x==='오염물'&&a.length>1)),m=pick(M,2),st=pick(S,2).filter(x=>!(x==='깨끗'&&c.length));
+ if(!c.length&&!m.length&&!st.length)return cut50(t.replace(/^[*\-·•]\s*/,'').split(/(?<=[.。])\s/)[0]);
+ let out=(c.length?c.join('·')+' 제거':'')+(m.length?(c.length?' ('+m.join('·')+')':m.join('·')):'')+(st.length?(out0(c,m)?', ':'')+st.join('·'):'');
+ return cut50(out)}
+const out0=(c,m)=>c.length||m.length;
 function fix(L,s){
  L=L||[];s=s||{};const o={};
  const t0=L.findIndex(x=>x&&!/^[A-Z0-9 &.\-+]+$/.test(String(x).trim()));
@@ -4994,8 +5013,8 @@ function fix(L,s){
  if(g)o.g=g;else if(s.g)o.g='';
  if(o.dRaw){o.d=sum50(o.dRaw,g);delete o.dRaw}
  // 용도 · 표면처리
- const us=sect(L,['용도'],3);if(us)o.us=us;
- const sp=sect(L,['표면처리'],4,/^\s*소지\s*최소\s*추천\s*$/);if(sp)o.sp=sp;
+ const us=sect(L,['용도'],3);if(us)o.us=sumUse(us);
+ const sp=sect(L,['표면처리'],4,/^\s*소지\s*최소\s*추천\s*$/);if(sp)o.sp=sumSurf(sp);
  // 희석제
  for(let i=0;i<L.length;i++){const gg=getLab(L[i]);if(!gg||!['희석제','신너','신나'].includes(gg.k)&&!(gg.k==='희석'&&/희석제|No\.?\s*\d/.test(gg.v)))continue;
   let r=gg.v.replace(/\(\s*최대[^)]*\)?/,'').trim();
