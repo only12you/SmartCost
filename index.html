@@ -3491,7 +3491,8 @@ function csvSelRe(){const q=CS.q.toLowerCase(),L=DB.map((p,j)=>[p,j]).filter(([p
 function csvSelTog(j,on){const p=DB[j];if(!p)return;on?CS.sel.add(p.n):CS.sel.delete(p.n)}
 function pqRowVals(p,incM,incD){const r=CSVH.filter(([t,k])=>incM||!['src','rev','chk','ver','memo'].includes(k)).map(([t,k])=>k=='trp'?(p.tr?+(p.tr*100).toFixed(2):''):k=='ver'?(p.ver?'검증완료':''):p[k]??'');if(incD)CSVD.forEach(([t,k])=>r.push(p[k]??''));return r}
 function pqHead(incM,incD){const h=CSVH.filter(([t,k])=>incM||!['src','rev','chk','ver','memo'].includes(k)).map(x=>x[0]);if(incD)CSVD.forEach(x=>h.push(x[0]));return h}
-function csvTemplate(){dl(new Blob([pqCsv([CSVH.map(x=>x[0]),['(예) 제품명','제조사','하도·에폭시','20','20','L','1.4','60','75','부피비','희석제명','002','10','18','','','','','','','https://…','2025-05-14',pqToday(),'','']])],{type:'text/csv'}),'PQC_제품DB_템플릿.csv');tt('빈 양식을 내려받았습니다<br><small>첫 번째 예시 행은 지우고 사용하세요</small>')}
+function csvTemplate(){const ex={n:'(예) 제품명',mf:'제조사',g:'하도·에폭시',pk:'20',mk:'20',un:'L',sg:'1.4',svr:'60',dft:'75',mixt:'부피비',tn:'희석제명',tc:'002',trp:'10',ts:'',dry:'20℃/4시간/16시간///',pot:'20℃ 4시간',sp:'유분·먼지 제거, 건조',pre:'',nxt:'',pks:'20L',src:'https://…',rev:'2025-05-14',chk:pqToday(),ver:'',memo:'',d:'2액형 에폭시 중도 도료',us:'강교 및 철 구조물의 방청하도 및 중도'};
+ const H=CSVH.concat(CSVD);dl(new Blob([pqCsv([H.map(x=>x[0]),H.map(x=>ex[x[1]]??'')])],{type:'text/csv'}),'PQC_제품DB_템플릿.csv');tt('빈 양식을 내려받았습니다<br><small>전체 '+H.length+'개 항목 · 첫 번째 예시 행은 지우고 사용하세요</small>')}
 function csvExport(){
  const L=csvScopeList();if(!L.length)return tt('내보낼 제품이 없습니다');
  const lbl={all:'내 제품 DB 전체',ver:'검증 완료 제품',sel:'선택한 제품'}[CS.scope];
