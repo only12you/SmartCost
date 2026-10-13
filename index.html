@@ -2084,7 +2084,7 @@ const PC=n=>P(n)||{n:n||'직접 입력 제품',g:'',d:'',svr:0,dft:0,mk:18,pk:18
 try{if(LS.sfx!='1'){let n=0;DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+D.mk>0&&(+p.pk!==+D.pk||+p.mk!==+D.mk)){p.pk=D.pk;p.mk=D.mk;if(D.un)p.un=D.un;n++}});if(n)sv();LS.sfx='1'}}catch(e){}
 try{if(LS.thfx!='1'){DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+p.dft>=1000&&+D.dft>0&&+D.dft<1000)p.dft=D.dft;if(+p.svr&&+p.dft)p.th=+(p.svr*10/p.dft).toFixed(4)});sv();LS.thfx='1'}}catch(e){}
 function toTop(){const f=()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'});document.documentElement.scrollTop=0;document.body.scrollTop=0;document.querySelectorAll('#es .zf,#es .zbd,#es .zsc,#vh,#app,.pn').forEach(e=>{e.scrollTop=0})}catch(e){}};f();requestAnimationFrame(f);setTimeout(f,90);setTimeout(f,300)}
-const T=n=>{$('#vh').hidden=n!=2;$('#app').hidden=n==2;$('#v0').hidden=n!=0;$('#v1').hidden=n!=1;$('#v3').hidden=n!=3;$('#v4').hidden=n!=4;$('#v5').hidden=n!=5;$('#v7').hidden=n!=7;{const e=$('#v8');if(e)e.hidden=n!=8}{const e=$('#v9');if(e)e.hidden=n!=9}$('#bb').hidden=n!=0;$('#bb3').hidden=n!=3;$('#ttl').textContent=pqTitle(n);if(n==1)dbl();if(n==3)syRender();if(n==2)dashRender();if(n==4)tpRender();if(n==5)csvRender();if(n==7)admRender();if(n==8)fmRender();document.body.dataset.pg=n;if(n==9&&window.RP)RP.R();toTop();const sa=$('#saw');if(sa)sa.hidden=n!=0;hdr(n);hh();setTimeout(()=>fit(document),0);try{sessionStorage.vw=n}catch(e){}if(typeof gnav=='function')gnav(n)};
+const T=n=>{$('#vh').hidden=n!=2;$('#app').hidden=n==2;$('#v0').hidden=n!=0;$('#v1').hidden=n!=1;$('#v3').hidden=n!=3;$('#v4').hidden=n!=4;$('#v5').hidden=n!=5;$('#v7').hidden=n!=7;{const e=$('#v8');if(e)e.hidden=n!=8}{const e=$('#v9');if(e)e.hidden=n!=9}$('#bb').hidden=n!=0;$('#bb3').hidden=n!=3;$('#ttl').textContent=pqTitle(n);if(n==1)dbl();if(n==3)syRender();if(n==2)dashRender();if(n==4)tpRender();if(n==5)csvRender();if(n==7)admRender();if(n==8)fmRender();document.body.dataset.pg=n;if(n==9&&window.LCCX)LCCX.R();toTop();const sa=$('#saw');if(sa)sa.hidden=n!=0;hdr(n);hh();setTimeout(()=>fit(document),0);try{sessionStorage.vw=n}catch(e){}if(typeof gnav=='function')gnav(n)};
 function hdr(n){const d=n==1;$('#hs1').textContent=d?'Technical Data Sheet':'Paint Quantity Calculator';$('#hs2').textContent=d?'Data Sheet DB':n==3?'Coating System':pqHs2(n)||'Unit Price Table';$('#tb0').classList.toggle('on',n==0||n==2);$('#tb1').classList.toggle('on',d);$('#tb3').classList.toggle('on',n==3);document.body.classList.toggle('cp',n==0);if(n==1)setTimeout(()=>{try{mfTds()}catch(e){}},400)}
 try{$('#hxbg').src=$('#vh .hbg').src}catch(e){}
 
@@ -2732,7 +2732,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v357',d:'2026.10.13'};
+const APPV={v:'v361',d:'2026.10.13'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3324,7 +3324,7 @@ const pqRc=()=>{try{return JSON.parse(LS.rc||'[]')}catch(e){return[]}};
 function pqRcAdd(t,n){const a=pqRc().filter(x=>!(x.t==t&&x.n==n));a.unshift({t,n,d:pqToday()});try{LS.rc=JSON.stringify(a.slice(0,10))}catch(e){}}
 
 /* 하단 메뉴 */
-const NAVI=n=>({2:0,0:1,3:2,5:4,4:4,1:4,7:4,8:1,9:4}[n]??-1);
+const NAVI=n=>({2:0,0:1,3:2,5:4,4:4,1:4,7:4,8:4,9:4}[n]??-1);
 const pqTitle=n=>({0:'일위대가표',1:'데이터 시트',2:'일위대가표',3:'도장 시스템',4:'TDS 등록',5:'CSV · 백업',7:'관리자 모드',8:'실란트 소요량 · 메쉬 소요량',9:'LCC'}[n]||'일위대가표');
 const pqHs2=n=>({4:'TDS Registration',5:'CSV · Backup',7:'Admin Console',8:'Sealant · Mesh Quantity',9:'Life Cycle Cost'}[n]);
 
@@ -3342,7 +3342,7 @@ function pqQuote(){if(typeof est=='function')est()}
 
 /* 더보기 · 자료 이용 안내 */
 function moreOpen(){
- const L=[['db','제품 DB','T(1)','제품 정보 · TDS 관리'],['save','백업 · 복원','goCsv(\'set\')','CSV · JSON 백업'],['calc','노무비 설정','lbSheet()','노임단가 · 할증'],['quote','사용법','helpOpen()'],['calc','LCC','T(9)','재도장 진단 · 사양별 수명/비용 비교'],['set','설정 · 언어','openSettings()'],['shield','자료 이용 안내','legalOpen()'],['info','정보','showInfo()']];
+ const L=[['db','제품 DB','T(1)','제품 정보 · TDS 관리'],['save','백업 · 복원','goCsv(\'set\')','CSV · JSON 백업'],['calc','노무비 설정','lbSheet()','노임단가 · 할증'],['fm','충진','T(8)'],['ap','도면','apOpen()'],['hq','공동','hqOpen()'],['lc','LCC','T(9)'],['quote','사용법','helpOpen()'],['set','설정 · 언어','openSettings()'],['shield','자료 이용 안내','legalOpen()'],['info','정보','showInfo()']];
  if(IS_ADMIN)L.push(['admin','관리자 모드','T(7)']);
  pqSheet('pqmore','<div class="pqmh"><b>더보기</b></div>'+'<div class="pqmg">'+L.map(([i,t,f,d])=>`<button class="pqml" onclick="pqX('pqmore');${f}"><span class="pqi">${PQI[i]}</span><span class="pqt"><b>${t}</b>${d?`<small>${d}</small>`:''}</span></button>`).join('')+'</div>'+'<button class="pqbc" onclick="pqX(\'pqmore\')">닫기</button>');
 }
@@ -3584,7 +3584,7 @@ function setTab(){
 }
 (async()=>{try{if(navigator.storage&&navigator.storage.estimate){const q=await navigator.storage.estimate();window.__pqUs=Math.round((q.usage||0)/1048576*10)/10}}catch(e){}})();
 function bkDo(){
- const o={app:'PQC',edition:EDITION,version:APPV.v,date:new Date().toISOString(),db:DB,st:S,sy:SY,syl:syLibGet(),lang:LANG,ar:(window.apGet?apGet():undefined),hq:(window.hqGet?hqGet():undefined),rp:(window.RP?RP.get():undefined),note:'TDS PDF 원본은 포함되지 않습니다'};
+ const o={app:'PQC',edition:EDITION,version:APPV.v,date:new Date().toISOString(),db:DB,st:S,sy:SY,syl:syLibGet(),lang:LANG,ar:(window.apGet?apGet():undefined),hq:(window.hqGet?hqGet():undefined),rp:(window.LCCX?LCCX.get():undefined),note:'TDS PDF 원본은 포함되지 않습니다'};
  dl(new Blob([JSON.stringify(o)],{type:'application/json'}),`PQC_backup_${pqToday()}.json`);LS.lbk=new Date().toISOString();tt('백업 파일을 저장했습니다<br><small>제품 '+DB.length+'개 포함</small>');if(CS.tab=='set')csvRender()
 }
 async function bkRestore(f){
@@ -3594,7 +3594,7 @@ async function bkRestore(f){
   const o=JSON.parse(await f.text());
   if(!o||o.app!=='PQC'||!Array.isArray(o.db)||o.db.some(p=>!p||typeof p.n!=='string'))throw new Error('PQC 백업 파일이 아닙니다');
   ask(`백업(${esc((o.date||'').slice(0,10))} · 제품 ${o.db.length}개)을 ${mode=='replace'?'<b>전체 대체</b>':'병합'}로 복원할까요?${mode=='replace'?'<br><small>현재 제품 DB와 작업 내용이 삭제됩니다.</small>':''}`,()=>{
-   try{if(o.rp&&window.RP)RP.set(o.rp)}catch(e){}    try{if(o.hq&&window.hqSetAll)hqSetAll(o.hq)}catch(e){}
+   try{if(o.rp&&window.LCCX)LCCX.set(o.rp)}catch(e){}    try{if(o.hq&&window.hqSetAll)hqSetAll(o.hq)}catch(e){}
    try{if(o.ar&&window.apSetAll&&(mode=='replace'||!((apGet()||{}).parts||[]).length))apSetAll(o.ar)}catch(e){}
    if(mode=='replace'){DB.splice(0,DB.length,...o.db);if(o.st){Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,o.st)}if(o.sy){Object.keys(SY).forEach(k=>delete SY[k]);Object.assign(SY,o.sy);syNorm()}if(Array.isArray(o.syl))syLibSet(o.syl)}
    else{o.db.forEach(p=>{const j=DB.findIndex(q=>q.n==p.n);if(j<0)DB.push(p);else DB[j]={...DB[j],...p}})}
@@ -6082,35 +6082,31 @@ const ol=window.lbSheet;
 if(typeof ol=='function')window.lbSheet=function(){ol.apply(this,arguments);const e=document.getElementById('pqlab');if(!e)return;const b=e.querySelector('.pqg2');if(!b||e.querySelector('.frgo'))return;const g=document.createElement('button');g.type='button';g.className='pqbc frgo';g.textContent='내화도료 품셈 기준';g.onclick=()=>{pqX('pqlab');frOpen()};b.insertBefore(g,b.firstChild)};
 })();
 </script>
-<style id=tb355>
+<style id=tb361>
 html body #fmgo,html body #apgo,html body #hqgo{display:none!important}
-html body #qtb{position:fixed!important;left:10px!important;right:10px!important;max-width:540px!important;margin:0 auto!important;z-index:6!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important;padding:5px!important;background:rgba(255,255,255,.97)!important;border:1px solid #cfe0fa!important;border-radius:14px!important;box-shadow:0 4px 14px rgba(20,60,140,.14)!important;bottom:calc(112px + env(safe-area-inset-bottom))!important}
-html body #qtb[hidden]{display:none!important}
-html body #qtb button{width:auto!important;height:38px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:0 2px!important;border:1px solid #d6e3f7!important;border-radius:10px!important;background:#f3f7ff!important;color:#1d4fc4!important;font-size:12.5px!important;font-weight:700!important;white-space:nowrap!important}
-html body #qtb button svg{width:16px!important;height:16px!important;flex:none!important}
-html body #qtb button:active{background:#e1ecff!important}
+html body #bb,html body.cp #bb{bottom:var(--gh,calc(44px + env(safe-area-inset-bottom)))!important}
 html body #v0 .pn,html body #v0{padding-bottom:calc(env(safe-area-inset-bottom) + 40px)}
+/* 더보기 메뉴: 9번째 이후 항목도 보이게 (기존 색 지정은 8번째까지만 있어 글자가 흰색으로 사라졌음) */
+html body .pqmg button.pqml:nth-child(n+9){background:#fff!important;border:1px solid #dce8f8!important}
+html body .pqmg button.pqml:nth-child(n+9) b{color:#0b2354!important}
+html body .pqmg button.pqml:nth-child(n+9) .pqi{background:linear-gradient(145deg,#6b7a96,#46536e)!important;color:#fff!important}
+html body .pqmg button.pqml:nth-child(9) .pqi{background:linear-gradient(145deg,#4a7bd8,#2a4fa0)!important}
+html body .pqmg button.pqml:nth-child(10) .pqi{background:linear-gradient(145deg,#2fa37c,#238a68)!important}
+html body .pqmg button.pqml:nth-child(12) .pqi{background:linear-gradient(145deg,#e0525c,#b0252f)!important}
 </style>
-<script id=tb355s>
+<script id=tb361s>
 (function(){
-const ITEMS=[['fmgo','충진'],['apgo','도면'],['hqgo','공동'],['rpgo','LCC']];
-const LCC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>';
-function mk(){if(document.getElementById('qtb'))return;const bb=document.getElementById('bb');if(!bb)return;
- const d=document.createElement('div');d.id='qtb';d.hidden=bb.hidden;
- d.innerHTML=ITEMS.map(([id,l])=>`<button type="button" data-g="${id}"><span class="qi"></span><span>${l}</span></button>`).join('');
- d.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.g=='rpgo'){T(9);return}const g=document.getElementById(b.dataset.g);if(g)g.click()});
- document.body.appendChild(d);fill();pos();
- new MutationObserver(()=>{d.hidden=bb.hidden;pos()}).observe(bb,{attributes:true,attributeFilter:['hidden','style','class']});
- window.addEventListener('resize',pos);window.addEventListener('orientationchange',()=>setTimeout(pos,300));
- if(window.visualViewport)window.visualViewport.addEventListener('resize',pos);
- if(window.ResizeObserver){const ro=new ResizeObserver(pos);ro.observe(bb);const gn=document.getElementById('gnav');if(gn)ro.observe(gn)}
- setInterval(pos,1200)}
-function fill(){const d=document.getElementById('qtb');if(!d)return;d.querySelectorAll('button').forEach(b=>{const q=b.querySelector('.qi');if(b.dataset.g=='rpgo'){q.innerHTML=LCC;return}const g=document.getElementById(b.dataset.g),s=g&&g.querySelector('.fmpin svg');if(s)q.innerHTML=s.outerHTML})}
-/* 하단 고정 메뉴(#bb 작업 버튼줄, #gnav 하단 메뉴) 중 가장 위쪽 가장자리 바로 위에 배치 */
-function pos(){const d=document.getElementById('qtb');if(!d||d.hidden)return;let top=window.innerHeight;
- ['bb','gnav'].forEach(id=>{const e=document.getElementById(id);if(!e||e.hidden)return;const r=e.getBoundingClientRect();if(r.height>0&&r.top<top)top=r.top});
- d.style.setProperty('bottom',(window.innerHeight-top+6)+'px','important')}
-mk();setTimeout(()=>{mk();fill();pos()},700);setTimeout(()=>{fill();pos()},2000);
+/* 더보기 메뉴용 아이콘 */
+if(typeof PQI=='object'&&typeof pqSv=='function')Object.assign(PQI,{
+ fm:pqSv('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'),
+ ap:pqSv('<path d="M3.5 16.5 16.5 3.5l4 4-13 13z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>'),
+ hq:pqSv('<path d="M4 6l3 12 2.5-8L12 18l2.5-8L17 18l3-12"/><path d="M3 10h18M3 14h18"/>'),
+ lc:pqSv('<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>')});
+/* 작업 버튼줄(#bb)이 하단 메인 메뉴 바로 위에 얹히도록 메뉴 높이를 측정 */
+function gh(){const g=document.getElementById('gnav');if(!g)return;const h=g.getBoundingClientRect().height;if(h>0)document.documentElement.style.setProperty('--gh',h+'px')}
+gh();const g=document.getElementById('gnav');if(g&&window.ResizeObserver)new ResizeObserver(gh).observe(g);
+window.addEventListener('resize',gh);window.addEventListener('orientationchange',()=>setTimeout(gh,300));if(window.visualViewport)window.visualViewport.addEventListener('resize',gh);
+setTimeout(gh,700);setTimeout(gh,2000);
 })();
 </script>
 
@@ -6228,7 +6224,7 @@ const all=a=>{const en=envI(a),B=ev(a.b,en.envLv),A=ev(a.a,en.envLv);return{a,en
 // UI helpers
 const I=(l,v,h,t)=>`<div><label>${l}</label><input type="${t||"number"}" step="any" value="${esc(v)}" onchange="${h}"></div>`;
 const Sel=(l,o,v,h)=>`<div><label>${l}</label><select onchange="${h}">${o.map(([x,t])=>`<option value="${x}" ${x==v?"selected":""}>${t}</option>`).join("")}</select></div>`;
-const D=(id,t,b)=>`<details ${RS.o[id]===false?"":"open"} ontoggle="RP.tg('${id}',this.open)"><summary>${t}</summary><div class="bd">${b}</div></details>`;
+const D=(id,t,b)=>`<details ${RS.o[id]===false?"":"open"} ontoggle="LCCX.tg('${id}',this.open)"><summary>${t}</summary><div class="bd">${b}</div></details>`;
 function Ua(k,v){const a=A_();a[k]=["n","t","dur"].includes(k)?v:+v;if(k=="t")a.sp.rec=mkS(rec(a,envI(a)));rsv();R()}
 function Uz(j,k,v){const a=A_(),z=a.zones[j];z[k]=k=="n"||k=="cc"?v:+v;zs0(a);rsv();R()}
 function addZone(){const a=A_();a.zones.push(mkZ("새 구역",100,5,10,70));zs0(a);rsv();R()}
@@ -6246,24 +6242,24 @@ function autoRec(){const a=A_();a.sp.rec=mkS(rec(a,envI(a)));rsv();R()}
 function addAsset(){RS.assets.push(mkA("[새 자산]","공장",1000,"C3",5,10,70,[0,0,0,0,0],2,3));const a=RS.assets[RS.assets.length-1];a.sp.rec=mkS(rec(a,envI(a)));RS.i=RS.assets.length-1;rsv();R()}
 function delAsset(){if(RS.assets.length>1&&confirm("삭제할까요?")){RS.assets.splice(RS.i,1);RS.i=0;rsv();R()}}
 // 페이지
-function zoneH(q,j){const z=q.z;return`<div class="coat"><div class="g">${I("구역명",z.n,`RP.Uz(${j},'n',this.value)`,"text")}${I("구역 면적 ㎡",z.ar,`RP.Uz(${j},'ar',this.value)`)}</div><div class="g3">${I("염화물 mg/㎡·일",z.cl,`RP.Uz(${j},'cl',this.value)`)}${I("SO₂ mg/㎡·일",z.so2,`RP.Uz(${j},'so2',this.value)`)}${I("평균 습도 %",z.rh,`RP.Uz(${j},'rh',this.value)`)}</div><div class="g">${I("시편 부식속도 µm/년 (선택)",z.mr,`RP.Uz(${j},'mr',this.value)`)}${Sel("등급 직접 지정 (선택)",[["","자동 (측정값)"],...CK.map(k=>[k,k+" "+CAT[k][0]])],z.cc,`RP.Uz(${j},'cc',this.value)`)}</div><div class="k">판정 <b>${q.eff}</b> (${CAT[q.eff][0]}) · 측정 추정 ${q.es} · 비중 ${(q.w*100).toFixed(0)}%</div><div style="margin-top:6px"><button class="btn s" onclick="RP.delZone(${j})">삭제</button></div></div>`}
+function zoneH(q,j){const z=q.z;return`<div class="coat"><div class="g">${I("구역명",z.n,`LCCX.Uz(${j},'n',this.value)`,"text")}${I("구역 면적 ㎡",z.ar,`LCCX.Uz(${j},'ar',this.value)`)}</div><div class="g3">${I("염화물 mg/㎡·일",z.cl,`LCCX.Uz(${j},'cl',this.value)`)}${I("SO₂ mg/㎡·일",z.so2,`LCCX.Uz(${j},'so2',this.value)`)}${I("평균 습도 %",z.rh,`LCCX.Uz(${j},'rh',this.value)`)}</div><div class="g">${I("시편 부식속도 µm/년 (선택)",z.mr,`LCCX.Uz(${j},'mr',this.value)`)}${Sel("등급 직접 지정 (선택)",[["","자동 (측정값)"],...CK.map(k=>[k,k+" "+CAT[k][0]])],z.cc,`LCCX.Uz(${j},'cc',this.value)`)}</div><div class="k">판정 <b>${q.eff}</b> (${CAT[q.eff][0]}) · 측정 추정 ${q.es} · 비중 ${(q.w*100).toFixed(0)}%</div><div style="margin-top:6px"><button class="btn s" onclick="LCCX.delZone(${j})">삭제</button></div></div>`}
 function pA(){const a=A_(),e=envI(a),c=CAT[e.eff];
-return D("a1","기본 정보",`<div class="g">${I("자산명",a.n,"RP.Ua('n',this.value)","text")}${Sel("유형",[["아파트","아파트"],["공장","공장"]],a.t,"RP.Ua('t',this.value)")}<div><label>총 면적 ㎡ (구역 합계)</label><input value="${F(a.ar)}" disabled></div>${I("마지막 도장 후 경과 년",a.age,"RP.Ua('age',this.value)")}</div><div style="margin-top:8px"><button class="btn s" onclick="RP.addAsset()">+ 자산 추가</button> <button class="btn s" onclick="RP.delAsset()">삭제</button></div>`)
-+D("a2","구역별 부식환경 측정 (면적 가중)",`<div class="note">구역마다 염화물·SO₂·습도를 측정해 입력하면 등급(ISO 12944-2)이 자동 판정되고, 구역 면적 비중으로 합산됩니다. 측정이 어려우면 사진으로 AI 판독을 참고하세요.</div>${Sel("요구 내구성",DK.map(k=>[k,DN[k]]),a.dur,"RP.Ua('dur',this.value)")}${e.zs.map((q,j)=>zoneH(q,j)).join("")}<button class="btn s" style="margin-top:8px" onclick="RP.addZone()">+ 구역 추가</button><div class="rs"><div class="sc"><table><tr><th>구역</th><th class="n">면적㎡</th><th class="n">비중</th><th>등급</th></tr>${e.zs.map(q=>`<tr><td>${hh(q.z.n)}</td><td class="n">${F(q.z.ar)}</td><td class="n">${(q.w*100).toFixed(0)}%</td><td>${q.eff}</td></tr>`).join("")}</table></div>적용 부식환경 <b>${e.eff}</b> (${CAT[e.eff][0]}) · 강 1년 손실 ${CAT[e.eff][1]}~${CAT[e.eff][2]} µm<br>가장 가혹한 구역: ${hh(e.mx.z.n)} ${e.mx.eff} · 환경영향 <b>${LV[e.envLv]}</b></div><div class="note">구역마다 측정값·시편 부식속도·직접 지정 중 가장 높은 등급을 구역 등급으로 쓰고, 면적 가중 평균 등급을 사양 평가에 적용합니다.</div>`)
-+D("a3","운영·안전 영향",`<div class="g">${a.ra.map((x,j)=>Sel(RAL[j],LV.map((l,m)=>[m,l]),x,`RP.Ub('ra',${j},this.value)`)).join("")}</div>`)
-+D("a4","수명 영향 인자",`<div class="g">${FT.map((t,j)=>Sel(t[0],t[2].map((l,m)=>[m,l]),a.f[j],`RP.Ub('f',${j},this.value)`)).join("")}</div>${a.cu.map((c,j)=>`<div class="g">${I("사용자 인자명",c.n,`RP.Uc(${j},'n',this.value)`,"text")}${I("수명 배수 0.5~1.2",c.m,`RP.Uc(${j},'m',this.value)`)}</div>`).join("")}<button class="btn s" style="margin-top:8px" onclick="RP.addC()">+ 인자 추가 (해안 염분·진동 등)</button><div class="rs">수명 인자곱 ×${e.fp.toFixed(2)}<br>${e.fl.map(f=>`<span style="${f[1]<1?"color:#d63a3a":""}">${f[0]} ×${f[1].toFixed(2)}</span>`).join(" · ")}</div>`)}
+return D("a1","기본 정보",`<div class="g">${I("자산명",a.n,"LCCX.Ua('n',this.value)","text")}${Sel("유형",[["아파트","아파트"],["공장","공장"]],a.t,"LCCX.Ua('t',this.value)")}<div><label>총 면적 ㎡ (구역 합계)</label><input value="${F(a.ar)}" disabled></div>${I("마지막 도장 후 경과 년",a.age,"LCCX.Ua('age',this.value)")}</div><div style="margin-top:8px"><button class="btn s" onclick="LCCX.addAsset()">+ 자산 추가</button> <button class="btn s" onclick="LCCX.delAsset()">삭제</button></div>`)
++D("a2","구역별 부식환경 측정 (면적 가중)",`<div class="note">구역마다 염화물·SO₂·습도를 측정해 입력하면 등급(ISO 12944-2)이 자동 판정되고, 구역 면적 비중으로 합산됩니다. 측정이 어려우면 사진으로 AI 판독을 참고하세요.</div>${Sel("요구 내구성",DK.map(k=>[k,DN[k]]),a.dur,"LCCX.Ua('dur',this.value)")}${e.zs.map((q,j)=>zoneH(q,j)).join("")}<button class="btn s" style="margin-top:8px" onclick="LCCX.addZone()">+ 구역 추가</button><div class="rs"><div class="sc"><table><tr><th>구역</th><th class="n">면적㎡</th><th class="n">비중</th><th>등급</th></tr>${e.zs.map(q=>`<tr><td>${hh(q.z.n)}</td><td class="n">${F(q.z.ar)}</td><td class="n">${(q.w*100).toFixed(0)}%</td><td>${q.eff}</td></tr>`).join("")}</table></div>적용 부식환경 <b>${e.eff}</b> (${CAT[e.eff][0]}) · 강 1년 손실 ${CAT[e.eff][1]}~${CAT[e.eff][2]} µm<br>가장 가혹한 구역: ${hh(e.mx.z.n)} ${e.mx.eff} · 환경영향 <b>${LV[e.envLv]}</b></div><div class="note">구역마다 측정값·시편 부식속도·직접 지정 중 가장 높은 등급을 구역 등급으로 쓰고, 면적 가중 평균 등급을 사양 평가에 적용합니다.</div>`)
++D("a3","운영·안전 영향",`<div class="g">${a.ra.map((x,j)=>Sel(RAL[j],LV.map((l,m)=>[m,l]),x,`LCCX.Ub('ra',${j},this.value)`)).join("")}</div>`)
++D("a4","수명 영향 인자",`<div class="g">${FT.map((t,j)=>Sel(t[0],t[2].map((l,m)=>[m,l]),a.f[j],`LCCX.Ub('f',${j},this.value)`)).join("")}</div>${a.cu.map((c,j)=>`<div class="g">${I("사용자 인자명",c.n,`LCCX.Uc(${j},'n',this.value)`,"text")}${I("수명 배수 0.5~1.2",c.m,`LCCX.Uc(${j},'m',this.value)`)}</div>`).join("")}<button class="btn s" style="margin-top:8px" onclick="LCCX.addC()">+ 인자 추가 (해안 염분·진동 등)</button><div class="rs">수명 인자곱 ×${e.fp.toFixed(2)}<br>${e.fl.map(f=>`<span style="${f[1]<1?"color:#d63a3a":""}">${f[0]} ×${f[1].toFixed(2)}</span>`).join(" · ")}</div>`)}
 function pD(){const a=A_(),r=all(a);
-return D("d1","결함 측정 (카메라 → 수치)",`<div class="g"><div><b class="k">BEFORE</b>${DF.map((f,j)=>I(f[1],a.b[j],`RP.Ub('b',${j},this.value)`)).join("")}</div><div><b class="k">AFTER</b>${DF.map((f,j)=>I(f[1],a.a[j],`RP.Ub('a',${j},this.value)`)).join("")}</div></div>`)
+return D("d1","결함 측정 (카메라 → 수치)",`<div class="g"><div><b class="k">BEFORE</b>${DF.map((f,j)=>I(f[1],a.b[j],`LCCX.Ub('b',${j},this.value)`)).join("")}</div><div><b class="k">AFTER</b>${DF.map((f,j)=>I(f[1],a.a[j],`LCCX.Ub('a',${j},this.value)`)).join("")}</div></div>`)
 +`<div class="card"><span class="z ${r.B.z}">${r.B.z}</span> ${ZI[r.B.z][0]} · ${r.B.sc.toFixed(1)}점 → <span class="z ${r.A.z}">${r.A.z}</span> ${r.A.sc.toFixed(1)}점<div class="k">${ZI[r.B.z][1]} · 녹 Ri${r.B.r} · 균열 ${r.B.c}등급 · 박리 ${r.B.f}등급</div><ul style="margin:6px 0;padding-left:18px">${fixes(r.B).map(x=>`<li>${x}</li>`).join("")}</ul></div>`}
-function coatH(r,c,i,s){const k=cc(c);return`<div class="coat"><div class="g">${I("구분",c.z,`RP.Ut('${r}',${i},'z',this.value)`,"text")}${I("제품명",c.p,`RP.Ut('${r}',${i},'p',this.value)`,"text")}</div><div class="g4">${I("DFT µm",c.d,`RP.Ut('${r}',${i},'d',this.value)`)}${I("고형분%",c.vs,`RP.Ut('${r}',${i},'vs',this.value)`)}${I("로스%",c.ls,`RP.Ut('${r}',${i},'ls',this.value)`)}${I("희석%",c.th,`RP.Ut('${r}',${i},'th',this.value)`)}</div><div class="g">${I("캔 가격 원",c.price,`RP.Ut('${r}',${i},'price',this.value)`)}${I("포장 "+(c.un=="kg"?"kg":"ℓ"),c.pk,`RP.Ut('${r}',${i},'pk',this.value)`)}</div><div class="g">${I("희석제 통가 원",c.tp,`RP.Ut('${r}',${i},'tp',this.value)`)}<div><label>DB 연결</label><button class="btn s" onclick="RP.pick('${r}',${i})">${c.db?"✓ "+hh(c.db).slice(0,14):"DB 제품 선택"}</button></div></div><div class="k">이론 ${k.th.toFixed(3)} ℓ/㎡ · 실제 ${k.ac.toFixed(3)} ℓ/㎡ · 1캔 ${k.cov.toFixed(0)}㎡ · ${F(k.cost)}원/㎡ <button class="btn s" style="padding:2px 8px" onclick="RP.delCoat('${r}',${i})">삭제</button></div></div>`}
-function pS(){const a=A_(),en=envI(a);return `<div class="note">사양 코트의 "DB 제품 선택"으로 일위대가표 제품 DB의 고형분·추천도막·희석율·포장을 불러옵니다. 공장 사양의 단가·노무비·수명은 예시값입니다. 실제 견적으로 교체하세요. 아파트 단가는 기존 엑셀의 ㎡당 재료비에서 역산한 값입니다.</div>`+RK.map((r,n)=>{const s=a.sp[r],m=sim(s,a,en);return D("s"+r,`<span style="color:${RC[n]}">●</span> ${RN[n]} · ${s.n}`,`<div class="g">${I("사양명",s.n,`RP.Us('${r}','n',this.value)`,"text")}${Sel("프리셋 불러오기",[["","선택"],...LIB.map((l,i)=>[i,l[1]])],"",`RP.load('${r}',this.value)`)}${I("기준수명 C3 (년)",s.life,`RP.Us('${r}','life',this.value)`)}${Sel("적용 한계 등급",CK.map(k=>[k,k]),s.cmax,`RP.Us('${r}','cmax',this.value)`)}${I("바탕·노무 등 원/㎡",s.lab,`RP.Us('${r}','lab',this.value)`)}</div>${s.coats.map((c,i)=>coatH(r,c,i,s)).join("")}<div style="margin-top:8px"><button class="btn s" onclick="RP.addCoat('${r}')">+ 코트 추가</button>${r=="rec"?` <button class="btn" onclick="RP.autoRec()">환경 맞춤 자동 추천</button>`:""}</div><div class="rs">총 DFT ${m.sc.dft}㎛ · 초기 ${F(m.sc.init)}원/㎡ (재료 ${F(m.sc.mat)} + 기타 ${F(s.lab)}) · 도료 ${F(m.sc.L)}ℓ / ${m.sc.cans}캔 · 희석제 ${F(m.sc.thL)}ℓ<br>추정수명 <b>${m.e.toFixed(1)}년</b> (보수주기 ${m.c}년) · ${m.mm>0?`<span class="dn">환경 ${en.eff} > 적용한계 ${s.cmax}: 수명 ×${Math.pow(.75,m.mm).toFixed(2)}</span>`:`<span class="up">${en.eff} 환경에 적합</span>`}</div>`)}).join("")}
+function coatH(r,c,i,s){const k=cc(c);return`<div class="coat"><div class="g">${I("구분",c.z,`LCCX.Ut('${r}',${i},'z',this.value)`,"text")}${I("제품명",c.p,`LCCX.Ut('${r}',${i},'p',this.value)`,"text")}</div><div class="g4">${I("DFT µm",c.d,`LCCX.Ut('${r}',${i},'d',this.value)`)}${I("고형분%",c.vs,`LCCX.Ut('${r}',${i},'vs',this.value)`)}${I("로스%",c.ls,`LCCX.Ut('${r}',${i},'ls',this.value)`)}${I("희석%",c.th,`LCCX.Ut('${r}',${i},'th',this.value)`)}</div><div class="g">${I("캔 가격 원",c.price,`LCCX.Ut('${r}',${i},'price',this.value)`)}${I("포장 "+(c.un=="kg"?"kg":"ℓ"),c.pk,`LCCX.Ut('${r}',${i},'pk',this.value)`)}</div><div class="g">${I("희석제 통가 원",c.tp,`LCCX.Ut('${r}',${i},'tp',this.value)`)}<div><label>DB 연결</label><button class="btn s" onclick="LCCX.pick('${r}',${i})">${c.db?"✓ "+hh(c.db).slice(0,14):"DB 제품 선택"}</button></div></div><div class="k">이론 ${k.th.toFixed(3)} ℓ/㎡ · 실제 ${k.ac.toFixed(3)} ℓ/㎡ · 1캔 ${k.cov.toFixed(0)}㎡ · ${F(k.cost)}원/㎡ <button class="btn s" style="padding:2px 8px" onclick="LCCX.delCoat('${r}',${i})">삭제</button></div></div>`}
+function pS(){const a=A_(),en=envI(a);return `<div class="note">사양 코트의 "DB 제품 선택"으로 일위대가표 제품 DB의 고형분·추천도막·희석율·포장을 불러옵니다. 공장 사양의 단가·노무비·수명은 예시값입니다. 실제 견적으로 교체하세요. 아파트 단가는 기존 엑셀의 ㎡당 재료비에서 역산한 값입니다.</div>`+RK.map((r,n)=>{const s=a.sp[r],m=sim(s,a,en);return D("s"+r,`<span style="color:${RC[n]}">●</span> ${RN[n]} · ${s.n}`,`<div class="g">${I("사양명",s.n,`LCCX.Us('${r}','n',this.value)`,"text")}${Sel("프리셋 불러오기",[["","선택"],...LIB.map((l,i)=>[i,l[1]])],"",`LCCX.load('${r}',this.value)`)}${I("기준수명 C3 (년)",s.life,`LCCX.Us('${r}','life',this.value)`)}${Sel("적용 한계 등급",CK.map(k=>[k,k]),s.cmax,`LCCX.Us('${r}','cmax',this.value)`)}${I("바탕·노무 등 원/㎡",s.lab,`LCCX.Us('${r}','lab',this.value)`)}</div>${s.coats.map((c,i)=>coatH(r,c,i,s)).join("")}<div style="margin-top:8px"><button class="btn s" onclick="LCCX.addCoat('${r}')">+ 코트 추가</button>${r=="rec"?` <button class="btn" onclick="LCCX.autoRec()">환경 맞춤 자동 추천</button>`:""}</div><div class="rs">총 DFT ${m.sc.dft}㎛ · 초기 ${F(m.sc.init)}원/㎡ (재료 ${F(m.sc.mat)} + 기타 ${F(s.lab)}) · 도료 ${F(m.sc.L)}ℓ / ${m.sc.cans}캔 · 희석제 ${F(m.sc.thL)}ℓ<br>추정수명 <b>${m.e.toFixed(1)}년</b> (보수주기 ${m.c}년) · ${m.mm>0?`<span class="dn">환경 ${en.eff} > 적용한계 ${s.cmax}: 수명 ×${Math.pow(.75,m.mm).toFixed(2)}</span>`:`<span class="up">${en.eff} 환경에 적합</span>`}</div>`)}).join("")}
 function bars(rows,cols){return`<svg viewBox="0 0 320 ${rows.length*54+6}" width="100%">${rows.map((r,i)=>{const mx=Math.max(...r[1],1e-9),y=i*54;return`<text x="0" y="${y+11}" font-size="11" font-weight="700" fill="var(--tx)">${r[0]}</text>`+r[1].map((v,j)=>{const w=Math.max(2,v/mx*215);return`<rect x="0" y="${y+16+j*12}" width="${w}" height="9" rx="3" fill="${cols[j]}"/><text x="${w+4}" y="${y+24+j*12}" font-size="9.5" fill="var(--mu)">${r[2](v)}</text>`}).join("")}).join("")}</svg>`}
 function line(ss,cols){const W=320,H=190,L=46,T=12,B=24,m=Math.max(...ss.flat(),1),x=y=>L+y/RS.hz*(W-L-8),Y=v=>H-B-v/m*(H-T-B),p=c=>"M"+x(0)+","+Y(c[0])+c.slice(1).map((v,i)=>` L${x(i+1)},${Y(c[i])} L${x(i+1)},${Y(v)}`).join("");
 return`<svg viewBox="0 0 ${W} ${H}" width="100%">${[0,.5,1].map(f=>`<line x1="${L}" x2="${W-8}" y1="${Y(m*f)}" y2="${Y(m*f)}" stroke="var(--bd)"/><text x="${L-4}" y="${Y(m*f)+3}" text-anchor="end" font-size="9" fill="var(--mu)">${F(m*f/1000)}M</text><text x="${x(RS.hz*f)}" y="${H-8}" text-anchor="middle" font-size="9" fill="var(--mu)">${Math.round(RS.hz*f)}년</text>`).join("")}${ss.map((c,i)=>`<path d="${p(c)}" fill="none" stroke="${cols[i]}" stroke-width="2.2"/>`).join("")}</svg>`}
 function donut(c,n){const C=238.76,cs={R:"#d63a3a",O:"#e07a1f",Y:"#c9a400",G:"#2e9d5b"};let o=0;return`<svg viewBox="0 0 100 100" width="120" height="120">${["R","O","Y","G"].map(z=>{const l=c[z]/n*C,x=`<circle cx="50" cy="50" r="38" fill="none" stroke="${cs[z]}" stroke-width="16" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-o}" transform="rotate(-90 50 50)"/>`;o+=l;return x}).join("")}<text x="50" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="var(--tx)">${n}곳</text></svg>`}
 const leg=()=>RN.map((n,i)=>`<span style="color:${RC[i]}">■</span> ${n}`).join(" &nbsp;");
 function pC(){const r=all(A_()),a=r.a,m=r.m,best=m.reduce((b,x,i)=>x.tot<m[b].tot?i:b,0),row=(t,f)=>`<tr><td>${t}</td>${m.map((x,i)=>`<td class="n">${f(x,i)}</td>`).join("")}</tr>`;
-return`<div class="card"><div class="g">${I("평가기간 (년)",RS.hz,"RP.hz(this.value)")}${I("보수 시점당 인상률 %",RS.esc,"RP.esc(this.value)")}</div></div>
+return`<div class="card"><div class="g">${I("평가기간 (년)",RS.hz,"LCCX.hz(this.value)")}${I("보수 시점당 인상률 %",RS.esc,"LCCX.esc(this.value)")}</div></div>
 <div class="card"><h1>사양 비교 · ${a.n.slice(0,14)}</h1><div class="sc"><table><tr><th></th>${RN.map(n=>`<th class="n">${n}</th>`).join("")}</tr>
 ${row("사양",(x,i)=>a.sp[RK[i]].n.slice(0,12))}${row("총 DFT ㎛",x=>x.sc.dft)}${row("추정수명 년",x=>x.e.toFixed(1))}${row("보수주기 년",x=>x.c)}${row("환경 적합",x=>x.mm>0?"<span class='dn'>부적합</span>":"<span class='up'>적합</span>")}${row("요구 내구성("+a.dur+")",x=>DK.indexOf(x.d)>=DK.indexOf(a.dur)?"<span class='up'>충족</span>":"<span class='dn'>미달</span>")}${row("초기 원/㎡",x=>F(x.sc.init))}${row("초기 총액 천원",x=>F(x.sc.init*a.ar/1000))}${row(RS.hz+"년 LCC 천원",x=>F(x.tot))}${row("연환산 원/㎡·년",x=>F(x.an))}${row("도료 ℓ / 캔",x=>F(x.sc.L)+" / "+x.sc.cans)}${row("LCC 대비(현재)",(x,i)=>i==0?"-":`<span class="${x.tot<=m[0].tot?"up":"dn"}">${((x.tot-m[0].tot)/m[0].tot*100).toFixed(1)}%</span>`)}</table></div>
 <p>최저 LCC: <b style="color:${RC[best]}">${RN[best]}</b> · 현재 대비 <span class="up">${F(m[0].tot-m[best].tot)} 천원</span> 절감</p></div>
@@ -6276,14 +6272,14 @@ return`<div id="ig"><h1>도장 수명 · LCC 인포그래픽</h1><div class="g">
 <div class="card"><h1>자산별 LCC (백만원)</h1>${bars(R.map(r=>[r.a.n.slice(0,16),r.m.map(x=>x.tot/1000),v=>v.toFixed(1)]),RC)}<div class="note">${leg()}</div></div>
 <div class="card"><h1>누적 LCC (천원, 포트폴리오)</h1>${line(cu,RC)}<div class="note">${leg()}</div></div>
 <div class="card"><h1>자산별 요약</h1><div class="sc"><table><tr><th>자산</th><th>Zone</th><th>환경</th><th class="n">수명 현/기/추</th><th class="n">LCC 현/기/추</th></tr>${R.map(r=>`<tr><td>${r.a.n.slice(0,14)}</td><td><span class="z ${r.B.z}">${r.B.z}</span></td><td>${r.en.eff}</td><td class="n">${r.m.map(x=>x.e.toFixed(1)).join(" / ")}</td><td class="n">${r.m.map(x=>F(x.tot)).join(" / ")}</td></tr>`).join("")}</table></div></div></div>
-<div class="card"><button class="btn" onclick="RP.saveH()">인포그래픽 저장 (.html)</button> <button class="btn s" onclick="RP.word()">Word 저장 (.doc)</button> <button class="btn s" onclick="RP.toCalc('rec')">추천사양 → 일위대가표</button><div id="st" class="note"></div></div>
+<div class="card"><button class="btn" onclick="LCCX.saveH()">인포그래픽 저장 (.html)</button> <button class="btn s" onclick="LCCX.word()">Word 저장 (.doc)</button> <button class="btn s" onclick="LCCX.toCalc('rec')">추천사양 → 일위대가표</button><div id="st" class="note"></div></div>
 ${D("r1","규격·가정",`<ul style="padding-left:18px;margin:0"><li>ISO 12944-2 / KS M ISO 12944-2: 부식환경 C1~CX (1년차 강 손실 µm)</li><li>ISO 9223·9225 / KS D ISO 9223·9225: 대기 부식성 분류, SO₂·염화물 침적 측정</li><li>ISO 4628: 도막 열화(녹·균열·박리·블리스터·쵸킹) 등급</li></ul><div class="note">소요량: 이론 ℓ/㎡ = DFT/(10×고형분%), 실제 = 이론/(1−로스). 추정수명 = 기준수명(C3) × 환경계수 × 인자 계수 × 적용한계 초과 시 0.75/단계. LCC = 초기비용×(1+인상률×k), 재도장 시점부터 ${RS.hz}년. 모든 계수와 구간은 가정값이라 현장 데이터로 교정이 필요합니다. 기본사양은 시방서 기준 사양을 입력하세요.</div>`)}`}
 
 let PK={};const TABS=[["자산",pA],["진단",pD],["사양",pS],["비교",pC],["보고서",pR]];
 function R(){const e=document.getElementById("v9");if(!e)return;const y=scrollY,a=A_();
-e.innerHTML=`<div class="rpc">${RS.assets.map((x,i)=>`<button class="${i==RS.i?"on":""}" onclick="RP.si(${i})">${hh(x.n).slice(0,12)}</button>`).join("")}</div><div class="k" style="margin:2px 2px 6px">기본면적 ${F(a.ar)}㎡ · ${a.t} · 평가 ${RS.hz}년</div><div class="rpt">${TABS.map((t,i)=>`<button class="${i==RS.tab?"on":""}" onclick="RP.tab(${i})">${t[0]}</button>`).join("")}</div>${TABS[RS.tab][1]()}`;scrollTo(0,y)}
-function pick(r,i){PK={r,i};pqSheet("rppk",`<div class="pqmh"><b>DB 제품 선택</b></div><input id="rpq" placeholder="제품명·제조사 검색" oninput="RP.pkq(this.value)"><div id="rpl" style="display:flex;flex-direction:column;gap:6px"></div><button class="pqbc" onclick="pqX('rppk')">닫기</button>`);pkq("")}
-function pkq(q){const L=DB.map((p,j)=>[p,j]).filter(([p])=>!q||(p.n+(p.mf||"")+(p.g||"")).toLowerCase().includes(String(q).toLowerCase())).slice(0,40);document.getElementById("rpl").innerHTML=L.length?L.map(([p,j])=>`<button class="pqml" onclick="RP.use(${j})"><span class="pqt"><b>${hh(p.n)}</b><small>${hh((p.mf||"")+" · "+(p.g||p.d||"")+" · SVR "+(p.svr||"-")+"% · "+(p.dft||"-")+"㎛")}</small></span></button>`).join(""):'<div class="k">제품 DB가 비어 있습니다. 더보기 → 제품 DB에서 추가하세요.</div>'}
+e.innerHTML=`<div class="rpc">${RS.assets.map((x,i)=>`<button class="${i==RS.i?"on":""}" onclick="LCCX.si(${i})">${hh(x.n).slice(0,12)}</button>`).join("")}</div><div class="k" style="margin:2px 2px 6px">기본면적 ${F(a.ar)}㎡ · ${a.t} · 평가 ${RS.hz}년</div><div class="rpt">${TABS.map((t,i)=>`<button class="${i==RS.tab?"on":""}" onclick="LCCX.tab(${i})">${t[0]}</button>`).join("")}</div>${TABS[RS.tab][1]()}`;scrollTo(0,y)}
+function pick(r,i){PK={r,i};pqSheet("rppk",`<div class="pqmh"><b>DB 제품 선택</b></div><input id="rpq" placeholder="제품명·제조사 검색" oninput="LCCX.pkq(this.value)"><div id="rpl" style="display:flex;flex-direction:column;gap:6px"></div><button class="pqbc" onclick="pqX('rppk')">닫기</button>`);pkq("")}
+function pkq(q){const L=DB.map((p,j)=>[p,j]).filter(([p])=>!q||(p.n+(p.mf||"")+(p.g||"")).toLowerCase().includes(String(q).toLowerCase())).slice(0,40);document.getElementById("rpl").innerHTML=L.length?L.map(([p,j])=>`<button class="pqml" onclick="LCCX.use(${j})"><span class="pqt"><b>${hh(p.n)}</b><small>${hh((p.mf||"")+" · "+(p.g||p.d||"")+" · SVR "+(p.svr||"-")+"% · "+(p.dft||"-")+"㎛")}</small></span></button>`).join(""):'<div class="k">제품 DB가 비어 있습니다. 더보기 → 제품 DB에서 추가하세요.</div>'}
 function use(j){const p=DB[j],c=A_().sp[PK.r].coats[PK.i],tr=+p.tr||0;c.p=p.n;c.db=p.n;c.vs=+p.svr||c.vs;c.d=+p.dft||c.d;c.th=tr?(tr>1?tr:+(tr*100).toFixed(1)):(+p.trp||c.th);c.pk=+p.mk||+p.pk||c.pk;c.un=/kg|㎏/i.test(p.un||"")?"kg":"L";c.sg=+p.sg||0;c.ts=+p.ts||18;pqX("rppk");rsv();R()}
 function toCalc(r){const a=A_(),s=a.sp[r],miss=s.coats.some(c=>!c.db);
 ask('일위대가표의 Coat를 "'+hh(s.n)+'" 사양으로 바꿀까요?<br><small>면적 '+F(a.ar)+'㎡'+(miss?' · DB 미연결 코트는 직접 입력 제품으로 전달됩니다':'')+'</small>',()=>{S.coats=s.coats.map(c=>({n:c.db||c.p,dft:c.d,svr:c.vs,loss:c.ls,tr:c.th,price:c.price,tprice:c.tp}));S.area=String(Math.round(a.ar));sv();T(0);try{cards()}catch(e){}})}
@@ -6296,7 +6292,7 @@ Rr.forEach(r=>{b+=`<h2>${hh(r.a.n)}</h2><p>수명 인자: ${hh(r.en.fl.map(f=>f[
 b+=`<p>가정: 소요량=DFT/(10×고형분), 추정수명=기준수명×환경·인자 계수, LCC 선형 ${RS.esc}% 인상. 참조: ISO 12944-2, ISO 9223/9225, ISO 4628, KS M ISO 12944, KS D ISO 9223.</p>`;
 const h='﻿<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>LCC 보고서</title><style>body{font-family:"Malgun Gothic",sans-serif;font-size:10.5pt}h1{font-size:18pt}h2{font-size:13pt;color:#1f3a5f}</style></head><body>'+b+'</body></html>';
 dl(new Blob([h],{type:"application/msword"}),"LCC_보고서.doc");tt("Word 보고서를 저장했습니다")}
-window.RP={R,si:i=>{RS.i=i;rsv();R()},tab:i=>{RS.tab=i;rsv();R();scrollTo(0,0)},tg:(id,o)=>{RS.o[id]=o},hz:v=>{RS.hz=Math.max(5,+v||30);rsv();R()},esc:v=>{RS.esc=+v||0;rsv();R()},get:()=>RS,
+window.LCCX={R,si:i=>{RS.i=i;rsv();R()},tab:i=>{RS.tab=i;rsv();R();scrollTo(0,0)},tg:(id,o)=>{RS.o[id]=o},hz:v=>{RS.hz=Math.max(5,+v||30);rsv();R()},esc:v=>{RS.esc=+v||0;rsv();R()},get:()=>RS,
 set:o=>{if(!o||!Array.isArray(o.assets)||!o.assets.length)return;RS=o;RS.tab=RS.tab||0;RS.i=0;RS.o=RS.o||{};RS.assets.forEach(a=>{if(!a.zones)a.zones=[mkZ("전체",a.ar,5,10,70,"")];zs0(a);if(!a.sp.rec)a.sp.rec=mkS(rec(a,envI(a)))});rsv();R()},
 Ua,Ub,Uc,Us,Ut,Uz,addC,addCoat,delCoat,load,autoRec,addAsset,delAsset,addZone,delZone,pick,pkq,use,toCalc,saveH,word};
 if(document.body&&document.body.dataset.pg==9)R();
