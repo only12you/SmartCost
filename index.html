@@ -2817,7 +2817,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v376',d:'2026.10.13'};
+const APPV={v:'v380',d:'2026.10.13'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -4365,11 +4365,11 @@ ${fsec('m2',2,'도포 면적 및 선택사항','',`<button class="fpa" onclick="
 <section class="scc screc"><div class="sch"><i>${ic('clock')}</i><b>최근 작업 현황</b><button class="sbt" onclick="fmTab('hist')">더보기 ${ic('chev')}</button></div>${recent(4)}</section>`}
 
 function histHtml(){return nav()+`<section class="scc screc"><div class="sch"><i>${ic('folder')}</i><b>작업 내역</b>${FM.hist.length?`<button class="sbt" onclick="if(confirm('작업 내역을 모두 지울까요?')){FM.hist=[];fmSave();fmRender()}">전체 삭제</button>`:''}</div>${FM.hist.length?FM.hist.map((h,i)=>`<div class="scrw"><button class="scrh" onclick="fmRestore(${i})"><i>${ic(h.k=='충진'?'pen':'grid')}</i><div><b>${esc2(h.nm)}</b><small>${fmDt(h.t)} · 눌러서 다시 열기</small></div><em>${esc2(h.val)}</em></button><button class="scrx" onclick="fmDelHist(${i})" aria-label="삭제">${ic('trash')}</button></div>`).join(''):'<div class="sce">저장된 작업이 없습니다. 실란트·메쉬 화면에서 "계산하기" 또는 "저장"을 누르면 저장됩니다.</div>'}</section>`}
-function fmRender(){const e=fq('v8');if(!e)return;const T=FM.tab;document.querySelectorAll('body>.sld').forEach(x=>x.remove());e.innerHTML=`<select class="scpill" onchange="fmTabSel(this.value)"><option value="fill"${T=='fill'?' selected':''}>실란트</option><option value="mesh"${T=='mesh'?' selected':''}>메쉬</option><option value="hist"${T=='hist'?' selected':''}>작업 내역</option></select><div class="sc">${T=='mesh'?meshHtml():T=='hist'?histHtml():fillHtml()}</div>${ldSheet()}`;const sl=e.querySelector('.sld');if(sl)document.body.appendChild(sl);document.querySelectorAll('body>.scpill').forEach(x=>x.remove());{const pl=e.querySelector('.scpill');if(pl)document.body.appendChild(pl)}{const t=document.getElementById('ttl'),h=document.getElementById('hs2');if(t){t.textContent=T=='mesh'?'메쉬 소요량 계산':'실란트 소요량 · 메쉬 소요량';if(h)h.textContent=T=='mesh'?'실란트 도포 시 필요한 메쉬 수량을 계산합니다.':'Sealant · Mesh Quantity'}}fmOut()}
+function fmRender(){const e=fq('v8');if(!e)return;const T=FM.tab;document.querySelectorAll('body>.sld').forEach(x=>x.remove());e.innerHTML=`<div class="sc">${T=='mesh'?meshHtml():T=='hist'?histHtml():fillHtml()}</div>${ldSheet()}`;const sl=e.querySelector('.sld');if(sl)document.body.appendChild(sl);document.querySelectorAll('body>.scpill').forEach(x=>x.remove());{const pl=e.querySelector('.scpill');if(pl)document.body.appendChild(pl)}{const t=document.getElementById('ttl'),h=document.getElementById('hs2');if(t){t.textContent=T=='mesh'?'메쉬 소요량 계산':'실란트 소요량 · 메쉬 소요량';if(h)h.textContent=T=='mesh'?'실란트 도포 시 필요한 메쉬 수량을 계산합니다.':'Sealant · Mesh Quantity'}}fmOut()}
 
 function fmResetMesh(){const f=()=>{const t=FM.tab;try{const o=JSON.parse(JSON.stringify(FD.mesh));Object.assign(FM.mesh,o)}catch(e){}fmSave();fmRender()};if(typeof ask=='function')ask('메쉬 입력값을 모두 초기화할까요?',f);else if(confirm('메쉬 입력값을 모두 초기화할까요?'))f()}
 
-setInterval(()=>{const pl=document.querySelector('body>.scpill'),v=document.getElementById('v8');if(pl)pl.style.display=(v&&!v.hidden)?'':'none';try{const t=document.getElementById('ttl');if(pl&&t&&v&&!v.hidden){const rg=document.createRange();rg.selectNodeContents(t);const r=rg.getBoundingClientRect(),h=pl.offsetHeight||30,w=pl.offsetWidth||90;let L=r.right+10;const mx=window.innerWidth-w-8;if(L>mx)L=mx;L=L+(mx-L)*0.5;pl.style.setProperty('right','auto','important');pl.style.setProperty('left',Math.round(L)+'px','important');pl.style.setProperty('top',Math.round(r.top+r.height/2-h/2)+'px','important');pl.style.setProperty('border-radius','999px','important')}}catch(e){}},300);
+
 </script><style id=pf311>
 .sc .fsd{--p:#e8f1ff;--d:#2a5bd7;--bd:#cfe0fb;border:1px solid var(--bd);border-radius:14px;background:#fff;margin:8px 0;overflow:hidden}
 .sc .fsd.k2,.sc .fsd.m2{--p:#e6f6ee;--d:#1f8a5b;--bd:#c6e8d6}.sc .fsd.k4{--p:#fff0e2;--d:#c26a1b;--bd:#f6dcc2}.sc .fsd.k3{--p:#f0ebfb;--d:#6a4cc0;--bd:#dcd2f3}
@@ -5771,7 +5771,7 @@ function body(){const t=AR.type;ensurePre(t);
  const kinds=Object.keys(K).map(k=>`<option value="${k}">${K[k].n}</option>`).join('');
  return `<div class="apty">${chips}</div><label class="apf w apsite"><span>현장 · 구역 이름 (선택)</span><input type="text" value="${esc(AR.name||'')}" placeholder="예: ○○아파트 101동" oninput="AR_N(this.value)"></label><div class="apl" id="apl">${L||'<div class="apno">부위가 없습니다</div>'}</div><div class="apadd"><select id="apks">${kinds}</select><button type="button" onclick="apAdd()">${I('plus')}<span>부위 추가</span></button></div><div class="apnote">면적 = 치수에서 계산한 면적 × 수량 − 공제입니다. 도면은 개략도이며 입력한 치수에 따라 바뀝니다. 현장 실측값이 있으면 \'직접 면적\' 부위를 쓰세요.</div>`}
 function shell(){const img=(document.getElementById('hxbg')||{}).src||'';
- return `<div class="ap-in"><header class="aph"><img alt="" src="${img}" onerror="this.style.display='none'"><button type="button" class="apbk" onclick="apClose()" aria-label="뒤로">${I('back')}</button><div class="apht"><b>도장 면적 산출</b><small>유형별 도면으로 ㎡ 계산 → 일위대가표로 적용</small></div></header><main class="apm" id="apm">${body()}</main><div class="apbar"><div class="apsum"><small>이 유형</small><b id="apt1">${fm(tot(AR.type))}</b></div><div class="apsum"><small>전체 합계</small><b id="apt2">${fm(tot())}</b></div><button type="button" class="apap" onclick="apApply(1)">이 유형 적용</button><button type="button" class="apap all" onclick="apApply(0)">전체 적용</button></div></div>`}
+ return `<div class="ap-in"><header class="aph"><img alt="" src="${img}" onerror="this.style.display='none'"><button type="button" class="apbk" onclick="apClose()" aria-label="뒤로">${I('back')}</button><div class="apht"><span class="aps1">Paint Quantity Calculator</span><b>도장 면적 산출</b><i class="aphb"></i><small>Painting Area Calculation</small></div></header><main class="apm" id="apm">${body()}</main><div class="apbar"><div class="apsum"><small>이 유형</small><b id="apt1">${fm(tot(AR.type))}</b></div><div class="apsum"><small>전체 합계</small><b id="apt2">${fm(tot())}</b></div><button type="button" class="apap" onclick="apApply(1)">이 유형 적용</button><button type="button" class="apap all" onclick="apApply(0)">전체 적용</button></div></div>`}
 window.apOpen=function(){apClose();const e=document.createElement('div');e.id='ap';e.className='ap';e.innerHTML=shell();document.body.appendChild(e);document.documentElement.classList.add('pdlock')};
 window.apClose=function(){const e=document.getElementById('ap');if(e)e.remove();document.documentElement.classList.remove('pdlock')};
 function rerenderAll(){const m=document.getElementById('apm');if(m)m.innerHTML=body();apSums()}
@@ -6096,7 +6096,7 @@ window.hqT=(i,k,v)=>{HQ.types[i][k]=v;save();upd()};window.hqTA=()=>{HQ.types.pu
 const sumsHtml=()=>{const t=HQ.type;return `<div class="apsum"><small>${t=='site'?'단지 전체':TYN[t]}</small><b id="hqt1">${won(t=='site'?sumG():C(t).c.G)}원</b></div><div class="apsum"><small>선택 공종 합계 (${WT.filter(inc).length}개)</small><b id="hqt2">${won(sumG())}원</b></div>`};
 function shell(){const img=(document.getElementById('hxbg')||{}).src||'';const t=HQ.type;
  const chips=CH.map(([k,l,ic])=>`<button type="button" class="${k==t?'on':''}" onclick="hqType('${k}')">${I(ic)}<b>${l}</b><em data-t="${k}">${k=='site'?'':(inc(k)&&C(k).c.G>0?won(C(k).c.G):'')}</em></button>`).join('');
- return `<div class="ap-in"><header class="aph"><img alt="" src="${img}" onerror="this.style.display='none'"><button type="button" class="apbk" onclick="hqClose()" aria-label="뒤로">${I('back')}</button><div class="apht"><b>공동주택 견적</b><small>면적 산출 → 공종별 내역서 → 원가계산서</small></div></header><main class="apm" id="hqm"><div class="apty">${chips}</div><div id="hqp">${panel(t)}</div></main><div class="apbar hq" id="hqbar">${sumsHtml()}<button type="button" class="apap" onclick="hqApply()">면적 → 일위대가표</button><button type="button" class="apap all" onclick="hqCsv()">내역서 CSV 저장</button></div></div>`}
+ return `<div class="ap-in"><header class="aph"><img alt="" src="${img}" onerror="this.style.display='none'"><button type="button" class="apbk" onclick="hqClose()" aria-label="뒤로">${I('back')}</button><div class="apht"><span class="aps1">Paint Quantity Calculator</span><b>공동주택 견적</b><i class="aphb"></i><small>Apartment Estimate</small></div></header><main class="apm" id="hqm"><div class="apty">${chips}</div><div id="hqp">${panel(t)}</div></main><div class="apbar hq" id="hqbar">${sumsHtml()}<button type="button" class="apap" onclick="hqApply()">면적 → 일위대가표</button><button type="button" class="apap all" onclick="hqCsv()">내역서 CSV 저장</button></div></div>`}
 window.hqOpen=function(){hqClose();const e=document.createElement('div');e.id='hq';e.className='ap';e.innerHTML=shell();document.body.appendChild(e);document.documentElement.classList.add('pdlock')};
 window.hqClose=function(){const e=document.getElementById('hq');if(e)e.remove();document.documentElement.classList.remove('pdlock')};
 function rerender(){const m=document.getElementById('hqm');if(!m)return;const sc=m.scrollTop;const e=document.getElementById('hq');e.innerHTML=shell();document.getElementById('hqm').scrollTop=sc}
@@ -6450,4 +6450,46 @@ new MutationObserver(m=>{for(const x of m)for(const a of x.addedNodes)if(a.nodeT
 <style id=cx367>html body .ccard .ctg{display:none!important}html body .ccard.cmin>*:not(.cch){display:revert!important}html body .ccard .cch{cursor:default!important}</style>
 <style id=ta369>.tx-tabs{grid-template-columns:1fr 1fr 1fr!important}.tx-tabs button{gap:calc(var(--u)*8)!important;white-space:nowrap}#tp_allr{margin-top:8px}.tx-card:has(#tp_all:not([hidden])) .tx-ck,.tx-card:has(#tp_all:not([hidden])) .tx-go,.tx-card:has(#tp_all:not([hidden])) #tp_st{display:none!important}#tp_allr .hint{font-size:12px}</style>
 <script id=ta369s>(function(){const o=window.tpRender;if(typeof o!='function')return;window.tpRender=function(){const r=o.apply(this,arguments);try{tpAllR()}catch(e){}return r}})();</script>
+<style id=ah377>
+html body :is(#ap,#hq) .aph{height:calc(var(--u)*236)!important;min-height:calc(var(--u)*236)!important;padding:0!important;display:block!important}
+html body :is(#ap,#hq) .aph:after{background:linear-gradient(90deg,rgba(7,66,178,.96) 0,rgba(10,84,200,.86) 38%,rgba(14,100,215,.35) 68%,rgba(14,100,215,0) 100%)!important}
+html body :is(#ap,#hq) .aph img{object-position:70% 57%!important}
+html body :is(#ap,#hq) .aph .apbk{position:absolute!important;left:calc(var(--u)*22)!important;top:calc(var(--u)*114)!important;width:30px!important;height:30px!important;min-width:30px!important;padding:0!important;border-radius:999px!important;background:#0a3a8f!important;border:2px solid rgba(255,255,255,.22)!important;color:#fff!important;display:flex!important;align-items:center!important;justify-content:center!important;box-shadow:0 4px 12px rgba(0,20,80,.35)!important}
+html body :is(#ap,#hq) .aph .apbk svg{width:58%!important;height:58%!important}
+html body :is(#ap,#hq) .aph .apht{position:absolute!important;left:calc(var(--u)*100)!important;top:calc(var(--u)*92)!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important}
+html body :is(#ap,#hq) .aph .aps1{font:500 10px/1.35 Poppins,"Noto Sans KR",system-ui,sans-serif!important;color:rgba(255,255,255,.9)!important;letter-spacing:.01em;white-space:nowrap}
+html body :is(#ap,#hq) .aph .apht b{font:800 19px/1.15 "Noto Sans KR",system-ui,sans-serif!important;letter-spacing:-.01em;margin-top:calc(var(--u)*4);white-space:nowrap;color:#fff}
+html body :is(#ap,#hq) .aph .aphb{display:block;width:calc(var(--u)*76);height:max(3px,calc(var(--u)*6));border-radius:4px;background:#fff;margin:calc(var(--u)*7) 0 calc(var(--u)*6)}
+html body :is(#ap,#hq) .aph .apht small{font:400 9.5px/1.3 Poppins,"Noto Sans KR",system-ui,sans-serif!important;color:rgba(255,255,255,.88)!important;white-space:nowrap}
+
+</style>
+<script id=pg378s>
+(function(){
+const OPT=[['fill','실란트'],['mesh','메쉬'],['hist','작업 내역'],['ap','도장면적'],['hq','공동'],['lcc','LCC']];
+let pl=null;
+function mk(){if(pl&&document.body.contains(pl))return pl;pl=document.createElement('select');pl.id='pgp';pl.className='scpill';pl.innerHTML=OPT.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('');
+ pl.onchange=function(){const v=this.value;try{
+  if(v=='fill'||v=='mesh'||v=='hist'){apClose();hqClose();const e=document.getElementById('v8');if(e&&e.hidden)T(8);fmTab(v)}
+  else if(v=='ap'){hqClose();apOpen()}
+  else if(v=='hq'){apClose();hqOpen()}
+  else if(v=='lcc'){apClose();hqClose();T(9)}
+ }catch(x){}};document.body.appendChild(pl);return pl}
+function tick(){try{
+ const ap=document.getElementById('ap'),hq=document.getElementById('hq'),v8=document.getElementById('v8'),v9=document.getElementById('v9');
+ let cur=null,tEl=null;
+ if(ap){cur='ap';tEl=ap.querySelector('.aph b')}else if(hq){cur='hq';tEl=hq.querySelector('.aph b')}
+ else if(v8&&!v8.hidden){cur=(typeof FM!='undefined'&&FM&&FM.tab)||'fill';tEl=document.getElementById('ttl')}
+ else if(v9&&!v9.hidden){cur='lcc';tEl=document.getElementById('ttl')}
+ const s=mk();
+ if(!cur||!tEl){s.style.display='none';return}
+ s.style.display='';if(s.value!==cur)s.value=cur;
+ const U=Math.min(window.innerWidth,560)/852,off=Math.max(0,(window.innerWidth-560)/2);
+ let top=Math.round(U*114),L=null;
+ if(cur=='fill'||cur=='mesh'||cur=='hist'){const rg=document.createRange();rg.selectNodeContents(tEl);const r=rg.getBoundingClientRect(),h=s.offsetHeight||30,w=s.offsetWidth||96;L=r.right+10;const mx=window.innerWidth-w-8;if(L>mx)L=mx;L=L+(mx-L)*0.5;top=Math.round(r.top+r.height/2-h/2)}
+ if(L==null)L=window.innerWidth-(s.offsetWidth||96)-off-Math.round(U*52);
+ s.style.setProperty('right','auto','important');s.style.setProperty('left',Math.round(L)+'px','important');s.style.setProperty('top',top+'px','important');s.style.setProperty('border-radius','999px','important');s.style.setProperty('z-index','400','important');
+}catch(e){}}
+setInterval(tick,250);window.addEventListener('load',tick);
+})();
+</script>
 </body></html>
