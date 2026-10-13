@@ -2710,7 +2710,7 @@ function esDel(j){esS().x.splice(j,1);sv();esRe()}
 function esSum(){const R=$('#es');if(!R)return;const g=e=>parseFloat(String(e.value).replace(/,/g,''))||0;let s=0;R.querySelectorAll('.ei[data-k]').forEach(tr=>{const i=tr.querySelectorAll('input.r'),a=Math.round(g(i[0])*g(i[1]));s+=a;tr.querySelector('.am').textContent=F(a,0)});const v=Math.round(s*.1);$('#esS').textContent=F(s,0);$('#esV').textContent=F(v,0);$('#esT').textContent=F(s+v,0)}
 function esRe(){const w=$('#es .rpw');if(!w)return;w.innerHTML=esHTML();w.firstChild.style.zoom=Math.min(1,(innerWidth-16)/794);esSum();esFsum()}
 function rcFit(){document.querySelectorAll('#rs .rcs b').forEach(b=>{const n=b.textContent.length;b.style.fontSize=n>20?'10px':n>16?'11px':n>13?'12px':n>10?'13.5px':''})}
-function ccTg(i,el,ev){if(ev&&ev.target.closest&&ev.target.closest('label,input'))return;const cd=el.closest('.ccard');if(!cd)return;const m=cd.classList.toggle('cmin');if(S.coats[i])S.coats[i].cm=m?1:0;sv()}
+function ccTg(i,el,ev){return;if(ev&&ev.target.closest&&ev.target.closest('label,input'))return;const cd=el.closest('.ccard');if(!cd)return;const m=cd.classList.toggle('cmin');if(S.coats[i])S.coats[i].cm=m?1:0;sv()}
 function esReset(){ask('견적서에 입력한 내용을 모두 지울까요?<br><small>수량·단가 수정, 추가 항목, 공급자·수신 입력칸이 초기화됩니다</small>',()=>{S.es={};window.ESED=undefined;esDef();sv();esFre();esRe();tt('견적서를 초기화했습니다')})}
 const QS=p=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>',QI={pen:QS('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'),del:QS('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>'),cal:QS('<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),prn:QS('<path d="M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2M7 14h10v6H7z"/>'),rf:QS('<path d="M20 11a8 8 0 0 0-14-4.5L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4.5L20 15M20 20v-5h-5"/>'),plus:QS('<path d="M12 5v14M5 12h14"/>')};
 function est(){esDef();let e=$('#es');if(e)e.remove();e=document.createElement('div');e.id='es';const hb=((document.querySelector('.hbg')||{}).src)||'';
@@ -2817,7 +2817,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v361',d:'2026.10.13'};
+const APPV={v:'v369',d:'2026.10.13'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3296,7 +3296,7 @@ X([
 ['파일이 20MB를 초과합니다.','The file exceeds 20MB.'],['PDF 형식이 아닙니다. 올바른 PDF 또는 이미지 파일을 선택하세요.','Not a PDF. Select a valid PDF or image file.'],['분석에 실패했습니다: ','Analysis failed: '],['제품 DB에서 직접 입력할 수도 있습니다.','You can also enter it manually in the product DB.'],['문서를 분석하는 중…','Analyzing the document…'],
 ['추출 결과 확인','Review extracted values'],['추출값은 바로 저장되지 않습니다. 단위와 값을 원문과 대조해 수정한 뒤 등록하세요. 혼합비가 부피비인지 중량비인지 확인이 필요합니다.','Extracted values are not saved immediately. Compare units and values with the source, edit them, then register. Check whether the mix ratio is by volume or by weight.'],
 ['제품 유형 (짧게)','Product type (short)'],['추천 도막(DFT)','Rec. DFT'],['SVR(고형분 용적비)','SVR (volume solids)'],['단위 (L 또는 kg)','Unit (L or kg)'],['출고규격(주제)','Package size (base)'],['혼합규격(주제+경화제)','Mixed size (base+hardener)'],['혼합비 기준','Mix ratio basis'],['희석제 코드','Thinner code'],['추천 희석율','Rec. thinning'],['희석제 규격','Thinner size'],['표면처리 (짧게)','Surface prep (short)'],
-['검토 필요','Needs review'],['미확인','Unknown'],['수정됨','Edited'],['확인됨','Confirmed'],['부피비','By volume'],['중량비','By weight'],['원문 확인: ','Source: '],['출처 URL','Source URL'],['TDS 개정일','TDS revision date'],['자료 확인일','Checked date'],['추출값을 원문과 대조해 확인했습니다 (검증 완료로 등록)','I checked the extracted values against the source (register as verified)'],['등록하기','Register'],
+['검토 필요','Needs review'],['미확인','Unknown'],['수정됨','Edited'],['확인됨','Confirmed'],['부피비','By volume'],['중량비','By weight'],['원문 확인: ','Source: '],['출처 URL','Source URL'],['TDS 개정일','TDS revision date'],['자료 확인일','Checked date'],['검토 완료 등록','I checked the extracted values against the source (register as verified)'],['등록하기','Register'],
 ['⚠ 값을 확인하세요','⚠ Check the values'],[' 값이 올바른 범위가 아닙니다',' is out of range'],['희석율은 0~100% 범위여야 합니다','Thinning must be between 0 and 100%'],['⚠ 혼합규격은 출고규격(주제)보다 작을 수 없습니다','⚠ Mixed size cannot be smaller than package size (base)'],['kg 단위인데 비중이 없습니다 (L 기준으로 계산됩니다)','Unit is kg but specific gravity is missing (calculated on an L basis)'],['그대로 등록할까요?','Register anyway?'],['같은 이름의 제품이 이미 있습니다.','A product with the same name already exists.'],['입력한 값으로 갱신할까요?','Update it with the entered values?'],['제품을 등록했습니다','Product registered'],['검증 완료','Verified'],['미검증','Unverified'],[' · 원본 PDF 보관',' · original PDF kept'],
 ['이 자료를 이용할 권한이 있으며,','I am authorized to use this material and'],['제조사의 이용조건을 확인했습니까?','have checked the manufacturer\'s terms of use?'],['분석 결과는 검토 후 등록됩니다.','Results are registered after review.'],
 ['사용내역','Usage details'],['미검증 제품 · ','Unverified products · '],[' — 원문과 대조해 검증하세요.',' — verify against the source.'],['입력값 확인','Check inputs'],['SVR는 0~100% 범위여야 합니다','SVR must be between 0 and 100%'],['도막두께 값을 확인하세요','Check the film thickness'],['로스율은 0% 이상 100% 미만이어야 합니다','Loss must be at least 0% and below 100%'],['단가가 음수입니다','A price is negative'],['kg 단위 제품에 비중이 없어 L 기준으로 계산됩니다','kg-unit product has no specific gravity; calculated on an L basis'],['혼합비 기준(부피비·중량비) 확인 필요','Check the mix ratio basis (volume/weight)'],['면적이 음수입니다','Area is negative'],
@@ -3420,7 +3420,7 @@ function dashRender(){
  const rc=pqRc();
  h+=`<div class="dsr"><b>최근 작업 내역</b>`+(rc.length?rc.slice(0,5).map(x=>`<div class="dsl"><span class="dsb">${esc(x.t)}</span><span class="dsn">${esc(x.n)}</span><span class="dsd">${esc(x.d)}</span></div>`).join(''):'<div class="dsl none">아직 작업 내역이 없습니다</div>')+`</div>`;
  
- h+=`<button class=\"dsa\" onclick=\"T(9)\">${PQI.calc}<span><b>LCC</b><small>재도장 진단 · 사양별 수명/비용 비교</small></span>${PQI.chev}</button>`;  if(IS_ADMIN)h+=`<button class="dsa" onclick="T(7)">${PQI.admin}<span><b>관리자 모드</b><small>배포용 데이터 관리 · 이용조건 확인 · 내보내기</small></span>${PQI.chev}</button>`;
+  if(IS_ADMIN)h+=`<button class="dsa" onclick="T(7)">${PQI.admin}<span><b>관리자 모드</b><small>배포용 데이터 관리 · 이용조건 확인 · 내보내기</small></span>${PQI.chev}</button>`;
  e.innerHTML=h+`</div>`;
 }
 function pqQuote(){if(typeof est=='function')est()}
@@ -3448,21 +3448,27 @@ function tpRender(){
  const all=pqRc().filter(x=>/TDS|등록/.test(x.t)),rc=TP.all?all.slice(0,10):all.slice(0,3);
  const I=(d,w)=>`<svg viewBox="0 0 24 24" width="${w||20}" height="${w||20}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none">${d}</svg>`;
  const DOC='<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',LINK='<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',CAL='<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M8 14h.01M12 14h.01M16 14h.01"/>';
- e.innerHTML=`<div class="pq tx"><div class="tx-tabs"><button id="tpt_link" class="${TP.tab=='link'?'on':''}" onclick="tpTab('link')">${I(DOC,22)}<span>링크 등록</span></button><button id="tpt_file" class="${TP.tab=='file'?'on':''}" onclick="tpTab('file')">${I(DOC,22)}<span>파일 첨부</span></button></div>
+ e.innerHTML=`<div class="pq tx"><div class="tx-tabs"><button id="tpt_link" class="${TP.tab=='link'?'on':''}" onclick="tpTab('link')">${I(DOC,22)}<span>링크 등록</span></button><button id="tpt_file" class="${TP.tab=='file'?'on':''}" onclick="tpTab('file')">${I(DOC,22)}<span>파일 첨부</span></button><button id="tpt_all" class="${TP.tab=='all'?'on':''}" onclick="tpTab('all')">${I('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M3 8v13h12" />',22)}<span>ALL</span></button></div>
  <div class="tx-card">
  <div id="tp_link" ${TP.tab=='link'?'':'hidden'}><div class="tx-h"><i>1</i><b>제조사 홈페이지 TDS URL</b></div><div class="tx-in"><input id="tp_url" class="pqin" placeholder="https://..." inputmode="url"></div><div class="tx-n">일부 사이트는 로그인·접근 제한 때문에 자동으로 내려받을 수 없습니다. 이 경우 PDF를 직접 첨부하면 URL은 출처로 기록됩니다.</div></div>
  <div id="tp_file" ${TP.tab=='file'?'':'hidden'}><div class="tx-h"><i>1</i><b>PDF 또는 이미지 파일 (최대 20MB)</b></div>
  <label class="tx-drop tdsfb"><span class="tx-di">${I('<path d="M6 3h9l4 4v6"/><path d="M15 3v4h4"/><path d="M6 3v18h7"/><circle cx="17.5" cy="17.5" r="4"/><path d="M17.5 15.5v4M15.5 17.5h4"/>',44)}</span><span class="tx-dt"><b>TDS 첨부 (PDF · 이미지)</b><small>파일을 선택하거나 드래그하여 업로드하세요.</small></span><input id="tp_f" type="file" accept=".pdf,application/pdf,image/*" onchange="tpPick(this)"></label><div id="tp_fn" class="tx-fn"></div>
  <label class="tx-lb" for="tp_src">${I(LINK,20)}<b>출처 URL (선택)</b></label><div class="tx-in"><input id="tp_src" class="pqin" placeholder="https://..." inputmode="url"></div>
  <label class="tx-lb" for="tp_rev">${I(CAL,20)}<b>TDS 개정일 (선택)</b></label><div class="tx-in"><input id="tp_rev" class="pqin" placeholder="예: 2025-05-14"><span class="tx-ic" onclick="document.getElementById('tp_rev').focus()">${I(CAL,22)}</span></div></div>
+ <div id="tp_all" ${TP.tab=='all'?'':'hidden'}><div class="tx-h"><i>1</i><b>TDS 파일 일괄 등록 (여러 파일 선택)</b></div>
+ <label class="tx-drop tdsfb"><span class="tx-di">${I('<path d="M6 3h9l4 4v6"/><path d="M15 3v4h4"/><path d="M6 3v18h7"/><circle cx="17.5" cy="17.5" r="4"/><path d="M17.5 15.5v4M15.5 17.5h4"/>',44)}</span><span class="tx-dt"><b>TDS 일괄 첨부 (PDF · 이미지)</b><small>여러 파일을 한꺼번에 선택하세요.</small></span><input id="tp_bf" type="file" multiple accept=".pdf,application/pdf,image/*" onchange="tpBulk(this.files);this.value=''"></label>
+ <div class="tx-n">파일 이름을 제품명과 같게 저장해 올리면 자동으로 제품에 연결됩니다 (예: EH2350.pdf). 연결되지 않은 파일은 대기 보관되고, 같은 이름의 제품이 DB에 추가되면 자동 연결됩니다.</div><div id="tp_allr"></div></div>
  <label class="tx-ck"><input type="checkbox" id="tp_keep"><i></i><span>원본 PDF를 이 기기에 보관합니다 (기본: 분석 후 보관하지 않음)</span></label>
  <label class="tx-ck"><input type="checkbox" id="tp_ok"><i></i><span>이 자료를 이용할 권한이 있으며, 제조사의 이용조건을 확인했습니다.</span></label>
  <button class="tx-go" onclick="tpStart()">${I('<path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="M21 3 10 13"/>',22)}<b>분석 시작</b>${I('<path d="M9 6l6 6-6 6"/>',22)}</button><div id="tp_st"></div></div>
  <div class="tx-pol">${I('<path d="M12 3 4.5 6v5.5c0 4.5 3 8 7.5 9.5 4.5-1.5 7.5-5 7.5-9.5V6z"/><path d="M9 12l2.2 2.2L15.5 10"/>',40)}<div><b>저장 정책</b><small>TDS 원문의 설명 문구·표·이미지는 저장하지 않고, 계산에 필요한 값(DFT·SVR·비중·혼합비 등)만 검토 후 등록합니다. 분석 결과는 바로 저장되지 않습니다.</small></div></div>
  <div class="tx-card tx-rc"><div class="tx-rh">${I('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',28)}<b>최근 등록</b>${all.length>3||TP.all?`<a onclick="TP.all=!TP.all;tpRender()">${TP.all?'접기':'전체보기'} ${I('<path d="M9 6l6 6-6 6"/>',16)}</a>`:''}</div>${rc.length?rc.map(x=>`<div class="tx-r" onclick="tpGoRc(this.dataset.n)" data-n="${esc(x.n)}"><span class="tx-ri">${I(DOC,20)}</span><span class="tx-rb">${esc(x.t)}</span><span class="tx-rn">${esc(x.n)}</span><span class="tx-rd">${esc(x.d)}</span>${I('<path d="M9 6l6 6-6 6"/>',18)}</div>`).join(''):'<div class="tx-none">등록 내역이 없습니다</div>'}</div></div>`;
 }
+async function tpBulk(fs){try{await bulk(fs)}catch(e){}tpAllR()}
+async function tpAllR(){const e=document.getElementById('tp_allr');if(!e)return;try{await rPend()}catch(x){}const q=id=>[...document.querySelectorAll('#'+id)].find(x=>!e.contains(x));const b=q('brs'),pd=q('pend');e.innerHTML=(b?b.innerHTML:'')+(pd?pd.innerHTML:'')}
+/*tpAllR hook*/
 function tpGoRc(n){try{T(1);setTimeout(()=>{const q=document.getElementById('q');if(q){q.value=n;if(typeof dbl=='function')dbl()}},120)}catch(e){}}
-function tpTab(t){TP.tab=t;['link','file'].forEach(k=>{const a=document.getElementById('tp_'+k),b=document.getElementById('tpt_'+k);if(a)a.hidden=k!=t;if(b)b.classList.toggle('on',k==t)})}
+function tpTab(t){TP.tab=t;['link','file','all'].forEach(k=>{const a=document.getElementById('tp_'+k),b=document.getElementById('tpt_'+k);if(a)a.hidden=k!=t;if(b)b.classList.toggle('on',k==t)})}
 function tpPick(i){const f=i.files[0];TP.file=f||null;const n=document.getElementById('tp_fn');if(n)n.textContent=f?f.name+' · '+(f.size/1048576).toFixed(1)+'MB':''}
 function tpSay(m,err){const e=document.getElementById('tp_st');if(!e)return;e.innerHTML=m?`<div class="pqst ${err?'er':''}">${err?'':'<i class="pqbar"></i>'}<span>${m}</span></div>`:''}
 async function tpStart(){
@@ -3512,7 +3518,7 @@ function tvOpen(r,ctx){
   return `<div class="tvr" data-r="${k}"><div class="tvk">${l}${u?`<small> ${u}</small>`:''}</div>${inp}<span class="bdg ${f?'y':'n'}" data-b="${k}">${f?'검토 필요':'미확인'}</span>${ev?`<div class="tve"><span>원문 확인: </span><span data-notr>${esc(ev)}</span></div>`:''}</div>`}).join('');
  pqSheet('pqtv',`<div class="pqmh"><span class="pqi">${PQI.tds}</span><b>${ctx.mode=='edit'?'제품 수정':ctx.mode=='new'?'제품 추가':'추출 결과 확인'}</b></div><div class="pqn">${ctx.mode?'항목은 CSV 항목과 같습니다. 값을 입력·수정한 뒤 저장하세요. 혼합비가 부피비인지 중량비인지 확인이 필요합니다.':'추출값은 바로 저장되지 않습니다. 단위와 값을 원문과 대조해 수정한 뒤 등록하세요. 혼합비가 부피비인지 중량비인지 확인이 필요합니다.'}</div><div class="tvl">${rows}</div>
  <div class="tvm"><label class="pql">출처 URL</label><input id="tv_src" class="pqin" value="${esc(ctx.src||'')}"><div class="tvg"><div><label class="pql">TDS 개정일</label><input id="tv_rev" class="pqin" value="${esc(ctx.rev||'')}" placeholder="2025-05-14"></div><div><label class="pql">자료 확인일</label><input id="tv_chk" class="pqin" value="${esc(ctx.chk||pqToday())}"></div></div></div>
- <label class="pqk"><input type="checkbox" id="tv_ok" ${ctx.ver?'checked':''} onchange="tvOk()"><span>추출값을 원문과 대조해 확인했습니다 (검증 완료로 등록)</span></label>
+ <label class="pqk"><input type="checkbox" id="tv_ok" ${ctx.ver?'checked':''} onchange="tvOk()"><span>검토 완료 등록</span></label>
  <div class="pqg2"><button class="pqbc" onclick="pqX('pqtv')">취소</button><button class="pqbc ok" onclick="tvSave()">${ctx.mode=='edit'?'저장하기':'등록하기'}</button></div>`,'tvs');if(ctx.ver)tvOk();
 }
 function tvEd(el){const k=el.dataset.k,b=document.querySelector(`[data-b="${k}"]`);if(!b)return;const v=el.value.trim(),ok=document.getElementById('tv_ok').checked;if(v===''){b.className='bdg n';b.textContent='미확인';return}if(ok){b.className='bdg g';b.textContent='확인됨'}else if(v!==TV.init[k]){b.className='bdg b';b.textContent='수정됨'}else{b.className='bdg y';b.textContent='검토 필요'}}
@@ -4520,7 +4526,7 @@ ${pf('drop','희석제 코드',pin('tc',v('tc'),'예) 002'))}${pf('drop','희석
 ${pf('doc','선행도장',pin('pre',v('pre'),'제품명 또는 도장사양에 따름'))}${pf('doc','후속도장',pin('nxt',v('nxt'),'제품명 또는 도장사양에 따름'))}</div></div>
 <div class="pfc">${sec(4,'자료 정보','TDS 출처와 확인 이력을 기록합니다.')}<div class="pg2">
 ${pf('link','출처',raw('tv_src',ctx.src||'','TDS 출처 (URL 또는 문서명)'),0,'pw')}${pf('note','TDS 개정일자',raw('tv_rev',ctx.rev||'','예) 2025-05-14'))}${pf('note','자료 확인일',raw('tv_chk',ctx.chk||pqToday(),'확인일'))}
-<label class="pdk pw"><input type="checkbox" id="tv_ok" ${ctx.ver?'checked':''}><span>원문과 대조해 확인했습니다 (검증 완료로 등록)</span></label></div></div>
+<label class="pdk pw"><input type="checkbox" id="tv_ok" ${ctx.ver?'checked':''}><span>검토 완료 등록</span></label></div></div>
 ${['pk','pks','memo','cat','cert','mixt'].map(hid).join('')}
 <datalist id="pd_mfl">${[...new Set(DB.map(q=>q.mf).filter(Boolean))].sort().map(m=>`<option value="${esc(m)}">`).join('')}</datalist><datalist id="pd_usl">${['철구조물','교량','파이프','탱크 외부','선박','콘크리트'].map(m=>`<option value="${m}">`).join('')}</datalist></div>
 <div class="pfa"><button type="button" class="ps" onclick="tvSave()">${pi('check')}${edit?'저장하기':'등록하기'}</button><button type="button" class="pa" onclick="pdAtt()">${pi('clip')}첨부하기</button><button type="button" class="pr" onclick="pdReset()">${pi('trash')}초기화</button><button type="button" class="pc" onclick="pqX('pqtv')">${pi('x')}취소</button></div>`;
@@ -6389,4 +6395,59 @@ try{new MutationObserver(q).observe(document.getElementById('app')||document.bod
 document.addEventListener('DOMContentLoaded',q);
 try{var u=document.querySelector('.sawrap .sau');if(u)u.addEventListener('click',function(){if(window.tt)tt('면적 단위는 m²로 고정되어 있습니다')})}catch(e){}
 q()})()</script>
+<style id=sp362>
+html body #cs .cc{margin:0 0 calc(var(--u)*8)!important}
+html body #cs .cc>.ch{padding:calc(var(--u)*11) calc(var(--u)*16)!important;min-height:0!important}
+html body #cs .cc>.cbd,html body #cs .cbd{padding-top:calc(var(--u)*8)!important;padding-bottom:calc(var(--u)*6)!important}
+html body #cs .cbd>*{margin-top:0!important;margin-bottom:calc(var(--u)*8)!important}
+html body #cs .prow{margin:0 0 calc(var(--u)*4)!important}
+html body #cs .rec{margin:calc(var(--u)*2) 0 calc(var(--u)*6)!important}
+html body #cs .ccard{margin:0 0 calc(var(--u)*8)!important;padding:calc(var(--u)*10) calc(var(--u)*12)!important}
+html body #cs .cch{margin-bottom:calc(var(--u)*6)!important;gap:calc(var(--u)*8)!important}
+html body #cs .cg3,html body #cs .cg2{gap:calc(var(--u)*7)!important;margin-bottom:calc(var(--u)*7)!important}
+html body #cs .cell{padding:calc(var(--u)*8) calc(var(--u)*10)!important;gap:calc(var(--u)*5)!important}
+html body #cs .cell input{height:calc(var(--u)*50)!important}
+html body #cs .addc{margin:0 0 calc(var(--u)*6)!important}
+html body #cs .addc>summary,html body #cs .pshd{padding-top:calc(var(--u)*6)!important;padding-bottom:calc(var(--u)*6)!important}
+html body #cs .ctabs{margin:0 0 calc(var(--u)*6)!important}
+html body #v0 .sa{margin:0 0 calc(var(--u)*8)!important;padding-top:calc(var(--u)*10)!important;padding-bottom:calc(var(--u)*10)!important}
+html body #v0 .sec{margin:calc(var(--u)*6) 0 calc(var(--u)*4)!important}
+html body #v0 .pn{padding-top:calc(var(--u)*8)!important}
+html body #v0 .lbc{margin:calc(var(--u)*6) 0!important;padding:calc(var(--u)*10) calc(var(--u)*12)!important}
+</style>
+<script id=rc364s>
+(function(){
+const V='var(--rc2)',EX=/(dot|swit|knob|toggle|track|prog|spinner|radio|handle|\bsw\b|thumb|scroll)/i;
+const split=s=>{const o=[];let d=0,c='';for(const ch of s){if(ch=='(')d++;if(ch==')')d--;if(ch==' '&&d==0){if(c)o.push(c);c=''}else c+=ch}if(c)o.push(c);return o};
+const isZero=t=>/^0(px|%)?$/.test(t);
+function nv(val){if(!val)return null;const v=val.trim();if(/50%/.test(v)||/var\(--rc2\)/.test(v))return null;const t=split(v.replace(/\s*!important/,'').replace(/\s*\/\s*.*$/,''));if(!t.length)return null;if(t.every(isZero))return null;return t.map(x=>isZero(x)?'0':V).join(' ')}
+function fixRule(r){if(r.__rc)return;if(r.cssRules&&!r.style){for(const x of r.cssRules)fixRule(x);return}if(!r.style||!r.selectorText)return;r.__rc=1;if(EX.test(r.selectorText))return;
+ const st=r.style,names=[];for(let i=0;i<st.length;i++){const n=st[i];if(/radius$/.test(n))names.push(n)}
+ if(r.cssRules&&r.style&&r.cssRules.length)for(const x of r.cssRules)fixRule(x);
+ for(const n of names){const val=st.getPropertyValue(n),nw=nv(val);if(nw)st.setProperty(n,nw,'important')}}
+function sheets(){for(const ss of document.styleSheets){let rs;try{rs=ss.cssRules}catch(e){continue}if(!rs)continue;for(const r of rs)fixRule(r)}}
+function inl(root){const l=root.nodeType==1?[root,...root.querySelectorAll('[style*="radius"]')]:[];for(const e of l){if(!e.style||!/radius/.test(e.getAttribute('style')||''))continue;if(EX.test(e.className||''))continue;const v=e.style.borderRadius,nw=nv(v);if(nw)e.style.setProperty('border-radius',nw,'important')}}
+
+function comp(root){const rs=document.documentElement.style.getPropertyValue('--rc2');const els=root.nodeType==1?[root,...root.querySelectorAll('*')]:[];for(const e of els){if(e.namespaceURI&&e.namespaceURI.indexOf('svg')>=0)continue;const c=getComputedStyle(e),v=c.borderTopLeftRadius;if(v==='0px'||v.indexOf('%')>=0)continue;if(EX.test(typeof e.className=='string'?e.className:''))continue;const w=e.offsetWidth,h=e.offsetHeight;if(!w||!h)continue;const px=parseFloat(v);if(Math.abs(w-h)<3&&px>=w/2-1)continue;if(e.__rcd===v)continue;const t=document.createElement('i').style;t.borderRadius='var(--rc2)';const ref=getComputedStyle(document.body).getPropertyValue('--rc2');e.style.setProperty('border-radius',V,'important');e.__rcd=getComputedStyle(e).borderTopLeftRadius}}
+function run(){try{sheets();inl(document.body);comp(document.body)}catch(e){}}
+run();window.addEventListener('load',()=>{run();setTimeout(run,800);setTimeout(run,2500)});
+setInterval(run,1500);let t=0;new MutationObserver(m=>{let s=0,n=[];for(const x of m){for(const a of x.addedNodes){if(a.nodeType!=1)continue;if(a.tagName=='STYLE'||a.tagName=='LINK')s=1;n.push(a)}}if(s)run();n.forEach(a=>{try{inl(a);comp(a)}catch(e){}})}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+<style id=ib365>
+html body input[data-ib]:not(#_a):not(#_b):not(#_c),html body select[data-ib]:not(#_a):not(#_b):not(#_c),html body textarea[data-ib]:not(#_a):not(#_b):not(#_c){border:1px solid #c9d8ef!important;background:#fff!important;border-radius:var(--rc2)!important;box-shadow:none!important;min-height:calc(var(--u)*60)!important;height:auto!important;padding-top:0!important;padding-bottom:0!important;padding-left:calc(var(--u)*25)!important;padding-right:calc(var(--u)*25)!important;box-sizing:border-box!important}
+html body textarea[data-ib]:not(#_a):not(#_b):not(#_c){padding-top:calc(var(--u)*14)!important;padding-bottom:calc(var(--u)*14)!important}
+html body input[data-ib]:not(#_a):not(#_b):not(#_c):focus,html body select[data-ib]:not(#_a):not(#_b):not(#_c):focus,html body textarea[data-ib]:not(#_a):not(#_b):not(#_c):focus{outline:0!important;border-color:#0b4fd0!important;box-shadow:0 0 0 2px rgba(11,79,208,.18)!important}
+</style>
+<script id=ib365s>
+(function(){const X=['file','checkbox','radio','range','hidden','color','button','submit','image','reset'];
+function run(r){try{(r||document).querySelectorAll('input,select,textarea').forEach(e=>{if(X.includes(e.type)||e.closest('.pbx,.esh,.a4,.pqc'))return;const w=e.parentElement;if(!w)return;const c=getComputedStyle(w);const bw=c.borderTopWidth!=='0px'&&c.borderTopStyle!=='none';const bg=c.backgroundColor!=='rgba(0, 0, 0, 0)'&&c.backgroundColor!=='transparent';if(bw||bg){e.removeAttribute('data-ib');return}if(w.querySelector(':scope>button,:scope>span,:scope>i,:scope>b')&&w.children.length>1&&!/^(LABEL|DIV)$/.test(w.tagName)){e.removeAttribute('data-ib');return}e.setAttribute('data-ib','1')})}catch(x){}}
+run();window.addEventListener('load',()=>{run();setTimeout(run,800)});setInterval(run,1500);
+new MutationObserver(m=>{for(const x of m)for(const a of x.addedNodes)if(a.nodeType==1){run(a.parentElement||document);return}}).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
+<style id=ca366>html body #cs .cell input:not(#_a):not(#_b){height:calc(var(--u)*60)!important;min-height:calc(var(--u)*60)!important;padding:0 calc(var(--u)*25)!important;border:1px solid #c9d8ef!important;border-radius:var(--rc2)!important;font-size:14px!important;box-sizing:border-box!important}</style>
+<style id=cx367>html body .ccard .ctg{display:none!important}html body .ccard.cmin>*:not(.cch){display:revert!important}html body .ccard .cch{cursor:default!important}</style>
+<style id=ta369>.tx-tabs{grid-template-columns:1fr 1fr 1fr!important}.tx-tabs button{gap:calc(var(--u)*8)!important;white-space:nowrap}#tp_allr{margin-top:8px}.tx-card:has(#tp_all:not([hidden])) .tx-ck,.tx-card:has(#tp_all:not([hidden])) .tx-go,.tx-card:has(#tp_all:not([hidden])) #tp_st{display:none!important}#tp_allr .hint{font-size:12px}</style>
+<script id=ta369s>(function(){const o=window.tpRender;if(typeof o!='function')return;window.tpRender=function(){const r=o.apply(this,arguments);try{tpAllR()}catch(e){}return r}})();</script>
 </body></html>
