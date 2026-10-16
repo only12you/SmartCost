@@ -6716,7 +6716,7 @@ function daPage(p){
 function daSearchCards(arr){return arr.map((a,i)=>`<button class="da-apartment" onclick="daSelected=daApartments[${daApartments.indexOf(a)}];daPage('detail')"><span class="da-building-thumb"></span><span><strong>${a.name}</strong><small>${a.location}<br>세대수 ${a.units}　동수 ${a.buildings}<br>준공연도 ${a.year}</small></span><b>›</b></button>`).join('')||'<div class="da-card">검색 결과가 없습니다.</div>'}
 function daRenderSearch(){const q=(document.getElementById('da-q')?.value||'').trim().toLowerCase();const arr=daApartments.filter(a=>(a.name+a.location).toLowerCase().includes(q));document.getElementById('da-results').innerHTML=daSearchCards(arr)}
 function daSearchFrom(id){const q=document.getElementById(id)?.value||'';daPage('search');document.getElementById('da-q').value=q;daRenderSearch()}
-function daInit(){document.getElementById('vh').style.display='none';document.getElementById('app').hidden=true;document.getElementById('designApp').style.display='block';daPage('home')}
+function daInit(){const vh=document.getElementById('vh');if(vh)vh.style.display='none';const app=document.getElementById('app');if(app)app.hidden=true;const shell=document.getElementById('designApp');if(shell)shell.style.display='block';daPage('home')}
 document.addEventListener('DOMContentLoaded',daInit);
 </script>
 </body></html>';const nm=(HQ.name||'공동주택')+'_견적서.xls';
