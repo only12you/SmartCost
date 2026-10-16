@@ -1,6 +1,6 @@
 [GitHub Pages로 아이폰에서 사용하기]
 1) GitHub 저장소(Paint-Quantity-Calculat)에 이 폴더 안의 파일을 "그대로" 올립니다.
-   (index.html, apt-db.json, sw.js, manifest.json, icon-192.png, icon-512.png, icon-180.png, icon-maskable-512.png, .nojekyll)
+   (index.html, sw.js, manifest.json, icon-192.png, icon-512.png, icon-180.png, icon-maskable-512.png, .nojekyll)
    ※ PQC 폴더째 올리지 말고 폴더 안의 파일들이 저장소 맨 위(루트)에 오도록 올리세요.
 2) Settings > Pages > Branch: main / (root) 저장
 3) 아이폰 사파리에서 https://only12you.github.io/Paint-Quantity-Calculat/ 접속
@@ -36,4 +36,6 @@
 
 [v390] 제품 등록·수정 화면(기본 정보)에 내화 시간·마감 체계 항목 추가 — 품셈 페이지에서 제품을 고르면 내화 시간·마감 체계(없으면 TDS 후속도장)를 자동으로 불러옴, 마감 체계는 상도 제품(제품 DB)·체계명 모두 조회·선택 가능, 마감 제품은 종류(우레탄·불소 등)로 품셈 항목과 매칭
 
-[v391] 공동 페이지를 APT v20(독립 프로그램)으로 교체 - 단지 DB 검색(apt-db.json 함께 올려야 함), 견적 저장/불러오기, 견적서·원가계산서·내역서 출력, 2026 기준 단가. 공동 입력값은 새 저장소(apt26:state)를 쓰며 JSON 백업에 포함됩니다. v390 이전 공동 입력값은 자동 이전되지 않습니다.
+[v391] 품셈·노무비 페이지 글꼴 20% 확대, 간격(여백·칸 사이) 10% 확대 — 높이는 내용에 맞게 자동 확장
+
+[v392] 공동주택 페이지를 PQC_APT_v9(2026 기준, 9개 공종·단지 DB 21,509개·견적 저장/출력)로 교체합본 — 기존 공동 페이지(hq352) 제거. apt-db.json 포함(오프라인 캐시), 면적은 일위대가표로 보내기 연결, 백업에 견적 목록 포함
