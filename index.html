@@ -6397,16 +6397,15 @@ function vaList(t){const L=[],cr=HQ.cr||{},ov=k=>cr[k]!==''&&cr[k]!=null&&isFini
  L.push(['i','재료비·경비 단가는 2026 기준값입니다. 시세와 다르면 단가 수정에서 입력하세요.']);
  if(t&&t!='site'){try{const r=C(t);if(r.area.some(a=>/③/.test(a[2]||'')))L.push(['w','면적이 ③ 세대 정보로 추정한 값입니다. 실측 또는 동별 산출값(①②)을 입력하면 정확도가 올라갑니다.']);if(r.c.G>0&&r.area.length&&r.base<=0)L.push(['w','면적이 0입니다.']);const pe=Object.keys(HQ.wk[t].pr||{}).length;if(pe)L.push(['i','단가 '+pe+'개 항목을 직접 수정했습니다 (수정값은 노임 보정 제외).']);if(t=='cctv'&&r.items.some(x=>x.r>=17&&x.r<=26&&x.q>0&&x.p[0]==0))L.push(['w','카메라 ‘기타’ 단가가 0원입니다. 단가 수정에서 입력하세요.'])}catch(e){}}
  return L}
-function vaHtml(t){const L=vaList(t);if(!L.length)return '';const w=L.filter(x=>x[0]=='w').length;return `<details class="hqva${w?' w':''}" ${HQ.od&&HQ.od.v===0?'':'open'} ontoggle="hqO('v',this.open)"><summary><span class="vai">${sxIc('<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16"/>')}</span>${w?'확인 필요 '+w+'건':'산정 기준'} · 2026 기준</summary>${L.map(x=>`<div class="${x[0]}">${x[0]=='w'?'⚠ ':'· '}${x[1]}</div>`).join('')}</details>`}
+function vaHtml(t){const L=vaList(t);if(!L.length)return '';const w=L.filter(x=>x[0]=='w').length;return `<details class="hqva${w?' w':''}" ${HQ.od&&HQ.od.v?'open':''} ontoggle="hqO('v',this.open)"><summary><span class="vai">${sxIc('<path d="M12 6.5v7M12 17.4h.01"/>')}</span>${w?'확인 필요 '+w+'건':'산정 기준'} · 2026 기준</summary>${L.map(x=>`<div class="${x[0]}">${x[0]=='w'?'⚠ ':'· '}${x[1]}</div>`).join('')}</details>`}
 const CRF=[['ind','간접노무비율','%',1],['ac','산재보험료 (노무비)','%',1],['emp','고용보험료 (노무비)','%',1],['hl','건강보험료 (직노)','%',1],['pn','연금보험료 (직노)','%',1],['ca','노인장기요양 (건강보험료 대비)','%',1],['rt','퇴직공제부금 (직노)','%',1],['sf1','안전관리비 5억 미만','%',1],['sf2','안전관리비 5~50억 요율','%',1],['sfb','안전관리비 5~50억 기초액','원',0],['sf3','안전관리비 50억 이상','%',1],['as','석면분담금 (노무비)','%',1],['wc','임금채권부담금 (노무비)','%',1],['et','기타경비율 (재+노)','%',1],['gm','일반관리비율','%',0],['pf','이윤율','%',0],['env','환경보전비 (직접공사비)','%',1],['vat','부가가치세','%',1]];
 const CRS={ind:'2026 기준 공종별 표 · 입력 시 전체 일괄',ac:'2026 기준 3.56%',emp:'2026 기준 1.01%',hl:'2026 기준 3.545% (고시 3.595%)',pn:'2026 기준 4.5% (고시 4.75%)',ca:'2026 기준 12.95% (고시 13.14%)',rt:'2026 기준 2.3%',sf1:'2026 기준 공종별 · 입력 시 전체 일괄',sf2:'2026 기준 공종별 (건축 2.28%)',sfb:'2026 기준 공종별 (건축 4,325천원)',sf3:'2026 기준 공종별 (건축 2.37%)',as:'2026 기준 0.006%',wc:'2026 기준 0.09%',et:'2026 기준에서 삭제 (0)',gm:'2026 기준 4% · 계약 확인',pf:'2026 기준 10% · 계약 확인',env:'기본 0 (건축 주택 외 0.5% 참고)',vat:'10%'};
 function stdHtml(){const q=CRN(),w=WGN();
  const f=([k,l,u,fr])=>{const v=FRAC.includes(k)?+(q[k]*100).toFixed(4):q[k],o=HQ.cr&&HQ.cr[k]!==''&&HQ.cr[k]!=null&&isFinite(+HQ.cr[k]);return `<label class="apf"><span>${l}${o?' ✎':''}<small class="hqsr">${CRS[k]}</small></span><div class="apin"><input type="number" inputmode="decimal" step="any" value="${v}" onchange="hqCr('${k}',this.value)" onwheel="this.blur()"><em>${u}</em></div></label>`};
  const wr=Object.keys(WN).map(k=>`<label class="apf"><span>${WN[k]} 일당<small class="hqsr">2026.1 기준 ${F(WG26[k],0)}원 · ×${(w[k]/WG26[k]).toFixed(3)}</small></span><div class="apin"><input type="number" inputmode="numeric" value="${w[k]}" onchange="hqWg('${k}',this.value)" onwheel="this.blur()"><em>원</em></div></label>`).join('');
- return `<div class="hqh">산정 기준 · 검증</div>
- ${vaHtml('site')}
+ return `<div class="sxc zst"><div class="zsth"><b>산정 기준 · 검증</b>${sxIc('<path d="M9 6l6 6-6 6"/>')}</div>${vaHtml('site')}<div class="zgrp">
  <details class="apc"><summary><span class="apk">${I('won')}</span><b>원가 제비율</b><em class="apa">2026</em>${I('chev','apv')}</summary><div class="apb2"><div class="apg">${CRF.map(f).join('')}</div><button type="button" class="apx hqrs" onclick="hqCrR()">${I('trash')}<span>제비율 기준값으로 초기화</span></button><div class="apnote">${basisNote()}<br>법정 요율은 해마다 바뀌고 공사 규모·계약 형태에 따라 적용 기준이 다릅니다. 모든 항목에 같은 요율을 쓰지 말고 계약 기준으로 확인하세요.</div></div></details>
- <details class="apc"><summary><span class="apk">${I('ruler')}</span><b>노임단가 보정 (노무비)</b><em class="apa">2026.1</em>${I('chev','apv')}</summary><div class="apb2"><div class="apg">${wr}</div><div class="apnote">2026 기준 노무비 단가는 공사노임 2026.1(대한건설협회 상반기) 기준으로 이미 반영되어 있습니다. 하반기(2026.9.1 공표) 노임을 입력하면 해당 직종 공종의 노무비 단가가 비례 보정됩니다 (외벽·내벽·에폭시=도장공, 옥상 방수=방수공, 포장·싱글=보통인부). CCTV·차단기·교통안전시설은 보정하지 않습니다. 하반기 직종별 금액은 확인하지 못했습니다.</div></div></details>`}
+ <details class="apc"><summary><span class="apk">${I('ruler')}</span><b>노임단가 보정 (노무비)</b><em class="apa">2026.1</em>${I('chev','apv')}</summary><div class="apb2"><div class="apg">${wr}</div><div class="apnote">2026 기준 노무비 단가는 공사노임 2026.1(대한건설협회 상반기) 기준으로 이미 반영되어 있습니다. 하반기(2026.9.1 공표) 노임을 입력하면 해당 직종 공종의 노무비 단가가 비례 보정됩니다 (외벽·내벽·에폭시=도장공, 옥상 방수=방수공, 포장·싱글=보통인부). CCTV·차단기·교통안전시설은 보정하지 않습니다. 하반기 직종별 금액은 확인하지 못했습니다.</div></div></details></div></div>`}
 window.hqCalc=t=>C(t);window.hqQF=QF;
 window.hqCr=(k,v)=>{HQ.cr=HQ.cr||{};const b=CR26[k],bv=FRAC.includes(k)?+(b*100).toFixed(4):b;if(v===''||+v===bv)delete HQ.cr[k];else HQ.cr[k]=v;save();rerender()};
 window.hqCrR=()=>ask('제비율을 기준값으로 되돌릴까요?',()=>{HQ.cr={};save();rerender()});
@@ -6424,8 +6423,8 @@ window.aptLoad=(id,v)=>{const e=lget().find(x=>x.id==id);if(!e)return;const st=v
 window.aptNew=()=>ask('새 견적을 시작할까요?<br><small>현재 입력은 저장하지 않으면 사라집니다</small>',()=>{HQ=DEF();save();rerender()});
 window.aptDel=id=>ask('이 견적을 삭제할까요?',()=>{lset(lget().filter(x=>x.id!=id));if(HQ.eid==id){delete HQ.eid;save()}rerender()});
 window.aptCopy=id=>{const a=lget(),e=a.find(x=>x.id==id);if(!e)return;const c=JSON.parse(JSON.stringify(e));c.id='e'+Date.now().toString(36);c.name=e.name+' (복사)';c.ver=1;c.hist=[];c.ts=Date.now();c.state.name=c.name;delete c.state.eid;a.unshift(c);lset(a);rerender()};
-function listHtml(){const a=lget();return `<details class="apc" ${HQ.od&&HQ.od.l?'open':''} ontoggle="hqO('l',this.open)"><summary><span class="apk">${I('doc')}</span><b>견적 저장 · 불러오기</b><em class="apa">${a.length}건</em>${I('chev','apv')}</summary><div class="apb2"><div class="aptbt"><button type="button" onclick="aptSave()">${HQ.eid?'현재 견적 저장 (새 버전)':'현재 견적 저장'}</button><button type="button" onclick="aptNew()">새 견적</button></div>
- ${a.length?a.map(e=>`<div class="aptli${e.id==HQ.eid?' on':''}"><div class="aptlt"><b>${esc(e.name)}</b><small>v${e.ver} · ${dstr(e.ts)} · ${won(e.total)}원</small></div><div class="aptla"><button type="button" onclick="aptLoad('${e.id}')">불러오기</button><button type="button" onclick="aptCopy('${e.id}')">복제</button><button type="button" onclick="aptDel('${e.id}')">삭제</button></div>${(e.hist||[]).length?`<div class="apthist">이전 버전 ${(e.hist||[]).map((h,i)=>`<a onclick="aptLoad('${e.id}',${i})">v${h.ver}</a>`).join(' · ')}</div>`:''}</div>`).join(''):'<div class="apno">저장된 견적이 없습니다</div>'}<div class="apnote">저장은 이 기기(브라우저)에만 됩니다. 저장할 때마다 새 버전이 되고 이전 버전은 최근 5개까지 보관합니다.</div></div></details>`}
+function listHtml(){const a=lget();return `<details class="apc" ${HQ.od&&HQ.od.l?'open':''} ontoggle="hqO('l',this.open)"><summary><span class="apk">${sxIc('<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>')}</span><b>견적 저장 · 불러오기</b><em class="apa">${a.length}건</em>${I('chev','apv')}</summary><div class="apb2"><div class="aptbt"><button type="button" onclick="aptSave()">${sxIc('<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/>')}<span>${HQ.eid?'현재 견적 저장 (새 버전)':'현재 견적 저장'}</span></button><button type="button" onclick="aptNew()">${sxIc('<path d="M12 5v14M5 12h14"/>')}<span>새 견적</span></button></div>
+ ${a.length?a.map(e=>`<div class="aptli${e.id==HQ.eid?' on':''}"><div class="zlt"><span class="zbi">${sxIc('<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/>')}</span><div class="aptlt"><b>${esc(e.name)}</b><small>v${e.ver} · ${dstr(e.ts)} · ${won(e.total)}원</small></div>${sxIc('<path d="M9 6l6 6-6 6"/>')}</div><div class="aptla"><button type="button" onclick="aptLoad('${e.id}')">${sxIc('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>')}<span>불러오기</span></button><button type="button" onclick="aptCopy('${e.id}')">${sxIc('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>')}<span>복제</span></button><button type="button" onclick="aptDel('${e.id}')">${sxIc('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>')}<span>삭제</span></button></div>${(e.hist||[]).length?`<div class="apthist">이전 버전 ${(e.hist||[]).map((h,i)=>`<a onclick="aptLoad('${e.id}',${i})">v${h.ver}</a>`).join(' · ')}</div>`:''}</div>`).join(''):'<div class="apno">저장된 견적이 없습니다</div>'}<div class="apnote">저장은 이 기기(브라우저)에만 됩니다. 저장할 때마다 새 버전이 되고 이전 버전은 최근 5개까지 보관합니다.</div></div></details>`}
 /* ===== 출력: 견적서 · 원가계산서 · 세부 내역서 (한 번 계산한 결과로 생성) ===== */
 const RWS=[['M','재료비 (직접재료비)'],['L','직접노무비'],['IL','간접노무비'],['E','직접경비'],['ac','산재보험료'],['emp','고용보험료'],['hl','건강보험료'],['pn','연금보험료'],['ca','노인장기요양보험료'],['rt','퇴직금공제부금비'],['sf','산업안전보건관리비'],['as','석면분담금'],['wc','임금채권부담금'],['et','기타경비'],['env','환경보전비'],['S','합 계'],['gm','일반관리비'],['pf','이 윤'],['T','총원가'],['vat','부가가치세'],['G','총공사비']];
 function repData(){const ts=WT.filter(inc),R=ts.map(t=>({t,r:C(t)})),S={};RWS.forEach(([k])=>S[k]=R.reduce((s,x)=>s+x.r.c[k],0));
@@ -6503,7 +6502,7 @@ function sitePanel0(){const B=HQ.blds,T=HQ.types,g=glob(HQ);
  ${SXE?`<div class="sxc kv"><div class="sxe"><div class="sxt" style="margin:0;flex:1"><i>${I('bld')}</i><b>단지 기본 정보</b></div><button type="button" class="sxed" onclick="sxEdit()">${SX.pn}<span>완료</span></button></div>${kvIn('단지명','name','단지 이름',HQ.name)+kvIn('주소','addr','주소',addr)+kvPlan()+kvIn('준공연도','year','예: 2010년',HQ.year)}<button type="button" class="mkdb" onclick="aptDbOpen()">${SX.sr}<span>단지 DB에서 검색해 채우기</span></button></div>`:''}
  ${segHtml()}${SXTAB==1?planTab():SXTAB==2?secTab():`<details class="sxc sxd" ${HQ.od&&HQ.od.b===0?'':'open'} ontoggle="hqO('b',this.open)"><summary>${ttl(I('bld'),'동별 층수','<small class="r">'+B.length+'개 동</small>')}${sxIc('<path d="M6 9l6 6 6-6"/>')}</summary><div class="sxdg"><div class="sxlf"><div class="sxh"><span>동명</span><span>지상</span><span>지하</span><span></span></div>${bl}</div></div><button type="button" class="sxadd" onclick="hqBA()">${SX.pl}<span>동 추가</span></button></details>`}
  <div class="sxc">${ttl(SX.ly,'세대 타입','<small class="r">(공급면적 · 세대수)</small>')}<div class="sxh t"><span>공급면적(㎡)</span><span>세대수</span><span></span></div>${tl}${T.length<30?`<button type="button" class="sxadd" onclick="hqTA()">${SX.pl}<span>세대 타입 추가</span></button>`:''}</div>
- <div class="sxc">${ttl(SX.rl,'견적에 포함할 공종')}${WT.map(t=>{const c=(CH.find(x=>x[0]==t)||[])[2];return `<div class="sxk"><label class="sxck"><input type="checkbox" ${inc(t)?'checked':''} onchange="hqInc('${t}',this.checked)"><i></i></label><button type="button" class="sxg" onclick="hqType('${t}')">${c?I(c):''}<span>${TYN[t]}</span><b>${won(C(t).c.G)}원</b>${SX.ch}</button></div>`}).join('')}</div>
+ ${(()=>{const row=t=>{const c=(CH.find(x=>x[0]==t)||[])[2];return `<div class="sxk"><label class="sxck"><input type="checkbox" ${inc(t)?'checked':''} onchange="hqInc('${t}',this.checked)"><i></i></label><button type="button" class="sxg" onclick="hqType('${t}')"><span class="zit">${c?I(c):''}</span><span>${TYN[t]}</span><b>${won(C(t).c.G)}원</b>${SX.ch}</button></div>`},card=(l,a)=>`<div class="sxc zlist"><div class="zlh"><b>${l}</b><em>${a.length}건</em></div>${a.map(row).join('')}</div>`;return card('기본 공사 항목',WT.slice(0,3))+card('추가 공사 항목',WT.slice(3))})()}
  ${stdHtml()}`}
 const kvr=(l,v)=>`<div class="kvr"><span>${l}</span><b>${v}</b></div>`;const kvIn=(l,k,ph,v)=>`<div class="kvr"><span>${l}</span><input type="text" class="kvi" value="${esc(v||'')}" placeholder="${ph}" oninput="hqS('${k}',this.value)"></div>`,kvPlan=()=>`<div class="kvr"><span>평면 형식</span><select class="kvi" onchange="hqPlan(this.value)"><option value="1"${HQ.plan=='1'?' selected':''}>계단실형 (계단식)</option><option value="2"${HQ.plan=='2'?' selected':''}>복도형</option></select></div>`;
 window.sxTab=i=>{SXTAB=i;rerender()};window.sxSel2=i=>{SXSEL=i;rerender()};
@@ -8006,5 +8005,67 @@ html body.cp #bb{background:#fff!important;border-radius:calc(var(--u)*26) calc(
 html body.cp #bb button{border-radius:calc(var(--u)*14)!important}
 html body.cp #bb button.rst2{background:linear-gradient(180deg,#1f6fe5,#0b55d0)!important;border:0!important;color:#fff!important}
 html body.cp.inapp #gnav.hnav{background:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:calc(var(--u)*36) calc(var(--u)*36) 0 0!important;box-shadow:0 -8px 22px rgba(40,90,170,.10)!important}
+
+/* ===== v396 공동주택 견적 하부 ===== */
+html body #hq .sxc.zlist{padding:0!important;overflow:hidden!important;margin:0 0 calc(var(--u)*16)!important}
+html body #hq .zlh{display:flex;align-items:center;padding:calc(var(--u)*20) calc(var(--u)*26) calc(var(--u)*12);background:#f5f8fd}
+html body #hq .zlh b{font:800 calc(var(--u)*29)/1.2 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+html body #hq .zlh em{margin-left:auto;font:700 calc(var(--u)*21)/1 "Noto Sans KR",system-ui,sans-serif;font-style:normal;color:#5b6c8c;background:#e6edf9;border-radius:99px;padding:calc(var(--u)*9) calc(var(--u)*17)}
+html body #hq .zlist .sxk{border:0;border-bottom:1px solid #e8eef8;border-radius:0;background:transparent;margin:0 calc(var(--u)*18);padding:0 calc(var(--u)*6);min-height:calc(var(--u)*80);gap:calc(var(--u)*18)}
+html body #hq .zlist .sxk:last-child{border-bottom:0;margin-bottom:calc(var(--u)*6)}
+html body #hq .zlist .sxck{width:calc(var(--u)*40);height:calc(var(--u)*40)}
+html body #hq .zlist .sxck i{border:2px solid #b9c7e0}
+html body #hq .zlist .sxck input:checked+i{background:#fff;border:3px solid #2f6fe0}
+html body #hq .zlist .sxck input:checked+i::after{content:'';position:absolute;left:24%;top:24%;width:52%;height:52%;border:0;transform:none;border-radius:50%;background:#2f6fe0}
+html body #hq .zlist .sxg{gap:calc(var(--u)*18);font:500 calc(var(--u)*27) "Noto Sans KR",system-ui,sans-serif;padding:calc(var(--u)*10) 0}
+html body #hq .zlist .sxg b{font-size:calc(var(--u)*27);color:#16824a}
+html body #hq .zit{flex:none!important;width:calc(var(--u)*52);height:calc(var(--u)*52);border-radius:calc(var(--u)*14);background:#eef3fc;display:grid!important;place-items:center}
+html body #hq .zit svg{width:calc(var(--u)*32)!important;height:calc(var(--u)*32)!important;color:#4a6aa8!important}
+html body #hq .zlist .sxg>span:nth-child(2){flex:1;min-width:0}
+html body #hq .zlist .sxg>svg:last-child{width:calc(var(--u)*22);height:calc(var(--u)*22);color:#8a96ad}
+html body #hq .sxc.zst{padding:calc(var(--u)*22) calc(var(--u)*18) calc(var(--u)*18)!important}
+html body #hq .zsth{display:flex;align-items:center;padding:0 calc(var(--u)*8) calc(var(--u)*14)}
+html body #hq .zsth b{font:800 calc(var(--u)*30)/1.2 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+html body #hq .zsth svg{margin-left:auto;width:calc(var(--u)*30);height:calc(var(--u)*30);color:#44557a}
+html body #hq .zst .hqva{margin:0 0 calc(var(--u)*14)!important;background:#eef4ff!important;border:1px solid #d6e3f8!important;border-radius:calc(var(--u)*16)!important;box-shadow:none!important;padding:0!important}
+html body #hq .zst .hqva.w{background:#eef4ff!important;border-color:#d6e3f8!important}
+html body #hq .zst .hqva>summary{padding:calc(var(--u)*15) calc(var(--u)*20)!important;font-size:calc(var(--u)*28)!important;gap:calc(var(--u)*16)!important}
+html body #hq .zst .hqva .vai{width:calc(var(--u)*44);height:calc(var(--u)*44);border-radius:50%;background:#2f6fe0!important;color:#fff!important;display:grid;place-items:center}
+html body #hq .zst .hqva .vai svg{width:calc(var(--u)*28)!important;height:calc(var(--u)*28)!important;stroke-width:2.6}
+html body #hq .zst .hqva>div{margin:0 calc(var(--u)*20) calc(var(--u)*12)!important;color:#33415f;font-size:calc(var(--u)*22)}
+html body #hq .zst .hqva>div.w{color:#8a5a00}
+html body #hq .zgrp{border:1px solid #e0e9f7;border-radius:calc(var(--u)*16);overflow:hidden;background:#fff}
+html body #hq .zgrp .apc{border:0!important;border-bottom:1px solid #e8eef8!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;margin:0!important}
+html body #hq .zgrp .apc:last-child{border-bottom:0!important}
+html body #hq .zgrp .apc>summary{padding:calc(var(--u)*14) calc(var(--u)*18)!important}
+html body #hq .zgrp .apk{background:transparent!important;box-shadow:none!important;color:#2f6fe0!important;width:calc(var(--u)*44)!important;height:calc(var(--u)*44)!important}
+html body #hq .zgrp .apk svg{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important}
+html body #hq .zgrp .apc>summary b{font-size:calc(var(--u)*27)!important;font-weight:700!important}
+html body #hq .zgrp .apa{font-size:calc(var(--u)*27)!important}
+html body #hq .aptbt{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*12);margin-bottom:calc(var(--u)*6)}
+html body #hq .aptbt button{height:calc(var(--u)*66);display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*10);border-radius:calc(var(--u)*14);font:700 calc(var(--u)*24) "Noto Sans KR",system-ui,sans-serif;width:auto}
+html body #hq .aptbt button:first-child{background:linear-gradient(180deg,#2f7be8,#1456c8);color:#fff;border:0}
+html body #hq .aptbt button:last-child{background:#fff;color:#1456c8;border:1.5px solid #2f6fe0}
+html body #hq .aptbt svg{width:calc(var(--u)*28);height:calc(var(--u)*28)}
+html body #hq .aptli{border:1px solid #d9e5f7;border-radius:calc(var(--u)*16);padding:calc(var(--u)*18);background:#fff;margin:calc(var(--u)*10) 0 0}
+html body #hq .aptli.on{background:#fff;border-color:#bcd0f3}
+html body #hq .zlt{display:flex;align-items:center;gap:calc(var(--u)*16)}
+html body #hq .zbi{flex:none;width:calc(var(--u)*52);height:calc(var(--u)*52);border-radius:calc(var(--u)*14);background:#eef3fc;color:#3a5a99;display:grid;place-items:center}
+html body #hq .zbi svg{width:calc(var(--u)*32);height:calc(var(--u)*32)}
+html body #hq .zlt>.aptlt{flex:1;min-width:0}
+html body #hq .zlt>svg{flex:none;width:calc(var(--u)*24);height:calc(var(--u)*24);color:#6b7b95}
+html body #hq .aptlt b{font:800 calc(var(--u)*27)/1.25 "Noto Sans KR",system-ui,sans-serif;color:#10264f}
+html body #hq .aptlt small{font:500 calc(var(--u)*21)/1.3 "Noto Sans KR",system-ui,sans-serif;color:#6b7b95}
+html body #hq .aptla{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:calc(var(--u)*10);margin-top:calc(var(--u)*16)}
+html body #hq .aptla button{height:calc(var(--u)*56);display:flex;align-items:center;justify-content:center;gap:calc(var(--u)*8);border-radius:calc(var(--u)*12);font:600 calc(var(--u)*22) "Noto Sans KR",system-ui,sans-serif;border:1px solid #cfdcf3;background:#fff;color:#1456c8;width:auto;padding:0}
+html body #hq .aptla button:first-child{background:#2f6fe0;color:#fff;border-color:#2f6fe0}
+html body #hq .aptla svg{width:calc(var(--u)*26);height:calc(var(--u)*26)}
+html body #hq .apthist{font:500 calc(var(--u)*21)/1.3 "Noto Sans KR",system-ui,sans-serif;color:#6b7b95;margin-top:calc(var(--u)*16);padding:0 calc(var(--u)*4)}
+html body #hq .apthist a{color:#1456c8;text-decoration:underline;font-weight:600}
+html body #hq .apbar .apsum i{width:calc(var(--u)*62);height:calc(var(--u)*62);border-radius:calc(var(--u)*16);background:#eef3fc}
+html body #hq .apbar .apsum i svg{width:calc(var(--u)*38);height:calc(var(--u)*38)}
+html body #hq .zgrp .apc>summary .apv{transform:rotate(-90deg)!important}
+html body #hq .zgrp .apc[open]>summary .apv{transform:rotate(90deg)!important}
+html body #hq .apc:not(.zgrp .apc)>summary .apa{font-size:calc(var(--u)*24)!important}
 </style>
 </body></html>
