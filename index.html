@@ -2903,7 +2903,7 @@ const syVal=(c,p,k)=>{const v=c[k];if(v!==undefined&&v!==''&&v!==null)return v;c
 function syRender(){
  const e=$('#v3');if(!e)return;
  const L=SY.layers,labs=syLb(),act=SY.act;
- let h=`<div class="sy-card"><div class="sy-hd"><span class="sy-ic">${syIc.area}</span><div class="sy-tt"><b>기본면적</b><small>Surface Area</small></div><div class="sy-iw2"><input type="number" inputmode="decimal" id="sy_ar" placeholder="면적을 입력하세요." value="${esc(SY.area)}" onwheel="this.blur()" oninput="syArea(this.value)"><span class="sy-u2">m²</span></div></div></div>`;
+ let h=(window.LCCEDIT?'<div class="sy-card" style="background:#fff6dc;border:1px solid #efd88f"><div class="sy-hd"><div class="sy-tt"><b>LCC 사양 수정 중</b><small>코트를 수정한 뒤 시스템의 ‘저장’을 누르면 LCC에 반영됩니다</small></div><div class="sy-hbs"><button class="sy-hb b" onclick="window.LCCEDIT=null;navGo(\'lcc\')">LCC로</button></div></div></div>':'')+`<div class="sy-card"><div class="sy-hd"><span class="sy-ic">${syIc.area}</span><div class="sy-tt"><b>기본면적</b><small>Surface Area</small></div><div class="sy-iw2"><input type="number" inputmode="decimal" id="sy_ar" placeholder="면적을 입력하세요." value="${esc(SY.area)}" onwheel="this.blur()" oninput="syArea(this.value)"><span class="sy-u2">m²</span></div></div></div>`;
  h+=`<div class="sy-card"><div class="sy-hd"><span class="sy-ic">${syIc.roll}</span><div class="sy-tt"><b>도장 시스템</b><small>Coating System · ${L.length?(SY.groups.length+'시스템 '+L.length+'제품'):'미선택'}</small></div><div class="sy-hbs"><button class="sy-hb a" onclick="syNew()">시스템+</button><button class="sy-hb b" onclick="syChg()">변경</button><button class="sy-hb c" onclick="syLibSheet()">저장S</button></div></div><div class="sy-bd">`;
  if(!L.length){
   h+=`<div class="sy-empty">${syIc.layers}<div><b>도장 시스템이 비어 있습니다</b><small>먼저 ‘시스템 추가’로 시스템을 만들어 목록에 저장하고, ‘저장된 시스템’에서 불러와 지정하세요.</small></div></div>`;
@@ -3025,11 +3025,12 @@ let SYQ={g:-1,name:'',st:'하도',q:'',mf:'all',lim:60,n:0,draft:true,items:[]},
 const syNm=()=>'시스템 '+(syLibGet().length+1);
 function syAh(){try{const p=document.querySelector('#v3 .syp'),a=p&&p.querySelector(':scope>.sy-card:first-child');if(a)p.style.setProperty('--ah',a.offsetHeight+'px')}catch(e){}}
 window.addEventListener('resize',()=>setTimeout(syAh,50));
-function syClose(){const e=$('#sypk');if(e)e.remove()}
+function syClose(){window.SYLCC=null;const e=$('#sypk');if(e)e.remove()}
 function syGn(g,v){const G=SY.groups[g];if(!G)return;G.name=v;syS();syCalc()}
-function syGSave(g,btn){const G=SY.groups[g];if(!G)return;const LB=syLb(),items=[];SY.layers.forEach((l,i)=>{if(l.g==g)items.push({n:l.n,lb:LB[i]=='미지정'?'':LB[i]})});
+function syGSave(g,btn){const G=SY.groups[g];if(!G)return;const LB=syLb(),items=[];SY.layers.forEach((l,i)=>{if(l.g==g)items.push(Object.assign({n:l.n,lb:LB[i]=='미지정'?'':LB[i]},['price','tprice','dft','svr','loss','tr'].reduce((o,k)=>{if(l[k]!==undefined&&l[k]!=='')o[k]=l[k];return o},{})))});
  const nm=(G.name||'').trim()||('시스템 '+(g+1)),A=syLibGet(),it={name:nm,ts:Date.now(),items},k=A.findIndex(x=>x.name==nm);if(k>=0)A[k]=it;else A.unshift(it);syLibSet(A);vib(20);
- if(btn){const o=btn.textContent;btn.textContent='저장됨 ✓';setTimeout(()=>{try{btn.textContent=o}catch(e){}},1500)}}
+ if(btn){const o=btn.textContent;btn.textContent='저장됨 ✓';setTimeout(()=>{try{btn.textContent=o}catch(e){}},1500)}
+ if(window.LCCEDIT&&window.LCCEDIT.g===g){const q=window.LCCEDIT;window.LCCEDIT=null;try{LCCX.applySys(q.r,g);tt('LCC 사양에 반영했습니다')}catch(e){console.error(e)}setTimeout(()=>navGo('lcc'),450)}}
 function syLbL(i,x){const l=SY.layers[i];if(!l)return;const LB=syLb();l.lb=LB[i]==x?'':x;syS();syRender()}
 function syMvL(i,d){const L=SY.layers,l=L[i];if(!l)return;let j=i+d;while(j>=0&&j<L.length&&L[j].g!=l.g)j+=d;if(j<0||j>=L.length)return;[L[i],L[j]]=[L[j],L[i]];SY.act=j;syS();syRender()}
 function syRmL(i){const L=SY.layers;if(!L[i])return;L.splice(i,1);SY.act=-1;syNorm();syS();syRender()}
@@ -3093,11 +3094,12 @@ function syLibUi(){
  b.innerHTML=R.length?R.map(([x,k])=>`<div class="syl-c"><div class="syl-t"><b>${esc(x.name)}</b><span class="bdg b">${x.items.length}개 제품</span><span class="syl-m">${fm(x.ts)}</span></div><div class="syl-d">${x.items.map(i=>esc((i.lb?i.lb+' ':'')+i.n)).join(' · ')}</div><div class="syl-bt"><button class="ok" onclick="syLibUse(${k})">${SYLC[k]?'✓ 불러옴 ×'+SYLC[k]+' (한 번 더)':'불러오기'}</button><button class="rd" onclick="syLibDel(${k})">삭제</button></div></div>`).join(''):`<div class="qhn0">${A.length?'검색 결과가 없습니다':'저장된 시스템이 없습니다<br><small>시스템 카드의 ‘저장’을 누르면 여기에 담깁니다</small>'}</div>`;
 }
 function syLibUse(k){
+ if(window.SYLCC){const f=window.SYLCC;window.SYLCC=null;syClose();return f(k)}
  const x=syLibGet()[k];if(!x)return;const ok=x.items.filter(i=>P(i.n)),miss=x.items.length-ok.length;
  if(!ok.length)return tt('이 시스템의 제품이 DB에 없습니다');
  let nm=x.name,n=1;while(SY.groups.some(g=>g.name==nm)){n++;nm=x.name+' ('+n+')'}
  const gi=SY.groups.length;SY.groups.push({name:nm,area:'',c:0});
- ok.forEach(i=>SY.layers.push({n:i.n,lb:i.lb||'',g:gi}));SY.act=-1;syNorm();syS();syRender();vib(20);
+ ok.forEach(i=>SY.layers.push(Object.assign({n:i.n,lb:i.lb||'',g:gi},['price','tprice','dft','svr','loss','tr'].reduce((o,k)=>{if(i[k]!==undefined)o[k]=i[k];return o},{}))));SY.act=-1;syNorm();syS();syRender();vib(20);
  SYLC[k]=(SYLC[k]||0)+1;syLibUi();if(miss)tt('DB에 없는 제품 '+miss+'개는 제외하고 추가했습니다');
 }
 function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{A.splice(k,1);syLibSet(A);SYLC={};syLibUi()})}
@@ -7048,7 +7050,7 @@ const FC={C1:1.15,C2:1.1,C3:1,C4:.85,C5:.7,CX:.5},LV=["Low","Medium","High"],DK=
 const FT=[["화학물질 노출",[1,.85,.65],["없음","경미","심함"]],["고온·결로",[1,.9,.75],["없음","보통","심함"]],["바탕 상태",[1,.9,.75],["양호","보통","불량"]],["시공 품질",[1,.9,.75],["양호","보통","불량"]],["유지관리",[1.05,1,.85],["정기","보통","불량"]]];
 const RAL=["대체 유틸리티·공정 영향","접근·보수 난이도","모재 이탈 시 위험","폭발·누수 사고 위험"],DF=[["rust","녹 %",0.1],["crack","균열폭 mm",0.05],["flake","박리 mm",1],["blis","블리스터 0~5",1],["chalk","쵸킹 0~5",1]];
 const ZI={G:["시급하지 않음","3년 내 재평가"],Y:["사소한 위험","1년 내 보수"],O:["위험","6개월 내 보수"],R:["중대 위험","3개월 내 보수"]},ZO={R:0,O:1,Y:2,G:3};
-const RN=["현재사양","기본사양","추천사양"],RK=["cur","base","rec"],RC=["#64748b","#2563eb","#16a34a"];
+const RN=["도장사양","범용사양","추천사양"],RT=["도장사양 : ","범용사양 : ","추천사양 : "],RK=["cur","base","rec"],RC=["#64748b","#2563eb","#16a34a"];
 // 사양 라이브러리: [유형,이름,기준수명(C3),적용한계,바탕·노무 등 원/㎡,[구분,제품,DFT,고형분%,로스%,희석%,원/ℓ,포장ℓ]]
 const LIB=[["아파트","아파트 외벽 KS1급 외부용",6,"C3",7462,[["하도","믹싱바인더",10,60,25,10,8950,18],["중도","KS1급 외부용",30,60,25,10,8950,18],["상도","KS1급 외부용",30,60,25,10,8950,18]]],
 ["아파트","아파트 외벽 실리콘 원코트",9,"C4",7462,[["하도","믹싱",10,60,25,10,8950,18],["중도","네오실-PLUS",30,60,25,10,14280,18],["상도","네오실-PLUS",30,60,25,10,14280,18]]],
@@ -7147,32 +7149,21 @@ function mapCoat(l,lb){
   return{z:lb&&lb!="미지정"?lb:"",p:String(l.n||""),d:g("dft")??(+p.dft||30),vs:g("svr")??(+p.svr||60),ls:g("loss")??10,th:g("tr")??tr0,
     price:+l.price||0,pk,un:UN(p)=="kg"?"kg":"L",sg:+p.sg||0,ts:+p.ts||18,tp:+l.tprice||0,db:(typeof P=="function"&&P(l.n))?String(l.n):""};
 }
-let SYL=[],SYR="";
-function sysList(){
-  const out=[],cur={};
-  try{const G=syGr(),LB=syLb();G.forEach((g,k)=>{if(!g.idx.length)return;const its=g.idx.map(i=>({l:SY.layers[i],lb:LB[i]}));its.forEach(x=>{if(+x.l.price>0)cur[x.l.n]=x.l});
-    out.push({src:"cur",k,n:g.name,its})})}catch(e){}
-  try{syLibGet().forEach((x,k)=>out.push({src:"lib",k,n:x.name,its:(x.items||[]).map(i=>({l:{n:i.n,price:(cur[i.n]||{}).price,tprice:(cur[i.n]||{}).tprice},lb:i.lb||""}))}))}catch(e){}
-  return out}
-function sysPick(r){SYR=r;SYL=sysList();
-  pqSheet("rpsy",`<div class="pqmh"><b>도장S · 도장시스템 불러오기</b></div><input id="rpsq" placeholder="도장사양·제품명 검색" oninput="LCCX.sysQ(this.value)"><div id="rpsl" style="display:flex;flex-direction:column;gap:6px;margin-top:8px"></div><button class="pqbc" onclick="pqX('rpsy')">닫기</button>`);sysQ("")}
-function sysQ(q){q=String(q||"").toLowerCase();const el=document.getElementById("rpsl");if(!el)return;
-  const mt=(n,t)=>!q||(n+" "+t).toLowerCase().includes(q),
-  A=SYL.map((x,j)=>[x,j]).filter(([x])=>mt(x.n,x.its.map(i=>i.l.n).join(" "))),
-  row=(x,j,tag)=>`<button class="pqml" onclick="LCCX.sysUse(${j})"><span class="pqt"><b>${hh(x.n)}</b><small>${hh(tag+" · "+x.its.map(i=>(i.lb?i.lb+" ":"")+i.l.n).join(" · "))}</small></span></button>`,
-  a=A.filter(([x])=>x.src=="cur"),b=A.filter(([x])=>x.src=="lib"),
-  ex=LIB.map((l,i)=>[l,i]).filter(([l])=>mt(l[1],l[5].map(c=>c[1]).join(" ")));
-  el.innerHTML=(a.length?`<div class="k">도장 시스템 (작업 중)</div>`+a.map(([x,j])=>row(x,j,x.its.length+"개 제품")).join(""):"")
-   +(b.length?`<div class="k" style="margin-top:6px">저장된 시스템</div>`+b.map(([x,j])=>row(x,j,"저장됨")).join(""):"")
-   +(!SYL.length?`<div class="k" style="white-space:normal">도장 시스템 탭에 구성하거나 저장한 시스템이 없습니다. 아래 내장 예시 사양을 쓰거나, 도장 시스템에서 제품을 추가한 뒤 다시 열어주세요.</div>`:"")
-   +(ex.length?`<div class="k" style="margin-top:6px">내장 예시 사양</div>`+ex.map(([l,i])=>`<button class="pqml" onclick="LCCX.sysUse(-${i+1})"><span class="pqt"><b>${hh(l[1])}</b><small>예시 · ${l[2]}년</small></span></button>`).join(""):"")}
-function sysUse(j){const r=SYR,a=A_(),old=a.sp[r]||{};let n;
-  if(j<0){n=mkS(-j-1);n.est=1}
-  else{const x=SYL[j];if(!x)return;
-    n={n:x.n,life:old.life||10,dur:old.dur||dgOf(old.life||10),cmax:old.cmax||"C3",lab:+old.lab||0,lw:old.lw||0,lq:old.lq||0,est:1,src:x.src,coats:x.its.map(i=>mapCoat(i.l,i.lb))};
-    const nop=n.coats.filter(c=>!(+c.price>0)).length;if(nop)setTimeout(()=>tt("단가가 없는 코트 "+nop+"개가 있습니다<br><small>도장 시스템에서 제품 단가를 입력하거나 여기서 직접 입력하세요</small>"),200)}
-  a.sp[r]=n;pqX("rpsy");rsv();R()}
-function estGen(r){const s=A_().sp[r];s.est=1;rsv();R();setTimeout(()=>{const e=document.getElementById("il"+r);if(e)e.scrollIntoView({behavior:"smooth",block:"start"})},50)}
+/* 도장S: 도장 시스템 페이지의 '저장S'(저장된 시스템) 화면을 그대로 열고, 불러오기를 누르면 LCC 사양에 적용 */
+function sysPick(r){window.SYLCC=k=>sysApplySaved(r,k);syLibSheet()}
+function sysApplySaved(r,k){const x=syLibGet()[k];if(!x)return;const a=A_(),old=a.sp[r]||{},cur={};
+  try{SY.layers.forEach(l=>{if(+l.price>0)cur[l.n]=l})}catch(e){}
+  const its=(x.items||[]).map(i=>{const c=cur[i.n]||{};return{l:Object.assign({n:i.n,price:c.price,tprice:c.tprice},i),lb:i.lb||""}});
+  const coats=its.map(i=>mapCoat(i.l,i.lb)),nop=coats.filter(c=>!(+c.price>0)).length;
+  a.sp[r]={n:x.name,life:old.life||10,dur:old.dur||dgOf(old.life||10),cmax:old.cmax||"C3",lab:+old.lab||0,lw:old.lw||0,lq:old.lq||0,coats};
+  rsv();R();if(nop)setTimeout(()=>tt("단가가 없는 코트 "+nop+"개가 있습니다<br><small>시스템수정에서 단가를 입력하고 저장하세요</small>"),250)}
+/* 시스템수정: 도장 시스템 페이지로 이동 → 코트 수정 후 '저장' 하면 이 사양에 반영 */
+function sysEdit(r){const s=A_().sp[r];if(!s)return;let gi=SY.groups.findIndex(g=>g.name===s.n);
+  if(gi<0){gi=SY.groups.length;SY.groups.push({name:s.n||"LCC 사양",area:"",c:0});
+    s.coats.forEach(c=>SY.layers.push({n:c.p,lb:c.z,g:gi,price:c.price,tprice:c.tp,dft:c.d,svr:c.vs,loss:c.ls,tr:c.th}));syNorm();syS()}
+  window.LCCEDIT={r,g:gi};navGo("sys")}
+function applySys(r,g){const a=A_(),old=a.sp[r]||{},G=syGr()[g];if(!G)return;const LB=syLb();
+  a.sp[r]=Object.assign({},old,{n:SY.groups[g].name,coats:G.idx.map(i=>mapCoat(SY.layers[i],LB[i]))});rsv();R()}
 
 /* 일위대가표: 도장시스템 제품 사양 → 하도/희석제, 중도/희석제, 상도/희석제 (규격·단위·소요량·단가·금액) */
 function ilH(r,s,a){
@@ -7181,9 +7172,11 @@ function ilH(r,s,a){
     rows+=`<tr><td>${hh(c.z)||"-"}</td><td style="text-align:left">${hh(c.p)}<br><small style="color:#7d8aa3">DFT ${c.d}㎛ · SVR ${c.vs}% · 로스 ${c.ls}% · 이론 ${k.th.toFixed(3)}${u}/㎡</small></td><td>1말 (${c.pk}${u})<br><small style="color:#7d8aa3">${F(c.price)}원 · ${pc}캔</small></td><td>${u}</td><td>${k.ac.toFixed(3)}</td><td>${F(pu)}</td><td>${F(pa)}</td></tr>
 <tr style="background:#f4f8ff"><td>${hh(c.z)||"-"}<br><small>희석제</small></td><td style="text-align:left">└ 희석제 (희석율 ${c.th}%)</td><td>1캔 (${+c.ts||18}ℓ)<br><small style="color:#7d8aa3">${F(c.tp)}원 · ${tc}캔</small></td><td>ℓ</td><td>${tq.toFixed(3)}</td><td>${F(tu)}</td><td>${F(ta)}</td></tr>`});
   const lab=+s.lab||0,tot=sum+lab;
-  return `<div class="card" id="il${r}" style="margin-top:10px"><h1 style="font-size:15px;margin:0 0 4px">일위대가표 · ${hh(s.n)}</h1><div class="k" style="white-space:normal;margin-bottom:6px">소요량(㎡당) = DFT÷(10×SVR)÷(1−로스) · 희석제 = 소요량×희석율 · 금액 = 소요량×단가(원/ℓ). 도장 시스템 계산식과 동일합니다.</div><div class="sc"><table style="width:100%;border-collapse:collapse;text-align:right"><tr style="background:#eaf2ff"><th>구분</th><th>제품명</th><th>규격</th><th>단위</th><th>소요량</th><th>단가</th><th>금액</th></tr>${rows}<tr><td colspan="6" style="text-align:left">재료비 소계</td><td>${F(sum)}</td></tr><tr><td colspan="6" style="text-align:left">표면처리(노무비)</td><td>${F(lab)}</td></tr><tr style="font-weight:700;background:#eaf2ff"><td colspan="6" style="text-align:left">합계 (원/㎡)</td><td>${F(tot)}</td></tr><tr style="font-weight:700"><td colspan="6" style="text-align:left">면적 ${F(a.ar)}㎡ 기준 총액 (원)</td><td>${F(tot*a.ar)}</td></tr></table></div></div>`}
+  return `<div class="card" id="il${r}" style="margin-top:10px;background:rgba(255,255,255,.85)"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><h1 style="font-size:15px;margin:0;flex:1;min-width:0">일위대가표 · ${hh(s.n)}</h1><button class="btn s" style="width:auto;flex:none" onclick="LCCX.sysEdit('${r}')">시스템수정</button></div><div class="k" style="white-space:normal;margin-bottom:6px">소요량(㎡당) = DFT÷(10×SVR)÷(1−로스) · 희석제 = 소요량×희석율 · 금액 = 소요량×단가(원/ℓ). 도장 시스템 계산식과 동일합니다.</div><div class="sc"><table style="width:100%;border-collapse:collapse;text-align:right"><tr style="background:#eaf2ff"><th>구분</th><th>제품명</th><th>규격</th><th>단위</th><th>소요량</th><th>단가</th><th>금액</th></tr>${rows}<tr><td colspan="6" style="text-align:left">재료비 소계</td><td>${F(sum)}</td></tr><tr><td colspan="6" style="text-align:left">표면처리(노무비)</td><td>${F(lab)}</td></tr><tr style="font-weight:700;background:#eaf2ff"><td colspan="6" style="text-align:left">합계 (원/㎡)</td><td>${F(tot)}</td></tr><tr style="font-weight:700"><td colspan="6" style="text-align:left">면적 ${F(a.ar)}㎡ 기준 총액 (원)</td><td>${F(tot*a.ar)}</td></tr></table></div></div>`}
 
-function pS(){const a=A_(),en=envI(a);return `<div class="note">도장사양은 직접 입력하거나 "도장S"로 도장시스템에 저장된 사양을 검색해 불러옵니다(코트·희석제·단가·노무비 자동 반영). 코트의 "DB 제품 선택"은 제품 DB의 고형분·추천도막·희석율·포장을 불러옵니다. 공장 사양의 단가·노무비·수명은 예시값이니 실제 견적으로 교체하세요. 아파트 단가는 기존 엑셀의 ㎡당 재료비에서 역산한 값입니다.</div>`+RK.map((r,n)=>{const s=a.sp[r],m=sim(s,a,enR(r,a,en));return D("s"+r,`<span style="color:${RC[n]}">●</span> ${RN[n]} · ${s.n}`,`${sHead(r,s)}${s.coats.map((c,i)=>coatH(r,c,i,s)).join("")}<div style="margin-top:8px"><button class="btn s" onclick="LCCX.addCoat('${r}')">+ 코트 추가</button> <button class="btn" onclick="LCCX.estGen('${r}')">견적서 생성</button>${r=="rec"?` <button class="btn" onclick="LCCX.autoRec()">환경 맞춤 자동 추천</button>`:""}</div>${s.est?ilH(r,s,a):""}<div class="rs">총 DFT ${m.sc.dft}㎛ · 초기 ${F(m.sc.init)}원/㎡ (재료 ${F(m.sc.mat)} + 표면처리 노무 ${F(s.lab)}) · 도료 ${F(m.sc.L)}ℓ / ${m.sc.cans}캔 · 희석제 ${F(m.sc.thL)}ℓ<br>추정수명 <b>${m.e.toFixed(1)}년</b> (보수주기 ${m.c}년) · ${m.mm>0?`<span class="dn">환경 ${en.eff} > 내구성등급 ${s.dur} 적용한계 ${s.cmax}: 수명 ×${Math.pow(.75,m.mm).toFixed(2)}</span>`:`<span class="up">${en.eff} 환경에 적합</span>`}</div>`)}).join("")}
+const PAS=[{bg:"#e8f1ff",bd:"#c7dbf8",tx:"#2a4f8f"},{bg:"#fff0e1",bd:"#f4d3b0",tx:"#97581d"},{bg:"#e5f6ec",bd:"#bfe3cd",tx:"#22684a"}];
+const DS=(id,t,b,n)=>{const c=PAS[n];return `<details class="spx" style="--pbg:${c.bg};--pbd:${c.bd};--ptx:${c.tx}" ${RS.o[id]===false?"":"open"} ontoggle="LCCX.tg('${id}',this.open)"><summary>${t}</summary><div class="bd">${b}</div></details>`};
+function pS(){const a=A_(),en=envI(a);return `<div class="note">도장사양은 직접 입력하거나 "도장S"로 도장 시스템의 저장된 시스템을 불러옵니다. 불러오면 일위대가표(소요량·단가·금액)가 자동 구성됩니다. 코트·단가를 고치려면 "시스템수정"으로 도장 시스템 페이지에서 수정한 뒤 시스템 "저장"을 누르세요. 공장 사양의 단가·노무비·수명은 예시값이니 실제 견적으로 교체하세요.</div>`+RK.map((r,n)=>{const s=a.sp[r],m=sim(s,a,enR(r,a,en));return DS("s"+r,`<span style="color:${PAS[n].tx}">●</span> ${RT[n]}${hh(s.n)}`,`${sHead(r,s)}${r=="rec"?`<div style="margin-top:8px"><button class="btn" onclick="LCCX.autoRec()">환경 맞춤 자동 추천</button></div>`:""}${ilH(r,s,a)}<div class="rs">총 DFT ${m.sc.dft}㎛ · 초기 ${F(m.sc.init)}원/㎡ (재료 ${F(m.sc.mat)} + 표면처리 노무 ${F(s.lab)}) · 도료 ${F(m.sc.L)}ℓ / ${m.sc.cans}캔 · 희석제 ${F(m.sc.thL)}ℓ<br>추정수명 <b>${m.e.toFixed(1)}년</b> (보수주기 ${m.c}년) · ${m.mm>0?`<span class="dn">환경 ${en.eff} > 내구성등급 ${s.dur} 적용한계 ${s.cmax}: 수명 ×${Math.pow(.75,m.mm).toFixed(2)}</span>`:`<span class="up">${en.eff} 환경에 적합</span>`}</div>`,n)}).join("")}
 function bars(rows,cols){return`<svg viewBox="0 0 320 ${rows.length*54+6}" width="100%">${rows.map((r,i)=>{const mx=Math.max(...r[1],1e-9),y=i*54;return`<text x="0" y="${y+11}" font-size="11" font-weight="700" fill="var(--tx)">${r[0]}</text>`+r[1].map((v,j)=>{const w=Math.max(2,v/mx*215);return`<rect x="0" y="${y+16+j*12}" width="${w}" height="9" rx="3" fill="${cols[j]}"/><text x="${w+4}" y="${y+24+j*12}" font-size="9.5" fill="var(--mu)">${r[2](v)}</text>`}).join("")}).join("")}</svg>`}
 function line(ss,cols){const W=320,H=190,L=46,T=12,B=24,m=Math.max(...ss.flat(),1),x=y=>L+y/RS.hz*(W-L-8),Y=v=>H-B-v/m*(H-T-B),p=c=>"M"+x(0)+","+Y(c[0])+c.slice(1).map((v,i)=>` L${x(i+1)},${Y(c[i])} L${x(i+1)},${Y(v)}`).join("");
 return`<svg viewBox="0 0 ${W} ${H}" width="100%">${[0,.5,1].map(f=>`<line x1="${L}" x2="${W-8}" y1="${Y(m*f)}" y2="${Y(m*f)}" stroke="var(--bd)"/><text x="${L-4}" y="${Y(m*f)+3}" text-anchor="end" font-size="9" fill="var(--mu)">${F(m*f/1000)}M</text><text x="${x(RS.hz*f)}" y="${H-8}" text-anchor="middle" font-size="9" fill="var(--mu)">${Math.round(RS.hz*f)}년</text>`).join("")}${ss.map((c,i)=>`<path d="${p(c)}" fill="none" stroke="${cols[i]}" stroke-width="2.2"/>`).join("")}</svg>`}
@@ -7260,7 +7253,7 @@ window.LCCX={R,diagInfo:()=>{const a=A_(),en=envI(a),r=all(a),on=a.dgOn!==false;
 diagApply:g=>{const a=A_();a.dg=g;a.dgOn=true;const it=g.items||{};if(it.rust&&it.rust.done)a.b[0]=+it.rust.pct||0;if(it.crack&&it.crack.done)a.b[1]=[0,.05,.2,.4,.8,1.2][it.crack.g]||0;if(it.peel&&it.peel.done)a.b[2]=[0,.5,2,6,20,40][it.peel.g]||0;if(it.blis&&it.blis.done)a.b[3]=Math.min(5,it.blis.g||0);if(it.chalk&&it.chalk.done)a.b[4]=Math.min(5,it.chalk.g||0);rsv()},
 dgOn:v=>{A_().dgOn=!!v;rsv()},dgH:h=>{const f=document.getElementById('dgf');if(f&&h>50)f.style.height=Math.ceil(h)+'px'},dgTop:()=>{const f=document.getElementById('dgf');if(f)f.scrollIntoView({block:'start'})},si:i=>{RS.i=i;rsv();R()},tab:i=>{RS.tab=i;rsv();R();scrollTo(0,0)},ds:v=>{RS.ds=+v;rsv();R()},tg:(id,o)=>{RS.o[id]=o},hz:v=>{RS.hz=Math.max(5,+v||30);rsv();R()},esc:v=>{RS.esc=+v||0;rsv();R()},get:()=>RS,
 set:o=>{if(!o||!Array.isArray(o.assets)||!o.assets.length)return;RS=o;RS.tab=RS.tab||0;RS.i=0;RS.o=RS.o||{};RS.assets.forEach(a=>{if(!a.zones)a.zones=[mkZ("전체",a.ar,5,10,70,"")];zs0(a);if(!a.sp.rec)a.sp.rec=mkS(rec(a,envI(a)))});rsv();R()},
-Ua,Ub,Uc,Us,Ut,Uz,addC,addCoat,delCoat,load,sysPick,sysQ,sysUse,estGen,autoRec,addAsset,delAsset,addZone,delZone,pick,pkq,use,toCalc,saveH,word};
+Ua,Ub,Uc,Us,Ut,Uz,addC,addCoat,delCoat,load,sysPick,sysEdit,applySys,autoRec,addAsset,delAsset,addZone,delZone,pick,pkq,use,toCalc,saveH,word};
 if(document.body&&document.body.dataset.pg==9)R();
 })();</script>
 <script id=oa362>(function(){function oa(){try{document.querySelectorAll('#v0 details.gl,#v8 details.fsub,#v8 details.scf').forEach(function(d){if(!d.dataset.oa){d.dataset.oa=1;d.open=true}})}catch(e){}}
@@ -8601,7 +8594,11 @@ html body #gnav{z-index:2147483200!important}
 html body #gtop{z-index:2147483200!important}
 html body #splash{z-index:2147483600!important}
 </style>
-<style id="lcc2">/* LCC 전 탭 — 대시보드와 같은 간격·글자 크기 */
+<style id="lcc399">
+html body[data-pg="9"] #v9 details.spx,html body[data-pg="9"] #v9 .lsh>details.spx{background:var(--pbg)!important;border:1px solid var(--pbd)!important;border-radius:calc(var(--u)*20)}
+html body[data-pg="9"] #v9 details.spx>summary{color:var(--ptx)!important;font-weight:800}
+html body[data-pg="9"] #v9 details.spx .coat{background:rgba(255,255,255,.6)}
+</style><style id="lcc2">/* LCC 전 탭 — 대시보드와 같은 간격·글자 크기 */
 html body[data-pg="9"] #v9 .lsh>details,html body[data-pg="9"] #v9 .lsh>.card,html body[data-pg="9"] #v9 .lsh>#ig>.card,html body[data-pg="9"] #v9 .lsh>#ig>details,html body[data-pg="9"] #v9 .lsh>.note{background:#fff;border:1px solid #dbe6f7;border-radius:calc(var(--u)*20);box-shadow:0 2px 10px rgba(20,60,140,.05);margin:0;padding:0;overflow:hidden}
 html body[data-pg="9"] #v9 .lsh>.card,html body[data-pg="9"] #v9 .lsh>#ig>.card{padding:calc(var(--u)*20) calc(var(--u)*18)}
 html body[data-pg="9"] #v9 .lsh>.note{padding:calc(var(--u)*18);background:#e9f2ff;border-color:#d6e3f6;font:400 calc(var(--u)*21)/1.55 "Noto Sans KR",system-ui,sans-serif;color:#4a5d7c}
