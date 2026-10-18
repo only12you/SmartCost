@@ -8320,19 +8320,35 @@ try{NAV.rc=JSON.parse(localStorage.getItem('nav397:rc')||'[]').filter(i=>IT[i])}
 const secOf=id=>SEC.find(s=>s.it.includes(id))||SEC[0];
 function items(){const a=SEC.map(s=>({...s,it:s.it.slice()}));try{if(typeof IS_ADMIN!='undefined'&&IS_ADMIN)a[3].it.push('adm')}catch(e){}return a}
 const tile=(id,s,v)=>{const it=IT[id];return `<button type="button" class="mt${v?' mv':''}" data-go="${id}" style="--c:${s.c};--cb:${s.cb}"><span class="mti">${svg(IC[id])}</span><span class="mtl">${it.n}</span>${CV}</button>`};
-function closeAll(){['hq','ap','aptdb','es'].forEach(i=>{const e=document.getElementById(i);if(e)e.remove()});document.documentElement.classList.remove('pdlock');document.querySelectorAll('.pqs').forEach(e=>e.remove());subClose();const m=$('#vmenu');if(m)m.hidden=true;const a=document.getElementById('aptpp');if(a)a.remove()}
+function closeAll(){['hq','ap','aptdb','es'].forEach(i=>{const e=document.getElementById(i);if(e)e.remove()});document.documentElement.classList.remove('pdlock');document.querySelectorAll('.pqs,.sypk').forEach(e=>e.remove());subClose();const m=$('#vmenu');if(m)m.hidden=true;const a=document.getElementById('aptpp');if(a)a.remove();document.body.classList.remove('pdlock')}
 function rec(id){if(id==='home'||id==='menu')return;NAV.rc=[id].concat(NAV.rc.filter(x=>x!==id)).slice(0,5);try{localStorage.setItem('nav397:rc',JSON.stringify(NAV.rc))}catch(e){}}
 function track(pid){if(!pid)return;if(NAV.cur!==pid){if(!NAV.going){NAV.stack.push(NAV.cur);NAV.stack=NAV.stack.slice(-30)}}NAV.cur=pid;refresh()}
-function go(id,back){const it=IT[id];if(!it)return;const pid=it.page;if(it.sheet){subClose();document.querySelectorAll('.pqs').forEach(e=>e.remove());rec(id);try{it.o()}catch(e){console.error(e)}return}closeAll();rec(id);
- if(pid&&!back&&NAV.cur!==pid){NAV.stack.push(NAV.cur);NAV.stack=NAV.stack.slice(-30)}
+/* ---- v397: 실제 화면 기준으로 현재 위치를 판별 (오버레이를 다른 경로로 열거나 닫아도 뒤로·홈이 항상 동작) ---- */
+const OVL=[['es','quote'],['aptdb','aptdb'],['ap','area'],['hq','hq']];
+function ovs(){return OVL.filter(([id])=>document.getElementById(id)).map(x=>x[1])}
+function baseLive(){const v=document.getElementById('vmenu');if(v&&!v.hidden)return'menu';const pg=+document.body.dataset.pg;if(pg===8)return(window.FM&&FM.tab==='mesh')?'mesh':'fill';return({0:'calc',1:'db',2:'home',3:'sys',4:'tds',5:'csv',7:'adm',9:'lcc'})[pg]||'home'}
+function owned(){const o=OVL.find(x=>x[1]===NAV.cur);return o?o[0]:null}
+function stray(){const own=owned();return OVL.filter(([id])=>id!==own&&document.getElementById(id)).map(x=>x[0])}
+function here(it){if(it.sheet||!it.page)return false;const pid=it.page;if(pid!==NAV.cur)return false;const o=OVL.find(x=>x[1]===pid);if(o)return!!document.getElementById(o[0])&&!stray().length;return baseLive()===pid&&!ovs().length}
+function sync(){if(NAV.going)return;const o=OVL.find(x=>x[1]===NAV.cur);
+ if(o&&!document.getElementById(o[0])){const b=baseLive();if(NAV.stack[NAV.stack.length-1]===b)NAV.stack.pop();NAV.cur=b}
+ refresh()}
+function push(c){if(c&&NAV.stack[NAV.stack.length-1]!==c){NAV.stack.push(c);NAV.stack=NAV.stack.slice(-30)}}
+function go(id,back){const it=IT[id];if(!it)return;const pid=it.page;
+ if(!back&&here(it)){subClose();try{window.scrollTo(0,0)}catch(e){}refresh();return}
+ if(it.sheet){subClose();document.querySelectorAll('.pqs').forEach(e=>e.remove());rec(id);try{it.o()}catch(e){console.error(e)}return}closeAll();rec(id);
+ if(pid&&!back&&NAV.cur!==pid)push(NAV.cur);
  NAV.going=1;try{if(it.ov)T(2);it.o()}catch(e){console.error(e)}finally{NAV.going=0}
  if(pid)NAV.cur=pid;refresh()}
-function navBack(){const a=document.getElementById('aptdb');if(a&&NAV.cur!=='aptdb'){try{aptDbClose()}catch(e){a.remove()}return}
- const p=NAV.stack.pop();if(p)go(IT[p]?p:'home',true);else if(NAV.cur!=='home')go('home',true)}
-window.navGo=go;window.navBack=navBack;
-function refresh(){const cat=CAT[NAV.cur]||'';document.querySelectorAll('#gnav .hni').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));
- const g=$('#gtop');if(g){g.classList.toggle('dk',NAV.cur==='menu');const b=g.querySelector('[data-a=back]'),h=g.querySelector('[data-a=home]');if(b)b.disabled=!NAV.stack.length&&NAV.cur==='home';if(h)h.disabled=NAV.cur==='home'}
- document.body.classList.toggle('inapp',NAV.cur!=='home')}
+function closeStray(){const s=stray();if(!s.length)return false;s.forEach(id=>{const e=document.getElementById(id);if(!e)return;if(id==='aptdb'){try{aptDbClose();if(document.getElementById('aptdb'))e.remove()}catch(x){e.remove()}}else e.remove()});document.body.classList.remove('pdlock');document.documentElement.classList.remove('pdlock');refresh();return true}
+function navBack(){sync();if(closeStray())return;
+ let p;while((p=NAV.stack.pop())&&(p===NAV.cur||!IT[p]));
+ if(p)go(p,true);else if(NAV.cur!=='home'||ovs().length||baseLive()!=='home')go('home',true)}
+function navHome(){closeAll();NAV.going=1;try{T(2)}catch(e){console.error(e)}finally{NAV.going=0}if(NAV.cur!=='home')push(NAV.cur);NAV.cur='home';refresh()}
+window.navGo=go;window.navBack=navBack;window.navHome=navHome;
+function refresh(){const cat=CAT[NAV.cur]||'',ox=ovs().length>0,atHome=NAV.cur==='home'&&!ox&&baseLive()==='home';document.querySelectorAll('#gnav .hni').forEach(b=>b.classList.toggle('on',b.dataset.cat===cat));
+ const g=$('#gtop');if(g){g.classList.toggle('dk',NAV.cur==='menu');const b=g.querySelector('[data-a=back]'),h=g.querySelector('[data-a=home]');if(b)b.disabled=atHome&&!NAV.stack.length;if(h)h.disabled=atHome}
+ document.body.classList.toggle('inapp',!atHome)}
 /* 전체 메뉴 */
 let MQ='';
 function menuBody(q){const S=items();
@@ -8360,13 +8376,13 @@ function subClose(){const e=$('#gsub');if(e)e.remove()}
 function subOpen(cid){const open=$('#gsub');if(open&&open.dataset.c===cid){subClose();return}subClose();const s=items().find(x=>x.id===cid);if(!s)return;
  const e=document.createElement('div');e.id='gsub';e.dataset.c=cid;const g=$('#gnav');document.documentElement.style.setProperty('--gnh',(g?g.offsetHeight:56)+'px');
  e.innerHTML=`<div class="gsb"></div><div class="gsp" style="--c:${s.c};--c2:${s.c2};--cb:${s.cb};--bg:${s.bg};--bd:${s.bd}"><div class="gsh"><span class="msi">${svg(IC[s.ic])}</span><div><b>${s.t}</b><small>${s.d}</small></div></div><div class="mgrid" style="grid-template-columns:repeat(${s.it.length>=5?3:Math.min(s.it.length,3)},minmax(0,1fr))">${s.it.map(id=>tile(id,s,0)).join('')}</div></div>`;
- e.addEventListener('click',ev=>{const b=ev.target.closest('[data-go]');if(b){go(b.dataset.go);return}if(ev.target.classList.contains('gsb'))subClose()});document.body.append(e)}
+ e.addEventListener('click',ev=>{const b=ev.target.closest('[data-go]');if(b){const id=b.dataset.go;subClose();setTimeout(()=>go(id),0);return}if(ev.target.classList.contains('gsb'))subClose()});document.body.append(e)}
 function buildNav(){const g=$('#gnav');if(!g)return;const ic={calc:IC.tbl,ana:IC.sys,db:IC.s_db,adm:IC.s_adm};
  g.innerHTML=SEC.map(s=>`<button class="hni" type="button" data-cat="${s.id}" aria-label="${s.t}" title="${s.t}">${svg(ic[s.id],28)}<span>${s.t}</span></button>`).join('');
  g.addEventListener('click',e=>{const b=e.target.closest('.hni');if(b){e.stopPropagation();subOpen(b.dataset.cat)}},true)}
 function buildTop(){const g=document.createElement('div');g.id='gtop';
  g.innerHTML=`<button type="button" data-a="back" aria-label="뒤로가기" title="뒤로가기">${svg(IC.back)}</button><button type="button" data-a="home" aria-label="홈" title="홈">${svg(IC.home)}</button><span class="gtsp"></span><button type="button" data-a="menu" aria-label="전체 메뉴" title="전체 메뉴">${svg(IC.menu)}</button>`;
- g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const a=b.dataset.a;subClose();if(a==='back')navBack();else if(a==='home')go('home');else if(a==='menu')go('menu')});
+ g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const a=b.dataset.a;subClose();if(a==='back')navBack();else if(a==='home')navHome();else if(a==='menu')go('menu')});
  document.body.append(g);document.body.classList.add('gt')}
 /* 기존 흐름 연결: T() 이동 → gnav(n) 훅, 오버레이 열기 함수 래핑 */
 const _g=window.gnav;
@@ -8376,7 +8392,7 @@ const W=(name,pid)=>{const f=window[name];if(typeof f!=='function')return;window
 W('apOpen','area');W('hqOpen','hq');W('aptDbMgr','aptdb');W('est','quote');
 const _ft=window.fmTab;if(typeof _ft==='function')window.fmTab=function(t){const r=_ft.apply(this,arguments);if(!NAV.going){const v=document.getElementById('v8');if(v&&!v.hidden)track(t==='mesh'?'mesh':'fill')}return r};
 function gh(){const g=$('#gnav');if(g)document.documentElement.style.setProperty('--gnh',g.offsetHeight+'px')}
-function init(){buildTop();buildMenu();buildNav();refresh();gh();addEventListener('resize',gh);setTimeout(gh,400);document.addEventListener('keydown',e=>{if(e.key==='Escape')subClose()})}
+function init(){buildTop();buildMenu();buildNav();refresh();gh();try{let t=0;new MutationObserver(()=>{cancelAnimationFrame(t);t=requestAnimationFrame(sync)}).observe(document.body,{childList:true})}catch(e){}addEventListener('resize',gh);setTimeout(gh,400);document.addEventListener('keydown',e=>{if(e.key==='Escape')subClose()})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 
