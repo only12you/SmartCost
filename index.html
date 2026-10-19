@@ -6006,7 +6006,7 @@ function leftHtml(){const t=AR.type,steel=t=='steel',c=cnd();let main='',others=
   others=AR.parts.filter(x=>x.t=='steel'&&x.id!=p.id&&(x.u||ar(x)>0)).map(partCard).join('');
  }else{const all=AR.parts.filter(x=>x.t==t),cp=curPart(),L=all.filter(x=>!cp||x.id!=cp.id).map(partCard).join(''),ck=cp&&K[cp.k];
   const fl=ck?(FX[cp.k]||FX.direct).f.replace(/<br>/g,' ').replace(/<[^>]+>/g,'').replace(/^도장면적\(㎡\)\s*=\s*/,''):'';
-  main=`<div class="zqc zqs1"><div class="zqsh"><span class="zqnb">01</span><div><b>부위 정보 입력</b><small>${TY[t].n}의 각 부위별 면적을 입력하세요.</small></div></div><div class="zqpills">${(()=>{const lim=4,ci=cp?all.findIndex(x=>x.id==cp.id):-1,show=AR.pm||all.length<=lim+1?all:all.filter((x,i)=>i<lim||i==ci);const b=show.map(x=>`<button type="button" class="${cp&&x.id==cp.id?'on':''}" onclick="apPick('${x.id}')">${esc(x.nm||K[x.k].n)}</button>`).join('');return b+(all.length>lim+1?`<button type="button" class="mo" onclick="apMore()">${AR.pm?'접기':'더보기'} ${I('chev')}</button>`:'')})()}</div>
+  main=`<div class="zqc zqs1"><div class="zqsh"><span class="zqnb">01</span><div><b>부위 정보 입력</b><small>${TY[t].n}의 각 부위별 면적을 입력하세요.</small></div></div><div class="zqpills">${(()=>{const lim=3,ci=cp?all.findIndex(x=>x.id==cp.id):-1,vis=all.length<=lim+1?all:all.filter((x,i)=>i<lim||i==ci),hid=all.filter(x=>vis.indexOf(x)<0),bt=x=>`<button type="button" class="${cp&&x.id==cp.id?'on':''}" onclick="apPick('${x.id}')">${esc(x.nm||K[x.k].n)}</button>`;return vis.map(bt).join('')+(hid.length?`<button type="button" class="mo${AR.pm?' on':''}" onclick="apMore()" aria-label="더보기">···</button>${AR.pm?`<div class="zqpop">${hid.map(bt).join('')}</div>`:''}`:'')})()}</div>
 <div class="zqlb">현장 · 구역 이름 <small>(선택)</small></div><div class="zqi" style="background:#fff"><input type="text" value="${esc(AR.name||'')}" placeholder="예: ○○아파트 101동" oninput="AR_N(this.value)"></div>
 ${ck?`<div class="zqnm" style="margin-top:12px"><div class="zqi"><input type="text" value="${esc(cp.nm||'')}" placeholder="${ck.n}" oninput="apName('${cp.id}',this.value)"></div><button type="button" class="zqx" onclick="apDel('${cp.id}')">삭제</button></div><div class="zqdm">${ck.f.filter(f=>f[2]!='sel').map(f=>tile(cp,f,cp.k)).join('')}${ck.f.filter(f=>f[2]=='sel').map(f=>selTile(cp,f)).join('')}</div>
 <div class="zqfr"><i>${I('info')}</i><div><small>${esc(cp.nm||ck.n)} 면적 계산식</small><span>${fl}</span></div><strong data-pa="${cp.id}">${fm(ar(cp))}</strong></div>`:'<div class="zqnt">부위가 없습니다</div>'}
@@ -6033,7 +6033,7 @@ window.apLive=()=>{const r=document.getElementById('zqrs');if(r)r.innerHTML=resI
 window.apType=t=>{AR.type=t;AR.cur=null;ensure();save();render()};
 window.apKind=k=>{AR.sk=k;mainPart(k);save();render()};
 window.apMore=()=>{AR.pm=AR.pm?0:1;save();render()};
-window.apPick=id=>{AR.cur=id;save();render()};
+window.apPick=id=>{AR.pm=0;AR.cur=id;save();render()};
 window.apCur=id=>{if(AR.cur==id||AR.type=='steel')return;AR.cur=id;save();const r=document.getElementById('zqr');if(r)r.innerHTML=rightHtml()};
 window.AR_N=v=>{AR.name=v;save()};
 window.apSet=(id,k,v)=>{const p=find(id);if(!p)return;p[k]=v;save();apLive()};
@@ -8966,5 +8966,11 @@ html body #ap .zqrh b{font-size:max(10.5px,calc(var(--k)*19))!important}
 html body #ap .zqpills{flex-wrap:wrap!important}
 html body #ap .zqpills button.mo{display:flex!important;align-items:center!important;gap:4px!important;background:#eef5ff!important;border-style:dashed!important;color:#1a56c8!important}
 html body #ap .zqpills button.mo svg{width:14px!important;height:14px!important}
+html body #ap .zqpills{flex-wrap:nowrap!important;position:relative!important;align-items:center!important}
+html body #ap .zqpills>button{flex:0 1 auto!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+html body #ap .zqpills button.mo{flex:none!important;width:max(34px,calc(var(--k)*60))!important;padding:0!important;display:flex!important;justify-content:center!important;border-style:solid!important;font-size:max(14px,calc(var(--k)*26))!important;letter-spacing:1px!important;line-height:1!important}
+html body #ap .zqpills button.mo.on{background:#1a56c8!important;color:#fff!important;border-color:#1a56c8!important}
+html body #ap .zqpop{position:absolute!important;right:0!important;top:calc(100% + 6px)!important;z-index:30!important;min-width:calc(var(--k)*300)!important;display:flex!important;flex-direction:column!important;gap:4px!important;padding:8px!important;background:#fff!important;border:1px solid #cfdcf0!important;border-radius:calc(var(--k)*14)!important;box-shadow:0 8px 22px rgba(20,60,140,.22)!important}
+html body #ap .zqpop button{width:100%!important;text-align:left!important;justify-content:flex-start!important}
 </style>
 </body></html>
