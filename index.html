@@ -5979,20 +5979,21 @@ function isoTube(){const x0=84,y0=56,s=96,t=15,dx=64,dy=-32,P=a=>a.map(q=>q.join
  `<line x1="${x0+s+dx+14}" y1="${y0+dy-2}" x2="${x0+s+dx+14}" y2="${y0+t+dy+2}" stroke="#10264f" stroke-width="1.4" marker-start="url(#mk)" marker-end="url(#mk)"/><text x="${x0+s+dx+24}" y="${y0+dy+10}" font-size="17" font-weight="600" fill="#10264f">t</text></svg>`}
 const dgHtml=()=>{const p=curPart();if(!p)return '';if(p.k=='hbeam'||p.k=='ibeam')return iso(p.k);if(p.k=='rtube')return isoTube();return `<div style="padding:calc(var(--k)*8) 0">${draw(p)}</div>`};
 const sy=p=>{const f=(FX[p.k]||FX.direct);return `<div class="zqfm">${f.f}</div><div class="zqsy">기호 설명</div><div>${f.sym.map(([a,b])=>`<span>${a}</span><span>:</span><span>${b}</span>`).join('')}</div>`};
-function rightHtml(){const p=curPart();if(!p)return '';return `<div class="zqr1"><h3>도장 면적 산출 공식 ${I('info')}</h3><div class="zqdg" id="zqdg">${dgHtml()}</div>${sy(p)}</div><div class="zqr1 zqr2"><h3><i>${I('atom')}</i>재료 소요량 계산 공식</h3><div class="zqfm">소요량(kg) = <b>도장면적(㎡) × 도료 사용량(kg/㎡)</b><br>소요량(L) = 소요량(kg) ÷ 비중(kg/L)<br>비용(원) = 소요량(L) × 도료 단가(원/L)</div><div class="zqnt">※ 도료별 사용량은 제품별 TDS를 참고하세요.</div></div>`}
+function rightHtml(){const p=curPart();if(!p)return '';const f=(FX[p.k]||FX.direct);return `<details class="zqr1 zqsm2" open><summary><i>${I('calc')}</i><b>계산식 요약</b>${I('chev')}</summary><div class="zqfm"><b>도장 면적</b><br>${f.f.replace(/<br>/g,' ')}<br><br><b>도료 소요량</b><br>소요량(kg) = 도장면적(㎡) × 도료 사용량(kg/㎡)<br>소요량(L) = 소요량(kg) ÷ 비중(kg/L)<br><br><b>도장 비용</b><br>비용(원) = 소요량(L) × 도료 단가(원/L)</div></details>
+<details class="zqr1 zqdg2"><summary><i>${I('info')}</i><b>산출식 도해 · 기호 설명</b>${I('chev')}</summary><div class="zqdg" id="zqdg">${dgHtml()}</div>${sy(p)}</details>
+<div class="zqtip"><div><i>${I('info')}</i><b>TIP</b><span>도장면적 산출 팁</span></div><ul><li>공제면적은 창문, 문, 설비 등 제외 면적입니다.</li><li>도료 소요량은 도장 조건(도막두께·사용량)을 반영합니다.</li><li>정확한 산출을 위해 실측값을 입력하세요.</li></ul></div>`}
 const f1=(v,d)=>F(v,d==null?1:d);
 function resCalc(){const A=tot(AR.type),c=cnd(),u=useKg(c),kg=A*u*(1+n(c.loss)/100),L=c.sg>0?kg/n(c.sg):0,cost=L*n(c.price);return{A,c,u,kg,L,cost}}
 function condItems(r){const p=curPart(),c=r.c,out=[];if(!p)return out;const kd=K[p.k];
  if(AR.type=='steel'){out.push(KN[p.k]||kd.n);const sz=SZ[p.k];if(sz){const v=sz.k.map(k=>n(p[k])>0?F(n(p[k]),1):'-').join('×');out.push(v)}if('L' in {L:1}&&kd.f.some(f=>f[0]=='L'))out.push('길이 '+(n(p.L)>0?F(n(p.L),1)+'m':'-'));out.push('수량 '+F(q1(p),0)+'본')}
  else{out.push(TY[AR.type].n);out.push('부위 '+AR.parts.filter(x=>x.t==AR.type).length+'곳')}
  out.push('도막두께 '+F(n(c.dft),0)+'µm');out.push('도료 사용량 '+F(r.u,3)+'kg/㎡');return out}
-function resInner(){const r=resCalc(),c=r.c;return `<div class="zqrh"><b>산출 결과</b><span>› 계산된 도장 면적과 재료 소요량을 확인하세요.</span><button type="button" onclick="apDetail()">상세내역 보기 ${I('right')}</button></div>
-<div class="zqtl"><div class="zqtc"><i>${I(AR.type)}</i><div><small>도장 면적</small><strong>${f1(r.A)}<u>m<sup>2</sup></u></strong></div></div>
-<div class="zqtc"><i>${I('drop')}</i><div><small>도료 소요량 <span>(예시)</span></small><strong>${f1(r.L)}<u>L</u></strong><em>(도막두께 ${F(n(c.dft),0)}µm 기준)</em></div></div>
-<div class="zqtc"><i>${I('kg')}</i><div><small>무게 기준 소요량 <span>(예시)</span></small><strong>${f1(r.kg)}<u>kg</u></strong><em>(도료 사용량 ${F(r.u,3)} kg/m² 기준)</em></div></div>
-<div class="zqtc g"><i>${I('yen')}</i><div><small>도장 비용 <span>(예시)</span></small><strong>${F(Math.round(r.cost/1000)*1000,0)}<u>원</u></strong><em>(도료 단가 ${F(n(c.price),0)}원/L 기준)</em></div></div></div>
-<div class="zqcn"><i>${I('doc')}</i><b>적용된 조건</b><div>${condItems(r).map(esc).join('<s>|</s>')}</div></div>
-<button type="button" class="zqgo" onclick="apApply(1)">${I('calc')}계산하기 ${I('right')}</button>`}
+function resInner(){const r=resCalc(),c=r.c,pr=r.A>0?r.L/r.A:0;return `<div class="zqrh"><i>${I('calc')}</i><b>최종 산출 결과</b><button type="button" onclick="apDetail()">상세보기 ${I('right')}</button></div>
+<div class="zqtl"><div class="zqtc"><i>${I(AR.type)}</i><div><small>도장 면적</small><strong>${f1(r.A,0)}<u>㎡</u></strong></div></div>
+<div class="zqtc"><i>${I('drop')}</i><div><small>도료 소요량</small><strong>${f1(r.L,0)}<u>L</u></strong><em>(소비율 ${F(pr,2)} L/㎡ 기준)</em></div></div>
+<div class="zqtc"><i>${I('kg')}</i><div><small>도료 무게</small><strong>${f1(r.kg,0)}<u>kg</u></strong><em>(도료 비중 ${F(n(c.sg),2)} 기준)</em></div></div>
+<div class="zqtc g"><i>${I('yen')}</i><div><small>도장 비용</small><strong>${F(Math.round(r.cost/100)*100,0)}<u>원</u></strong><em>(도료 단가 ${F(n(c.price),0)}원/L 기준)</em></div></div></div>
+<div class="zqap"><button type="button" class="zqgo" onclick="apApply(1)">${I('calc')}기본면적에 적용</button><button type="button" class="zqgo2" onclick="apApply(0)">전체 합계로 적용</button></div>`}
 function partCard(p){const kd=K[p.k];if(!kd)return '';const sels=kd.f.filter(f=>f[2]=='sel'),dims=kd.f.filter(f=>f[2]!='sel');
  return `<details class="zqpt" data-id="${p.id}"${p.o?' open':''} ontoggle="apTog('${p.id}',this.open)"><summary>${I(p.t)}<span data-nm="${p.id}">${esc(p.nm||kd.n)}</span><em data-pa="${p.id}">${fm(ar(p))}</em>${I('chev')}</summary><div><div class="zqnm"><div class="zqi"><input type="text" value="${esc(p.nm||'')}" placeholder="${kd.n}" oninput="apName('${p.id}',this.value)" onfocus="apCur('${p.id}')"></div><button type="button" class="zqx" onclick="apDel('${p.id}')">삭제</button></div><div class="zqdm">${dims.map(f=>tile(p,f,p.k)).join('')}${sels.map(f=>selTile(p,f)).join('')}</div></div></details>`}
 function leftHtml(){const t=AR.type,steel=t=='steel',c=cnd();let main='',others='';
@@ -6003,8 +6004,13 @@ function leftHtml(){const t=AR.type,steel=t=='steel',c=cnd();let main='',others=
 <div class="zqsp"><div><div class="zqlb">규격 선택</div><div class="zqsel"><select onchange="apSz('${p.id}',this.value)"><option value="x">직접 입력</option>${list.map((h,i)=>`<option value="${i}"${i==cur?' selected':''}>${h[0]}</option>`).join('')}</select>${I('chev')}</div></div><div><div class="zqlb">단위 수량</div><div class="zqst"><div><button type="button" onclick="apStep('${p.id}',-1)">−</button><input type="number" inputmode="numeric" value="${q1(p)}" oninput="apSet('${p.id}','q',this.value)" onfocus="apCur('${p.id}')"><button type="button" onclick="apStep('${p.id}',1)">+</button></div><em>EA</em></div></div></div>
 <div class="zqlb">치수 입력 <small>(${k=='pipe'?'mm · m':'mm'})</small></div><div class="zqdm">${dims.map(f=>tile(p,f,k)).join('')}${tile(p,['q','수량','본'],k)}</div></div>`;
   others=AR.parts.filter(x=>x.t=='steel'&&x.id!=p.id&&(x.u||ar(x)>0)).map(partCard).join('');
- }else{const L=AR.parts.filter(p=>p.t==t).map(partCard).join('');
-  main=`<div class="zqc zqs1"><div class="zqsh"><span class="zqnb">01</span><div><b>부위 정보 입력</b><small>부위의 치수와 수량을 입력하세요.</small></div></div><div class="zqlb">현장 · 구역 이름 <small>(선택)</small></div><div class="zqi" style="background:#fff"><input type="text" value="${esc(AR.name||'')}" placeholder="예: ○○아파트 101동" oninput="AR_N(this.value)"></div><div class="zqlb">부위 목록 <small>(${TY[t].n})</small></div>${L||'<div class="zqnt">부위가 없습니다</div>'}`+addRow(t)+`</div>`}
+ }else{const all=AR.parts.filter(x=>x.t==t),cp=curPart(),L=all.filter(x=>!cp||x.id!=cp.id).map(partCard).join(''),ck=cp&&K[cp.k];
+  const fl=ck?(FX[cp.k]||FX.direct).f.replace(/<br>/g,' ').replace(/<[^>]+>/g,'').replace(/^도장면적\(㎡\)\s*=\s*/,''):'';
+  main=`<div class="zqc zqs1"><div class="zqsh"><span class="zqnb">01</span><div><b>부위 정보 입력</b><small>${TY[t].n}의 각 부위별 면적을 입력하세요.</small></div></div><div class="zqpills">${all.map(x=>`<button type="button" class="${cp&&x.id==cp.id?'on':''}" onclick="apPick('${x.id}')">${esc(x.nm||K[x.k].n)}</button>`).join('')}</div>
+<div class="zqlb">현장 · 구역 이름 <small>(선택)</small></div><div class="zqi" style="background:#fff"><input type="text" value="${esc(AR.name||'')}" placeholder="예: ○○아파트 101동" oninput="AR_N(this.value)"></div>
+${ck?`<div class="zqnm" style="margin-top:12px"><div class="zqi"><input type="text" value="${esc(cp.nm||'')}" placeholder="${ck.n}" oninput="apName('${cp.id}',this.value)"></div><button type="button" class="zqx" onclick="apDel('${cp.id}')">삭제</button></div><div class="zqdm">${ck.f.filter(f=>f[2]!='sel').map(f=>tile(cp,f,cp.k)).join('')}${ck.f.filter(f=>f[2]=='sel').map(f=>selTile(cp,f)).join('')}</div>
+<div class="zqfr"><i>${I('info')}</i><div><small>${esc(cp.nm||ck.n)} 면적 계산식</small><span>${fl}</span></div><strong data-pa="${cp.id}">${fm(ar(cp))}</strong></div>`:'<div class="zqnt">부위가 없습니다</div>'}
+${L}`+addRow(t)+`</div>`}
  const p=curPart(),kd=p&&K[p.k],sels=kd?kd.f.filter(f=>f[2]=='sel'):[];
  const a2=`<div class="zqc"><div class="zqac${AR.a2?' on':''}" onclick="apAcc(2)"><div class="zqsh"><span class="zqnb">02</span><div><b>도장면 정보</b><small>도장된 면(양면/단면 등)을 선택하세요.</small></div></div>${I('right')}</div>${AR.a2?`<div class="zqab"><div class="zqdm">${sels.length&&p?sels.map(f=>selTile(p,f)).join(''):'<div class="zqnt" style="grid-column:1/-1">이 부위는 추가로 선택할 도장면 항목이 없습니다.</div>'}</div></div>`:''}</div>`;
  const prods=(typeof DB!='undefined'&&DB.length)?DB.map(x=>x.n):[];
@@ -6012,11 +6018,10 @@ function leftHtml(){const t=AR.type,steel=t=='steel',c=cnd();let main='',others=
  return main+others+a2+a3}
 const cin=(l,k,u,v,ph)=>`<div class="zqd"><span>${l}</span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${v===''||v==null?'':v}" placeholder="${ph||''}" oninput="apCond('${k}',this.value);apLive()"><em>${u}</em></div></div>`;
 const addRow=t=>{const ks=Object.keys(K).map(k=>`<option value="${k}">${K[k].n}</option>`).join('');return `<div class="zqad"><div class="zqsel"><select id="apks">${ks}</select>${I('chev')}</div><button type="button" onclick="apAdd()">＋ 부위 추가</button></div>`};
-function page(){const img=(document.getElementById('hxbg')||{}).src||'';
- return `<div class="zqh"><img alt="" src="${img}" onerror="this.style.display='none'"><div class="zqhi"><button type="button" class="zqlg" onclick="apClose()" aria-label="뒤로"><i>${I('roller')}</i></button><span class="zqsm">CoatCost</span><b>도장 면적 산출</b><i class="zqbar"></i><div class="zqtg">정확한 계산으로<br>더 효율적인 도장 작업을 완성하세요.</div><button type="button" class="zqpl" onclick="apMenu()">도장면적 ${I('chev')}</button><div class="zqmn" id="zqmn"><button onclick="apApply(1)">이 유형 기본면적에 적용</button><button onclick="apApply(0)">전체 합계 적용</button><button onclick="apClose()">닫기</button></div></div></div>
+function page(){
+ return `<div class="zqhx"><i class="zqhp"></i><svg class="zqhw" viewBox="0 0 1024 392" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="zqwg" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#0b4fc4" stop-opacity=".96"/><stop offset=".62" stop-color="#1c6fe0" stop-opacity=".86"/><stop offset=".98" stop-color="#3f8cf0" stop-opacity="0"/></linearGradient></defs><path d="M0 124 C200 176 420 166 640 96 L780 70 L780 392 L0 392Z" fill="url(#zqwg)"/></svg><div class="zqhi"><div class="zqbr"><i class="zqlo">C</i><span>CoatCost</span></div><b>도장 면적 산출</b><div class="zqrg"><i>${I('roller')}</i></div><p class="zqtg2">정확한 계산으로<br>더 효율적인 도장 작업을 완성하세요.</p></div></div>
 <div class="zqp"><div class="zqt">${TABS.map(k=>`<button type="button" class="${k==AR.type?'on':''}" onclick="apType('${k}')">${I(k)}${TY[k].n}</button>`).join('')}</div>
-<div class="zqg"><div class="zqcol" id="zql">${leftHtml()}</div><div class="zqr" id="zqr">${rightHtml()}</div></div>
-<div class="zqrs" id="zqrs">${resInner()}</div></div>`}
+<div class="zqg"><div class="zqcol" id="zql">${leftHtml()}</div><div class="zqrc"><div class="zqrs" id="zqrs">${resInner()}</div><div class="zqr" id="zqr">${rightHtml()}</div></div></div></div>`}
 function render(){const e=document.getElementById('zq');if(!e)return;const sc=e.scrollTop;e.innerHTML=page();e.scrollTop=sc}
 const ensure=()=>{ensurePre(AR.type);if(AR.type=='steel')mainPart(AR.sk||'hbeam')};
 window.apOpen=function(){apClose();ensure();const e=document.createElement('div');e.id='ap';e.className='ap';e.innerHTML='<div class="zq" id="zq"></div>';document.body.appendChild(e);document.documentElement.classList.add('pdlock');render();const g=document.getElementById('gnav');if(g)g.addEventListener('click',apClose,true)};
@@ -6027,6 +6032,7 @@ window.apRe=()=>render();
 window.apLive=()=>{const r=document.getElementById('zqrs');if(r)r.innerHTML=resInner();const d=document.getElementById('zqdg');if(d)d.innerHTML=dgHtml();document.querySelectorAll('#ap [data-pa]').forEach(e=>{const p=find(e.dataset.pa);if(p)e.textContent=fm(ar(p))})};
 window.apType=t=>{AR.type=t;AR.cur=null;ensure();save();render()};
 window.apKind=k=>{AR.sk=k;mainPart(k);save();render()};
+window.apPick=id=>{AR.cur=id;save();render()};
 window.apCur=id=>{if(AR.cur==id||AR.type=='steel')return;AR.cur=id;save();const r=document.getElementById('zqr');if(r)r.innerHTML=rightHtml()};
 window.AR_N=v=>{AR.name=v;save()};
 window.apSet=(id,k,v)=>{const p=find(id);if(!p)return;p[k]=v;save();apLive()};
@@ -8883,5 +8889,82 @@ html body #gnav .hni svg{width:23px!important;height:23px!important}
 html body :is(.pqs,.sypk,#inf,#lgs,#qh,#qv,.sld,.dsp,#ugp,#ugz,#vw,#aptrp,#rp){bottom:var(--gnh,52px)!important}
 html body #pqlab{padding-bottom:0!important}
 html body #pqtv .pfa{bottom:var(--gnh,52px)!important}
+</style>
+<style id=zq408>/* v408 도장 면적 산출 — 목업 구조 */
+html body #ap .zqhx{position:relative!important;height:calc(var(--k)*392)!important;overflow:hidden!important;background:linear-gradient(180deg,#f7fbff 0,#dcebfc 38%,#b7d3f6 100%)!important;color:#fff!important}
+html body #ap .zqhx .zqhp{position:absolute!important;right:0!important;top:0!important;bottom:0!important;width:64%!important;background:var(--hph) 62% 50%/cover no-repeat!important;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 50%)!important;mask-image:linear-gradient(90deg,transparent 0,#000 50%)!important;z-index:0!important}
+html body #ap .zqhx:after{content:""!important;position:absolute!important;inset:0!important;background:linear-gradient(180deg,rgba(255,255,255,.98) 0,rgba(255,255,255,.9) 20%,rgba(255,255,255,.35) 34%,rgba(255,255,255,0) 46%)!important;z-index:1!important;pointer-events:none!important}
+html body #ap .zqhw{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;z-index:2!important}
+html body #ap .zqhi{position:absolute!important;inset:0!important;z-index:3!important;height:auto!important}
+html body #ap .zqbr{position:absolute!important;left:calc(var(--k)*40)!important;top:calc(var(--k)*34)!important;display:flex!important;align-items:center!important;gap:calc(var(--k)*14)!important}
+html body #ap .zqlo{display:flex!important;align-items:center!important;justify-content:center!important;width:calc(var(--k)*58)!important;height:calc(var(--k)*58)!important;border-radius:50%!important;background:linear-gradient(145deg,#2b86ff,#0b4fc4)!important;color:#fff!important;font:800 max(14px,calc(var(--k)*34))/1 Poppins,"Noto Sans KR",system-ui,sans-serif!important;font-style:normal!important}
+html body #ap .zqbr span{font:700 max(12px,calc(var(--k)*30))/1 Poppins,"Noto Sans KR",system-ui,sans-serif!important;color:#1a5fd6!important;letter-spacing:-.01em!important}
+html body #ap .zqhi>b{position:absolute!important;left:calc(var(--k)*40)!important;top:calc(var(--k)*100)!important;font:800 max(20px,calc(var(--k)*54))/1.1 "Noto Sans KR",system-ui,sans-serif!important;color:#12306b!important;letter-spacing:-.02em!important;white-space:nowrap!important}
+html body #ap .zqrg{position:absolute!important;left:calc(var(--k)*42)!important;top:calc(var(--k)*206)!important;width:calc(var(--k)*134)!important;height:calc(var(--k)*134)!important;border-radius:50%!important;background:linear-gradient(145deg,#1f6fe8,#0a3fa8)!important;box-shadow:0 calc(var(--k)*8) calc(var(--k)*20) rgba(6,40,120,.35)!important;display:flex!important;align-items:center!important;justify-content:center!important}
+html body #ap .zqrg i{display:flex!important;width:calc(var(--k)*84)!important;height:calc(var(--k)*84)!important;border-radius:50%!important;border:calc(var(--k)*6) solid #fff!important;align-items:center!important;justify-content:center!important;border-right-color:transparent!important;font-style:normal!important}
+html body #ap .zqrg svg{width:calc(var(--k)*50)!important;height:calc(var(--k)*50)!important;color:#fff!important}
+html body #ap .zqtg2{position:absolute!important;left:calc(var(--k)*206)!important;top:calc(var(--k)*236)!important;margin:0!important;font:500 max(11px,calc(var(--k)*26))/1.4 "Noto Sans KR",system-ui,sans-serif!important;color:#fff!important;text-shadow:0 1px 6px rgba(5,30,90,.45)!important}
+html body #ap .zqp{margin-top:calc(var(--k)*-16)!important}
+/* 좌: 부위 탭 · 계산식 행 */
+html body #ap .zqpills{display:flex!important;flex-wrap:wrap!important;gap:calc(var(--k)*8)!important;margin-top:calc(var(--k)*14)!important}
+html body #ap .zqpills button{height:max(26px,calc(var(--k)*40))!important;padding:0 calc(var(--k)*16)!important;border-radius:calc(var(--k)*10)!important;border:1px solid #cfdcf0!important;background:#fff!important;color:#1d3a78!important;font:700 max(10px,calc(var(--k)*17))/1 "Noto Sans KR",system-ui,sans-serif!important}
+html body #ap .zqpills button.on{background:linear-gradient(180deg,#2a8bff,#0a62d8)!important;border-color:#0a62d8!important;color:#fff!important;box-shadow:0 calc(var(--k)*4) calc(var(--k)*10) rgba(10,98,216,.3)!important}
+html body #ap .zqfr{display:flex!important;align-items:center!important;gap:calc(var(--k)*12)!important;margin-top:calc(var(--k)*12)!important;padding:calc(var(--k)*12) calc(var(--k)*14)!important;border-radius:calc(var(--k)*14)!important;background:#eef5ff!important;border:1px solid #d6e4f6!important}
+html body #ap .zqfr>i{flex:none!important;display:flex!important;width:calc(var(--k)*34)!important;height:calc(var(--k)*34)!important;border-radius:50%!important;background:#1a56c8!important;color:#fff!important;align-items:center!important;justify-content:center!important}
+html body #ap .zqfr>i svg{width:60%!important;height:60%!important}
+html body #ap .zqfr>div{flex:1!important;min-width:0!important}
+html body #ap .zqfr small{display:block!important;font-size:max(9.5px,calc(var(--k)*14))!important;font-weight:700!important;color:#1a56c8!important}
+html body #ap .zqfr span{display:block!important;font-size:max(9.5px,calc(var(--k)*14))!important;color:#33496f!important;line-height:1.35!important}
+html body #ap .zqfr strong{flex:none!important;font-size:max(13px,calc(var(--k)*26))!important;font-weight:800!important;color:#0a52c8!important}
+html body #ap .zqad{flex-direction:column!important}
+html body #ap .zqad .zqsel{display:none!important}
+html body #ap .zqad button{width:100%!important;height:max(36px,calc(var(--k)*50))!important;background:#fff!important;font-size:max(12px,calc(var(--k)*20))!important}
+/* 우: 결과 카드 */
+html body #ap .zqg{grid-template-columns:618fr 348fr!important}
+html body #ap .zqrc{display:flex!important;flex-direction:column!important;gap:calc(var(--k)*14)!important;min-width:0!important}
+html body #ap .zqrs{margin:0!important;border:0!important;border-radius:calc(var(--k)*20)!important;background:linear-gradient(165deg,#1d63d8,#0b3d9c)!important;box-shadow:0 calc(var(--k)*10) calc(var(--k)*24) rgba(10,60,150,.32)!important;padding:calc(var(--k)*12)!important;overflow:visible!important}
+html body #ap .zqrh{height:auto!important;background:none!important;padding:calc(var(--k)*4) calc(var(--k)*4) calc(var(--k)*12)!important;gap:calc(var(--k)*10)!important;flex-wrap:nowrap!important}
+html body #ap .zqrh>i{flex:none!important;display:flex!important;width:calc(var(--k)*40)!important;height:calc(var(--k)*40)!important;border-radius:calc(var(--k)*10)!important;background:rgba(255,255,255,.2)!important;align-items:center!important;justify-content:center!important}
+html body #ap .zqrh>i svg{width:60%!important;height:60%!important;color:#fff!important}
+html body #ap .zqrh b{flex:1!important;font-size:max(11px,calc(var(--k)*21))!important;font-weight:800!important;color:#fff!important;white-space:nowrap!important}
+html body #ap .zqrh button{background:rgba(255,255,255,.2)!important;border:0!important;color:#fff!important;height:max(24px,calc(var(--k)*34))!important;font-size:max(9px,calc(var(--k)*13))!important;padding:0 calc(var(--k)*10)!important}
+html body #ap .zqtl{display:flex!important;flex-direction:column!important;gap:calc(var(--k)*10)!important;padding:0!important}
+html body #ap .zqtc,html body #ap .zqtc:first-child,html body #ap .zqtc.g{background:#fff!important;border:0!important;border-radius:calc(var(--k)*14)!important;padding:calc(var(--k)*12) calc(var(--k)*12)!important;gap:calc(var(--k)*12)!important}
+html body #ap .zqtc>i,html body #ap .zqtc:first-child>i,html body #ap .zqtc:nth-child(n+2)>i,html body #ap .zqtc.g>i{width:calc(var(--k)*58)!important;height:calc(var(--k)*58)!important;border-radius:50%!important;background:linear-gradient(145deg,#2a86f5,#0a4fc4)!important}
+html body #ap .zqtc small{font-size:max(10px,calc(var(--k)*15))!important;color:#233a68!important}
+html body #ap .zqtc strong,html body #ap .zqtc:first-child strong,html body #ap .zqtc:nth-child(n+2) strong{font-size:max(17px,calc(var(--k)*38))!important;color:#0a52c8!important;margin:calc(var(--k)*2) 0!important;letter-spacing:-.02em!important}
+html body #ap .zqtc em{font-size:max(9px,calc(var(--k)*12))!important;white-space:normal!important}
+html body #ap .zqap{display:flex!important;flex-direction:column!important;gap:calc(var(--k)*8)!important;margin-top:calc(var(--k)*12)!important}
+html body #ap .zqgo{width:100%!important;margin:0!important;height:max(38px,calc(var(--k)*54))!important;border-radius:calc(var(--k)*14)!important;background:linear-gradient(180deg,#34c06f,#14893f)!important;color:#fff!important;border:0!important;font:800 max(10px,calc(var(--k)*16))/1.15 "Noto Sans KR",system-ui,sans-serif!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:calc(var(--k)*8)!important;padding:0 calc(var(--k)*8)!important;position:static!important}
+html body #ap .zqgo2{width:100%!important;height:max(32px,calc(var(--k)*44))!important;border-radius:calc(var(--k)*12)!important;background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.4)!important;font:700 max(11px,calc(var(--k)*17))/1 "Noto Sans KR",system-ui,sans-serif!important}
+html body #ap .zqcn{display:none!important}
+html body #ap .zqr{display:flex!important;flex-direction:column!important;gap:calc(var(--k)*12)!important}
+html body #ap details.zqr1>summary{list-style:none!important;display:flex!important;align-items:center!important;gap:calc(var(--k)*10)!important;cursor:pointer!important;font-size:max(11px,calc(var(--k)*18))!important;color:#10264f!important}
+html body #ap details.zqr1>summary::-webkit-details-marker{display:none!important}
+html body #ap details.zqr1>summary>i{flex:none!important;display:flex!important;width:calc(var(--k)*36)!important;height:calc(var(--k)*36)!important;border-radius:calc(var(--k)*10)!important;background:#1a56c8!important;color:#fff!important;align-items:center!important;justify-content:center!important}
+html body #ap details.zqr1>summary>i svg{width:60%!important;height:60%!important;color:#fff!important}
+html body #ap details.zqr1>summary>b{flex:1!important;font-weight:800!important}
+html body #ap details.zqr1>summary>svg{width:calc(var(--k)*20)!important;height:calc(var(--k)*20)!important;color:#4a6a9c!important;transition:transform .15s!important}
+html body #ap details.zqr1[open]>summary>svg{transform:rotate(180deg)!important}
+html body #ap details.zqr1 .zqfm{margin-top:calc(var(--k)*10)!important;font-size:max(9.5px,calc(var(--k)*13))!important;line-height:1.5!important}
+html body #ap .zqtip{border-radius:calc(var(--k)*16)!important;background:#fff!important;border:1px solid #d6e4f6!important;padding:calc(var(--k)*12) calc(var(--k)*14)!important}
+html body #ap .zqtip>div{display:flex!important;align-items:center!important;gap:calc(var(--k)*8)!important}
+html body #ap .zqtip>div i{display:flex!important;width:calc(var(--k)*30)!important;height:calc(var(--k)*30)!important;border-radius:50%!important;background:#fff3c4!important;color:#c98a00!important;align-items:center!important;justify-content:center!important}
+html body #ap .zqtip>div i svg{width:60%!important;height:60%!important}
+html body #ap .zqtip>div b{padding:1px calc(var(--k)*10)!important;border:1px solid #1a56c8!important;border-radius:20px!important;color:#1a56c8!important;font-size:max(9px,calc(var(--k)*13))!important}
+html body #ap .zqtip>div span{font-size:max(11px,calc(var(--k)*16))!important;font-weight:800!important;color:#10264f!important}
+html body #ap .zqtip ul{margin:calc(var(--k)*8) 0 0!important;padding-left:calc(var(--k)*20)!important;font-size:max(10px,calc(var(--k)*13.5))!important;color:#1a56c8!important;line-height:1.55!important}
+html body #ap .zqtip li::marker{color:#1a56c8}
+/* 하단 스크롤 여유 */
+html body #ap .zq{padding-bottom:calc(var(--k)*40)!important}
+html body #ap .zqnm{flex-wrap:nowrap!important;align-items:stretch!important}
+html body #ap .zqnm .zqi{min-width:0!important;width:auto!important;flex:1 1 0!important}
+html body #ap .zqnm .zqx{flex:none!important}
+html body #ap .zqtc small{white-space:normal!important}
+html body #ap .zq .zqnm{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:calc(var(--k)*10)!important}
+html body #ap .zqrh button svg{display:none!important}
+html body #ap .zqrh{gap:calc(var(--k)*6)!important}
+html body #ap .zqrh>i{width:calc(var(--k)*34)!important;height:calc(var(--k)*34)!important}
+html body #ap .zqrh b{font-size:max(10.5px,calc(var(--k)*19))!important}
 </style>
 </body></html>
