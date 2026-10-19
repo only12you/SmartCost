@@ -8748,4 +8748,38 @@ html body:where(.lccasset) #v9 .abar .as{margin-bottom:0}
 html body:where(.lccasset) #v9 .sv399{margin:calc(var(--u)*8) 0 calc(var(--u)*30)}html body:where(.lccasset) #v9 .sv399 .ab{display:flex;gap:calc(var(--u)*16)}html body:where(.lccasset) #v9 .sv399 p{margin:calc(var(--u)*14) calc(var(--u)*6) 0;font-size:calc(var(--u)*22);line-height:1.5;color:#7a8aa6}
 html body:where(.lccasset) #v9 .ldh>button{display:grid}
 </style>
+<style id="hero400">
+/* 모든 페이지 상단 이미지(히어로) 통일: 높이 = 일위대가표(#hx) 250u, 위치 = 상단 고정(sticky top:0, z 8) */
+html body{--hh:calc(min(100vw,560px)*250/852)}
+/* LCC */
+html body #v9 .ldh,html body:where(.lccasset) #v9 .ldh{position:sticky!important;top:0!important;left:auto!important;transform:none!important;width:auto!important;height:var(--hh)!important;z-index:8!important;box-shadow:none!important;border-radius:0!important}
+html body #v9 .ldsp{display:none!important}
+html body[data-pg="9"] #v9 .ldh h1{top:calc(var(--u)*44)!important;font-size:calc(var(--u)*60)!important}
+html body[data-pg="9"] #v9 .ldh .lds{top:calc(var(--u)*110)!important;font-size:calc(var(--u)*28)!important}
+html body[data-pg="9"] #v9 .ldh .ldu{top:calc(var(--u)*150)!important;height:calc(var(--u)*7)!important}
+html body[data-pg="9"] #v9 .ldh p{top:calc(var(--u)*168)!important;font-size:calc(var(--u)*22)!important;line-height:1.45!important}
+html body #v9 .ldh>button{top:calc(var(--u)*40)!important}
+/* 전체 메뉴 */
+html body.gt #vmenu{padding-top:var(--gt)}
+html body #vmenu .vmh{position:sticky!important;top:0!important;z-index:8!important;height:var(--hh)!important}
+html body #vmenu .vmh h1{top:calc(var(--u)*40)!important;font-size:calc(var(--u)*50)!important}
+html body #vmenu .vmh p{top:calc(var(--u)*104)!important}
+html body #vmenu .vms{top:calc(var(--u)*150)!important}
+/* 견적서(#es) */
+html body #es .zh{height:var(--hh)!important;min-height:0!important;box-sizing:border-box!important;overflow:hidden!important}
+/* 도장 면적 산출(#ap) */
+html body #ap .zqh{position:sticky!important;top:calc(0px - var(--gt,0px))!important;z-index:8!important;height:var(--hh)!important}
+html body #ap .zqhi{height:100%!important}
+/* 공동주택 견적(#hq): 헤더를 상단 이미지(히어로)로, 안내 배너는 헤더에 통합 */
+html body #hq header.aph{position:relative!important;display:block!important;height:var(--hh)!important;min-height:0!important;box-sizing:border-box!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important;background:var(--hgr),var(--hph) 66% 48%/cover no-repeat #0b4fd0!important;z-index:8}
+html body #hq header.aph .axh{position:absolute!important;left:calc(var(--u)*46)!important;top:calc(var(--u)*78)!important;right:auto!important;text-align:left!important;margin:0!important;padding:0!important}
+html body #hq header.aph .axh b{display:block!important;color:#fff!important;font:800 calc(var(--u)*50)/1.15 "Noto Sans KR",system-ui,sans-serif!important;white-space:nowrap!important}
+html body #hq header.aph .axh::after{content:"정확한 데이터로 더 신뢰할 수 있는 견적을 제공합니다.";display:block;margin-top:calc(var(--u)*14);color:rgba(255,255,255,.92);font:400 calc(var(--u)*22)/1.4 "Noto Sans KR",system-ui,sans-serif;white-space:nowrap}
+html body #hq header.aph .axq,html body #hq header.aph .axs{position:absolute!important;top:calc(var(--u)*34)!important;margin:0!important}
+html body #hq header.aph .axs{right:calc(var(--u)*24)!important}
+html body #hq header.aph .axq{right:calc(var(--u)*100)!important}
+html body #hq .mkhero{display:none!important}
+/* 단지 DB 상세(#aptdb) */
+html body #aptdb .zhero{height:var(--hh)!important;border-radius:0!important}
+</style>
 </body></html>
