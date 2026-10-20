@@ -2268,7 +2268,23 @@ function ctab(i){S.coats.forEach((c,j)=>c.o=j==i);sv();cards();setTimeout(()=>{c
 function cardEdt(i){const p=P(S.coats[i].n);if(!p)return tt('제품을 먼저 선택하세요');const j=DB.indexOf(p);if(j<0)return tt('DB에 등록된 제품만 수정할 수 있습니다');pdOpen(j)}
 function tdsPill(nm,ex,i){const st='event.preventDefault();event.stopPropagation();';return `<span class=psb><button type=button class="zsp no" data-t="${nm||'~c'+i}" onclick="${st}tds(${ex},${i})">${IC.doc}<span>미첨부</span></button><button type=button class="zsp at" onclick="${st}att(${ex},${i})"><span>첨부</span></button><button type=button class="zsp dl" onclick="${st}tdel(${ex},${i})"><span>삭제</span></button><button type=button class="zsp ed" onclick="${st}cardEdt(${i})"><span>제품 수정</span></button></span>`}
 function tdsBar(nm,ex,x){return `<div class="tdr tdsbar${x?' t'+(3+x.split('<button').length-1):''}"><button class=no data-t="${nm}" onclick="tds(${ex})">${IC.doc}<span>미첨부</span></button><button class=at onclick="att(${ex})">${IC.doc}<span>첨부</span></button><button class=dl onclick="tdel(${ex})">${IC.trash}<span>삭제</span></button>${x||''}</div>`}
-function cards(){$('#ar').value=+S.area>0?S.area:'';$('.sa').classList.toggle('emp',!(+S.area>0));applyLock();$('#cnt').textContent=DB.length+'개';
+function cards(){try{cards0()}catch(e){cardsHeal(e)}}
+function cardsHeal(err){
+ const msg=String((err&&err.message)||err).slice(0,120);let bad=[];
+ try{
+  const keep=S.coats;if(!Array.isArray(keep)||!keep.length){S.coats=[{}];bad.push(0)}
+  else{
+   const ok=keep.map((c,i)=>{if(!c||typeof c!='object'){return null}S.coats=[c];try{cards0();return c}catch(e){return null}});
+   S.coats=keep.map((c,i)=>{if(ok[i])return ok[i];bad.push(i+1);return {area:(c&&c.area)||''}});
+  }
+  sv();cards0();
+ }catch(e2){
+  try{const el=document.getElementById('cs');if(el)el.innerHTML='<div class="ccard" style="padding:14px;color:#b3261e">코트 카드를 표시하지 못했습니다.<br><small>'+esc(String(e2&&e2.message||e2))+'</small><br><button class="gb" style="margin-top:8px" onclick="if(confirm(\'일위대가표 입력값을 초기화할까요?\')){S={area:\'\',labor:0,coats:[{}]};sv();cards()}">입력값 초기화</button></div>'}catch(_){}
+  return;
+ }
+ try{tt('저장된 코트 데이터 일부가 손상되어 복구했습니다<br><small>'+(bad.length?bad.join(', ')+'번 코트 초기화 · ':'')+esc(msg)+'</small>')}catch(_){}
+}
+function cards0(){$('#ar').value=+S.area>0?S.area:'';$('.sa').classList.toggle('emp',!(+S.area>0));applyLock();$('#cnt').textContent=DB.length+'개';
 const NC=S.coats.length,labs=syLabsOld(NC);
 $('#cs').innerHTML=(NC>1?`<div class=ctabs>${S.coats.map((c,i)=>`<button class="ctab${c.o!==false?' on':''}" style="${cvars(i)}" onclick="ctab(${i})">${od(i+1)}${labs[i]?' · '+labs[i]:''}</button>`).join('')}</div>`:'')+S.coats.map((c,i)=>{const p=P(c.n),u=p?UN(p):'ℓ',m=p?mx(p):{},rc=p?rec(p):{},op=c.o!==false,nm=(c.n||'').replace(/"/g,''),lb=labs[i]?' · '+labs[i]:'',
 f=(l,key,ic,ph)=>`<div class="cell k-${key}"><div class=lb>${CI[ic]||''}<span>${l}</span></div><input type=number inputmode=decimal data-k=${key} placeholder="${ph||(p&&rc[key]!==undefined&&rc[key]!==''?rc[key]:(EXP[key]||''))}" value="${c[key]??''}" oninput="U(${i},'${key}',this.value)"></div>`;
@@ -3492,10 +3508,11 @@ const pqTitle=n=>({0:'일위대가표',1:'데이터 시트',2:'일위대가표',
 const pqHs2=n=>({4:'TDS Registration',5:'CSV · Backup',7:'Admin Console',8:'Sealant · Mesh Quantity',9:'Life Cycle Cost'}[n]);
 
 /* 대시보드 */
-function dashRender(){
+function dashRender(){try{dashRender0()}catch(err){const e=document.getElementById('dash');if(e)e.innerHTML='<div class="dsh"><div class="dsr"><b>최근 작업 내역</b><div class="dsl none">표시하지 못했습니다 · '+esc(String(err&&err.message||err).slice(0,80))+'</div></div></div>'}}
+function dashRender0(){
  const e=document.getElementById('dash');if(!e)return;
  let h=`<div class="dsh">`;
- const rc=pqRc();
+ let rc=pqRc();if(!Array.isArray(rc))rc=[];rc=rc.filter(x=>x&&typeof x=='object');
  h+=`<div class="dsr"><b>최근 작업 내역</b>`+(rc.length?rc.slice(0,5).map(x=>`<div class="dsl"><span class="dsb">${esc(x.t)}</span><span class="dsn">${esc(x.n)}</span><span class="dsd">${esc(x.d)}</span></div>`).join(''):'<div class="dsl none">아직 작업 내역이 없습니다</div>')+`</div>`;
  
   if(IS_ADMIN)h+=`<button class="dsa" onclick="T(7)">${PQI.admin}<span><b>관리자 모드</b><small>배포용 데이터 관리 · 이용조건 확인 · 내보내기</small></span>${PQI.chev}</button>`;
