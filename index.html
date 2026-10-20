@@ -8613,14 +8613,16 @@ function buildMenu(){const v=document.createElement('div');v.id='vmenu';v.hidden
  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();clearTimeout(at);const r=search(MQ);if(r.length)go(exact(MQ)||r[0]);inp.blur()}});
  v.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(b.dataset.go)})}
 /* 하단 4메뉴 + 서브메뉴 */
-function subClose(){const e=$('#gsub');if(e)e.remove()}
+function subClose(){const e=$('#gsub');if(e)e.remove();document.querySelectorAll('#gnav .hni.sel').forEach(b=>b.classList.remove('sel'))}
 function subOpen(cid){const open=$('#gsub');if(open&&open.dataset.c===cid){subClose();return}subClose();const s=items().find(x=>x.id===cid);if(!s)return;
  const e=document.createElement('div');e.id='gsub';e.dataset.c=cid;const g=$('#gnav');document.documentElement.style.setProperty('--gnh',(g?g.offsetHeight:56)+'px');
  e.innerHTML=`<div class="gsb"></div><div class="gsp" style="--c:${s.c};--c2:${s.c2};--cb:${s.cb};--bg:${s.bg};--bd:${s.bd}"><div class="gsh"><span class="msi">${svg(IC[s.ic])}</span><div><b>${s.t}</b><small>${s.d}</small></div></div><div class="mgrid" style="grid-template-columns:repeat(${s.it.length>=5?3:Math.min(s.it.length,3)},minmax(0,1fr))">${s.it.map(id=>tile(id,s,0)).join('')}</div></div>`;
- e.addEventListener('click',ev=>{const b=ev.target.closest('[data-go]');if(b){const id=b.dataset.go;subClose();setTimeout(()=>go(id),0);return}if(ev.target.classList.contains('gsb'))subClose()});document.body.append(e)}
+ e.addEventListener('click',ev=>{const b=ev.target.closest('[data-go]');if(b){const id=b.dataset.go;subClose();setTimeout(()=>go(id),0);return}if(ev.target.classList.contains('gsb'))subClose()});document.body.append(e);document.querySelectorAll('#gnav .hni[data-cat]').forEach(b=>b.classList.toggle('sel',b.dataset.cat===cid))}
 function buildNav(){const g=$('#gnav');if(!g)return;const ic={calc:IC.tbl,ana:IC.sys,db:IC.s_db,adm:IC.s_adm};
- const ab=(a,tt,i)=>`<button class="hni ga" type="button" data-a="${a}" aria-label="${tt}" title="${tt}">${svg(i,28)}</button>`;
- g.innerHTML=ab('back','뒤로가기',IC.back)+ab('home','홈',IC.home)+SEC.map(s=>`<button class="hni" type="button" data-cat="${s.id}" aria-label="${s.t}" title="${s.t}">${svg(ic[s.id],28)}</button>`).join('')+ab('menu','전체 메뉴',IC.menu);
+ const LB={back:'',home:'홈',menu:'더보기',calc:'산출',ana:'분석',db:'DB',adm:'관리'};
+ const ab=(a,tt,i)=>`<button class="hni ga" type="button" data-a="${a}" aria-label="${tt}" title="${tt}">${svg(i,28)}${LB[a]?`<span>${LB[a]}</span>`:''}</button>`;
+ SEC.forEach(x=>g.style.setProperty('--art-'+x.id,'url('+ART[x.art]+')'));
+ g.innerHTML=ab('back','뒤로가기',IC.back)+ab('home','홈',IC.home)+SEC.map(s=>`<button class="hni" type="button" data-cat="${s.id}" aria-label="${s.t}" title="${s.t}" style="--c:${s.c};--cb:${s.cb}">${svg(ic[s.id],28)}<span>${LB[s.id]}</span></button>`).join('')+ab('menu','전체 메뉴',IC.menu);
  g.addEventListener('click',e=>{const b=e.target.closest('.hni');if(!b)return;e.stopPropagation();if(b.dataset.a){if(b.disabled)return;const a=b.dataset.a;subClose();if(a==='back')navBack();else if(a==='home')navHome();else if(a==='menu')go('menu');return}subOpen(b.dataset.cat)},true)}
 function buildTop(){document.body.classList.add('gt')}
 /* 기존 흐름 연결: T() 이동 → gnav(n) 훅, 오버레이 열기 함수 래핑 */
@@ -9484,5 +9486,27 @@ html body #v9 .rp414 .rp-k>.rp-kv,html body #v9 .rp414 .rp-k>.rp-pill{grid-colum
 /* v422 히어로 아이콘 크기 통일 */
 html body #v9 .lx .lxhb button,html body #v9 .lx .lxhb button.lxhd{width:max(26px,calc(var(--lk)*64));height:max(26px,calc(var(--lk)*64))}
 html body #v9 .lx .lxhb button svg,html body #v9 .lx .lxhb button.lxhd svg{width:100%;height:100%;stroke-width:2}
+/* v422 전체 메뉴: 한 화면 가득 (좌우·상하 확장) */
+html body #vmenu:not([hidden]){display:flex!important;flex-direction:column;min-height:100dvh;box-sizing:border-box;padding-bottom:calc(var(--gnh,56px) + var(--u)*16)}
+html body #vmenu .vmh{flex:none}
+html body #vmenu .vmb{flex:1 1 auto;padding:calc(var(--u)*16) calc(var(--u)*10) 0;gap:calc(var(--u)*14)}
+html body #vmenu .vmb>.msec{flex:1 1 auto;display:flex;flex-direction:column}
+html body #vmenu .vmb>.msec .mgrid{flex:1}
+html body #vmenu .vmb>.msec .mgrid .mt{height:auto;min-height:calc(var(--u)*96)}
+html body #vmenu .vmb>.msec .mgrid .mt.mv{height:auto;min-height:calc(var(--u)*128)}
+html body #vmenu .vmb>.mrc{flex:none}
+/* v422 하단 바: 라벨 + 선택 메뉴 배경사진, 높이 +10% */
+html body #gnav.hnav,html body.inapp #gnav.hnav{padding:0 4px calc(env(safe-area-inset-bottom,0px)*.55)!important}
+html body #gnav .hni{position:relative;overflow:hidden;height:40px;padding:3px 0 2px!important;gap:1px!important;justify-content:center;border-radius:10px!important}
+html body #gnav .hni svg{width:19px!important;height:19px!important;position:relative;z-index:1}
+html body #gnav .hni span{display:block!important;position:relative;z-index:1;font-size:10px!important;font-weight:700;line-height:1.1;white-space:nowrap}
+html body #gnav .hni[data-cat=calc]{--art:var(--art-calc)}
+html body #gnav .hni[data-cat=ana]{--art:var(--art-ana)}
+html body #gnav .hni[data-cat=db]{--art:var(--art-db)}
+html body #gnav .hni[data-cat=adm]{--art:var(--art-adm)}
+html body #gnav .hni.on::before,html body #gnav .hni.sel::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.3)),var(--art,none) right center/auto 100% no-repeat}
+html body #gnav .hni.on[data-cat],html body #gnav .hni.sel[data-cat]{color:var(--c)!important;box-shadow:inset 0 0 0 1.5px var(--c)}
+html body #gnav .hni.on::after,html body #gnav .hni.sel::after{z-index:1}
+html body #gnav .hni.on[data-cat] :is(svg,span),html body #gnav .hni.sel[data-cat] :is(svg,span){filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 3px #fff)}
 </style>
 </body></html>
