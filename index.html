@@ -2910,7 +2910,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v419',d:'2026.10.21'};
+const APPV={v:'v421',d:'2026.10.21'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -7421,11 +7421,11 @@ function lxCo2(m,a){const l=m.sc.cs.reduce((x,y)=>x+y.acv,0)*a.ar,n=Math.ceil(RS
 const lxDc=v=>v>0.05?`<span class="lxd">▼ ${v.toFixed(1)}%</span>`:v<-0.05?`<span class="lxd bad">▲ ${(-v).toFixed(1)}%</span>`:`<span class="lxd">― 0%</span>`;
 const lxDg=v=>v>0.05?`<span class="lxd ok">▲ ${v.toFixed(1)}%</span>`:v<-0.05?`<span class="lxd bad">▼ ${(-v).toFixed(1)}%</span>`:`<span class="lxd">― 0%</span>`;
 const lxCh='<path d="M9 5l7 7-7 7"/>';
-const LXFL=[["자산 등록","설비/시설 기본정보 등록","기본정보",'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h5"/>',1],["진단 평가","현장점검 및 상태진단","데이터 수집",'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8.5 11l2 2 3.5-4"/>',2],["사양 설정","최적 사양 및 개선안 적용","분석/계산",'<circle cx="12" cy="12" r="3.5"/><path d="M10.4 3h3.2l.5 2.2 1.6.7 1.9-1.2 2.3 2.3-1.2 1.9.7 1.6 2.2.5v3.2l-2.2.5-.7 1.6 1.2 1.9-2.3 2.3-1.9-1.2-1.6.7-.5 2.2h-3.2l-.5-2.2-1.6-.7-1.9 1.2-2.3-2.3 1.2-1.9-.7-1.6L3 13.6v-3.2l2.2-.5.7-1.6-1.2-1.9 2.3-2.3 1.9 1.2 1.6-.7z"/>',3],["비용 분석","생애주기 비용 산출 및 비교","결과 분석",'<path d="M5 20v-6M10 20V9M15 20v-8M20 20V5"/>',4],["보고서 생성","종합 리포트 자동 생성","보고서",'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 13l2 2 4-4"/>',5]];
-function lxTop(){return lxHero(dRows().filter(r=>r.B.z=="R"||r.B.z=="O").length)+lxStrip()}
-function lxHero(urg){return`<div class="lxh"><div class="lxtx"><div class="lxlogo"><b>LCC</b><svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lxlg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b9a63"/><stop offset="1" stop-color="#4fcfee"/></linearGradient></defs><path d="M3 36C3 17 14 4 37 3 37 23 26 37 9 37z" fill="url(#lxlg)"/><path d="M5 35C14 24 22 16 32 9" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" fill="none"/></svg></div><div class="lxsub">Life Cycle Cost</div><p>설비의 생애주기 전체를<br>데이터로 관리합니다.</p></div><div class="lxhb"><button type="button" onclick="tt('긴급 보수 대상 ${urg}곳 (R·O 등급)')" aria-label="알림">${MI('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/>')}${urg?"<i></i>":""}</button><button type="button" onclick="openSettings()" aria-label="설정">${MI('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>')}</button></div></div>`}
+const LXFL=[["자산 등록","설비 기본정보","기본정보",'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h5"/>',1],["진단 평가","현장/상태진단","데이터 수집",'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8.5 11l2 2 3.5-4"/>',2],["사양 설정","최적/개선적용","분석/계산",'<circle cx="12" cy="12" r="3.5"/><path d="M10.4 3h3.2l.5 2.2 1.6.7 1.9-1.2 2.3 2.3-1.2 1.9.7 1.6 2.2.5v3.2l-2.2.5-.7 1.6 1.2 1.9-2.3 2.3-1.9-1.2-1.6.7-.5 2.2h-3.2l-.5-2.2-1.6-.7-1.9 1.2-2.3-2.3 1.2-1.9-.7-1.6L3 13.6v-3.2l2.2-.5.7-1.6-1.2-1.9 2.3-2.3 1.9 1.2 1.6-.7z"/>',3],["비용 분석","LCC비용산출","결과 분석",'<path d="M5 20v-6M10 20V9M15 20v-8M20 20V5"/>',4],["보고서 생성","종합리포트생성","보고서",'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 13l2 2 4-4"/>',5]];
+function lxTop(){return lxHero(dRows().filter(r=>r.B.z=="R"||r.B.z=="O").length)}
+function lxHero(urg){return`<div class="lxh"><div class="lxtx"><div class="lxlogo"><b>LCC</b><svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lxlg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b9a63"/><stop offset="1" stop-color="#4fcfee"/></linearGradient></defs><path d="M3 36C3 17 14 4 37 3 37 23 26 37 9 37z" fill="url(#lxlg)"/><path d="M5 35C14 24 22 16 32 9" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" fill="none"/></svg></div><div class="lxsub">Life Cycle Cost</div><p>설비의 생애주기 전체를<br>데이터로 관리합니다.</p></div><div class="lxhb"><button type="button" class="lxhd${RS.tab==0?" on":""}" onclick="LCCX.tab(0)" aria-label="대시보드">${MI(TI[0])}</button><button type="button" onclick="tt('긴급 보수 대상 ${urg}곳 (R·O 등급)')" aria-label="알림">${MI('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/>')}${urg?"<i></i>":""}</button><button type="button" onclick="openSettings()" aria-label="설정">${MI('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>')}</button></div></div>`}
 function lxStrip(){return`<div class="lxt"><div class="lxtr">${TABS.map((t,i)=>`<button type="button" class="${i==RS.tab?"on":""}" onclick="LCCX.tab(${i})">${MI(TI[i])}<span>${t[0]}</span></button>`).join("")}</div><button type="button" class="lxtn" onclick="this.previousElementSibling.scrollBy({left:220,behavior:'smooth'})" aria-label="다음 탭">${MI(lxCh)}</button></div>`}
-function lxChart(rows){const N=Math.max(2,Math.min(RS.dr>0?RS.dr:RS.hz+1,RS.hz+1)),y0=new Date().getFullYear();
+function lxChart(rows){const N=Math.max(2,Math.min(RS.dr>0?RS.dr:RS.hz,RS.hz)+1),y0=new Date().getFullYear();
 const S=k=>{const o=[];for(let y=0;y<N;y++)o.push(rows.reduce((s,r)=>s+(r.m[k].cu[y]||0),0)/1000);return o},A=S(0),B=S(2);
 const mx=Math.max(1,...A,...B),p=Math.pow(10,Math.floor(Math.log10(mx/4))),st=([1,2,2.5,5,10].map(s=>s*p).find(s=>s*4>=mx)||p*10),top=st*4;
 const X=i=>46+i*(300/(N-1)),Y=v=>196-v/top*170;
@@ -7452,12 +7452,12 @@ const pill=`<label class="lxpill"><span>${dSel()<0?"전체 보기":hh(a.n).slice
 const rg=RS.dr>0?RS.dr:0,rgs=`<label class="lxpill lxrg"><span>${rg?"처음 "+rg+"년":"전체 "+RS.hz+"년"}</span>${MI('<path d="M6 9l6 6 6-6"/>')}<select aria-label="기간" onchange="LCCX.dr(this.value)"><option value="5"${rg==5?" selected":""}>처음 5년</option><option value="10"${rg==10?" selected":""}>처음 10년</option><option value="0"${rg==0?" selected":""}>전체 ${RS.hz}년</option></select></label>`;
 const FL=LXFL;
 const flw=FL.map((f,i)=>`<button type="button" class="lxf f${i+1}" onclick="LCCX.tab(${f[4]})"><em>0${i+1}</em><i>${MI(f[3])}</i><b>${f[0]}</b><small>${f[1]}</small><span>${f[2]}</span></button>`).join(`<u>${MI(lxCh)}</u>`);
-return`<div class="lx">${lxHero(urg2)}${lxStrip()}
+return`<div class="lx">${lxHero(urg2)}
 <section class="lxc"><div class="lxch"><span class="lxci">${MI('<path d="M5 20V11M10 20V4M15 20v-9M20 20v-5"/>')}</span><div class="lxtt"><b>LCC 현황</b><small>프로젝트 전반의 비용과 수명을 한눈에 확인하세요.</small></div>${pill}</div>
-<div class="lxk">${tl.map((k,i)=>`<div class="lxkt t${i+1}"><i>${MI(KL[k[0]])}</i><span class="lxkl">${k[1]}</span><b class="lxkv ${k[6]}">${k[2]}</b><span class="lxku">${k[3]||"&nbsp;"}</span>${k[4]||'<span class="lxd">&nbsp;</span>'}<small class="lxkc">${k[5]}</small></div>`).join("")}</div></section>
+<div class="lxk">${tl.map((k,i)=>`<div class="lxkt t${i+1}"><div class="lxkh"><i>${MI(KL[k[0]])}</i><span class="lxkl">${k[1]}</span></div><b class="lxkv ${k[6]}">${k[2]}</b><span class="lxku">${k[3]||"&nbsp;"}</span>${k[4]||'<span class="lxd">&nbsp;</span>'}<small class="lxkc">${k[5]}</small></div>`).join("")}</div></section>
 <div class="lxrow"><section class="lxc"><div class="lxch"><span class="lxci">${MI('<path d="M5 20V11M10 20V4M15 20v-9M20 20v-5"/><path d="M3 8l5-4 5 3 6-4"/>')}</span><div class="lxtt"><b>비용 구성 비율</b><small>생애주기별 비용 비중을 확인하세요.</small></div></div>
 <div class="lxpm">${donutS(comp,ct)}<div class="lxlg">${comp.map((v,i)=>`<div><i style="background:${DC[i]}"></i><span>${DL[i]}</span><b>${F(v/1000)}<small>백만원</small></b><em>${ct>0?Math.round(v/ct*100):0}%</em></div>`).join("")}</div></div></section>
-<section class="lxc"><div class="lxch"><span class="lxci">${MI('<path d="M5 20V11M10 20V4M15 20v-9M20 20v-5"/><path d="M3 8l5-4 5 3 6-4"/>')}</span><div class="lxtt"><b>비용 추이</b><small>누적 비용 (백만원)</small></div>${rgs}</div>
+<section class="lxc"><div class="lxch"><span class="lxci">${MI('<path d="M5 20V11M10 20V4M15 20v-9M20 20v-5"/><path d="M3 8l5-4 5 3 6-4"/>')}</span><div class="lxtt"><b>비용 추이</b><small>누적 비용 (백만원)</small></div></div><div class="lxbt"><span>단위 : 년</span><div>${[5,10,20,30,40,50].map(v=>`<button type="button" class="${v==(RS.dr>0?RS.dr:RS.hz)?"on":""}"${v>RS.hz?" disabled":""} onclick="LCCX.dr(${v})">${v}</button>`).join("")}</div></div>
 ${lxChart(rows)}<div class="lxgd"><span><i style="background:#1d62dc"></i>현재 사양</span><span><i style="background:#12a366"></i>추천 사양</span></div></section></div>
 <section class="lxc"><div class="lxch"><span class="lxci">${MI('<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>')}</span><div class="lxtt"><b>흐름 안내</b><small>LCC 분석부터 보고서까지의 전체 프로세스를 확인해보세요.</small></div><button type="button" class="lxpill" onclick="LCCX.tab(1)">전체 과정 보기${MI(lxCh)}</button></div><div class="lxfl">${flw}</div></section>
 <div class="lxrc"><span class="lxrcw">${fac}</span><div class="lxrt"><div class="lxrn"><em>추천</em><b>${hh(a.sp.rec.n).slice(0,22)}</b></div><div class="lxrm"><span>${kname(a)}</span><u>|</u><span>${ra.en.eff}</span><u>|</u><span>${F(a.ar)}㎡</span></div></div><button type="button" class="lxpill" onclick="LCCX.tab(3)">상세보기${MI(lxCh)}</button></div>
@@ -9430,5 +9430,23 @@ html body #v9 .lx .lxfs .lxf i{margin-top:calc(var(--lk)*16)}
 html body #v9 .lx .lxfs .lxf.on{background:#fff;box-shadow:0 0 0 2px var(--fc),0 4px 10px rgba(25,70,150,.12)}
 html body #v9 .lx .lxfs .lxf.dn{opacity:.8}
 html body #v9 .lx .fwn button.pri{background:linear-gradient(180deg,#3b86f5,#1457d8);border-color:#1457d8}
+
+/* ===== v420 수정: KPI 헤더, 연도 버튼, 흐름 카드 넘침, 히어로 아이콘 ===== */
+html body #v9 .lx .lxkh{display:flex;align-items:center;gap:calc(var(--lk)*8);font-size:max(8px,calc(var(--lk)*16));min-height:2.7em}
+html body #v9 .lx .lxkt .lxkh i{flex:none;width:max(14px,calc(var(--lk)*36));height:max(14px,calc(var(--lk)*36));margin:0}
+html body #v9 .lx .lxkt .lxkl{flex:1;min-width:0;font-size:max(8px,calc(var(--lk)*16));letter-spacing:-.02em;min-height:0}
+html body #v9 .lx .lxbt{display:flex;flex-direction:column;gap:calc(var(--lk)*8);margin:calc(var(--lk)*-4) 0 calc(var(--lk)*12)}
+html body #v9 .lx .lxbt>span{font:600 max(8.5px,calc(var(--lk)*17))/1 "Noto Sans KR",system-ui,sans-serif;color:#5f6f8d}
+html body #v9 .lx .lxbt>div{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:calc(var(--lk)*6)}
+html body #v9 .lx .lxbt button{height:max(20px,calc(var(--lk)*44));padding:0;border:1px solid #cfdcf3;border-radius:calc(var(--lk)*12);background:#fff;color:#1d62dc;font:700 max(7.2px,calc(var(--lk)*14.4))/1 "Noto Sans KR",system-ui,sans-serif;min-width:0}
+html body #v9 .lx .lxbt button.on{background:linear-gradient(180deg,#3b86f5,#1457d8);border-color:#1457d8;color:#fff}
+html body #v9 .lx .lxbt button:disabled{opacity:.35}
+html body #v9 .lx .lxf{white-space:normal;overflow:hidden}
+html body #v9 .lx .lxf b,html body #v9 .lx .lxf small,html body #v9 .lx .lxf span{white-space:normal;max-width:100%;overflow-wrap:anywhere;word-break:keep-all}
+html body #v9 .lx .lxhb{gap:calc(var(--lk)*18)}
+html body #v9 .lx .lxhb button{color:#0a2d78;filter:drop-shadow(0 0 2px rgba(255,255,255,.95))}
+html body #v9 .lx .lxhb button svg{stroke-width:2}
+html body #v9 .lx .lxhb button.lxhd.on{background:rgba(255,255,255,.6);border-radius:50%;filter:none}
+html body #v9 .lx .lxhb button.lxhd svg{width:78%;height:78%}
 </style>
 </body></html>
