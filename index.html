@@ -5949,8 +5949,13 @@ const lab=l=>{const m=String(l).match(/^(\S+)\s+(\(.*\))$/);return m?`${m[1]} <s
 const mainPart=k=>{let p=AR.parts.find(x=>x.t=='steel'&&x.k==k);if(!p){p={id:'p'+(AR.seq++),t:'steel',k,nm:'',q:'',s:'1'};AR.parts.push(p);save()}return p};
 const curPart=()=>{if(AR.type=='steel')return mainPart(AR.sk||'hbeam');return AR.parts.find(p=>p.id==AR.cur&&p.t==AR.type)||AR.parts.find(p=>p.t==AR.type)};
 const num=(p,k)=>p[k]===''||p[k]==null?'':p[k];
-const tile=(p,[k,l,u,o],kk)=>{const h=(HINT[kk]||{})[k]||l;return `<div class="zqd"><span>${lab(h)}</span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${num(p,k)}" placeholder="${k=='q'?'1':(o||'')}" oninput="apSet('${p.id}','${k}',this.value)" onfocus="apCur('${p.id}')" onwheel="this.blur()"><em>${u}</em></div></div>`};
-const selTile=(p,[k,l,u,o])=>`<div class="zqd"><span>${lab(l)}</span><div class="zqi"><select onchange="apSet('${p.id}','${k}',this.value);apRe()">${o.map(([v,t])=>`<option value="${v}"${String(p[k]==null||p[k]===''?o[0][0]:p[k])==v?' selected':''}>${t}</option>`).join('')}</select></div></div>`;
+const ICN={h:'<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>',v:'<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>',d:'<path d="M5 19L19 5M5 19v-6M5 19h6M19 5v6M19 5h-6"/>',t:'<path d="M4 8h16M4 16h16M12 8v8M9 11l3-3 3 3M9 13l3 3 3-3"/>',q:'<path d="M6 6l12 12M18 6L6 18"/>',m:'<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',a:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/>',s:'<path d="M3 17l9 4 9-4M3 12l9 4 9-4M12 3L3 7l9 4 9-4z"/>',r:'<path d="M4 20h16M4 20L16 6M9 20a6 6 0 0 0-1.6-4"/>',c:'<circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/><path d="M18 5L6 19"/>',w:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',y:'<path d="M7 4h10M7 9h10M12 9c-3 0-5 2-5 4.5S9 17 12 17M12 17v3M8 20h8"/>'};
+const icn=l=>{const t=String(l).replace(/<[^>]+>/g,'');let k='';
+ if(/높이|^H\b|^h\b|깊이/.test(t))k='v';else if(/두께|^tw|^tf|^t\b/.test(t))k='t';else if(/가로|폭|밑변|너비|지름|외경|^B\b|^W\b|^A\b/.test(t))k='h';else if(/세로/.test(t))k='v';else if(/길이|^L\b/.test(t))k='h';
+ else if(/수량|대수|개수/.test(t))k='q';else if(/공제/.test(t))k='m';else if(/면적/.test(t))k='a';else if(/도장 ?면/.test(t))k='s';else if(/경사/.test(t))k='r';else if(/계수|로스/.test(t))k='c';else if(/사용량|비중/.test(t))k='w';else if(/단가/.test(t))k='y';else if(/DFT/.test(t))k='t';
+ return k?`<svg class="zqic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICN[k]}</svg>`:''};
+const tile=(p,[k,l,u,o],kk)=>{const h=(HINT[kk]||{})[k]||l;return `<div class="zqd"><span>${icn(h)}<i>${lab(h)}</i></span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${num(p,k)}" placeholder="${k=='q'?'1':(o||'')}" oninput="apSet('${p.id}','${k}',this.value)" onfocus="apCur('${p.id}')" onwheel="this.blur()"><em>${u}</em></div></div>`};
+const selTile=(p,[k,l,u,o])=>`<div class="zqd"><span>${icn(l)||icn('도장 면')}<i>${lab(l)}</i></span><div class="zqi"><select onchange="apSet('${p.id}','${k}',this.value);apRe()">${o.map(([v,t])=>`<option value="${v}"${String(p[k]==null||p[k]===''?o[0][0]:p[k])==v?' selected':''}>${t}</option>`).join('')}</select></div></div>`;
 /* 철재 · 형강 종류별 정적 일러스트 (등각 투영) */
 function iso(kd){const T=kd=='ibeam'?{bw:84,bh:124,tf:14,tw:12}:{bw:106,bh:112,tf:17,tw:15},x0=kd=='ibeam'?82:70,y0=kd=='ibeam'?56:62,dx=70,dy=-36,{bw,bh,tf,tw}=T,wx0=x0+bw/2-tw/2,wx1=wx0+tw,y1=y0+bh-tf,yb=y0+bh,xr=x0+bw;
  const P=a=>a.map(q=>q.join(',')).join(' ');
@@ -6016,7 +6021,7 @@ ${L}`+addRow(t)+`</div>`}
  const prods=(typeof DB!='undefined'&&DB.length)?DB.map(x=>x.n):[];
  const a3=`<div class="zqc"><div class="zqac${AR.a3?' on':''}" onclick="apAcc(3)"><div class="zqsh"><span class="zqnb">03</span><div><b>도장 조건</b><small>도료, 도장 횟수, 도막두께 등을 입력하세요.</small></div></div>${I('right')}</div>${AR.a3?`<div class="zqab"><div class="zqdm">${prods.length?`<div class="zqd" style="grid-column:1/-1"><span>도료 <small>(제품 DB · 선택)</small></span><div class="zqi"><select onchange="apCond('p',this.value);apRe()"><option value="">직접 입력</option>${prods.map(x=>`<option value="${esc(x)}"${c.p==x?' selected':''}>${esc(x)}</option>`).join('')}</select></div></div>`:''}${cin('도막 두께 <small>(DFT)</small>','dft','µm',c.dft)}${cin('도료 사용량','use','kg/㎡',c.use,F(useKg(c),3)+' (자동)')}${cin('비중','sg','kg/L',c.sg)}${cin('도료 단가','price','원/L',c.price)}${cin('로스','loss','%',c.loss)}</div></div>`:''}</div>`;
  return main+others+a2+a3}
-const cin=(l,k,u,v,ph)=>`<div class="zqd"><span>${l}</span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${v===''||v==null?'':v}" placeholder="${ph||''}" oninput="apCond('${k}',this.value);apLive()"><em>${u}</em></div></div>`;
+const cin=(l,k,u,v,ph)=>`<div class="zqd"><span>${icn(l)}<i>${l}</i></span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${v===''||v==null?'':v}" placeholder="${ph||''}" oninput="apCond('${k}',this.value);apLive()"><em>${u}</em></div></div>`;
 const addRow=t=>{const ks=Object.keys(K).map(k=>`<option value="${k}">${K[k].n}</option>`).join('');return `<div class="zqad"><div class="zqsel"><select id="apks">${ks}</select>${I('chev')}</div><button type="button" onclick="apAdd()">＋ 부위 추가</button></div>`};
 function page(){
  return `<div class="zqhx"><i class="zqhp"></i><div class="zqhi"><i class="zqlg3">${I('roller')}</i><span class="zqbr2">CoatCost</span><b>도장 면적 산출</b><p>간단한 입력으로 정확한 도장 면적과<br>소요량을 계산하세요.</p></div></div>
@@ -8994,6 +8999,36 @@ html body #ap .zqpills button.mo{flex:none!important;width:max(34px,calc(var(--k
 html body #ap .zqpills button.mo.on{background:#1a56c8!important;color:#fff!important;border-color:#1a56c8!important}
 html body #ap .zqpop{position:absolute!important;right:0!important;top:calc(100% + 6px)!important;z-index:30!important;min-width:calc(var(--k)*300)!important;display:flex!important;flex-direction:column!important;gap:4px!important;padding:8px!important;background:#fff!important;border:1px solid #cfdcf0!important;border-radius:calc(var(--k)*14)!important;box-shadow:0 8px 22px rgba(20,60,140,.22)!important}
 html body #ap .zqpop button{width:100%!important;text-align:left!important;justify-content:flex-start!important}
+/* v412 좌측 글자 20% 확대 · 아이콘 · 탭 간격 10% 축소 */
+html body #ap .zqpills{gap:calc(var(--k)*7.2)!important;margin-top:calc(var(--k)*12.6)!important}
+html body #ap .zqpills>button{padding:0 calc(var(--k)*14.4)!important}
+html body #ap .zqnb{font-size:max(4.8px,calc(var(--k)*26.4))!important}
+html body #ap .zqsh b{font-size:max(4.8px,calc(var(--k)*25.2))!important}
+html body #ap .zqsh small{font-size:max(4.8px,calc(var(--k)*17.4))!important}
+html body #ap .zqex{font-size:max(4.8px,calc(var(--k)*17.4))!important}
+html body #ap .zqlb{font-size:max(4.8px,calc(var(--k)*19.8))!important}
+html body #ap .zqlb small{font-size:max(4.8px,calc(var(--k)*18))!important}
+html body #ap .zqkd button{font-size:max(4.8px,calc(var(--k)*20.4))!important}
+html body #ap .zqsel select{font-size:max(4.8px,calc(var(--k)*22.8))!important}
+html body #ap .zqst button{font-size:max(4.8px,calc(var(--k)*26.4))!important}
+html body #ap .zqst input{font-size:max(4.8px,calc(var(--k)*22.8))!important}
+html body #ap .zqst em{font-size:max(4.8px,calc(var(--k)*19.2))!important}
+html body #ap .zqd>span{font-size:max(4.8px,calc(var(--k)*19.2))!important;display:flex!important;align-items:center!important;gap:calc(var(--k)*7)!important}
+html body #ap .zqd>span i{font-style:normal!important;min-width:0!important}
+html body #ap .zqd>span small{font-size:max(4.8px,calc(var(--k)*16.8))!important}
+html body #ap .zqic{flex:none!important;width:calc(var(--k)*26)!important;height:calc(var(--k)*26)!important;min-width:10px!important;min-height:10px!important;color:#1a6fe0!important}
+html body #ap .zqi input{font-size:max(4.8px,calc(var(--k)*22.8))!important}
+html body #ap .zqi em{font-size:max(4.8px,calc(var(--k)*15.6))!important}
+html body #ap .zqi select{font-size:max(4.8px,calc(var(--k)*20.4))!important}
+html body #ap .zqpt>summary{font-size:max(4.8px,calc(var(--k)*20.4))!important}
+html body #ap .zqpt>summary em{font-size:max(4.8px,calc(var(--k)*18))!important}
+html body #ap .zqx{font-size:max(4.8px,calc(var(--k)*18))!important}
+html body #ap .zqad button{font-size:max(12px,calc(var(--k)*24))!important}
+html body #ap .zqac .zqsh b{font-size:max(4.8px,calc(var(--k)*20.4))!important}
+html body #ap .zqac .zqsh small{font-size:max(4.8px,calc(var(--k)*15.6))!important}
+html body #ap .zqfr small{font-size:max(11.4px,calc(var(--k)*16.8))!important}
+html body #ap .zqfr span{font-size:max(11.4px,calc(var(--k)*16.8))!important}
+html body #ap .zqfr strong{font-size:max(15.6px,calc(var(--k)*31))!important}
 </style>
 <style id=zq409>
 .q4408{--g1:#eef2f7;display:block}
@@ -9060,5 +9095,32 @@ html body #ap .zqpop button{width:100%!important;text-align:left!important;justi
 .q4408 .q4bo p{margin:0;font:500 10.5px/1.5 "Noto Sans KR",system-ui,sans-serif;color:#33496f;flex:1}
 .q4408 .q4bo button{height:36px;border:0;border-radius:10px;background:linear-gradient(180deg,#14a37a,#0b8460);color:#fff;font:800 12px "Noto Sans KR",system-ui,sans-serif}
 .q4408 .q4edit{margin-top:12px}
+</style>
+<style id=zq412>
+/* v412 도장 면적 산출 — 부위 탭 간격 -10%, 좌측 글자 +20%, 방향 아이콘 */
+html body #ap .zqpills{gap:calc(var(--k)*7.2)!important}
+html body #ap .zqpills button{padding:0 calc(var(--k)*14.4)!important}
+html body #ap .zqsh b{font-size:max(6px,calc(var(--k)*30.2))!important}
+html body #ap .zqsh small{font-size:max(6px,calc(var(--k)*20.9))!important}
+html body #ap .zqlb{font-size:max(6px,calc(var(--k)*23.8))!important}
+html body #ap .zqlb small{font-size:max(6px,calc(var(--k)*21.6))!important}
+html body #ap .zqd>span{font-size:max(12px,calc(var(--k)*23))!important;gap:calc(var(--k)*8)!important}
+html body #ap .zqd>span small{font-size:max(10px,calc(var(--k)*20.2))!important}
+html body #ap .zqi{height:calc(var(--k)*52)!important}
+html body #ap .zqi input{font-size:max(14px,calc(var(--k)*27.4))!important}
+html body #ap .zqi em{font-size:max(10px,calc(var(--k)*18.7))!important}
+html body #ap .zqi select{font-size:max(12px,calc(var(--k)*24.5))!important}
+html body #ap .zqpt>summary{font-size:max(12px,calc(var(--k)*20.4))!important}
+html body #ap .zqpt>summary em{font-size:max(10px,calc(var(--k)*18))!important}
+html body #ap .zqex{font-size:max(10px,calc(var(--k)*17.4))!important}
+html body #ap .zqx{font-size:max(11px,calc(var(--k)*18))!important}
+html body #ap .zqac .zqsh b{font-size:max(12px,calc(var(--k)*20.4))!important}
+html body #ap .zqac .zqsh small{font-size:max(9.5px,calc(var(--k)*15.6))!important}
+html body #ap .zqnt{font-size:max(10px,calc(var(--k)*16.2))!important}
+html body #ap .zqfr small{font-size:max(11.4px,calc(var(--k)*16.8))!important}
+html body #ap .zqfr span{font-size:max(11.4px,calc(var(--k)*16.8))!important}
+html body #ap .zqfr strong{font-size:max(15px,calc(var(--k)*31))!important}
+html body #ap .zqad button{font-size:max(12px,calc(var(--k)*19.2))!important}
+html body #ap .zqic{width:calc(var(--k)*34)!important;height:calc(var(--k)*34)!important;min-width:18px!important;min-height:18px!important;padding:3px!important;border-radius:7px!important;background:#e3efff!important;color:#1a56c8!important}
 </style>
 </body></html>
