@@ -2910,7 +2910,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v423',d:'2026.10.21'};
+const APPV={v:'v424',d:'2026.10.21'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -4622,7 +4622,7 @@ ${pf('drop','희석제 코드',pin('tc',v('tc'),'예) 002'))}${pf('drop','희석
 ${pf('doc','선행도장',pin('pre',v('pre'),'제품명 또는 도장사양에 따름'))}${pf('doc','후속도장',pin('nxt',v('nxt'),'제품명 또는 도장사양에 따름'))}</div></div>
 <div class="pfc">${sec(4,'자료 정보','TDS 출처와 확인 이력을 기록합니다.')}<div class="pg2">
 ${pf('link','출처',raw('tv_src',ctx.src||'','TDS 출처 (URL 또는 문서명)'),0,'pw')}${pf('note','TDS 개정일자',raw('tv_rev',ctx.rev||'','예) 2025-05-14'))}${pf('note','자료 확인일',raw('tv_chk',ctx.chk||pqToday(),'확인일'))}
-<label class="pdk pw"><input type="checkbox" id="tv_ok" ${ctx.ver?'checked':''}><span>검토 완료</span></label></div></div>
+<label class="pdk pw"><input type="checkbox" id="tv_ok" ${ctx.ver?'checked':''}><span>검증 완료</span></label></div></div>
 ${['pk','pks','memo','cat','cert','mixt'].map(hid).join('')}
 <datalist id="pd_mfl">${[...new Set(DB.map(q=>q.mf).filter(Boolean))].sort().map(m=>`<option value="${esc(m)}">`).join('')}</datalist><datalist id="pd_frl">${['30분','1시간','1.5시간','2시간','3시간'].map(m=>`<option value="${m}">`).join('')}</datalist><datalist id="pd_fnl">${['조합페인트','폴리우레탄','불소수지','에폭시','실리콘','아크릴',...DB.map(q=>q.n)].map(m=>`<option value="${esc(m)}">`).join('')}</datalist><datalist id="pd_usl">${['철구조물','교량','파이프','탱크 외부','선박','콘크리트'].map(m=>`<option value="${m}">`).join('')}</datalist></div>
 <div class="pfa"><button type="button" class="ps" onclick="tvSave()">${pi('check')}${edit?'저장하기':'등록하기'}</button><button type="button" class="pa" onclick="pdAtt()">${pi('clip')}첨부하기</button><button type="button" class="pr" onclick="pdReset()">${pi('trash')}초기화</button><button type="button" class="pc" onclick="pqX('pqtv')">${pi('x')}취소</button></div>`;
@@ -9508,5 +9508,20 @@ html body #gnav .hni.on::before,html body #gnav .hni.sel::before{content:"";posi
 html body #gnav .hni.on[data-cat],html body #gnav .hni.sel[data-cat]{color:var(--c)!important;box-shadow:inset 0 0 0 1.5px var(--c)}
 html body #gnav .hni.on::after,html body #gnav .hni.sel::after{z-index:1}
 html body #gnav .hni.on[data-cat] :is(svg,span),html body #gnav .hni.sel[data-cat] :is(svg,span){filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 3px #fff)}
+</style>
+<style id=pd424>
+/* 제품 수정: 하단 버튼바(+전체메뉴 높이)에 가려지지 않게 맨 아래 여백 확보 */
+html body #pqtv .pqsb.pdf2 .pfb{padding-bottom:calc(var(--gnh,56px) + max(32px,calc(var(--k)*66)) + calc(var(--k)*29) + env(safe-area-inset-bottom,0px) + 44px)!important;padding-left:calc(var(--k)*8)!important;padding-right:calc(var(--k)*8)!important}
+html body #pqtv .pfa{padding-left:calc(var(--k)*14)!important;padding-right:calc(var(--k)*14)!important}
+/* 검증 완료 체크박스: 줄바꿈 없이 한 줄 */
+html body #pqtv .pqsb.pdf2 .pdk{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:calc(var(--k)*14);white-space:nowrap;min-height:max(32px,calc(var(--k)*56));font-weight:700}
+html body #pqtv .pqsb.pdf2 .pdk span{white-space:nowrap;flex:none}
+html body #pqtv .pqsb.pdf2 .pdk input{flex:none;width:max(18px,calc(var(--k)*32));height:max(18px,calc(var(--k)*32));margin:0}
+/* 화면 좌우 여백 줄여 넓게 */
+html body #pqtv .pqsb.pdf2 .pg2{padding-left:calc(var(--k)*14);padding-right:calc(var(--k)*14)}
+html body #pqtv .pqsb.pdf2 .pin{margin-left:calc(var(--k)*12);margin-right:calc(var(--k)*12)}
+html body.pg1 #app #v1.pn,html body #app #v1.pn{padding-left:calc(var(--u)*10)!important;padding-right:calc(var(--u)*10)!important}
+html body #app #v1 .dbsh{padding-left:calc(var(--u)*10);padding-right:calc(var(--u)*10)}
+html body #app #v1 .dbsb{padding-left:calc(var(--u)*10);padding-right:calc(var(--u)*10)}
 </style>
 </body></html>
