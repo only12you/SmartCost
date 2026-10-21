@@ -3970,8 +3970,8 @@ function shUni(o){
  let fmt='text';
  const C={},st=m=>{const s=document.getElementById('shs');if(s)s.textContent=m};
  const cv=async()=>{if(C.cv)return C.cv;st('보고서를 만드는 중…');C.cv=await esCv(o.el());return C.cv};
- const blob=async f=>{if(C[f])return C[f];const c=await cv();if(f=='image')C.image=await new Promise(ok=>c.toBlob(ok,'image/png'));else{const r=await shPdf(c);C.pdf=r.blob;C.pages=r.pages}return C[f]};
- const ext={image:'png',pdf:'pdf'},lab={image:'이미지',text:'텍스트',pdf:'PDF'};
+ const blob=async f=>{if(C[f])return C[f];const c=await cv();if(f=='image')C.image=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.88));else{const r=await shPdf(c);C.pdf=r.blob;C.pages=r.pages}return C[f]};
+ const ext={image:'jpg',pdf:'pdf'},lab={image:'이미지',text:'텍스트',pdf:'PDF'};
  const done=()=>{if(o.commit)try{o.commit(lab[fmt])}catch(x){}};
  const sec=document.getElementById('shsec'),pv=document.getElementById('shp');
  const btn=(t,fn,cls)=>{const b=document.createElement('button');b.textContent=t;if(cls)b.className=cls;b.onclick=fn;sec.append(b)};
@@ -3984,8 +3984,8 @@ function shUni(o){
   else{pv.innerHTML='<div class="shw0">준비 중…</div>';
    btn('저장',async()=>{try{const b=await blob(fmt);dl(b,o.name+'.'+ext[fmt]);done();tt((fmt=='pdf'?'PDF':'이미지')+'를 저장했습니다<br><small>'+esc(o.name+'.'+ext[fmt])+'</small>')}catch(x){tt('만들지 못했습니다<br>온라인 연결을 확인하거나 텍스트로 보내세요')}});
    btn('인쇄',async()=>{try{prnBlob(await blob(fmt),o.name+'.'+ext[fmt]);done()}catch(x){tt('인쇄 준비에 실패했습니다')}});
-   if(fmt=='image')btn('복사',async()=>{try{if(navigator.clipboard&&window.ClipboardItem){const b=await blob('image');await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);done();tt('이미지를 복사했습니다<br>붙여넣기 하세요')}else{dl(await blob('image'),o.name+'.png');tt('이 기기는 이미지 복사를 지원하지 않아 저장했습니다')}}catch(x){tt('이미지 복사에 실패했습니다')}});
-   const f=fmt;try{const c=await cv();if(fmt!=f||!document.getElementById('shp'))return;pv.innerHTML='';const im=document.createElement('img');im.src=c.toDataURL('image/jpeg',.55);im.style.cssText='width:100%;display:block;border-radius:8px';pv.append(im);
+   if(fmt=='image')btn('복사',async()=>{try{if(navigator.clipboard&&window.ClipboardItem){await blob('image');const b=await new Promise(ok=>C.cv.toBlob(ok,'image/png'));await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);done();tt('이미지를 복사했습니다<br>붙여넣기 하세요')}else{dl(await blob('image'),o.name+'.jpg');tt('이 기기는 이미지 복사를 지원하지 않아 저장했습니다')}}catch(x){tt('이미지 복사에 실패했습니다')}});
+   const f=fmt;try{const c=await cv();if(fmt!=f||!document.getElementById('shp'))return;pv.innerHTML='';const im=document.createElement('img');im.src=(()=>{const k=Math.min(1,900/c.width),t=document.createElement('canvas');t.width=Math.max(1,Math.round(c.width*k));t.height=Math.max(1,Math.round(c.height*k));t.getContext('2d').drawImage(c,0,0,t.width,t.height);return t.toDataURL('image/jpeg',.6)})();im.style.cssText='width:100%;display:block;border-radius:8px';pv.append(im);
     if(f=='pdf'){await blob('pdf');st('A4 PDF '+C.pages+'쪽으로 보냅니다')}else st('이미지로 보냅니다')}catch(x){pv.innerHTML='<div class="shw0">미리보기를 만들지 못했습니다</div>';st('이미지·PDF를 만들지 못했습니다 (온라인 연결 필요) · 텍스트로 보내세요')}}};
  e.querySelectorAll('.shtab button').forEach(b=>b.onclick=()=>{fmt=b.dataset.f;render()});
  document.getElementById('shx').onclick=()=>e.remove();
@@ -9565,6 +9565,17 @@ html body #v3 .sy-lcc .sy-ls{flex:none;width:auto!important;height:34px!importan
 #sbx details.sbd{margin-top:8px;font-size:11.5px;color:#44546f;line-height:1.6}#sbx details.sbd summary{cursor:pointer;color:#1d4fa8;font-weight:700}
 .cc .mhint{display:inline-block;margin-left:6px;font-size:10.5px;color:#fff;background:#e0662f;border-radius:999px;padding:1px 8px;vertical-align:middle}
 </style>
+<style id=sub430css>#sh{padding-bottom:calc(var(--navh,0px) + 10px)!important;box-sizing:border-box}#sh .shb{padding-bottom:12px!important;max-height:calc(92dvh - var(--navh,0px) - 10px)!important;border-radius:20px!important}</style>
+<script id=sub430>
+/* 공유창을 하단 내비게이션 위로 올림 + html2canvas가 문서 전체 대신 대상 영역만 복제하도록 제한(속도) */
+(function(){
+const _sh=shUni;shUni=function(){try{const n=document.getElementById('gnav');document.documentElement.style.setProperty('--navh',(n?n.offsetHeight:0)+'px')}catch(e){}return _sh.apply(this,arguments)};
+let H=window.html2canvas;
+const wrap=h=>{if(!h||h.__w)return h;const w=function(el,o){o=Object.assign({},o||{});try{if(el&&document.documentElement.contains(el)&&!o.ignoreElements)o.ignoreElements=n=>{if(n===el||n.contains(el)||el.contains(n))return false;const t=n.tagName;return !(t==='STYLE'||t==='LINK'||t==='META'||t==='HEAD')}}catch(e){}return h.call(this,el,o)};w.__w=1;return w};
+H=wrap(H);
+Object.defineProperty(window,'html2canvas',{configurable:true,get(){return H},set(v){H=wrap(v)}});
+})();
+</script>
 <script id=sub429>
 /* 견적·보고서 내보내기 속도 개선: 동일 내용 재사용, 라이브러리 미리 불러오기 */
 (function(){
