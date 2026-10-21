@@ -2843,8 +2843,8 @@ const el=src.cloneNode(true);el.style.cssText='zoom:1;width:794px;min-width:794p
 const oi=[...src.querySelectorAll('input,textarea')],ci=[...el.querySelectorAll('input,textarea')];
 ci.forEach((x,i)=>{const s=document.createElement('div');s.textContent=oi[i].value;s.className='ev '+x.className;if(x.tagName=='TEXTAREA')s.style.cssText='min-height:70px;text-align:left;padding:4px 2px';x.replaceWith(s)});
 el.querySelectorAll('.noexp').forEach(x=>x.remove());box.append(el);document.body.append(box);await new Promise(r=>setTimeout(r,150));
-const sc=Math.min(2,Math.sqrt(1.2e7/(794*Math.max(1,el.offsetHeight)))),cv=await html2canvas(el,{scale:sc,backgroundColor:'#fff',windowWidth:794,scrollX:0,scrollY:0});
-const bl=await new Promise(ok=>cv.toBlob(ok,'image/png')),nm='견적서_'+new Date().toISOString().slice(0,10)+'.png',f=new File([bl],nm,{type:'image/png'});
+const sc=Math.min(1.6,Math.sqrt(8e6/(794*Math.max(1,el.offsetHeight)))),cv=await html2canvas(el,{scale:sc,backgroundColor:'#fff',windowWidth:794,scrollX:0,scrollY:0});
+const bl=await new Promise(ok=>cv.toBlob(ok,'image/jpeg',.88)),nm='견적서_'+new Date().toISOString().slice(0,10)+'.jpg',f=new File([bl],nm,{type:'image/jpeg'});
 if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'견적서'});qtCommit('이미지')}else{dl(bl,nm);qtCommit('이미지');tt('견적서 이미지를 저장했습니다<br><small>'+nm+'</small>')}}catch(x){if(!(x&&x.name=='AbortError'))tt('이미지 생성에 실패했습니다<br>온라인 연결을 확인해 주세요')}finally{if(box)box.remove();bt.textContent='견적서 생성'}}
 const ldj=()=>window.jspdf?Promise.resolve():new Promise((o,e)=>{const x=document.createElement('script');x.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';x.onload=o;x.onerror=e;document.head.append(x)});
 async function esCv(se){await ldp();const src=se||$('#es .esh');const box=document.createElement('div');box.style.cssText='position:fixed;left:-12000px;top:0;width:794px;background:#fff;z-index:-1';
@@ -2852,9 +2852,9 @@ async function esCv(se){await ldp();const src=se||$('#es .esh');const box=docume
  const oi=[...src.querySelectorAll('input,textarea')],ci=[...el.querySelectorAll('input,textarea')];
  ci.forEach((x,i)=>{const d=document.createElement('div');d.textContent=oi[i].value;d.className='ev '+x.className;x.replaceWith(d)});
  box.append(el);document.body.append(box);await new Promise(r=>setTimeout(r,150));
- try{const sc=Math.min(2,Math.sqrt(1.2e7/(794*Math.max(1,el.offsetHeight))));return await html2canvas(el,{scale:sc,backgroundColor:'#fff',windowWidth:794,scrollX:0,scrollY:0})}finally{box.remove()}}
+ try{const sc=Math.min(1.6,Math.sqrt(8e6/(794*Math.max(1,el.offsetHeight))));return await html2canvas(el,{scale:sc,backgroundColor:'#fff',windowWidth:794,scrollX:0,scrollY:0})}finally{box.remove()}}
 async function esPdf(){try{const cv=await esCv();await ldj();const J=window.jspdf.jsPDF,pdf=new J({unit:'mm',format:'a4'}),W=210,Hp=297,ph=Math.floor(cv.width*Hp/W);let y=0,n=0;
- while(y<cv.height){const c2=document.createElement('canvas');c2.width=cv.width;c2.height=Math.min(ph,cv.height-y);c2.getContext('2d').drawImage(cv,0,y,cv.width,c2.height,0,0,cv.width,c2.height);if(n)pdf.addPage();pdf.addImage(c2.toDataURL('image/jpeg',.95),'JPEG',0,0,W,c2.height*W/cv.width);y+=ph;n++}
+ while(y<cv.height){const c2=document.createElement('canvas');c2.width=cv.width;c2.height=Math.min(ph,cv.height-y);c2.getContext('2d').drawImage(cv,0,y,cv.width,c2.height,0,0,cv.width,c2.height);if(n)pdf.addPage();pdf.addImage(c2.toDataURL('image/jpeg',.8),'JPEG',0,0,W,c2.height*W/cv.width,undefined,'FAST');y+=ph;n++}
  const nm='견적서_'+new Date().toISOString().slice(0,10)+'.pdf';dl(pdf.output('blob'),nm);qtCommit('PDF');tt('PDF를 저장했습니다<br><small>'+nm+'</small>')}catch(x){tt('PDF 생성에 실패했습니다<br>온라인 연결을 확인하거나 이미지로 저장하세요')}}
 function pqFit1(){document.querySelectorAll('#v4 .pqk span').forEach(s=>{let f=12;s.style.fontSize=f+'px';while(s.scrollWidth>s.clientWidth+1&&f>7){f-=.5;s.style.fontSize=f+'px'}})}
 {const _t=tpRender;tpRender=function(){_t.apply(this,arguments);pqFit1()}}addEventListener('resize',()=>{try{pqFit1()}catch(e){}});
@@ -2863,8 +2863,8 @@ async function rpImg(){const src=$('#rp .a4'),bt=$('#rpb');bt.textContent='만�
 box=document.createElement('div');box.style.cssText='position:fixed;left:-12000px;top:0;width:794px;background:#fff;z-index:-1';
 const el=src.cloneNode(true);el.style.cssText='zoom:1;width:794px;min-width:794px;max-width:794px;flex:none;box-shadow:none;margin:0';box.append(el);document.body.append(box);
 await new Promise(r=>setTimeout(r,150));
-const sc=Math.min(2,Math.sqrt(1.2e7/(794*Math.max(1,el.offsetHeight)))),cv=await html2canvas(el,{scale:sc,backgroundColor:'#fff',windowWidth:794,scrollX:0,scrollY:0});
-const bl=await new Promise(ok=>cv.toBlob(ok,'image/png')),nm='일위대가표_'+new Date().toISOString().slice(0,10)+'.png',f=new File([bl],nm,{type:'image/png'});
+const sc=Math.min(1.6,Math.sqrt(8e6/(794*Math.max(1,el.offsetHeight)))),cv=await html2canvas(el,{scale:sc,backgroundColor:'#fff',windowWidth:794,scrollX:0,scrollY:0});
+const bl=await new Promise(ok=>cv.toBlob(ok,'image/jpeg',.88)),nm='일위대가표_'+new Date().toISOString().slice(0,10)+'.jpg',f=new File([bl],nm,{type:'image/jpeg'});
 if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({files:[f],title:'일위대가표'});else{dl(bl,nm);tt('보고서 이미지를 저장했습니다<br><small>'+nm+'</small>')}}catch(x){if(!(x&&x.name=='AbortError'))tt('이미지 생성에 실패했습니다<br>온라인 연결을 확인해 주세요')}finally{if(box)box.remove();bt.textContent='이미지 공유·저장'}}
 /* ===== v70: 제조사별 용어 → 표준용어 매칭 ===== */
 const TERMS=[
@@ -3922,7 +3922,7 @@ function qvAdd(id,kind){const H=qtLoad(),r=H.find(x=>x.id==id);if(r){if(!r.ch.in
 async function qvAct(id,kind){
  const r=qhFind(id),el=document.querySelector('#qv .qvp .esh');if(!r||!el)return;
  try{const cv=await esCv(el),base='견적서_'+r.no+'_VER'+r.ver;
-  if(kind=='pdf'){await ldj();const J=window.jspdf.jsPDF,pdf=new J({unit:'mm',format:'a4'}),W=210,ph=Math.floor(cv.width*297/W);let y=0,n=0;while(y<cv.height){const c2=document.createElement('canvas');c2.width=cv.width;c2.height=Math.min(ph,cv.height-y);c2.getContext('2d').drawImage(cv,0,y,cv.width,c2.height,0,0,cv.width,c2.height);if(n)pdf.addPage();pdf.addImage(c2.toDataURL('image/jpeg',.95),'JPEG',0,0,W,c2.height*W/cv.width);y+=ph;n++}dl(pdf.output('blob'),base+'.pdf');qvAdd(id,'PDF');tt('PDF를 저장했습니다<br><small>'+esc(base)+'.pdf</small>')}
+  if(kind=='pdf'){await ldj();const J=window.jspdf.jsPDF,pdf=new J({unit:'mm',format:'a4'}),W=210,ph=Math.floor(cv.width*297/W);let y=0,n=0;while(y<cv.height){const c2=document.createElement('canvas');c2.width=cv.width;c2.height=Math.min(ph,cv.height-y);c2.getContext('2d').drawImage(cv,0,y,cv.width,c2.height,0,0,cv.width,c2.height);if(n)pdf.addPage();pdf.addImage(c2.toDataURL('image/jpeg',.8),'JPEG',0,0,W,c2.height*W/cv.width,undefined,'FAST');y+=ph;n++}dl(pdf.output('blob'),base+'.pdf');qvAdd(id,'PDF');tt('PDF를 저장했습니다<br><small>'+esc(base)+'.pdf</small>')}
   else{const bl=await new Promise(ok=>cv.toBlob(ok,'image/png'));if(kind=='print'){prnBlob(bl,base+'.png');qvAdd(id,'인쇄')}else{await shareBlob(bl,base+'.png');qvAdd(id,'이미지')}}
  }catch(x){tt('처리에 실패했습니다<br>온라인 연결을 확인해 주세요')}}
 if(typeof X==='function')X([['견적 발송 내역','Quotation Sent History'],['발송 내역','Sent history'],['견적번호 · 수신 · 현장명 검색','Search no. · recipient · site'],['발송 내역이 없습니다','No sent history'],['견적서를 생성·PDF 저장·인쇄하면 자동으로 기록됩니다','Recorded automatically when you generate, save as PDF or print'],['보기','View'],['수정 발송','Edit & resend'],['전체 삭제','Delete all'],['이미 발송한 견적입니다 · 마지막 ','Already sent · last '],['발송할 때 견적번호가 확정됩니다 · 수정해서 다시 보내면 VER 2, VER 3로 구분됩니다','The number is fixed when sent · resending an edited quote is tracked as VER 2, VER 3'],['발송 내역에 저장했습니다','Saved to sent history'],['발송 내역을 삭제할까요?','Delete this sent record?'],['삭제하면 되돌릴 수 없습니다','This cannot be undone'],['이 견적을 불러와 수정합니다.','Load this quotation to edit it.']]);
@@ -3957,7 +3957,7 @@ async function shFile(bl,name,title){
  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title});return true}dl(bl,name);tt('파일을 저장했습니다<br><small>'+esc(name)+'</small>');return true}
  catch(x){if(x&&x.name=='AbortError')return false;try{dl(bl,name);tt('공유가 막혀 파일을 저장했습니다<br><small>'+esc(name)+'</small>');return true}catch(y){tt('공유할 수 없습니다');return false}}}
 async function shPdf(cv){await ldj();const J=window.jspdf.jsPDF,pdf=new J({unit:'mm',format:'a4'}),W=210,ph=Math.floor(cv.width*297/W);let y=0,n=0;
- while(y<cv.height){const c2=document.createElement('canvas');c2.width=cv.width;c2.height=Math.min(ph,cv.height-y);c2.getContext('2d').drawImage(cv,0,y,cv.width,c2.height,0,0,cv.width,c2.height);if(n)pdf.addPage();pdf.addImage(c2.toDataURL('image/jpeg',.95),'JPEG',0,0,W,c2.height*W/cv.width);y+=ph;n++}
+ while(y<cv.height){const c2=document.createElement('canvas');c2.width=cv.width;c2.height=Math.min(ph,cv.height-y);c2.getContext('2d').drawImage(cv,0,y,cv.width,c2.height,0,0,cv.width,c2.height);if(n)pdf.addPage();pdf.addImage(c2.toDataURL('image/jpeg',.8),'JPEG',0,0,W,c2.height*W/cv.width,undefined,'FAST');y+=ph;n++}
  return{blob:pdf.output('blob'),pages:n}}
 /* o:{title,name,text,el:()=>Element,commit:kind=>void,extra:[[label,fn]]} */
 function shUni(o){
@@ -9565,6 +9565,15 @@ html body #v3 .sy-lcc .sy-ls{flex:none;width:auto!important;height:34px!importan
 #sbx details.sbd{margin-top:8px;font-size:11.5px;color:#44546f;line-height:1.6}#sbx details.sbd summary{cursor:pointer;color:#1d4fa8;font-weight:700}
 .cc .mhint{display:inline-block;margin-left:6px;font-size:10.5px;color:#fff;background:#e0662f;border-radius:999px;padding:1px 8px;vertical-align:middle}
 </style>
+<script id=sub429>
+/* 견적·보고서 내보내기 속도 개선: 동일 내용 재사용, 라이브러리 미리 불러오기 */
+(function(){
+let ck='',cc=null;const _ec=esCv;
+esCv=async function(se){let k='';try{const src=se||document.querySelector('#es .esh');k=src.innerHTML+'\u0001'+[...src.querySelectorAll('input,textarea')].map(x=>x.value).join('\u0001')}catch(e){}
+ if(k&&k===ck&&cc)return cc;const r=await _ec(se);ck=k;cc=r;return r};
+setTimeout(()=>{try{ldp().catch(()=>{});ldj().catch(()=>{})}catch(e){}},3000);
+})();
+</script>
 <script id=sub427>
 (function(){const _m=window.fmMs||fmMs;fmMs=function(k,v){_m.apply(this,arguments);const e=document.getElementById('rla');if(e){const M=MS();e.innerHTML='롤 면적 = 롤 폭 × 롤 길이 = <b>'+fn((+M.wr||0)*(+M.lr||0),1)+' ㎡</b><br>입력 단위: 띠 폭·연장·겹침은 mm, 길이는 m, 면적은 ㎡'}}})();
 window.fmSrc=function(v){MS().src=v;fmSave();fmRender();try{res()}catch(e){}};
