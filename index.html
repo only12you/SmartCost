@@ -9712,8 +9712,7 @@ setTimeout(()=>{try{res()}catch(e){}},0);
 html body.pg1 #hx .dshb button:nth-child(n+2){display:none!important}
 html body.pg1 #v1>.dbtp{display:grid!important;position:sticky!important;top:var(--sk1,0)!important;z-index:7!important;margin:0 calc(var(--u)*-10) 0!important;padding:calc(var(--u)*12) calc(var(--u)*10) calc(var(--u)*8)!important;background:#f3f7fd!important}
 html body #app #v1 .dsq{position:sticky!important;top:var(--sk2,0)!important;z-index:7!important}
-html body #app #v1 .dsq input#q{font-size:calc(var(--u)*22.75)!important}
-html body #app #v1 .dsq input#q::placeholder{font-size:calc(var(--u)*22.75)!important}
+html body #app #v1 .dsq input#q,html body #app #v1 .dsq input#q::placeholder{font-size:max(16px,calc(var(--u)*22.75))!important}
 </style>
 <script>(function(){function sk(){try{if(!document.body.classList.contains('pg1'))return;var v=document.getElementById('v1'),h=document.getElementById('hx');if(!v||!h||v.hidden)return;var t=v.querySelector(':scope>.dbtp'),hh=h.getBoundingClientRect().height,th=t?t.getBoundingClientRect().height:0;v.style.setProperty('--sk1',hh+'px');v.style.setProperty('--sk2',(hh+th)+'px')}catch(e){}}
 window.addEventListener('resize',sk);window.addEventListener('load',function(){sk();setTimeout(sk,300)});setInterval(sk,400)})();</script>
