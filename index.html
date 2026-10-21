@@ -4463,7 +4463,7 @@ function meshHtml(){const M=MS(),multi=M.mem.length>1,
  return nav()+`<div class="scg"><section class="scc scin"><div class="sch"><i>${ic('grid')}</i><b>메쉬 소요량 계산</b></div>
 ${fsec('m1',1,'메쉬 정보','',`<button class="fpa" onclick="event.preventDefault();event.stopPropagation();fmLoad('mesh','menu')">${ic('clip')}첨부</button>`,`${M.maker||M.dsmsg?`<div class="sdm"><i class="sdl">${ic('leaf')}</i><span>${M.maker?'제조사(자동): '+esc2(M.maker)+'<br>':''}${esc2(M.dsmsg||'')}</span></div>`:''}
 <div class="sfr2">${mt('메쉬 명칭',M.name,"fmMs('name',this.value)",'예) 내부용 유리섬유 메쉬')}${mt('규격',M.open,"fmMs('open',this.value)",'예) 11 × 11 mm')}</div>
-<div class="sfr3">${mf('중량',M.gm,"fmMs('gm',this.value)",'g/m²')}${mf('롤 폭',M.wr,"fmMs('wr',this.value)",'m','1.5')}${mf('롤 길이',M.lr,"fmMs('lr',this.value)",'m','50')}</div>`)}
+<div class="sfr3">${mf('중량',M.gm,"fmMs('gm',this.value)",'g/m²')}${mf('롤 폭',M.wr,"fmMs('wr',this.value)",'m','1.5')}${mf('롤 길이',M.lr,"fmMs('lr',this.value)",'m','150')}</div><div class="sdm"><span id="rla">롤 면적 = 롤 폭 × 롤 길이 = <b>${fn((+M.wr||0)*(+M.lr||0),1)} ㎡</b><br>입력 단위: 띠 폭·연장·겹침은 mm, 길이는 m, 면적은 ㎡</span></div>`)}
 ${fsec('m2',2,'도포 면적 및 선택사항','',`<button class="fpa" onclick="event.preventDefault();event.stopPropagation();${M.src=='m'?'fmAddMan()':'fmAddMem()'}">+ ${M.src=='m'?'행':'부재'} 추가</button>`,`${seg}${M.src=='m'?manH:mem}${cond}`)}
 </section>
 <section class="scres"><div class="sch"><i>${ic('bars')}</i><b>계산 결과</b><button class="sbt" onclick="fmRun()">저장</button><button class="sbt" onclick="fmResetMesh()">${ic('reset')}초기화</button></div><div id="scR"></div></section></div>
@@ -9566,6 +9566,7 @@ html body #v3 .sy-lcc .sy-ls{flex:none;width:auto!important;height:34px!importan
 .cc .mhint{display:inline-block;margin-left:6px;font-size:10.5px;color:#fff;background:#e0662f;border-radius:999px;padding:1px 8px;vertical-align:middle}
 </style>
 <script id=sub427>
+(function(){const _m=window.fmMs||fmMs;fmMs=function(k,v){_m.apply(this,arguments);const e=document.getElementById('rla');if(e){const M=MS();e.innerHTML='롤 면적 = 롤 폭 × 롤 길이 = <b>'+fn((+M.wr||0)*(+M.lr||0),1)+' ㎡</b><br>입력 단위: 띠 폭·연장·겹침은 mm, 길이는 m, 면적은 ㎡'}}})();
 window.fmSrc=function(v){MS().src=v;fmSave();fmRender();try{res()}catch(e){}};
 window.fmMan=function(i,k,v){MS().man[i][k]=v;fmSave();fmOut();try{res()}catch(e){}};
 window.fmAddMan=function(){const M=MS();M.man.push({nm:'수기'+(M.man.length+1),w:'',l:'',q:1,a:''});fmSave();fmRender()};
