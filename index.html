@@ -2310,7 +2310,7 @@ k.onchange=async()=>{const f=k.files[0];k.remove();if(!f)return;LAST=[];try{awai
 function cuEdit(i){const d=S.coats[i].cp||{},n=(d.n||'').trim();if(!n)return tt('제품명을 입력하세요');const go=()=>{const j=DB.findIndex(p=>p.n==n);if(j>=0)pdOpen(j)};if(DB.some(p=>p.n==n))return go();ask('입력한 제품을 DB에 등록하고<br>제품 수정 화면으로 이동할까요?',()=>{cuSave(i,1);go()})}
 function cuTdel(i){const n=((S.coats[i].cp||{}).n||'').trim();if(!n)return tt('제품명을 입력하세요');if(!P(n))return tt('등록되지 않은 제품입니다<br><small>삭제할 TDS가 없습니다</small>');tdel(n)}
 function res(){RP=[];document.querySelectorAll('[data-k=area]').forEach(e=>e.placeholder='기본면적');
-const A=+S.area||1,v=x=>`<span class=cv>${x}</span>`;let sec='',rows='',pr='',tot=0,T2=0,buy=0,sM=0,sT=0,sTh=0,sAc=0,any=0;const PT=[];
+const A=+S.area||1,v=x=>`<span class=cv>${x}</span>`;let sec='',rows='',pr='',tot=0,T2=0,buy=0,sM=0,sT=0,sTh=0,sAc=0,any=0;const PT=[];const SBR=window.subRows?subRows():[],SBA=SBR.reduce((z,r)=>z+Math.round(r.q*r.p),0);
 S.coats.forEach((c,i)=>{const r=calc(c),hh=$('#h'+i),el=$('#r'+i),o=od(i+1);if(hh)hh.textContent='';if(el)el.innerHTML='';const te=$('#th'+i),ae=$('#ac'+i);if(te){te.textContent='자동 계산됩니다.';te.classList.add('emp')}if(ae){ae.textContent='자동 계산됩니다.';ae.classList.add('emp')}
 if(!r)return;
 any=1;const p=PC(c.n),Ac=+c.area||A,s=r.reduce((a,x)=>a+x.amt,0),a=r[0],t=r[1],m=mx(p),u=UN(p);const pa=Ac>0?f10(a.amt*Ac):0,da=t&&Ac>0?f10(t.amt*Ac):0,ct=pa+da;tot+=s;T2+=ct;sM+=a.amt;sT+=t?t.amt:0;sTh+=a.th;sAc+=a.ac;
@@ -2324,7 +2324,7 @@ rows+=`<div class=xpr>${xb(i,Lh,Rh)}</div>`;
 const fl=x=>F(Math.floor(x/10)*10,0),FM='<div class=fmb><b>■ 소요량 산출 공식</b><div class=fmr><b>이론 소요량</b> [L/㎡]</div><div class=fmf>추천도막두께[㎛] ÷ (SVR[%] × 10)</div><div class=fmr><b>실제 소요량</b> [L/㎡]</div><div class=fmf>이론 소요량 ÷ (1 − Loss[%] ÷ 100)</div><small>※ kg 단위 제품은 비중을 곱해 kg/㎡로 환산<br>예) 추천도막두께 100㎛ · SVR 50% · Loss 10% → 이론 0.2 / 실제 약 0.22 L/㎡</small></div>',NT='<div class=nt>⚠ 본 자료는 참고용이며 현장 상황·작업자 숙련도에 따라 실제 사용량은 다를 수 있습니다. 산출 근거는 도료 소요량 공식이며, 활용에 따른 판단과 책임은 사용자에게 있으며, 제작자는 법령이 허용하는 범위에서 책임을 지지 않습니다.</div>';
 const BU={};PT.forEach(r=>{const k=r.u==='ℓ'?'L':r.u;BU[k]=(BU[k]||0)+r.q});const tLq=PT.reduce((z,r)=>z+r.tq,0),f2=x=>(+x).toFixed(2),jn=o=>{const e=Object.entries(o).filter(([k,v])=>v>0);return e.length?e.map(([k,v])=>`${f2(v)}<small>${k}</small>`).join(' + '):`0.00<small>L</small>`},TT=Object.assign({},BU);if(tLq>0)TT.L=(TT.L||0)+tLq;const DRP='<svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="currentColor" style="flex:none"><path d="M12 2.5c-3.4 4.3-6 7.6-6 11a6 6 0 0 0 12 0c0-3.4-2.6-6.7-6-11z"/></svg>';
 const sP=PT.reduce((z,r)=>z+r.pa,0),sD=PT.reduce((z,r)=>z+r.da,0),tcl=PT.map(r=>`<div class=tcr style="${cvars(r.i)}"><span class=tcn><i>${r.o}</i>${esc(r.nm)}</span><span class=tcq>${r.Ac>0?F(r.q)+r.u+' → '+r.k+'말'+(r.tn?' · 희석제 '+F(r.tq)+'L':''):'면적 입력 시 표시'}</span><span class=tca>${r.Ac>0?F(r.pa+r.da,0)+'원':'-'}</span></div>`).join('');
-$('#rs').innerHTML=(any?`<div class=rcw><div class=rch>${DRP}소요량 계산 결과</div><div class=rcb><div class=rcg><div class="rcc rth"><div class=rcl><b>이론 소요량 <small>(L/㎡)</small></b></div><div class=rcf>DFT[㎛] ÷ (SVR[%] × 10)</div><div class=rcv>${F(sTh)}<small>L/㎡</small></div></div><div class="rcc rac"><div class=rcl><b>실제 소요량 <small>(L/㎡)</small></b></div><div class=rcf>이론 ÷ (1 − Loss[%]÷100)</div><div class=rcv>${F(sAc)}<small>L/㎡</small></div></div></div><div class=rcs><div><span>소요량(예상)</span><b>${jn(BU)}</b></div><div><span>희석제 소요량</span><b>${jn({L:tLq})}</b></div><div><span>총 소요량</span><b>${jn(TT)}</b></div></div></div></div><div class=tcd><div class=tct><span>총 금액<small>제품 + 희석제 · VAT 별도</small></span><b>${T2>0?F(T2,0)+'<small>원</small>':'-'}</b></div><div class=tcm><span>제품 <b>${F(sP,0)}원</b></span><span>희석제 <b>${F(sD,0)}원</b></span><span>㎡당 <b>${fl(tot)}원</b></span></div><div class=tcl>${tcl}</div><div class=tch>${T2>0?'십원 미만 절사 · 소요량 단위 L·kg/㎡':'면적과 단가를 입력하면 총 금액이 표시됩니다'}</div></div><details class="rsd rtop" ${window.RSO===false?'':'open'} ontoggle="window.RSO=this.open"><summary><span class=rtt>${DRP}세부 내역 · 출력</span><button class="lk qgen" style="float:right" onclick="event.stopPropagation();est()">견적서 생성</button></summary>${rdHTML()}</details>`:'')+(any?FM:'')+NT;rcFit()}
+$('#rs').innerHTML=(any?`<div class=rcw><div class=rch>${DRP}소요량 계산 결과</div><div class=rcb><div class=rcg><div class="rcc rth"><div class=rcl><b>이론 소요량 <small>(L/㎡)</small></b></div><div class=rcf>DFT[㎛] ÷ (SVR[%] × 10)</div><div class=rcv>${F(sTh)}<small>L/㎡</small></div></div><div class="rcc rac"><div class=rcl><b>실제 소요량 <small>(L/㎡)</small></b></div><div class=rcf>이론 ÷ (1 − Loss[%]÷100)</div><div class=rcv>${F(sAc)}<small>L/㎡</small></div></div></div><div class=rcs><div><span>소요량(예상)</span><b>${jn(BU)}</b></div><div><span>희석제 소요량</span><b>${jn({L:tLq})}</b></div><div><span>총 소요량</span><b>${jn(TT)}</b></div></div></div></div><div class=tcd><div class=tct><span>총 금액<small>제품 + 희석제 · VAT 별도</small></span><b>${(T2+SBA)>0?F(T2+SBA,0)+'<small>원</small>':'-'}</b></div><div class=tcm><span>제품 <b>${F(sP,0)}원</b></span><span>희석제 <b>${F(sD,0)}원</b></span>${SBA>0?`<span>부자재 <b>${F(SBA,0)}원</b></span>`:''}<span>㎡당 <b>${fl(tot)}원</b></span></div><div class=tcl>${tcl}${SBR.map(r=>`<div class=tcr><span class=tcn><i>+</i>${esc(r.n)}</span><span class=tcq>${F(r.q)}${r.u}</span><span class=tca>${r.p>0?F(Math.round(r.q*r.p),0)+'원':'-'}</span></div>`).join('')}</div><div class=tch>${T2>0?'십원 미만 절사 · 소요량 단위 L·kg/㎡':'면적과 단가를 입력하면 총 금액이 표시됩니다'}</div></div><details class="rsd rtop" ${window.RSO===false?'':'open'} ontoggle="window.RSO=this.open"><summary><span class=rtt>${DRP}세부 내역 · 출력</span><button class="lk qgen" style="float:right" onclick="event.stopPropagation();est()">견적서 생성</button></summary>${rdHTML()}</details>`:'')+(any?FM:'')+NT;rcFit()}
 async function tds(n0,ci){const n=attK(n0,ci);if(!n)return tt('등록된 TDS가 없습니다');const p=P(n);const f=await idb('get',n).catch(()=>0);if(f){const bl=f.buf?new Blob([f.buf],{type:f.type}):f.b;vwr(bl,f.name,f.type||bl.type||'')}else if(p&&p.url)open(p.url);else tt('등록된 TDS가 없습니다. "TDS 첨부"로 PDF를 추가하거나 DB의 TDS링크 열에 주소를 넣으세요.')}
 const attK=(n,i)=>(n||'').trim()||(i!=null?'~c'+i:'');
 function att(n0,ci){const n=attK(n0,ci);if(!n)return tt('제품명을 입력하거나 일위대가표 칸에서 첨부하세요');const i=document.createElement('input');i.type='file';i.style.cssText='position:fixed;left:-9999px;top:0;opacity:0';document.body.append(i);
@@ -2752,7 +2752,7 @@ function rdHTML(){
   const row=(nm,sub,spec,qty,pr,gs)=>{const am=Math.round((+qty||0)*(+pr||0));sum+=am;return `<div class="rdr dt${gs?' gs':''}"><span class="l"><b>${nm}</b>${sub?`<small>${sub}</small>`:''}</span><span>${spec}</span><span>${F(qty,0)}</span><span>${pr?F(+pr,0):'-'}</span><span class="am">${F(am,0)}</span></div>`};
   dt+=row(od(x.i+1)+' · '+esc(p.n),'면적 '+F(Ac)+'㎡','1말 ('+F(a.pk)+u+')',Ac>0?Math.ceil(a.ac*Ac/a.pk-1e-9):0,+c.price||0,1);
   if(t)dt+=row('└ '+esc(String(p.tn||'희석제').replace(/\s*\n\s*/g,' ')),'','1캔 ('+F(t.pk)+'L)',Ac>0?Math.ceil(t.ac*Ac/t.pk-1e-9):0,+c.tprice||0,0)});
- const vat=Math.round(sum*.1);
+ (window.subRows?subRows():[]).forEach(r=>{const am=Math.round(r.q*r.p);sum+=am;dt+=`<div class="rdr dt gs"><span class="l"><b>${esc(r.n)}</b>${r.m?`<small>${esc(r.m)}</small>`:''}</span><span>${esc(r.s)}</span><span>${F(r.q,r.u=='㎡'?2:0)}</span><span>${r.p?F(+r.p,0):'-'}</span><span class="am">${F(am,0)}</span></div>`});const vat=Math.round(sum*.1);
  return `<div class="rdw"><div class="rdh tsp">도장 시스템 및 제품 사양</div><div class="rdt tsp"><div class="rdr sx h"><span>구분</span><span>제품 · 제조사</span><span>DFT</span><span>SVR</span><span>비중</span><span>산출물량</span></div>${sp}</div>
 <div class="rdh tdt">견적 세부 내역 <small>캔 구매 기준</small></div><div class="rdt tdt"><div class="rdr dt h"><span>품명</span><span>규격</span><span>수량</span><span>단가</span><span>금액</span></div>${dt}</div>
 <div class="rdsum"><div><span>공급가액</span><b>${F(sum,0)}</b></div><div><span>VAT (10%)</span><b>${F(vat,0)}</b></div><div class="tt"><span>합계 (VAT 포함)</span><b>${F(sum+vat,0)}원</b></div></div></div>`}
@@ -2770,7 +2770,7 @@ function esRows(){const R=[];esGroups().forEach((g,gi)=>{g.L.forEach(x=>{const p
  const LB=lbCalc(g.lab,g.A);if(LB){const d2=v=>+v.toFixed(2),gk='L'+g.k+gi,ps=(g.lab||{}).ps,px=w=>LB.B?'':' · 투입량 '+(+w.toFixed(4))+'인/㎡'+(ps?' · '+ps.s+(ps.v?'':'(검증 전)'):'');
   if(LB.qp>0)R.push({k:'lp'+gk,g:gk,sn:'',n:'노무비 · 도장공',s:'인',q:d2(LB.qp),p:LB.s.rp,m:(g.sn||'전체')+(LB.m>1?' · 할증 '+LB.s.sc+'%':'')+px(LB.pp),dec:1});
   if(LB.qn>0)R.push({k:'ln'+gk,g:gk,sn:'',n:'노무비 · 보통인부',s:'인',q:d2(LB.qn),p:LB.s.rn,m:(g.sn||'전체')+px(LB.pn),dec:1});
-  if(LB.tool>0)R.push({k:'lt'+gk,g:gk,sn:'',n:'공구손료 ('+LB.s.tl+'%)',s:'식',q:1,p:LB.tool,m:''})}});return R}
+  if(LB.tool>0)R.push({k:'lt'+gk,g:gk,sn:'',n:'공구손료 ('+LB.s.tl+'%)',s:'식',q:1,p:LB.tool,m:''})}});if(esS().pq!==0)(window.subRows?subRows():[]).forEach(r=>R.push({k:'b'+r.k,g:'b'+r.k,sn:'',n:r.n,s:r.s,q:r.q,p:r.p,m:r.m}));return R}
 const esToday=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
 function esAutoNo(){const E=esS(),d=new Date(),ym=String(d.getFullYear()).slice(2)+String(d.getMonth()+1).padStart(2,'0');S.qs=S.qs||{};E.no='CC-'+ym+'-'+String((S.qs[ym]||0)+1).padStart(4,'0')}
 function esIssue(){const E=esS(),m=/^(?:PQC|CC)-(\d{4})-(\d{4})$/.exec(String(E.no||'').trim());if(!m)return;S.qs=S.qs||{};if((S.qs[m[1]]||0)<+m[2]){S.qs[m[1]]=+m[2];sv()}}
@@ -4065,7 +4065,7 @@ function helpHtml(){
  +C('6. CSV · 백업 · 복원','<p>더보기 → <b>백업 · 복원</b>. 위쪽 탭이 <b>CSV 관리</b> / <b>백업 · 설정</b>으로 나뉩니다.</p><ul><li><b>빈 CSV 양식 내려받기</b>: 제품 DB의 모든 항목(제품명 · 제조사 · 규격 · SVR · 도막 · 희석제 · 건조시간 · 가사시간 · 선행/후속도장 · 출처 · 설명 · 용도 등)이 열로 들어 있는 양식입니다. 첫 예시 행은 지우고 쓰세요.</li><li><b>가져오기</b>: CSV · 엑셀 · JSON 파일을 고르면 미리보기와 검증(오류 · 경고)을 거쳐 반영합니다. 중복 제품은 \'갱신\' 또는 \'건너뛰기\'를 고릅니다. 제품설명 · 용도 열은 \'가져오기\' 체크를 켠 경우에만 반영됩니다.</li><li><b>내보내기</b>: 전체 / 검증 완료 / 선택한 제품 범위를 고르고 출처 · 설명 포함 여부를 정합니다.</li><li><b>JSON 백업 저장</b>: 제품 DB · 작업 내용 · 시스템 · 설정을 모두 저장합니다. TDS 원본 PDF는 포함되지 않습니다.</li><li><b>백업 파일 복원</b>: \'병합\'(기존 유지, 같은 제품 갱신) 또는 \'전체 대체\'(현재 데이터 삭제)를 고릅니다.</li><li>마지막 백업이 30일 지나면 경고가 표시됩니다.</li></ul>')
  +C('7. 도장 면적 산출 (유형별 도면)','<p>면적을 직접 계산하기 어려울 때 쓰는 보조 페이지입니다. 일위대가표 화면의 <b>도장 면적 산출 · 도면</b> 버튼으로 엽니다.</p><ol><li>위쪽에서 <b>유형</b>(아파트 · 주택 · 옥상 · 주차장 · 철재 · 차량 · 직접)을 고릅니다. 유형마다 기본 부위가 준비되어 있고, 아래 <b>부위 추가</b>로 벽면 · 바닥 · 파라펫 · 기둥 · 구획선 · 강관 · H형강 · 평판 · 탱크 · 직접 면적을 더할 수 있습니다.</li><li>부위를 펼쳐 <b>치수 · 수량 · 공제(창 · 문) · 도장 면(한 면/양면)</b>을 입력하면 <b>도면이 입력값에 맞게 바뀌고</b> 부위 면적(㎡)이 계산됩니다.</li><li>맨 아래에 <b>이 유형 합계</b>와 <b>전체 합계</b>가 표시됩니다. <b>이 유형 적용</b> 또는 <b>전체 적용</b>을 누르면 합계가 일위대가표의 <b>기본면적</b>으로 들어갑니다.</li></ol><p><b>계산식</b></p><ul><li>벽면 = (가로 × 높이 × 수량 − 공제) × 도장 면 수</li><li>바닥 · 천장 = 가로 × 세로 × 수량 − 공제</li><li>경사 지붕 = 밑변 × 길이 × √(1 + (경사/10)²)</li><li>파라펫 = 길이 × (높이 × 면 수 + 상단 폭)</li><li>기둥 = 둘레 × 높이 × 수량 (사각 2(a+b), 원형 π×지름)</li><li>구획선 = 선 길이 × 선 폭 × 수량</li><li>강관 = π × 외경 × 길이 × 수량 × 면 수</li><li>H형강 = (4B + 2H − 2tw) × 길이 × 수량</li><li>탱크 = π × 지름 × 높이 (+ 지붕 · 바닥 π×지름²/4) × 수량</li><li>차량(근사) = 2(L×W + L×H + W×H) × 외판 계수(기본 0.3) × 대수</li></ul><p class="hlpw">※ 도면은 개략도이고 면적은 입력한 치수 기준입니다. 차량처럼 곡면이 많은 대상은 근사값이므로 실측 면적이 있으면 \'직접 면적\' 부위를 쓰세요. 입력 내용은 기기에 저장되고 JSON 백업에 포함됩니다.</p>')
  +C('8. 공동주택 견적 (내역서 · 원가계산서)','<p>일위대가표 화면의 <b>공동주택 견적 · 내역서</b> 버튼으로 엽니다. 아파트 단지 보수공사 6개 공종(외벽 도장 · 내벽 도장 · 옥상 우레탄 방수 · 지하주차장 에폭시 · 보차도 포장 · 지붕 싱글)을 <b>면적 산출 → 공종별 내역서 → 원가계산서</b>까지 계산합니다.</p><ol><li><b>단지 정보</b>: 단지 이름, 평면 형식(계단실형 / 복도형), 동별 층수, 세대 타입별 공급면적 · 세대수를 입력합니다.</li><li>위쪽 칩에서 공종을 고릅니다. 면적은 <b>① 직접 입력 &gt; ② 동별 · 구역 산출 &gt; ③ 세대 정보 추정</b> 순서로 적용됩니다.</li><li><b>시공 조건</b>(도장 방식, 두께, 바탕처리 범위 등)을 고르면 내역서 수량이 바뀝니다.</li><li><b>공종별 내역서</b>에서 항목별 수량 · 금액, <b>공사 원가계산서</b>에서 간접노무비 · 보험료 · 안전관리비 · 일반관리비 · 이윤 · 부가세를 확인합니다.</li><li><b>단가 수정</b>: 재료 · 노무 · 경비 단가는 기본값(엑셀 기준)이며 항목별로 바꿀 수 있습니다.</li><li>‘단지 견적 합계에 포함’을 켠 공종만 하단 합계에 더해집니다.</li><li><b>면적 → 일위대가표</b>는 이 공종 면적을 기본면적으로 보내고, <b>내역서 CSV 저장</b>은 엑셀로 열 수 있는 파일을 만듭니다.</li></ol><p>백업 JSON에도 함께 저장됩니다.</p>')
- +C('9. 일위대가표 (코트별 계산)','<ol><li>맨 위 <b>기본면적</b>(㎡)을 입력합니다. 코트마다 면적을 따로 넣으면 그 값이 우선합니다.</li><li>제품명을 입력해 선택하면 DFT·SVR·Loss·희석율이 자동으로 채워집니다. DB에 없으면 <b>+ 생성</b>으로 직접 입력합니다. 제품 DB 화면의 데이터 시트에서 확인한 값과 같은 값이 쓰입니다.</li><li><b>제품단가(원/1말)</b>는 <b>혼합규격 1말 기준</b>으로 입력하고, <b>희석제 단가</b>도 입력합니다.</li><li>입력이 필요한 칸은 <b>연한 빨간 테두리</b>로 표시되고, 값이 들어가면 사라집니다.</li><li>결과에서 이론·실제 소요량, 캔(말) 수, ㎡당 단가, 총 금액을 확인합니다.</li></ol><p>하단 버튼: <b>+ Coat 추가 / − Coat 삭제 / 공유 / 전체 초기화</b>. 세부 내역·출력의 <b>견적서 생성</b>으로 바로 견적서를 만듭니다.</p>')
+ +C('9. 일위대가표 (코트별 계산)','<ol><li>맨 위 <b>기본면적</b>(㎡)을 입력합니다. 코트마다 면적을 따로 넣으면 그 값이 우선합니다.</li><li>제품명을 입력해 선택하면 DFT·SVR·Loss·희석율이 자동으로 채워집니다. DB에 없으면 <b>+ 생성</b>으로 직접 입력합니다. 제품 DB 화면의 데이터 시트에서 확인한 값과 같은 값이 쓰입니다.</li><li><b>제품단가(원/1말)</b>는 <b>혼합규격 1말 기준</b>으로 입력하고, <b>희석제 단가</b>도 입력합니다.</li><li>입력이 필요한 칸은 <b>연한 빨간 테두리</b>로 표시되고, 값이 들어가면 사라집니다.</li><li>결과에서 이론·실제 소요량, 캔(말) 수, ㎡당 단가, 총 금액을 확인합니다.</li></ol><p>하단 버튼: <b>+ Coat 추가 / − Coat 삭제 / 공유 / 전체 초기화</b>. 세부 내역·출력의 <b>견적서 생성</b>으로 바로 견적서를 만듭니다.</p><p><b>부자재(메쉬·실란트)</b>: 코트 목록 아래 「부자재 소요량」 카드에서 체크하면 일위대가표 행(품명·규격·수량·단가·금액)으로 합산됩니다. <b>에폭시 내화 제품을 선택하면 메쉬가 자동 포함</b>되며, 형강 규격·적용 부위·롤 규격은 「설정」 버튼에서 입력합니다. 메쉬·실란트 금액은 총 금액, 세부 내역, 견적서에 함께 반영됩니다.</p>')
  +C('10. 도장 시스템','<ol><li>상단 <b>기본면적</b>은 화면 위에 고정되어 있습니다.</li><li><b>시스템+</b>: 시스템 이름을 쓰고 단계(하도·중도·상도·구분 없음)를 고른 뒤 제품을 눌러 담고 <b>시스템 저장</b>.</li><li><b>저장S</b>(저장된 시스템): 저장한 시스템 목록에서 <b>불러오기</b>로 화면에 반영합니다.</li><li><b>변경</b>: 화면의 시스템에 제품을 추가·변경합니다.</li><li>시스템 카드: 이름·시스템별 면적 입력, <b>저장 / 삭제 / 제품+</b>. ⌄ 버튼으로 접고 펼칩니다.</li><li>제품 줄을 누르면 펼쳐져 <b>단계 변경, ▲▼ 순서, 삭제</b>와 소요량 산출 기준(DFT·SVR·Loss·희석율·면적·단가)을 입력할 수 있습니다.</li></ol>')
  +C('11. 실란트 · 메쉬 소요량','<ol><li>일위대가표 화면에서 기본면적 아래 <b>실란트 소요량 · 메쉬 소요량</b> 버튼을 누릅니다. 오른쪽 위 선택 메뉴로 <b>실란트 / 메쉬 / 작업 내역 / 일위대가표</b>를 오갑니다.</li></ol><p><b>실란트</b> (실란트 · 실리콘 · 퍼티 충진량)</p><ol><li><b>제품 정보</b>: 제품명, 비중, 포장 규격을 입력합니다. <b>첨부</b>로 데이터시트를 올리면 제조사 · 값이 자동으로 채워집니다.</li><li><b>단면 프로파일 선택</b>: 줄눈 · 원형 등 충진 단면을 고릅니다.</li><li><b>충진 부위 입력</b>: 폭 · 깊이 · 길이, 충진 갯수, 로스율을 부위별로 넣으면 필요 용량과 포장 수가 계산됩니다. 줄눈은 폭에 맞는 권장 깊이를 안내합니다.</li></ol><p><b>메쉬</b> (에폭시 내화 메쉬 소요량)</p><ol><li><b>형강 규격 선택</b> 또는 직접 입력(H · B · tw · tf)</li><li>부재 길이 · 수량을 넣고, 메쉬를 붙일 부위를 도형이나 목록에서 선택합니다.</li><li><b>세부 조건</b>에서 플랜지 연장 · 도막 두께 · 겹침 길이 · 접합부 띠 폭 · 로스 · 단가를 조정합니다.</li></ol><p>계산 결과는 <b>작업 내역</b>에 쌓입니다.</p>')
  +C('12. 노무비(인건비) 계산','<p><b>노무비 = 노무량(인/㎡) × 면적 × 노임단가(원/인)</b><br>※ 1인 = 한 사람이 하루(1일) 일한 양</p><ol><li>더보기 → <b>노무비 설정</b>(아래 <b>내화도료 품셈 기준</b> 버튼: KCC SQ-1003·2003·2007 중도 도막·이론 소요량·횟수 확인, 인/㎡는 현장 실적 입력)에서 도장공·보통인부 노임단가, 할증(%), 공구손료(%)를 확인·수정합니다. (기본값: 2026 상반기 시중노임단가)</li><li><b>노무비 산출 기준</b>에 입력합니다. 인건비는 제품마다가 아니라 <b>시스템 전체에 1건</b>입니다. 도장 시스템은 각 시스템 카드 맨 아래, 일위대가표는 코트 목록 맨 아래에 있습니다. 입력 방식은 둘 중 하나를 고릅니다.</li></ol><div class="hlpx"><b>방식 ① 품셈</b> — 표준품셈에 적힌 <b>㎡당 필요한 인(人) 수</b>를 그대로 입력<br>예) 하도~상도 전체 공정에 도장공 0.05 인/㎡ · 보통인부 0.02 인/㎡ → 100㎡면 도장공 5인, 인부 2인</div><div class="hlpx"><b>방식 ② 생산성</b> — 현장에서 실제로 하는 속도를 입력<br><b>팀 생산성</b> = 한 팀이 <b>하루에 칠하는 면적(㎡/일)</b><br><b>도장공 · 보통인부 (명)</b> = 그 팀에 몇 명이 일하는지<br>예) 도장공 2명 + 보통인부 1명 팀이 하루 80㎡를 칠한다면<br>· 도장공 2 ÷ 80 = 0.025 인/㎡<br>· 보통인부 1 ÷ 80 = 0.0125 인/㎡<br>· 100㎡ 시공 → 도장공 2.5인, 인부 1.25인, <b>예상 작업일수 1.25일</b><br>(팀을 2배로 늘리면 인원 합계는 같고 작업일수만 절반이 됩니다)</div><ol start="3"><li><b>할증</b>은 고소·소규모·야간 등 현장 조건으로 인(人) 수를 늘리는 비율, <b>공구손료</b>는 노무비에 더하는 비율입니다. 0이면 적용되지 않습니다.</li><li>결과에 도장공·보통인부 공수와 금액, <b>재료비+노무비</b>가 표시되고, 견적서에는 시스템(또는 일위대가표 전체)마다 인건비 줄이 1세트(도장공·보통인부·공구손료) 들어갑니다.</li></ol><p>값을 비워 두면 노무비는 계산하지 않습니다. 품셈 값이 있으면 ①, 현장 실적이 있으면 ②가 편합니다.</p><p class="hlpw">※ 품셈 계수는 앱에 내장하지 않았습니다. 최신 표준품셈과 계약 조건에 맞는 값을 직접 입력하세요.</p>')
@@ -9542,4 +9542,73 @@ html body #v3 .sy-lcc .sy-lo button{flex:1;height:30px!important;margin:0!import
 html body #v3 .sy-lcc .sy-lo button.on{background:linear-gradient(180deg,#3b86f5,#1457d8)!important;color:#fff!important}
 html body #v3 .sy-lcc .sy-ls{flex:none;width:auto!important;height:34px!important;margin:0!important;padding:0 14px!important;border-radius:10px!important;border:1px solid #238a68!important;background:linear-gradient(180deg,#2fa37c,#238a68)!important;color:#fff!important;font-size:12.5px!important;font-weight:800!important}
 </style>
+<style id=sub426css>
+#sbx{margin:10px 0 0}
+#sbx .sbc{background:#fff;border:1px solid #d9e2f2;border-radius:16px;padding:12px;box-shadow:0 1px 4px rgba(20,33,61,.06)}
+#sbx .sbh{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}#sbx .sbh b{font-size:15px;color:#14213d}#sbx .sbh small{color:#6b7b95;font-size:11px}
+#sbx .sbi{border:1px solid #e1e8f5;border-radius:12px;padding:9px 10px;margin-top:8px;background:#fafcff}
+#sbx .sbt{display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer}#sbx .sbt input{width:18px;height:18px;accent-color:#e0662f}
+#sbx .sbt em{font-style:normal;font-size:10.5px;color:#fff;background:#e0662f;border-radius:999px;padding:1px 8px}
+#sbx .sbg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+#sbx .sbg div{background:#fff;border:1px solid #e1e8f5;border-radius:10px;padding:6px 8px;font-size:10.5px;color:#6b7b95}
+#sbx .sbg b{display:block;font-size:14px;color:#14213d;margin-top:2px}
+#sbx .sbp{display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12px}#sbx .sbp span{flex:none;color:#44546f}
+#sbx .sbp input{flex:1;min-width:0;border:1px solid #bcd0ee;border-radius:9px;padding:7px 8px;font-size:14px;text-align:right}
+#sbx .sbp b{flex:none;font-weight:600;color:#44546f}
+#sbx .sbb{margin-top:8px;width:100%;border:1px solid #2f6fdc;color:#2f6fdc;background:#f1f6ff;border-radius:10px;padding:8px;font-size:12.5px;font-weight:700}
+#sbx .sbn{margin-top:8px;font-size:11px;color:#6b7b95;line-height:1.55}
+#sbx .sbw{margin-top:8px;font-size:11.5px;color:#b3261e;background:#fdecea;border-radius:8px;padding:6px 8px}
+#sbx details.sbd{margin-top:8px;font-size:11.5px;color:#44546f;line-height:1.6}#sbx details.sbd summary{cursor:pointer;color:#1d4fa8;font-weight:700}
+.cc .mhint{display:inline-block;margin-left:6px;font-size:10.5px;color:#fff;background:#e0662f;border-radius:999px;padding:1px 8px;vertical-align:middle}
+</style>
+<script id=sub426>
+/* 부자재(메쉬·실란트) 소요량 → 일위대가표 행으로 합산 (v426) */
+(function(){
+const SB=()=>{S.sb=S.sb||{};return S.sb};
+const isEpF=p=>{if(!p)return false;const t=[p.n,p.g,p.d,p.us,p.mf].join(' ');return /내화|fire\s?mask|파이어\s?마스크/i.test(t)&&/에폭시|epoxy|fire\s?mask|파이어\s?마스크/i.test(t)};
+const epC=()=>S.coats.map((c,i)=>({c,i,p:P(c.n)})).filter(x=>x.p&&isEpF(x.p));
+const meshOn=()=>{const s=SB();return s.mesh===1||(s.mesh===undefined&&epC().length>0)};
+const sealOn=()=>SB().seal===1;
+const f=(x,d=1)=>(+x||0).toLocaleString('ko-KR',{maximumFractionDigits:d});
+window.subRows=function(){const R=[];try{
+ if(meshOn()){const M=FM.mesh,c=cM();if(c.A>0){
+  const ur=c.rolls>0&&(M.pu=='롤'||+M.rp>0),pr=ur?(+M.rp>0?+M.rp:(M.pu=='롤'?+M.price||0:0)):(M.pu=='롤'?0:+M.price||0);
+  R.push({k:'mesh',n:'내화 메쉬 · '+(M.name||'메쉬'),s:ur?`1롤 (${f(M.wr,2)}m×${f(M.lr,0)}m)`:'㎡',q:ur?c.rolls:+c.At.toFixed(2),p:pr,u:ur?'롤':'㎡',m:`소요 ${f(c.A,2)}㎡ · 로스 ${M.loss}% 포함 ${f(c.At,2)}㎡`})}}
+ if(sealOn()){const c=cF();if(c.n>0){
+  R.push({k:'seal',n:(FM.pname||'실란트'),s:`1개 (${f(FM.pk,2)}${FM.pu}${FM.pn?' '+FM.pn:''})`,q:c.n,p:+FM.price||0,u:'개',m:`충진 ${f(c.Vt/1000,2)}L (로스 포함)`});
+  if(FM.mode=='j'&&c.rod>0){const a=Math.ceil(c.rod*1.05),b=Math.ceil(c.tape*1.05);R.push({k:'rod',n:'└ 백업재',s:'m',q:a,p:+FM.rodp||0,u:'m',m:''});if(b>0)R.push({k:'tape',n:'└ 보호(마스킹) 테이프',s:'m',q:b,p:+FM.tapep||0,u:'m',m:''})}}}
+}catch(e){}return R};
+function sum(){const R=subRows(),el=id=>document.getElementById(id);
+ const m=R.find(r=>r.k=='mesh'),s=R.find(r=>r.k=='seal');
+ const a=el('sbm_s');if(a&&m)a.innerHTML=`<div>소요 면적<b>${f(FM.mesh&&cM().A,2)}㎡</b></div><div>수량<b>${f(m.q)} ${m.u}</b></div><div>금액<b>${m.p>0?f(Math.round(m.q*m.p),0)+'원':'-'}</b></div>`;
+ const b=el('sbs_s');if(b&&s){const t=R.filter(r=>r.k!='mesh').reduce((z,r)=>z+Math.round(r.q*r.p),0);b.innerHTML=`<div>충진량<b>${f(cF().Vt/1000,2)}L</b></div><div>수량<b>${f(s.q)} ${s.u}</b></div><div>금액<b>${t>0?f(t,0)+'원':'-'}</b></div>`}}
+window.sbSet=function(k,on){SB()[k]=on?1:0;sv();ui();res()};
+window.sbGo=function(w){FM.tab=w;fmSave();T(8)};
+window.sbMs=function(k,v){fmMs(k,v);res();sum()};
+window.sbFs=function(k,v){fmSet(k,v);res();sum()};
+function ui(){const cs=document.getElementById('cs');if(!cs)return;let e=document.getElementById('sbx');if(!e){e=document.createElement('div');e.id='sbx';cs.insertAdjacentElement('afterend',e)}
+ /* 코트 카드 배지 */
+ document.querySelectorAll('#cs .cc .mhint').forEach(x=>x.remove());
+ const ep=epC(),cards=document.querySelectorAll('#cs .cc');
+ if(meshOn())ep.forEach(x=>{const h=cards[x.i]&&cards[x.i].querySelector('.chn');if(h)h.insertAdjacentHTML('beforeend','<span class="mhint">+ 메쉬</span>')});
+ if(!S.coats.some(c=>c&&c.n)&&!meshOn()&&!sealOn()&&SB().mesh===undefined&&SB().seal===undefined){/* 제품 미선택이어도 수동 추가 가능하도록 카드는 유지 */}
+ const M=FM.mesh,mo=meshOn(),so=sealOn(),auto=SB().mesh===undefined&&ep.length>0,mc=cM();
+ const dft=ep.length?(ev(ep[0].c,ep[0].p).dft||0):0;
+ const seq=`<details class=sbd><summary>메쉬 설치 순서 (KCC NEXWEB Mesh 기준)</summary>① 하도 도포 후 충분히 건조 → ② 중도(FIREMASK 3500 등)를 <b>인정 도막두께의 약 ½</b>로 도장${dft?` (예: ${f(dft)}㎛ → 1차 약 ${f(dft/2)}㎛)`:''} → ③ 도료가 건조되기 전에 메쉬를 설치하고 롤러로 완전 밀착 (메쉬는 Flange 크기에 맞춰 미리 절단) → ④ 고화건조 후 오염되기 전에 <b>인정 도막두께 이상</b>이 되도록 후속 도장.<br>※ 메쉬는 Ceramic/Glass fiber 교차 구조, 약 40g/㎡, 폭 1.0m, 1롤 150㎡ 기준입니다(제품별로 다르면 메쉬 화면에서 수정). 중도는 두 번에 나눠 바르지만 <b>총 도막두께는 같아 도료 소요량은 변하지 않고</b>, 메쉬는 별도 자재로 추가됩니다.</details>`;
+ e.innerHTML=`<div class=sbc><div class=sbh><b>부자재 소요량</b><small>메쉬 · 실란트 — 일위대가표 행으로 합산</small></div>
+ <div class=sbi><label class=sbt><input type=checkbox ${mo?'checked':''} onchange="sbSet('mesh',this.checked)"><b>내화 메쉬</b>${auto&&mo?'<em>에폭시 내화 선택 · 자동</em>':''}</label>
+ ${mo?`${mc.A>0?`<div class=sbg id=sbm_s></div>`:`<div class=sbw>메쉬를 넣을 형강·부위가 아직 선택되지 않았습니다. 아래 버튼에서 설정하세요.</div>`}
+ <div class=sbp><span>롤 단가</span><input type=number inputmode=decimal value="${M.rp||''}" placeholder="롤당 가격" oninput="sbMs('rp',this.value)"><b>원/롤</b></div>
+ ${mc.warn?`<div class=sbw>${mc.warn}</div>`:''}
+ <button class=sbb onclick="sbGo('mesh')">형강 규격 · 적용 부위 · 롤 규격 설정 ›</button>${seq}`:`<div class=sbn>${ep.length?'에폭시 내화 제품이 선택되어 있습니다. 메쉬가 필요하면 체크하세요.':'에폭시 내화 제품(예: FIREMASK 3500)을 선택하면 메쉬가 자동으로 포함됩니다. 직접 넣으려면 체크하세요.'}</div>`}</div>
+ <div class=sbi><label class=sbt><input type=checkbox ${so?'checked':''} onchange="sbSet('seal',this.checked)"><b>실란트 · 충진재</b></label>
+ ${so?`${cF().n>0?`<div class=sbg id=sbs_s></div>`:`<div class=sbw>충진 부위(폭·깊이·길이)가 아직 입력되지 않았습니다. 아래 버튼에서 입력하세요.</div>`}
+ <div class=sbp><span>1개 단가</span><input type=number inputmode=decimal value="${FM.price||''}" placeholder="카트리지·소시지 1개 가격" oninput="sbFs('price',this.value)"><b>원</b></div>
+ <button class=sbb onclick="sbGo('fill')">제품 · 단면 · 충진 부위 설정 ›</button>`:`<div class=sbn>줄눈·코킹 등 실란트 충진이 견적에 포함되면 체크하세요.</div>`}</div>
+ <div class=sbn>금액은 아래 「소요량 계산 결과」 총 금액, 「세부 내역」, 견적서에 함께 반영됩니다.</div></div>`;
+ sum()}
+const _res=res;res=function(){_res.apply(this,arguments);try{ui()}catch(e){}};
+setTimeout(()=>{try{res()}catch(e){}},0);
+})();
+</script>
 </body></html>
