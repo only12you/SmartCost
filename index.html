@@ -6016,12 +6016,12 @@ function isoTube(){const x0=84,y0=56,s=96,t=15,dx=64,dy=-32,P=a=>a.map(q=>q.join
  `<line x1="${x0+s+dx+14}" y1="${y0+dy-2}" x2="${x0+s+dx+14}" y2="${y0+t+dy+2}" stroke="#10264f" stroke-width="1.4" marker-start="url(#mk)" marker-end="url(#mk)"/><text x="${x0+s+dx+24}" y="${y0+dy+10}" font-size="17" font-weight="600" fill="#10264f">t</text></svg>`}
 const dgHtml=()=>{const p=curPart();if(!p)return '';if(p.k=='hbeam'||p.k=='ibeam')return iso(p.k);if(p.k=='rtube')return isoTube();return `<div style="padding:calc(var(--k)*8) 0">${draw(p)}</div>`};
 const sy=p=>{const f=(FX[p.k]||FX.direct);return `<div class="zqfm">${f.f}</div><div class="zqsy">기호 설명</div><div>${f.sym.map(([a,b])=>`<span>${a}</span><span>:</span><span>${b}</span>`).join('')}</div>`};
-function rightHtml(){const p=curPart();if(!p)return '';IC.bulb=IC.bulb||'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.3 1 2.1h5c0-.8.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>';
+function rightHtml(m){const p=curPart();if(!p)return '';IC.bulb=IC.bulb||'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.3 1 2.1h5c0-.8.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>';
  const f=(FX[p.k]||FX.direct),kd=K[p.k],fl=fxs(p,f).replace(/<br>/g,' ').replace(/<[^>]+>/g,'').replace(/^도장면적\(㎡\)\s*=\s*/,'');
  const dm=kd?kd.f.filter(x=>x[2]!='sel'&&x[0]!='q'):[],la=(dm[0]||[0,'가로'])[1].replace(/\s*\(.*\)/,''),lb=(dm[1]||[0,'높이'])[1].replace(/\s*\(.*\)/,'');
  const row=(a,b)=>`<div class="zqcr"><b>${a}</b><span>=</span><em>${b}</em></div>`;
  const svg=`<svg viewBox="0 0 200 112" aria-hidden="true"><defs><marker id="zqa" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L8 4L0 8z" fill="#1d3a73"/></marker></defs><rect x="46" y="8" width="146" height="76" fill="#e3eeff" stroke="#1d58d8" stroke-width="1.6"/><line x1="30" y1="12" x2="30" y2="80" stroke="#1d3a73" stroke-width="1.2" marker-start="url(#zqa)" marker-end="url(#zqa)"/><text x="4" y="50" font-size="11" fill="#33496f">${lb}</text><line x1="48" y1="97" x2="190" y2="97" stroke="#1d3a73" stroke-width="1.2" marker-start="url(#zqa)" marker-end="url(#zqa)"/><text x="119" y="110" font-size="11" fill="#33496f" text-anchor="middle">${la}</text></svg>`;
- return `<details class="zqcf" open><summary><i>${I('calc')}</i><b>계산 공식</b>${I('chev')}</summary><div class="zqcb"><div class="zqcg">${row('도장면적',fl)}${row('소요량(kg)','도장면적 × 도료 사용량')}${row('소요량(L)','소요량(kg) ÷ 비중')}${row('비용(원)','소요량(L) × 도료 단가')}</div><div class="zqcd" id="zqdg">${svg}</div></div><div class="zqtp"><span class="zqtpb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC.bulb}</svg>TIP</span><ul><li>도장면적에서 공제되는 부위는 창문, 출입문 등입니다.</li><li>실제 소요량을 입력하면 보다 정확한 견적을 산출할 수 있습니다.</li></ul></div></details>`}
+ return m=='f'?`<details class="zqcf" open><summary><i>${I('calc')}</i><b>계산 공식</b>${I('chev')}</summary><div class="zqcb"><div class="zqcg">${row('도장면적',fl)}${row('소요량(kg)','도장면적 × 도료 사용량')}${row('소요량(L)','소요량(kg) ÷ 비중')}${row('비용(원)','소요량(L) × 도료 단가')}</div><div class="zqcd" id="zqdg">${svg}</div></div></details>`:`<div class="zqtp"><span class="zqtpb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC.bulb}</svg>TIP</span><ul><li>도장면적에서 공제되는 부위는 창문, 출입문 등입니다.</li><li>실제 소요량을 입력하면 보다 정확한 견적을 산출할 수 있습니다.</li></ul></div>`}
 
 const f1=(v,d)=>F(v,d==null?1:d);
 function resCalc(){const A=tot(AR.type),c=cnd(),u=useKg(c),kg=A*u*(1+n(c.loss)/100),L=c.sg>0?kg/n(c.sg):0,cost=L*n(c.price);return{A,c,u,kg,L,cost}}
@@ -6063,7 +6063,7 @@ const addRow=t=>{const ks=Object.keys(K).map(k=>`<option value="${k}">${K[k].n}<
 function page(){
  return `<div class="zqhx"><i class="zqhp"></i><div class="zqhi"><i class="zqlg3">${I('roller')}<em>CoatCost</em></i><span class="zqbr2">CoatCost</span><b>도장 면적 산출</b><p>간단한 입력으로 정확한 도장 면적과<br>소요량을 계산하세요.</p></div></div>
 <div class="zqp"><div class="zqt">${TABS.map(k=>`<button type="button" class="${k==AR.type?'on':''}" onclick="apType('${k}')">${I(k)}${TY[k].n}</button>`).join('')}</div>
-<div class="zqg"><div class="zqcol" id="zql">${leftHtml()}</div><div class="zqrc"><div class="zqrs" id="zqrs">${resInner()}</div></div></div></div>`}
+<div class="zqg"><div class="zqcol" id="zql">${leftHtml()}</div><div class="zqrc"><div class="zqrs" id="zqrs">${resInner()}</div><div id="zqfc">${rightHtml('f')}</div></div></div></div>`}
 function render(){const e=document.getElementById('zq');if(!e)return;const sc=e.scrollTop;e.innerHTML=page();e.scrollTop=sc}
 const ensure=()=>{ensurePre(AR.type);if(AR.type=='steel')mainPart(AR.sk||'hbeam')};
 window.apOpen=function(){apClose();ensure();const e=document.createElement('div');e.id='ap';e.className='ap';e.innerHTML='<div class="zq" id="zq"></div>';document.body.appendChild(e);document.documentElement.classList.add('pdlock');document.body.classList.add('apopen');render();const g=document.getElementById('gnav');if(g)g.addEventListener('click',apClose,true)};
@@ -6076,7 +6076,7 @@ window.apType=t=>{AR.type=t;AR.cur=null;ensure();save();render()};
 window.apKind=k=>{AR.sk=k;mainPart(k);save();render()};
 window.apMore=()=>{AR.pm=AR.pm?0:1;save();render()};
 window.apPick=id=>{AR.pm=0;AR.cur=id;save();render()};
-window.apCur=id=>{if(AR.cur==id||AR.type=='steel')return;AR.cur=id;save();const r=document.getElementById('zqr');if(r)r.innerHTML=rightHtml()};
+window.apCur=id=>{if(AR.cur==id||AR.type=='steel')return;AR.cur=id;save();const r=document.getElementById('zqr');if(r)r.innerHTML=rightHtml();const f=document.getElementById('zqfc');if(f)f.innerHTML=rightHtml('f')};
 window.AR_N=v=>{AR.name=v;save()};
 window.apSet=(id,k,v)=>{const p=find(id);if(!p)return;p[k]=v;save();apLive()};
 window.apName=(id,v)=>{const p=find(id);if(!p)return;p.nm=v;save();const e=document.querySelector(`#ap [data-nm="${id}"]`);if(e)e.textContent=v||K[p.k].n};
@@ -10096,6 +10096,18 @@ html body #ap .zqcol{display:contents!important}
 html body #ap .zqcol>*{grid-column:1/-1}
 html body #ap .zqcol>.zqs1{grid-column:1!important;grid-row:1!important}
 html body #ap .zqrc{grid-column:2!important;grid-row:1!important;align-self:start!important;margin:0 0 calc(var(--u)*16)!important;min-width:0}
+
+/* v438d: 계산 공식을 결과 카드 아래(오른쪽 열)로 이동 · TIP은 03 카드에 유지 */
+html body #ap .zqrc #zqfc{margin-top:calc(var(--u)*14)}
+html body #ap .zqrc #zqfc:empty{display:none}
+html body #ap .zqrc .zqcb{flex-direction:column;align-items:stretch}
+html body #ap .zqrc .zqcg{width:100%}
+html body #ap .zqrc .zqcr{display:block;line-height:1.45}
+html body #ap .zqrc .zqcr b{display:block}
+html body #ap .zqrc .zqcr span{display:inline;margin-right:calc(var(--u)*6)}
+html body #ap .zqrc .zqcr em{display:inline}
+html body #ap .zqrc .zqcd{width:80%;margin:0 auto}
+html body #ap .zqs3 .zqr>.zqtp{margin-top:0}
 </style>
 
 </body></html>
