@@ -3001,7 +3001,7 @@ function syRender(){
   h+=`<div class="sy-empty">${syIc.layers}<div><b>도장 시스템이 비어 있습니다</b><small>먼저 ‘시스템 추가’로 시스템을 만들어 목록에 저장하고, ‘저장된 시스템’에서 불러와 지정하세요.</small></div></div>`;
  }else{
   syGr().forEach((g,gi)=>{
-   h+=`<div class="sy-sg${gi?' nx':''}${SY.groups[gi].c?' fold':''}"><div class="sy-sgh"><button class="sy-fold" onclick="syFold(${gi})" aria-label="접기/펼치기" aria-expanded="${SY.groups[gi].c?'false':'true'}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><span class="sy-sgn">${gi+1}</span><input class="sy-gn" value="${esc(g.name)}" oninput="syGn(${gi},this.value)" aria-label="시스템 이름" placeholder="시스템 이름"><span class="sy-sgc">${g.idx.length}개</span><label class="carea sy-car"><span>면적 [m²]</span><input type="number" inputmode="decimal" placeholder="면적 ㎡" value="${esc(SY.groups[gi].area||'')}" onwheel="this.blur()" oninput="syGa(${gi},this.value)" aria-label="${esc(g.name)} 면적"></label><button class="zs1x sv" onclick="syGSave(${gi},this)">저장</button><button class="zdlx" onclick="syDelG(${gi})" aria-label="삭제">삭제</button><button class="all" onclick="syPick(${gi})">제품+</button></div><div class="sy-ly">${syIc.layers}<span>${g.idx.map(i=>labs[i]).join(' · ')}</span></div>`;
+   h+=`<div class="sy-sg${gi?' nx':''}${SY.groups[gi].c?' fold':''}"><div class="sy-sgh"><button class="sy-fold" onclick="syFold(${gi})" aria-label="접기/펼치기" aria-expanded="${SY.groups[gi].c?'false':'true'}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button><span class="sy-sgn">${gi+1}</span><input class="sy-gn" value="${esc(g.name)}" oninput="syGn(${gi},this.value)" aria-label="시스템 이름" placeholder="시스템 이름"><span class="sy-sgc">${g.idx.length}개</span><label class="carea sy-car"><span>면적 [m²]</span><input type="number" inputmode="decimal" placeholder="면적 ㎡" value="${esc(SY.groups[gi].area||'')}" onwheel="this.blur()" oninput="syGa(${gi},this.value)" aria-label="${esc(g.name)} 면적"></label><button class="zs1x sv" onclick="syGSave(${gi},this)">저장</button><button class="zdlx" onclick="syDelG(${gi})" aria-label="삭제">삭제</button><button class="all" onclick="syPick(${gi})">제품+</button></div><div class="sy-ly">${syIc.layers}<span>${g.idx.map(i=>labs[i]).join(' · ')}</span></div><div class="sy-lcc"><span class="sy-lt">LCC 사양</span><div class="sy-lo">${[['cur','기존'],['base','범용'],['rec','추천']].map(([v,t])=>`<button type="button" class="${(SY.groups[gi].lr||'cur')==v?'on':''}" onclick="syLccSel(${gi},'${v}')">${t}</button>`).join('')}</div><button type="button" class="sy-ls" onclick="syToLcc(${gi})">LCC로 보내기</button></div>`;
    g.idx.forEach((i,k)=>{
     const c=L[i],p=PC(c.n),on=act==i,pk=p?(+p.mk||+p.pk||0):0,u=p?UN(p):'';
     h+=`<div class="sy-t ${on?'on':''}" style="--lc:${syCol[k]}"><div class="sy-th" onclick="syAct(${i})"><span class="sy-tn">${k+1}</span><b class="sy-tl">${labs[i]}</b><span class="sy-tm">${esc(c.n)}${p?'':' <small>(DB에서 삭제됨)</small>'}</span>${p&&p.mf?`<span class="sy-mf">${esc(p.mf)}</span>`:''}<span class="sy-cv">${syIc.chev}</span></div>`;
@@ -3118,6 +3118,11 @@ function syAh(){try{const p=document.querySelector('#v3 .syp'),a=p&&p.querySelec
 window.addEventListener('resize',()=>setTimeout(syAh,50));
 function syClose(){window.SYLCC=null;const e=$('#sypk');if(e)e.remove()}
 function syGn(g,v){const G=SY.groups[g];if(!G)return;G.name=v;syS();syCalc()}
+function syLccSel(g,v){if(!SY.groups[g])return;SY.groups[g].lr=v;syS();syRender()}
+function syToLcc(g){const G=SY.groups[g];if(!G)return;const r=G.lr||'cur',nm={cur:'기존',base:'범용',rec:'추천'}[r];
+ if(!SY.layers.some(l=>l.g==g))return tt('보낼 제품이 없습니다');
+ let an='';try{an=LCCX.diagInfo().n||''}catch(e){}
+ try{LCCX.applySys(r,g);tt('LCC '+nm+' 사양으로 보냈습니다'+(an?'<br><small>'+esc(String(an).slice(0,18))+'</small>':''))}catch(e){console.error(e);tt('LCC로 보내지 못했습니다')}}
 function syGSave(g,btn){const G=SY.groups[g];if(!G)return;const LB=syLb(),items=[];SY.layers.forEach((l,i)=>{if(l.g==g)items.push(Object.assign({n:l.n,lb:LB[i]=='미지정'?'':LB[i]},['price','tprice','dft','svr','loss','tr'].reduce((o,k)=>{if(l[k]!==undefined&&l[k]!=='')o[k]=l[k];return o},{})))});
  const nm=(G.name||'').trim()||('시스템 '+(g+1)),A=syLibGet(),it={name:nm,ts:Date.now(),items},k=A.findIndex(x=>x.name==nm);if(k>=0)A[k]=it;else A.unshift(it);syLibSet(A);vib(20);
  if(btn){const o=btn.textContent;btn.textContent='저장됨 ✓';setTimeout(()=>{try{btn.textContent=o}catch(e){}},1500)}
@@ -7456,7 +7461,7 @@ return`<div class="lx">${lxHero(urg2)}
 const FW=[["대시보드","전체 현황을 한눈에 보는 요약 화면입니다. 입력은 없고, 아래 단계에서 넣은 값이 모두 여기로 모입니다.","입력 없음 · 결과 요약"],
 ["자산","① 무엇을 평가할지 정합니다. 설비 종류·면적·경과년·요구 내구성과 염화물·SO₂·습도(부식환경)를 입력합니다.","입력 시작점"],
 ["진단","② 현장 상태(녹·균열·박리·들뜸·백화)를 점검해 자산 정보를 실제 열화 상태로 보정합니다. 건너뛰면 기본값을 씁니다.","자산 → 열화 보정"],
-["사양","③ 비교할 3가지 도장 사양(현재·범용·추천)의 도료·막두께·단가를 정합니다. 앞 단계의 환경·보정이 수명 계산에 자동 반영되고, 일위대가표에서 바꾼 도장사양(코트·제품·두께·단가·면적)도 자동으로 이 화면의 연동 사양에 들어옵니다.","환경·보정 → 사양별 수명/비용"],
+["사양","③ 비교할 3가지 도장 사양(현재·범용·추천)의 도료·막두께·단가를 정합니다. 앞 단계의 환경·보정이 수명 계산에 자동 반영됩니다. 도장 시스템에서 만든 사양은 'LCC 사양으로 보내기'로 도장·범용·추천 중 원하는 곳에 넣습니다.","환경·보정 → 사양별 수명/비용"],
 ["비교","④ 같은 조건에서 3가지 사양의 수명과 LCC를 나란히 비교해 가장 경제적인 사양을 고릅니다.","사양 → 최저 LCC 선정"],
 ["보고서","⑤ 결과를 보고서로 정리하고, 선택한 사양을 일위대가표(공사비 산출)로 보냅니다.","결과 → 보고서·일위대가표"]];
 function fwChips(){const a=A_(),r=all(a),j=judge(a),m=r.m,best=m.reduce((b,x,i)=>x.tot<m[b].tot?i:b,0),k=dgK(a),dgs=a.dg&&a.dgOn!==false&&a.dg.k>0?"현장진단 반영 ×"+(+a.dg.k).toFixed(2):"현장진단 미반영",env=r.en.eff+" "+CAT[r.en.eff][0];
@@ -7482,7 +7487,7 @@ function pick(r,i){PK={r,i};pqSheet("rppk",`<div class="pqmh"><b>DB 제품 선�
 function pkq(q){const L=DB.map((p,j)=>[p,j]).filter(([p])=>!q||(p.n+(p.mf||"")+(p.g||"")).toLowerCase().includes(String(q).toLowerCase())).slice(0,40);document.getElementById("rpl").innerHTML=L.length?L.map(([p,j])=>`<button class="pqml" onclick="LCCX.use(${j})"><span class="pqt"><b>${hh(p.n)}</b><small>${hh((p.mf||"")+" · "+(p.g||p.d||"")+" · SVR "+(p.svr||"-")+"% · "+(p.dft||"-")+"㎛")}</small></span></button>`).join(""):'<div class="k">제품 DB가 비어 있습니다. 더보기 → 제품 DB에서 추가하세요.</div>'}
 function use(j){const p=DB[j],c=A_().sp[PK.r].coats[PK.i],tr=+p.tr||0;c.p=p.n;c.db=p.n;c.vs=+p.svr||c.vs;c.d=+p.dft||c.d;c.th=tr?(tr>1?tr:+(tr*100).toFixed(1)):(+p.trp||c.th);c.pk=+p.mk||+p.pk||c.pk;c.un=/kg|㎏/i.test(p.un||"")?"kg":"L";c.sg=+p.sg||0;c.ts=+p.ts||18;pqX("rppk");rsv();R()}
 
-function pull(){if(!S||!Array.isArray(S.coats)||!S.coats.some(c=>c&&c.n))return;if(!RS.link||!RS.assets[RS.link.i])RS.link={i:Math.min(RS.i,RS.assets.length-1),r:"cur"};const a=RS.assets[RS.link.i],r=RS.link.r,sp=a&&a.sp[r];if(!sp)return;
+function pull(){return;/* v425: 일위대가표 → LCC 자동 반영 삭제 (도장 시스템의 LCC 사양으로 보내기로 대체) */if(!S||!Array.isArray(S.coats)||!S.coats.some(c=>c&&c.n))return;if(!RS.link||!RS.assets[RS.link.i])RS.link={i:Math.min(RS.i,RS.assets.length-1),r:"cur"};const a=RS.assets[RS.link.i],r=RS.link.r,sp=a&&a.sp[r];if(!sp)return;
 const nc=S.coats.filter(c=>c&&typeof c=="object"&&c.n).map((c,k)=>{const o=sp.coats[k]||{z:k==0?"하도":"상도",pk:18,un:"L",sg:0,ts:18,tp:0,db:""},n=c.n||o.p;return Object.assign({},o,{p:n,db:DB.some(x=>x.n==n)?n:"",d:+c.dft||0,vs:+c.svr||o.vs,ls:c.loss!==undefined&&c.loss!==""?+c.loss:o.ls,th:c.tr!==undefined&&c.tr!==""?+c.tr:o.th,price:+c.price||0,tp:+c.tprice||0})});
 if(!nc.length)return;const ch=JSON.stringify(nc)!=JSON.stringify(sp.coats),ar=Math.round(+S.area||0),car=ch||(ar>0&&Math.round(a.ar)!=ar);if(!car)return;
 sp.coats=nc;RS.link.t=Date.now();if(ar>0&&Math.round(a.ar)!=ar){const o=RS.i;RS.i=RS.link.i;try{Ar(ar)}catch(e){}RS.i=o}rsv();if(document.getElementById("v9")&&document.body.dataset.pg==9)R();try{tt("일위대가표 변경 → LCC \""+hh(a.n).slice(0,12)+"\" "+RN[RK.indexOf(r)]+"에 반영")}catch(e){}}
@@ -9523,5 +9528,17 @@ html body #pqtv .pqsb.pdf2 .pin{margin-left:calc(var(--k)*12);margin-right:calc(
 html body.pg1 #app #v1.pn,html body #app #v1.pn{padding-left:calc(var(--u)*10)!important;padding-right:calc(var(--u)*10)!important}
 html body #app #v1 .dbsh{padding-left:calc(var(--u)*10);padding-right:calc(var(--u)*10)}
 html body #app #v1 .dbsb{padding-left:calc(var(--u)*10);padding-right:calc(var(--u)*10)}
+/* v425 제품 수정/등록: 저장 버튼 바를 하단 내비게이션 바로 위까지 내림 (하단 안전영역 여백 제거) */
+html body #pqtv .pfa{bottom:var(--gnh,52px)!important;padding-bottom:calc(var(--k,.46px)*14)!important}
+/* v425 견적서 미리보기: 하단 버튼(PDF 저장·인쇄·초기화·공유)이 하단 내비게이션에 가려지지 않게 */
+html body #es .qpvb{bottom:var(--gnh,52px)!important;padding-bottom:10px!important}
+html body #es .rpw.pv{padding-bottom:calc(var(--gnh,52px) + 84px)!important}
+/* v425 도장 시스템 → LCC 사양으로 보내기 */
+html body #v3 .sy-lcc{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 10px;padding:8px 10px;border:1px solid #cfe0f7;border-radius:12px;background:#f1f6fe}
+html body #v3 .sy-lcc .sy-lt{font-size:12.5px;font-weight:800;color:#0f2147;flex:none}
+html body #v3 .sy-lcc .sy-lo{display:flex;gap:2px;background:#e3ecfa;border-radius:10px;padding:3px;flex:1;min-width:150px}
+html body #v3 .sy-lcc .sy-lo button{flex:1;height:30px!important;margin:0!important;padding:0 6px!important;border:0!important;border-radius:8px!important;background:transparent!important;color:#3d4f6e!important;font-size:12.5px!important;font-weight:800!important}
+html body #v3 .sy-lcc .sy-lo button.on{background:linear-gradient(180deg,#3b86f5,#1457d8)!important;color:#fff!important}
+html body #v3 .sy-lcc .sy-ls{flex:none;width:auto!important;height:34px!important;margin:0!important;padding:0 14px!important;border-radius:10px!important;border:1px solid #238a68!important;background:linear-gradient(180deg,#2fa37c,#238a68)!important;color:#fff!important;font-size:12.5px!important;font-weight:800!important}
 </style>
 </body></html>
