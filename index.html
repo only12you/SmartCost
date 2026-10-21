@@ -9565,12 +9565,17 @@ html body #v3 .sy-lcc .sy-ls{flex:none;width:auto!important;height:34px!importan
 #sbx details.sbd{margin-top:8px;font-size:11.5px;color:#44546f;line-height:1.6}#sbx details.sbd summary{cursor:pointer;color:#1d4fa8;font-weight:700}
 .cc .mhint{display:inline-block;margin-left:6px;font-size:10.5px;color:#fff;background:#e0662f;border-radius:999px;padding:1px 8px;vertical-align:middle}
 </style>
-<style id=sub433css>
-/* 하단 내비 서브메뉴 패널: 더보기 타이틀과 같은 배경 사진 */
-html body #gsub .gsp{background:var(--hgr),var(--hph) 66% 50%/cover no-repeat #0b4fd0!important;border-color:rgba(255,255,255,.4)!important}
-html body #gsub .gsh b{color:#fff!important;text-shadow:0 1px 6px rgba(0,20,70,.35)}
-html body #gsub .gsh small{color:rgba(255,255,255,.95)!important;text-shadow:0 1px 5px rgba(0,20,70,.35)}
+<style id=sub434css>
+/* 하단 내비 서브메뉴 패널: 더보기의 산출·도장 분석·DB·관리 섹션과 같은 배경 이미지 */
+#gsub .gsp::before{content:"";position:absolute;right:0;top:0;width:calc(var(--u)*353);height:calc(var(--u)*77);background:var(--art-x) right top/100% 100% no-repeat;-webkit-mask-image:linear-gradient(90deg,transparent,#000 45%);mask-image:linear-gradient(90deg,transparent,#000 45%);pointer-events:none}
+#gsub[data-c=calc] .gsp{--art-x:var(--art-calc)}#gsub[data-c=ana] .gsp{--art-x:var(--art-ana)}#gsub[data-c=db] .gsp{--art-x:var(--art-db)}#gsub[data-c=adm] .gsp{--art-x:var(--art-adm)}
 </style>
+<script id=sub434>
+(function(){const ids=['calc','ana','db','adm'];let n=0;
+function cp(){const g=document.getElementById('gnav');if(!g)return false;const cs=getComputedStyle(g);let ok=0;ids.forEach(id=>{const k='--art-'+id,v=(g.style.getPropertyValue(k)||cs.getPropertyValue(k)||'').trim();if(v){document.documentElement.style.setProperty(k,v);ok++}});return ok==ids.length}
+const t=setInterval(()=>{if(cp()||++n>20)clearInterval(t)},300);
+})();
+</script>
 <style id=sub432css>
 .sy-grip{flex:none;width:26px;height:28px;display:flex;align-items:center;justify-content:center;border:0;background:none;color:#7d8fb3;padding:0;touch-action:none;cursor:grab;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 .sy-grip svg{width:16px;height:16px;pointer-events:none}
