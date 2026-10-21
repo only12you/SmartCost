@@ -10089,6 +10089,13 @@ html body #ap .zqtpb svg{width:calc(var(--u)*28);height:calc(var(--u)*28)}
 html body #ap .zqtp ul{margin:0;padding:0 0 0 calc(var(--u)*22);border-left:1px solid #cfdcf0;font-size:max(9px,calc(var(--u)*18));color:#33496f;line-height:1.5}
 /* 01 접힘 부위 행 · 부위 추가 */
 html body #ap .zqpt>summary svg:first-child{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important;padding:calc(var(--u)*7);border-radius:calc(var(--u)*10);background:#e3eeff;color:#1d58d8!important}
+
+/* v438c: 최종 산출 결과를 01 부위 정보 입력 카드 오른쪽으로 되돌림 (02·03·계산 공식은 v438b 유지) */
+html body #ap .zqg{display:grid!important;grid-template-columns:minmax(0,1.72fr) minmax(0,1fr)!important;column-gap:calc(var(--u)*12)!important;row-gap:0!important;align-items:start!important}
+html body #ap .zqcol{display:contents!important}
+html body #ap .zqcol>*{grid-column:1/-1}
+html body #ap .zqcol>.zqs1{grid-column:1!important;grid-row:1!important}
+html body #ap .zqrc{grid-column:2!important;grid-row:1!important;align-self:start!important;margin:0 0 calc(var(--u)*16)!important;min-width:0}
 </style>
 
 </body></html>
