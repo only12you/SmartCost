@@ -5892,7 +5892,7 @@ const K={
  plate:{n:'평판·철판',f:[['w','가로','m'],['l','세로','m'],['q','수량','장'],['s','도장 면','sel',SEL12]],a:p=>n(p.w)*n(p.l)*q1(p)*sd(p)},
  tank:{n:'탱크·원통',f:[['D','지름','m'],['h','높이','m'],['t','지붕·바닥','sel',[['0','측면만'],['1','측면 + 지붕'],['2','측면 + 지붕 + 바닥']]],['q','수량','기']],a:p=>(PI*n(p.D)*n(p.h)+PI*n(p.D)*n(p.D)/4*(+p.t||0))*q1(p)},
  car:{n:'차량(근사)',f:[['L','길이','m'],['W','폭','m'],['H','높이','m'],['k','외판 계수','','0.3'],['q','대수','대']],a:p=>2*(n(p.L)*n(p.W)+n(p.L)*n(p.H)+n(p.W)*n(p.H))*(p.k===''||p.k==null?0.3:n(p.k))*q1(p)},
- direct:{n:'직접 면적',f:[['A','면적','㎡'],['q','수량','개']],a:p=>n(p.A)*q1(p)}
+ direct:{n:'직접 면적',f:[['A','면적','㎡'],['q','수량','개'],['s','도장 면','sel',[['','선택하세요'],['1','한 면'],['2','양면']]]],a:p=>n(p.A)*q1(p)*sd(p)}
 };
 const TY={
  apt:{n:'아파트',pre:[['외벽','wall'],['내벽(세대)','wall'],['천장','floor'],['계단실 벽','wall'],['복도 바닥','floor'],['옥상 바닥','floor'],['옥상 파라펫','parapet']]},
@@ -5949,6 +5949,7 @@ const D={
 const draw=p=>`<svg viewBox="0 0 ${DW} ${DH}" width="100%" aria-hidden="true">${(D[p.k]||D.direct)(p)}</svg>`;
 /* ---------- 화면 (v384 · 1024px 참고 디자인 기준) ---------- */
 const IC={apt:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M11 21v-3h2v3"/>',house:'<path d="M3.5 11 12 4l8.5 7"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>',roof:'<rect x="6" y="3" width="12" height="18" rx="1.2"/><path d="M9.5 7h1.6M12.9 7h1.6M9.5 11h1.6M12.9 11h1.6M9.5 15h1.6M12.9 15h1.6"/>',park:'<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M9.5 16V8.5h3a2.3 2.3 0 0 1 0 4.6h-3"/>',steel:'<path d="M5 4h14v3.5H13.5v9H19V20H5v-3.5h5.5v-9H5z"/>',car:'<path d="M3 15v-3l2-4h14l2 4v3z"/><circle cx="7.5" cy="16.5" r="1.8"/><circle cx="16.5" cy="16.5" r="1.8"/>',plant:'<path d="M3 20V9l5 3V9l5 3V5h3l1 7h3v8z"/><path d="M7 16h2M12 16h2M17 16h2"/>',free:'<circle cx="5.5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18.5" cy="12" r="1.3"/>',hbeam:'<path d="M6 4v16M18 4v16M6 12h12"/>',ibeam:'<path d="M6 4h12M6 20h12M12 4v16"/>',rtube:'<rect x="5" y="5" width="14" height="14" rx="1.5"/>',pipe:'<circle cx="12" cy="12" r="8"/>',chev:'<path d="M6 9l6 6 6-6"/>',right:'<path d="M9 6l6 6-6 6"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.4"/>',calc:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/>',roller:'<rect x="4" y="3.5" width="14" height="6" rx="1.8"/><path d="M18 6.5h2.5V12h-8v3"/><rect x="10" y="15" width="4" height="6" rx="1.2"/>',drop:'<path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 2.5-6.5 6-11z"/>',kg:'<path d="M7 9h10l2.2 11H4.8z"/><circle cx="12" cy="5.5" r="2"/>',yen:'<circle cx="12" cy="12" r="9"/><path d="M8.5 7l3.5 5 3.5-5M12 12v6M9 13.5h6M9 16h6"/>',doc:'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 14l2 2 4-4"/>',atom:'<circle cx="12" cy="12" r="1.8"/><ellipse cx="12" cy="12" rx="9" ry="3.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(120 12 12)"/>',plus:'<path d="M12 5v14M5 12h14"/>',ruler:'<path d="M3 17 17 3l4 4L7 21z"/><path d="M7.5 12.5l2 2M10.5 9.5l2 2M13.5 6.5l2 2"/>'};
+Object.assign(IC,{pin:'<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',layers:'<path d="M12 3L3 7.5l9 4.5 9-4.5z"/><path d="M3 12l9 4.5 9-4.5M3 16.5L12 21l9-4.5"/>'});
 const I=(k,c)=>`<svg class="${c||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]||''}</svg>`;
 const FMIB=[['I-100×75×5×8',100,75,5,8],['I-150×75×5.5×9.5',150,75,5.5,9.5],['I-200×100×7×10',200,100,7,10],['I-250×125×7.5×12.5',250,125,7.5,12.5],['I-300×150×8×13',300,150,8,13]];
 const FMRT=[['□-50×50×2.3',50,50,2.3],['□-75×75×3.2',75,75,3.2],['□-100×100×4.5',100,100,4.5],['□-150×150×6.0',150,150,6],['□-200×200×8.0',200,200,8]];
@@ -5972,6 +5973,7 @@ const FX={hbeam:{f:'도장면적(㎡) = <b>{ 2×H + 4×B − 2×tw }</b><br>× �
  car:{f:'도장면적(㎡) = <b>2 × (L×W + L×H + W×H) × 외판 계수</b> × 대수',sym:[['L','길이 (m)'],['W','폭 (m)'],['H','높이 (m)'],['계수','외판 계수 (기본 0.3)']]},
  direct:{f:'도장면적(㎡) = <b>면적 × 수량</b>',sym:[['면적','직접 입력 (㎡)'],['수량','개수']]}};
 const TABS=['apt','house','roof','park','steel','car','plant','free'];
+const fxs=(p,f)=>f.f+((p&&p.k=='direct'&&+p.s==2)?' × 2(양면)':'');
 const CD0={dft:100,use:'',sg:1.33,price:40000,loss:0,p:''};
 const cnd=()=>{const c=Object.assign({},CD0,AR.cond||{});return c};
 const useKg=c=>{if(n(c.use)>0)return n(c.use);const p=c.p&&typeof P=='function'?P(c.p):null;if(p&&n(p.svr)>0)return n(c.dft)/(10*n(p.svr))*(n(p.sg)>0?n(p.sg):c.sg);return n(c.dft)*0.00105};
@@ -5979,10 +5981,10 @@ const lab=l=>{const m=String(l).match(/^(\S+)\s+(\(.*\))$/);return m?`${m[1]} <s
 const mainPart=k=>{let p=AR.parts.find(x=>x.t=='steel'&&x.k==k);if(!p){p={id:'p'+(AR.seq++),t:'steel',k,nm:'',q:'',s:'1'};AR.parts.push(p);save()}return p};
 const curPart=()=>{if(AR.type=='steel')return mainPart(AR.sk||'hbeam');return AR.parts.find(p=>p.id==AR.cur&&p.t==AR.type)||AR.parts.find(p=>p.t==AR.type)};
 const num=(p,k)=>p[k]===''||p[k]==null?'':p[k];
-const ICN={h:'<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>',v:'<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>',d:'<path d="M5 19L19 5M5 19v-6M5 19h6M19 5v6M19 5h-6"/>',t:'<path d="M4 8h16M4 16h16M12 8v8M9 11l3-3 3 3M9 13l3 3 3-3"/>',q:'<path d="M6 6l12 12M18 6L6 18"/>',m:'<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',a:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 12h16M12 4v16"/>',s:'<path d="M3 17l9 4 9-4M3 12l9 4 9-4M12 3L3 7l9 4 9-4z"/>',r:'<path d="M4 20h16M4 20L16 6M9 20a6 6 0 0 0-1.6-4"/>',c:'<circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/><path d="M18 5L6 19"/>',w:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',y:'<path d="M7 4h10M7 9h10M12 9c-3 0-5 2-5 4.5S9 17 12 17M12 17v3M8 20h8"/>'};
+const ICN={h:'<path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/>',v:'<path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4"/>',d:'<path d="M5 19L19 5M5 19v-6M5 19h6M19 5v6M19 5h-6"/>',t:'<path d="M4 8h16M4 16h16M12 8v8M9 11l3-3 3 3M9 13l3 3 3-3"/>',q:'<rect x="4" y="3.5" width="13" height="5.5" rx="1.6"/><path d="M17 6.2h2.5v5H12v3"/><rect x="10" y="14" width="4" height="6.5" rx="1.2"/>',m:'<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>',a:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',s:'<path d="M3 17l9 4 9-4M3 12l9 4 9-4M12 3L3 7l9 4 9-4z"/>',r:'<path d="M4 20h16M4 20L16 6M9 20a6 6 0 0 0-1.6-4"/>',c:'<circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/><path d="M18 5L6 19"/>',w:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',y:'<path d="M4 6l3.5 12L12 8l4.5 10L20 6M3 10.5h18M3 14h18"/>'};
 const icn=l=>{const t=String(l).replace(/<[^>]+>/g,'');let k='';
  if(/높이|^H\b|^h\b|깊이/.test(t))k='v';else if(/두께|^tw|^tf|^t\b/.test(t))k='t';else if(/가로|폭|밑변|너비|지름|외경|^B\b|^W\b|^A\b/.test(t))k='h';else if(/세로/.test(t))k='v';else if(/길이|^L\b/.test(t))k='h';
- else if(/수량|대수|개수/.test(t))k='q';else if(/공제/.test(t))k='m';else if(/면적/.test(t))k='a';else if(/도장 ?면/.test(t))k='s';else if(/경사/.test(t))k='r';else if(/계수|로스/.test(t))k='c';else if(/사용량|비중/.test(t))k='w';else if(/단가/.test(t))k='y';else if(/DFT/.test(t))k='t';
+ else if(/수량|대수|개수/.test(t))k='q';else if(/공제/.test(t))k='m';else if(/면적/.test(t))k='a';else if(/도장 ?면/.test(t))k='s';else if(/경사/.test(t))k='r';else if(/계수|로스/.test(t))k='c';else if(/사용량|비중/.test(t))k='w';else if(/단가/.test(t))k='y';else if(/DFT/.test(t))k='t';else if(/제품 ?DB/.test(t))k='s';
  return k?`<svg class="zqic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICN[k]}</svg>`:''};
 const tile=(p,[k,l,u,o],kk)=>{const h=(HINT[kk]||{})[k]||l;return `<div class="zqd"><span>${icn(h)}<i>${lab(h)}</i></span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${num(p,k)}" placeholder="${k=='q'?'1':(o||'')}" oninput="apSet('${p.id}','${k}',this.value)" onfocus="apCur('${p.id}')" onwheel="this.blur()"><em>${u}</em></div></div>`};
 const selTile=(p,[k,l,u,o])=>`<div class="zqd"><span>${icn(l)||icn('도장 면')}<i>${lab(l)}</i></span><div class="zqi"><select onchange="apSet('${p.id}','${k}',this.value);apRe()">${o.map(([v,t])=>`<option value="${v}"${String(p[k]==null||p[k]===''?o[0][0]:p[k])==v?' selected':''}>${t}</option>`).join('')}</select></div></div>`;
@@ -6014,7 +6016,7 @@ function isoTube(){const x0=84,y0=56,s=96,t=15,dx=64,dy=-32,P=a=>a.map(q=>q.join
  `<line x1="${x0+s+dx+14}" y1="${y0+dy-2}" x2="${x0+s+dx+14}" y2="${y0+t+dy+2}" stroke="#10264f" stroke-width="1.4" marker-start="url(#mk)" marker-end="url(#mk)"/><text x="${x0+s+dx+24}" y="${y0+dy+10}" font-size="17" font-weight="600" fill="#10264f">t</text></svg>`}
 const dgHtml=()=>{const p=curPart();if(!p)return '';if(p.k=='hbeam'||p.k=='ibeam')return iso(p.k);if(p.k=='rtube')return isoTube();return `<div style="padding:calc(var(--k)*8) 0">${draw(p)}</div>`};
 const sy=p=>{const f=(FX[p.k]||FX.direct);return `<div class="zqfm">${f.f}</div><div class="zqsy">기호 설명</div><div>${f.sym.map(([a,b])=>`<span>${a}</span><span>:</span><span>${b}</span>`).join('')}</div>`};
-function rightHtml(){const p=curPart();if(!p)return '';const f=(FX[p.k]||FX.direct);return `<details class="zqr1 zqsm2" open><summary><i>${I('calc')}</i><b>계산식 요약</b>${I('chev')}</summary><div class="zqfm"><b>도장 면적</b><br>${f.f.replace(/<br>/g,' ')}<br><br><b>도료 소요량</b><br>소요량(kg) = 도장면적(㎡) × 도료 사용량(kg/㎡)<br>소요량(L) = 소요량(kg) ÷ 비중(kg/L)<br><br><b>도장 비용</b><br>비용(원) = 소요량(L) × 도료 단가(원/L)</div></details>
+function rightHtml(){const p=curPart();if(!p)return '';const f=(FX[p.k]||FX.direct);return `<details class="zqr1 zqsm2" open><summary><i>${I('calc')}</i><b>계산식 요약</b>${I('chev')}</summary><div class="zqfm"><b>도장 면적</b><br>${fxs(p,f).replace(/<br>/g,' ')}<br><br><b>도료 소요량</b><br>소요량(kg) = 도장면적(㎡) × 도료 사용량(kg/㎡)<br>소요량(L) = 소요량(kg) ÷ 비중(kg/L)<br><br><b>도장 비용</b><br>비용(원) = 소요량(L) × 도료 단가(원/L)</div></details>
 <details class="zqr1 zqdg2"><summary><i>${I('info')}</i><b>산출식 도해 · 기호 설명</b>${I('chev')}</summary><div class="zqdg" id="zqdg">${dgHtml()}</div>${sy(p)}</details>
 <div class="zqtip"><div><i>${I('info')}</i><b>TIP</b><span>도장면적 산출 팁</span></div><ul><li>공제면적은 창문, 문, 설비 등 제외 면적입니다.</li><li>도료 소요량은 도장 조건(도막두께·사용량)을 반영합니다.</li><li>정확한 산출을 위해 실측값을 입력하세요.</li></ul></div>`}
 const f1=(v,d)=>F(v,d==null?1:d);
@@ -6024,13 +6026,13 @@ function condItems(r){const p=curPart(),c=r.c,out=[];if(!p)return out;const kd=K
  else{out.push(TY[AR.type].n);out.push('부위 '+AR.parts.filter(x=>x.t==AR.type).length+'곳')}
  out.push('도막두께 '+F(n(c.dft),0)+'µm');out.push('도료 사용량 '+F(r.u,3)+'kg/㎡');return out}
 function resInner(){const r=resCalc(),c=r.c,pr=r.A>0?r.L/r.A:0;return `<div class="zqrh"><i>${I('calc')}</i><b>최종 산출 결과</b><button type="button" onclick="apDetail()">상세보기 ${I('right')}</button></div>
-<div class="zqtl"><div class="zqtc"><i>${I(AR.type)}</i><div><small>도장 면적</small><strong>${f1(r.A,0)}<u>㎡</u></strong></div></div>
+<div class="zqtl"><div class="zqtc"><i>${I('roller')}</i><div><small>도장 면적</small><strong>${f1(r.A,0)}<u>㎡</u></strong></div></div>
 <div class="zqtc"><i>${I('drop')}</i><div><small>도료 소요량</small><strong>${f1(r.L,0)}<u>L</u></strong><em>(소비율 ${F(pr,2)} L/㎡ 기준)</em></div></div>
 <div class="zqtc"><i>${I('kg')}</i><div><small>도료 무게</small><strong>${f1(r.kg,0)}<u>kg</u></strong><em>(도료 비중 ${F(n(c.sg),2)} 기준)</em></div></div>
 <div class="zqtc g"><i>${I('yen')}</i><div><small>도장 비용</small><strong>${F(Math.round(r.cost/100)*100,0)}<u>원</u></strong><em>(도료 단가 ${F(n(c.price),0)}원/L 기준)</em></div></div></div>
 <div class="zqap"><button type="button" class="zqgo" onclick="apApply(1)">${I('calc')}기본면적에 적용</button><button type="button" class="zqgo2" onclick="apApply(0)">전체 합계로 적용</button></div>`}
 function partCard(p){const kd=K[p.k];if(!kd)return '';const sels=kd.f.filter(f=>f[2]=='sel'),dims=kd.f.filter(f=>f[2]!='sel');
- return `<details class="zqpt" data-id="${p.id}"${p.o?' open':''} ontoggle="apTog('${p.id}',this.open)"><summary>${I(p.t)}<span data-nm="${p.id}">${esc(p.nm||kd.n)}</span><em data-pa="${p.id}">${fm(ar(p))}</em>${I('chev')}</summary><div><div class="zqnm"><div class="zqi"><input type="text" value="${esc(p.nm||'')}" placeholder="${kd.n}" oninput="apName('${p.id}',this.value)" onfocus="apCur('${p.id}')"></div><button type="button" class="zqx" onclick="apDel('${p.id}')">삭제</button></div><div class="zqdm">${dims.map(f=>tile(p,f,p.k)).join('')}${sels.map(f=>selTile(p,f)).join('')}</div></div></details>`}
+ return `<details class="zqpt" data-id="${p.id}"${p.o?' open':''} ontoggle="apTog('${p.id}',this.open)"><summary>${I(p.t)}<span data-nm="${p.id}">${esc(p.nm||kd.n)}</span><em data-pa="${p.id}">${fm(ar(p))}</em>${I('chev')}</summary><div><div class="zqnm"><div class="zqi"><input type="text" value="${esc(p.nm||'')}" placeholder="${kd.n}" oninput="apName('${p.id}',this.value)" onfocus="apCur('${p.id}')"></div><button type="button" class="zqx" onclick="apDel('${p.id}')">${I('trash')}삭제</button></div><div class="zqdm">${dims.map(f=>tile(p,f,p.k)).join('')}${sels.map(f=>selTile(p,f)).join('')}</div></div></details>`}
 function leftHtml(){const t=AR.type,steel=t=='steel',c=cnd();let main='',others='';
  if(steel){const k=AR.sk||'hbeam',p=mainPart(k),kd=K[k],sz=SZ[k],list=sz?sz.l():[],cur=list.findIndex(h=>sz.k.every((kk,i)=>n(p[kk])===h[i+1]&&n(p[kk])>0));
   const dims=kd.f.filter(f=>f[2]!='sel'&&f[0]!='q');
@@ -6040,28 +6042,29 @@ function leftHtml(){const t=AR.type,steel=t=='steel',c=cnd();let main='',others=
 <div class="zqlb">치수 입력 <small>(${k=='pipe'?'mm · m':'mm'})</small></div><div class="zqdm">${dims.map(f=>tile(p,f,k)).join('')}${tile(p,['q','수량','본'],k)}</div></div>`;
   others=AR.parts.filter(x=>x.t=='steel'&&x.id!=p.id&&(x.u||ar(x)>0)).map(partCard).join('');
  }else{const all=AR.parts.filter(x=>x.t==t),cp=curPart(),L=all.filter(x=>!cp||x.id!=cp.id).map(partCard).join(''),ck=cp&&K[cp.k];
-  const fl=ck?(FX[cp.k]||FX.direct).f.replace(/<br>/g,' ').replace(/<[^>]+>/g,'').replace(/^도장면적\(㎡\)\s*=\s*/,''):'';
-  main=`<div class="zqc zqs1"><div class="zqsh"><span class="zqnb">01</span><div><b>부위 정보 입력</b><small>${TY[t].n}의 각 부위별 면적을 입력하세요.</small></div></div><div class="zqpills">${(()=>{const lim=3,ci=cp?all.findIndex(x=>x.id==cp.id):-1,vis=all.length<=lim+1?all:all.filter((x,i)=>i<lim||i==ci),hid=all.filter(x=>vis.indexOf(x)<0),bt=x=>`<button type="button" class="${cp&&x.id==cp.id?'on':''}" onclick="apPick('${x.id}')">${esc(x.nm||K[x.k].n)}</button>`;return vis.map(bt).join('')+(hid.length?`<button type="button" class="mo${AR.pm?' on':''}" onclick="apMore()" aria-label="더보기">···</button>${AR.pm?`<div class="zqpop">${hid.map(bt).join('')}</div>`:''}`:'')})()}</div>
-<div class="zqlb">현장 · 구역 이름 <small>(선택)</small></div><div class="zqi" style="background:#fff"><input type="text" value="${esc(AR.name||'')}" placeholder="예: ○○아파트 101동" oninput="AR_N(this.value)"></div>
-${ck?`<div class="zqnm" style="margin-top:12px"><div class="zqi"><input type="text" value="${esc(cp.nm||'')}" placeholder="${ck.n}" oninput="apName('${cp.id}',this.value)"></div><button type="button" class="zqx" onclick="apDel('${cp.id}')">삭제</button></div><div class="zqdm">${ck.f.filter(f=>f[2]!='sel').map(f=>tile(cp,f,cp.k)).join('')}${ck.f.filter(f=>f[2]=='sel').map(f=>selTile(cp,f)).join('')}</div>
-<div class="zqfr"><i>${I('info')}</i><div><small>${esc(cp.nm||ck.n)} 면적 계산식</small><span>${fl}</span></div><strong data-pa="${cp.id}">${fm(ar(cp))}</strong></div>`:'<div class="zqnt">부위가 없습니다</div>'}
+  const fl=ck?fxs(cp,FX[cp.k]||FX.direct).replace(/<br>/g,' ').replace(/<[^>]+>/g,'').replace(/^도장면적\(㎡\)\s*=\s*/,''):'';
+  main=`<div class="zqc zqs1"><div class="zqsh"><span class="zqnb">01</span><div><b>부위 정보 입력</b><small>${TY[t].n}의 각 부위별 면적을 입력하세요.</small></div></div>${t=='free'?`<div class="zqseg"><button type="button" class="${cp&&cp.k=='direct'?'on':''}" onclick="apDirect()">${I('edit')}면적 직접 입력</button><button type="button" class="${cp&&cp.k!='direct'?'on':''}" onclick="apShape()">${I('pin')}도면에서 선택</button></div>`:''}<div class="zqpills"${t=='free'?' hidden':''}>${(()=>{const lim=3,ci=cp?all.findIndex(x=>x.id==cp.id):-1,vis=all.length<=lim+1?all:all.filter((x,i)=>i<lim||i==ci),hid=all.filter(x=>vis.indexOf(x)<0),bt=x=>`<button type="button" class="${cp&&x.id==cp.id?'on':''}" onclick="apPick('${x.id}')">${esc(x.nm||K[x.k].n)}</button>`;return vis.map(bt).join('')+(hid.length?`<button type="button" class="mo${AR.pm?' on':''}" onclick="apMore()" aria-label="더보기">···</button>${AR.pm?`<div class="zqpop">${hid.map(bt).join('')}</div>`:''}`:'')})()}</div>
+<div class="zqlb">현장 · 구역 이름 <small>(선택)</small></div><div class="zqi zqsite">${I('pin')}<input type="text" value="${esc(AR.name||'')}" placeholder="예: ○○아파트 101동" oninput="AR_N(this.value)"></div>
+${ck?`<div class="zqnm" style="margin-top:12px"><div class="zqi"><input type="text" value="${esc(cp.nm||'')}" placeholder="${ck.n}" oninput="apName('${cp.id}',this.value)"></div><button type="button" class="zqx" onclick="apDel('${cp.id}')">${I('trash')}삭제</button></div><div class="zqdm">${ck.f.filter(f=>f[2]!='sel').map(f=>tile(cp,f,cp.k)).join('')}</div>
+<div class="zqfr"><i>${I('calc')}</i><div><small>${esc(cp.nm||ck.n)} 면적 계산식</small><span>${fl}</span></div><strong data-pa="${cp.id}">${fm(ar(cp))}</strong></div>`:'<div class="zqnt">부위가 없습니다</div>'}
 ${L}`+addRow(t)+`</div>`}
  const p=curPart(),kd=p&&K[p.k],sels=kd?kd.f.filter(f=>f[2]=='sel'):[];
- const a2=`<div class="zqc"><div class="zqac${AR.a2?' on':''}" onclick="apAcc(2)"><div class="zqsh"><span class="zqnb">02</span><div><b>도장면 정보</b><small>도장된 면(양면/단면 등)을 선택하세요.</small></div></div>${I('right')}</div>${AR.a2?`<div class="zqab"><div class="zqdm">${sels.length&&p?sels.map(f=>selTile(p,f)).join(''):'<div class="zqnt" style="grid-column:1/-1">이 부위는 추가로 선택할 도장면 항목이 없습니다.</div>'}</div></div>`:''}</div>`;
- const prods=(typeof DB!='undefined'&&DB.length)?DB.map(x=>x.n):[];
- const a3=`<div class="zqc"><div class="zqac${AR.a3?' on':''}" onclick="apAcc(3)"><div class="zqsh"><span class="zqnb">03</span><div><b>도장 조건</b><small>도료, 도장 횟수, 도막두께 등을 입력하세요.</small></div></div>${I('right')}</div>${AR.a3?`<div class="zqab"><div class="zqdm">${prods.length?`<div class="zqd" style="grid-column:1/-1"><span>도료 <small>(제품 DB · 선택)</small></span><div class="zqi"><select onchange="apCond('p',this.value);apRe()"><option value="">직접 입력</option>${prods.map(x=>`<option value="${esc(x)}"${c.p==x?' selected':''}>${esc(x)}</option>`).join('')}</select></div></div>`:''}${cin('도막 두께 <small>(DFT)</small>','dft','µm',c.dft)}${cin('도료 사용량','use','kg/㎡',c.use,F(useKg(c),3)+' (자동)')}${cin('비중','sg','kg/L',c.sg)}${cin('도료 단가','price','원/L',c.price)}${cin('로스','loss','%',c.loss)}</div></div>`:''}</div>`;
+ const selRow=(p,[k,l,u,o])=>`<div class="zqsb">${I('layers')}<select onchange="apSet('${p.id}','${k}',this.value);apRe()">${o.map(([v,t])=>`<option value="${v}"${String(p[k]==null?'':p[k])==v?' selected':''}>${t}</option>`).join('')}</select>${I('chev')}</div>`;
+  const a2=`<div class="zqc zqs2"><div class="zqac"><div class="zqsh"><span class="zqnb">02</span><div><b>도장면 정보</b><small>도장된 면(양면/단면 등)을 선택하세요.</small></div></div>${I('right')}</div><div class="zqab">${sels.length&&p?sels.map(f=>selRow(p,f)).join(''):'<div class="zqnt">이 부위는 추가로 선택할 도장면 항목이 없습니다.</div>'}</div></div>`;
+  const prods=(typeof DB!='undefined'&&DB.length)?DB.map(x=>x.n):[];
+ const a3=`<div class="zqc zqs3"><div class="zqac"><div class="zqsh"><span class="zqnb">03</span><div><b>도장 조건</b><small>도료, 도장 횟수, 도막두께 등을 입력하세요.</small></div></div></div>${true?`<div class="zqab"><div class="zqdm">${prods.length?`<div class="zqd" style="grid-column:1/-1"><span>도료 <small>(제품 DB · 선택)</small></span><div class="zqi"><select onchange="apCond('p',this.value);apRe()"><option value="">직접 입력</option>${prods.map(x=>`<option value="${esc(x)}"${c.p==x?' selected':''}>${esc(x)}</option>`).join('')}</select></div></div>`:''}${cin('도막 두께 <small>(DFT)</small>','dft','µm',c.dft)}${cin('도료 사용량','use','kg/㎡',c.use,F(useKg(c),3))}${cin('비중','sg','kg/L',c.sg)}${cin('도료 단가','price','원/L',c.price)}${cin('로스','loss','%',c.loss)}</div></div>`:''}</div>`;
  return main+others+a2+a3}
 const cin=(l,k,u,v,ph)=>`<div class="zqd"><span>${icn(l)}<i>${l}</i></span><div class="zqi"><input type="number" inputmode="decimal" step="any" value="${v===''||v==null?'':v}" placeholder="${ph||''}" oninput="apCond('${k}',this.value);apLive()"><em>${u}</em></div></div>`;
 const addRow=t=>{const ks=Object.keys(K).map(k=>`<option value="${k}">${K[k].n}</option>`).join('');return `<div class="zqad"><div class="zqsel"><select id="apks">${ks}</select>${I('chev')}</div><button type="button" onclick="apAdd()">＋ 부위 추가</button></div>`};
 function page(){
- return `<div class="zqhx"><i class="zqhp"></i><div class="zqhi"><i class="zqlg3">${I('roller')}</i><span class="zqbr2">CoatCost</span><b>도장 면적 산출</b><p>간단한 입력으로 정확한 도장 면적과<br>소요량을 계산하세요.</p></div></div>
+ return `<div class="zqhx"><i class="zqhp"></i><div class="zqhi"><i class="zqlg3">${I('roller')}<em>CoatCost</em></i><span class="zqbr2">CoatCost</span><b>도장 면적 산출</b><p>간단한 입력으로 정확한 도장 면적과<br>소요량을 계산하세요.</p></div></div>
 <div class="zqp"><div class="zqt">${TABS.map(k=>`<button type="button" class="${k==AR.type?'on':''}" onclick="apType('${k}')">${I(k)}${TY[k].n}</button>`).join('')}</div>
 <div class="zqg"><div class="zqcol" id="zql">${leftHtml()}</div><div class="zqrc"><div class="zqrs" id="zqrs">${resInner()}</div><div class="zqr" id="zqr">${rightHtml()}</div></div></div></div>`}
 function render(){const e=document.getElementById('zq');if(!e)return;const sc=e.scrollTop;e.innerHTML=page();e.scrollTop=sc}
 const ensure=()=>{ensurePre(AR.type);if(AR.type=='steel')mainPart(AR.sk||'hbeam')};
-window.apOpen=function(){apClose();ensure();const e=document.createElement('div');e.id='ap';e.className='ap';e.innerHTML='<div class="zq" id="zq"></div>';document.body.appendChild(e);document.documentElement.classList.add('pdlock');render();const g=document.getElementById('gnav');if(g)g.addEventListener('click',apClose,true)};
-window.apClose=function(){const e=document.getElementById('ap');if(e)e.remove();document.documentElement.classList.remove('pdlock');const g=document.getElementById('gnav');if(g)g.removeEventListener('click',apClose,true)};
-function ensurePre(t){if(t=='steel'||AR.parts.some(p=>p.t==t))return;(TY[t]||TY.free).pre.forEach(([nm,k])=>{AR.parts.push({id:'p'+(AR.seq++),t,k,nm,q:'',s:'1'})});save()}
+window.apOpen=function(){apClose();ensure();const e=document.createElement('div');e.id='ap';e.className='ap';e.innerHTML='<div class="zq" id="zq"></div>';document.body.appendChild(e);document.documentElement.classList.add('pdlock');document.body.classList.add('apopen');render();const g=document.getElementById('gnav');if(g)g.addEventListener('click',apClose,true)};
+window.apClose=function(){const e=document.getElementById('ap');if(e)e.remove();document.documentElement.classList.remove('pdlock');document.body.classList.remove('apopen');const g=document.getElementById('gnav');if(g)g.removeEventListener('click',apClose,true)};
+function ensurePre(t){if(t=='steel'||AR.parts.some(p=>p.t==t))return;(TY[t]||TY.free).pre.forEach(([nm,k])=>{AR.parts.push({id:'p'+(AR.seq++),t,k,nm,q:'',s:k=='direct'?'':'1'})});save()}
 const find=id=>AR.parts.find(p=>p.id==id);
 window.apRe=()=>render();
 window.apLive=()=>{const r=document.getElementById('zqrs');if(r)r.innerHTML=resInner();const d=document.getElementById('zqdg');if(d)d.innerHTML=dgHtml();document.querySelectorAll('#ap [data-pa]').forEach(e=>{const p=find(e.dataset.pa);if(p)e.textContent=fm(ar(p))})};
@@ -6078,6 +6081,9 @@ window.apStep=(id,d)=>{const p=find(id);if(!p)return;p.q=String(Math.max(1,Math.
 window.apSz=(id,i)=>{const p=find(id);if(!p||i==='x')return;const sz=SZ[p.k],h=sz.l()[+i];sz.k.forEach((k,j)=>{p[k]=h[j+1]});save();render()};
 window.apCond=(k,v)=>{AR.cond=Object.assign({},CD0,AR.cond||{});if(k=='p'){AR.cond.p=v;const q=v&&typeof P=='function'?P(v):null;if(q){AR.cond.use='';if(n(q.dft)>0)AR.cond.dft=n(q.dft);if(n(q.sg)>0)AR.cond.sg=n(q.sg)}}else AR.cond[k]=v;save()};
 window.apAcc=i=>{AR['a'+i]=AR['a'+i]?0:1;save();render()};
+ window.apDirect=()=>{const p=curPart();if(p&&p.k!='direct'){p.k='direct';p.nm='면적 직접 입력';save();render()}};
+ window.apShape=()=>{const p=curPart();if(!p)return;const ks=Object.keys(K).filter(k=>k!='direct');pqSheet('apsh','<div class="pqmh"><b>도면에서 선택</b></div><div class="zqls">'+ks.map(k=>`<button type="button" class="pqml" style="height:auto;padding:10px 12px" onclick="pqX('apsh');apShapeSet('${k}')"><b>${K[k].n}</b></button>`).join('')+'</div><button class="pqbc" onclick="pqX(\'apsh\')">닫기</button>')};
+ window.apShapeSet=k=>{const p=curPart();if(!p||!K[k])return;p.k=k;p.nm=K[k].n;save();render()};
 window.apMenu=()=>{const m=document.getElementById('zqmn');if(m)m.classList.toggle('on')};
 window.apDel=id=>{const p=find(id);if(!p)return;ask('<b>'+esc(p.nm||K[p.k].n)+'</b> 부위를 삭제할까요?',()=>{AR.parts=AR.parts.filter(x=>x.id!=id);save();render()})};
 window.apAdd=()=>{const k=(document.getElementById('apks')||{}).value||'wall';const p={id:'p'+(AR.seq++),t:AR.type,k,nm:'',q:'',s:'1',o:1,u:1};AR.parts.push(p);AR.cur=p.id;save();render()};
@@ -9902,4 +9908,145 @@ html body #v3 .syp .lbc{padding-left:calc(var(--u)*14)!important;padding-right:c
 html body #v3 .syp .sy-sg>.sy-sgh{padding-left:calc(var(--u)*20)!important;padding-right:calc(var(--u)*18)!important}
 html body #v3 .syp .lbc .lbic{margin-left:0!important}
 </style>
+<style id="v438">
+/* v438: 도장 면적 산출 화면 — 시안(852px 기준, 1u=화면폭/852)과 동일 + 좌우 확장 */
+html body #ap{--u:calc(min(100vw,900px)/852);--n:#0b2354;--g:#6b7b9b;--bl:#0b4fd0;background:#eaf1fc!important}
+html body #ap .zq{max-width:900px!important;background:#f4f8fe!important;font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,-apple-system,sans-serif!important;color:var(--n)!important;letter-spacing:-.01em;line-height:1.25!important;padding-bottom:calc(var(--u)*40)!important}
+html body #ap .zq input,html body #ap .zq select,html body #ap .zq button{font-family:inherit!important}
+/* 히어로 */
+html body #ap .zqhx{height:calc(var(--u)*219)!important;background:linear-gradient(90deg,#f6faff,#eaf3ff 60%,#dfeeff)!important;box-shadow:none!important}
+html body #ap .zqhx .zqhp{width:52%!important;background-position:68% 42%!important;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 38%)!important;mask-image:linear-gradient(90deg,transparent 0,#000 38%)!important}
+html body #ap .zqlg3{left:calc(var(--u)*25)!important;top:calc(var(--u)*41)!important;width:calc(var(--u)*104)!important;height:calc(var(--u)*107)!important;border-radius:calc(var(--u)*24)!important;background:linear-gradient(160deg,#2a7cf8,#0a4fd4)!important;box-shadow:0 calc(var(--u)*6) calc(var(--u)*14) rgba(10,79,212,.30)!important;flex-direction:column!important;gap:calc(var(--u)*6)!important}
+html body #ap .zqlg3 svg{width:calc(var(--u)*56)!important;height:calc(var(--u)*56)!important;stroke-width:1.8!important}
+html body #ap .zqlg3 em{font:700 max(7px,calc(var(--u)*17))/1 "Poppins","Noto Sans KR",system-ui,sans-serif!important;font-style:normal!important;color:#fff!important}
+html body #ap .zqbr2{left:calc(var(--u)*152)!important;top:calc(var(--u)*34)!important;font:700 max(12px,calc(var(--u)*27))/1 "Poppins","Apple SD Gothic Neo","Noto Sans KR",sans-serif!important;color:var(--n)!important}
+html body #ap .zqhi>b{left:calc(var(--u)*152)!important;top:calc(var(--u)*66)!important;font:800 max(20px,calc(var(--u)*44))/1.1 "Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif!important;color:var(--n)!important;letter-spacing:-.02em!important}
+html body #ap .zqhi>p{left:calc(var(--u)*152)!important;top:calc(var(--u)*128)!important;font:400 max(10px,calc(var(--u)*21))/1.4 "Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif!important;color:#3a4d73!important}
+/* 본문 · 좌우 여백 축소 */
+html body #ap .zqp{padding:calc(var(--u)*14) calc(var(--u)*10) calc(var(--u)*30)!important;background:#f4f8fe!important}
+/* 유형 탭 */
+html body #ap .zqt{gap:calc(var(--u)*8)!important;padding-bottom:calc(var(--u)*22)!important}
+html body #ap .zqt button{height:calc(var(--u)*87)!important;border-radius:calc(var(--u)*16)!important;border:1px solid #e3ecf8!important;gap:calc(var(--u)*8)!important;font-size:max(9.5px,calc(var(--u)*17))!important;font-weight:700!important;color:var(--n)!important;box-shadow:0 calc(var(--u)*3) calc(var(--u)*10) rgba(30,70,150,.09)!important}
+html body #ap .zqt button svg{width:calc(var(--u)*36)!important;height:calc(var(--u)*36)!important;color:#27437d!important}
+html body #ap .zqt button.on{flex-grow:1!important;background:linear-gradient(180deg,#1c58e0,#0b3fc0)!important;border-color:#0b3fc0!important;box-shadow:0 calc(var(--u)*6) calc(var(--u)*14) rgba(11,63,192,.32)!important;color:#fff!important}
+html body #ap .zqt button.on svg{color:#fff!important}
+html body #ap .zqt button.on:after{width:calc(var(--u)*40)!important;height:calc(var(--u)*4)!important;bottom:calc(var(--u)*-14)!important;margin-left:calc(var(--u)*-20)!important;border-radius:4px!important;background:#0b4fd0!important}
+/* 2단 */
+html body #ap .zqg{grid-template-columns:minmax(0,1.72fr) minmax(0,1fr)!important;gap:calc(var(--u)*12)!important}
+html body #ap .zqcol{min-width:0}
+html body #ap .zqc{background:#fff!important;border:1px solid #e1eaf7!important;border-radius:calc(var(--u)*26)!important;box-shadow:0 calc(var(--u)*4) calc(var(--u)*16) rgba(30,70,160,.07)!important;margin:0 0 calc(var(--u)*16)!important}
+html body #ap .zqs1{padding:calc(var(--u)*16) calc(var(--u)*12) calc(var(--u)*14)!important}
+html body #ap .zqs2,html body #ap .zqs3{padding:calc(var(--u)*16) calc(var(--u)*12) calc(var(--u)*14)!important}
+html body #ap .zqsh{gap:calc(var(--u)*16)!important;padding:0 calc(var(--u)*4) calc(var(--u)*14)!important;border-bottom:1px solid #e8eff9!important;margin:0!important}
+html body #ap .zqs2 .zqac,html body #ap .zqs3 .zqac{display:flex!important;align-items:center!important;gap:calc(var(--u)*8)!important;margin:0 0 calc(var(--u)*14)!important;padding:0 calc(var(--u)*4)!important;background:transparent!important;border:0!important;cursor:default!important}
+html body #ap .zqs2 .zqac .zqsh,html body #ap .zqs3 .zqac .zqsh{border:0!important;padding:0!important}
+html body #ap .zqac>svg{width:calc(var(--u)*24)!important;height:calc(var(--u)*24)!important;color:#7d8fb3!important;transform:none!important}
+html body #ap .zqnb{width:calc(var(--u)*58)!important;height:calc(var(--u)*58)!important;border-radius:50%!important;background:linear-gradient(145deg,#1a5fe6,#0a3bb8)!important;font-size:max(11px,calc(var(--u)*26))!important;font-weight:800!important;box-shadow:0 calc(var(--u)*3) calc(var(--u)*8) rgba(10,59,184,.28)!important;display:grid!important;place-items:center!important;color:#fff!important}
+html body #ap .zqsh b,html body #ap .zqac .zqsh b{font-size:max(13px,calc(var(--u)*28))!important;font-weight:800!important;color:var(--n)!important;line-height:1.25!important}
+html body #ap .zqsh small,html body #ap .zqac .zqsh small{font-size:max(9.5px,calc(var(--u)*20))!important;font-weight:400!important;color:var(--g)!important;margin-top:calc(var(--u)*4)!important}
+html body #ap .zqlb{font-size:max(11px,calc(var(--u)*23))!important;font-weight:800!important;color:var(--n)!important;margin:calc(var(--u)*16) calc(var(--u)*4) calc(var(--u)*8)!important}
+html body #ap .zqlb small{font-size:max(9.5px,calc(var(--u)*20))!important;font-weight:400!important;color:var(--g)!important}
+/* 직접 입력 / 도면 선택 토글 */
+html body #ap .zqseg{display:grid!important;grid-template-columns:234fr 221fr!important;gap:calc(var(--u)*12)!important;margin:calc(var(--u)*14) calc(var(--u)*4) 0!important}
+html body #ap .zqseg button{height:calc(var(--u)*58)!important;border-radius:calc(var(--u)*12)!important;border:1.5px solid #cfdcf0!important;background:#f3f7fd!important;color:#33496f!important;font-size:max(10.5px,calc(var(--u)*22))!important;font-weight:700!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:calc(var(--u)*12)!important;width:100%!important;padding:0!important}
+html body #ap .zqseg button svg{width:calc(var(--u)*30)!important;height:calc(var(--u)*30)!important;flex:none}
+html body #ap .zqseg button.on{background:linear-gradient(180deg,#1c58e0,#0b3fc0)!important;border-color:#0b3fc0!important;color:#fff!important;box-shadow:0 calc(var(--u)*5) calc(var(--u)*12) rgba(11,63,192,.28)!important}
+/* 부위 탭(다른 유형) */
+html body #ap .zqpills{margin:calc(var(--u)*14) calc(var(--u)*4) 0!important;gap:calc(var(--u)*8)!important}
+html body #ap .zqpills[hidden]{display:none!important}
+html body #ap .zqpills button{height:max(26px,calc(var(--u)*46))!important;border-radius:calc(var(--u)*12)!important;font-size:max(10.5px,calc(var(--u)*20))!important;padding:0 calc(var(--u)*16)!important;border:1.5px solid #cfdcf0!important;color:var(--n)!important}
+html body #ap .zqpills button.on{background:linear-gradient(180deg,#1c58e0,#0b3fc0)!important;border-color:#0b3fc0!important;color:#fff!important}
+/* 입력 박스 */
+html body #ap .zqi{height:calc(var(--u)*50)!important;border:1.5px solid #cfe0f6!important;border-radius:calc(var(--u)*10)!important;background:#fff!important;padding:0 calc(var(--u)*14)!important;display:flex!important;align-items:center!important}
+html body #ap .zqi input,html body #ap .zqi select{font-size:max(16px,calc(var(--u)*25))!important;font-weight:500!important;color:var(--n)!important}
+html body #ap .zqi input::placeholder{color:#9fb0c9!important;font-weight:400!important}
+html body #ap .zqi em{font-size:max(10px,calc(var(--u)*21))!important;color:#7d8fb3!important}
+html body #ap .zqsite{height:calc(var(--u)*50)!important;background:#f6f9fe!important;gap:calc(var(--u)*12)!important;margin:0 calc(var(--u)*4)!important}
+html body #ap .zqsite svg{width:calc(var(--u)*26)!important;height:calc(var(--u)*26)!important;color:#7d8fb3!important;flex:none}
+html body #ap .zqsite input{font-size:max(16px,calc(var(--u)*24))!important}
+/* 부위 제목 + 삭제 */
+html body #ap .zqs1 .zqnm{margin:calc(var(--u)*20) calc(var(--u)*4) calc(var(--u)*10)!important;padding-top:calc(var(--u)*4)!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:calc(var(--u)*10)!important;align-items:center!important}
+html body #ap .zqs1 .zqnm .zqi{height:calc(var(--u)*44)!important;border:0!important;background:transparent!important;padding:0!important}
+html body #ap .zqs1 .zqnm .zqi input{font-size:max(14px,calc(var(--u)*26))!important;font-weight:800!important;padding:0!important}
+html body #ap .zqx{height:calc(var(--u)*38)!important;padding:0 calc(var(--u)*14)!important;border-radius:calc(var(--u)*10)!important;border:1.5px solid #f0b0b6!important;background:#fff5f6!important;color:#d6313f!important;font-size:max(10px,calc(var(--u)*19))!important;font-weight:700!important;display:inline-flex!important;align-items:center!important;gap:calc(var(--u)*6)!important}
+html body #ap .zqx svg{width:calc(var(--u)*22)!important;height:calc(var(--u)*22)!important}
+/* 면적/수량 타일 */
+html body #ap .zqdm{grid-template-columns:1fr 1fr!important;gap:calc(var(--u)*10)!important;margin:0 calc(var(--u)*4)!important}
+html body #ap .zqd{background:#f5f9ff!important;border:1.5px solid #dfe9f7!important;border-radius:calc(var(--u)*14)!important;padding:calc(var(--u)*12) calc(var(--u)*12) calc(var(--u)*13)!important}
+html body #ap .zqd>span{font-size:max(11px,calc(var(--u)*23))!important;font-weight:700!important;color:var(--n)!important;gap:calc(var(--u)*12)!important;margin-bottom:calc(var(--u)*10)!important}
+html body #ap .zqd>span small{font-size:max(9.5px,calc(var(--u)*19))!important;color:#8a9ab5!important;font-weight:400!important}
+html body #ap .zqic{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important;min-width:18px!important;min-height:18px!important;padding:calc(var(--u)*6)!important;border-radius:calc(var(--u)*9)!important;background:#1d58d8!important;color:#fff!important;box-shadow:none!important}
+html body #ap .zqd .zqi{height:calc(var(--u)*50)!important}
+/* 계산식 행 */
+html body #ap .zqfr{margin:calc(var(--u)*12) calc(var(--u)*4) 0!important;padding:calc(var(--u)*14) calc(var(--u)*16)!important;border-radius:calc(var(--u)*14)!important;background:#eef4ff!important;border:1.5px solid #dbe7f8!important;gap:calc(var(--u)*14)!important}
+html body #ap .zqfr>i{width:calc(var(--u)*44)!important;height:calc(var(--u)*44)!important;background:#1d58d8!important}
+html body #ap .zqfr small{font-size:max(10.5px,calc(var(--u)*20))!important;font-weight:800!important;color:#1d58d8!important}
+html body #ap .zqfr span{font-size:max(10px,calc(var(--u)*19))!important;color:var(--g)!important;margin-top:calc(var(--u)*3)!important}
+html body #ap .zqfr strong{font-size:max(15px,calc(var(--u)*34))!important;font-weight:800!important;color:#0b4fd0!important}
+/* 부위 추가 · 다른 부위 접기 카드 */
+html body #ap .zqad{margin:calc(var(--u)*14) calc(var(--u)*4) 0!important}
+html body #ap .zqad button{height:calc(var(--u)*58)!important;border-radius:calc(var(--u)*12)!important;border:2px solid #1d58d8!important;background:#fff!important;color:#0b4fd0!important;font-size:max(12px,calc(var(--u)*26))!important;font-weight:800!important}
+html body #ap .zqpt{margin:calc(var(--u)*10) calc(var(--u)*4) 0!important;border:1.5px solid #dfe9f7!important;border-radius:calc(var(--u)*14)!important;background:#f5f9ff!important}
+html body #ap .zqpt>summary{padding:calc(var(--u)*12) calc(var(--u)*14)!important;font-size:max(11px,calc(var(--u)*23))!important;font-weight:700!important;color:var(--n)!important}
+html body #ap .zqpt>summary em{font-size:max(10px,calc(var(--u)*20))!important;color:#0b4fd0!important}
+/* 02 도장면 선택 */
+html body #ap .zqab{padding:0 calc(var(--u)*4)!important;margin:0!important}
+html body #ap .zqsb{position:relative;display:flex;align-items:center;height:calc(var(--u)*52);margin:0 0 calc(var(--u)*10);padding:0 calc(var(--u)*16);border:1.5px solid #cfe0f6;border-radius:calc(var(--u)*10);background:#f6f9fe;gap:calc(var(--u)*14)}
+html body #ap .zqsb:last-child{margin-bottom:0}
+html body #ap .zqsb>svg:first-child{width:calc(var(--u)*30);height:calc(var(--u)*30);color:#5f7398;flex:none}
+html body #ap .zqsb>svg:last-child{position:absolute;right:calc(var(--u)*14);width:calc(var(--u)*24);height:calc(var(--u)*24);color:#7d8fb3;pointer-events:none}
+html body #ap .zqsb select{flex:1;min-width:0;height:100%!important;border:0!important;background:transparent!important;-webkit-appearance:none;appearance:none;font-size:max(16px,calc(var(--u)*24))!important;color:var(--n)!important;font-weight:500!important;padding:0 calc(var(--u)*30) 0 0!important;outline:0}
+html body #ap .zqab .zqnt{margin:0!important;padding:calc(var(--u)*6) 0!important;font-size:max(10px,calc(var(--u)*19))!important;color:var(--g)!important}
+/* 03 조건 */
+html body #ap .zqs3 .zqab .zqdm{margin:0!important}
+html body #ap .zqs3 .zqd .zqi{background:#fff!important}
+html body #ap .zqs3 .zqd .zqi select{font-size:max(14px,calc(var(--u)*24))!important;font-weight:800!important;letter-spacing:.01em}
+/* 결과 카드 */
+html body #ap .zqrc{gap:calc(var(--u)*14)!important}
+html body #ap .zqrs{border-radius:calc(var(--u)*22)!important;background:linear-gradient(165deg,#0b55dd,#0a3ab0)!important;padding:calc(var(--u)*12)!important;box-shadow:0 calc(var(--u)*10) calc(var(--u)*24) rgba(10,58,176,.30)!important;margin:0!important}
+html body #ap .zqrh{padding:calc(var(--u)*4) calc(var(--u)*2) calc(var(--u)*12)!important;gap:calc(var(--u)*8)!important}
+html body #ap .zqrh>i{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important;border-radius:calc(var(--u)*9)!important;background:rgba(255,255,255,.22)!important}
+html body #ap .zqrh b{font-size:max(11px,calc(var(--u)*23))!important;font-weight:800!important}
+html body #ap .zqrh button{height:max(24px,calc(var(--u)*34))!important;padding:0 calc(var(--u)*10)!important;border-radius:calc(var(--u)*9)!important;background:rgba(255,255,255,.16)!important;border:1px solid rgba(255,255,255,.4)!important;font-size:max(9px,calc(var(--u)*16))!important;font-weight:700!important;display:inline-flex!important;align-items:center!important;gap:calc(var(--u)*4)!important}
+html body #ap .zqrh button svg{display:block!important;width:calc(var(--u)*16)!important;height:calc(var(--u)*16)!important}
+html body #ap .zqtl{gap:calc(var(--u)*10)!important}
+html body #ap .zqtc,html body #ap .zqtc:first-child,html body #ap .zqtc.g{border-radius:calc(var(--u)*14)!important;padding:calc(var(--u)*12) calc(var(--u)*14)!important;gap:calc(var(--u)*14)!important;background:#fff!important;border:0!important;align-items:center!important}
+html body #ap .zqtc>i,html body #ap .zqtc:first-child>i,html body #ap .zqtc:nth-child(n+2)>i,html body #ap .zqtc.g>i{width:calc(var(--u)*60)!important;height:calc(var(--u)*60)!important;border-radius:50%!important;background:linear-gradient(145deg,#1f63ea,#0a3fc0)!important}
+html body #ap .zqtc>i svg{width:calc(var(--u)*34)!important;height:calc(var(--u)*34)!important}
+html body #ap .zqtc small{font-size:max(10px,calc(var(--u)*20))!important;font-weight:700!important;color:var(--n)!important}
+html body #ap .zqtc strong,html body #ap .zqtc:first-child strong,html body #ap .zqtc:nth-child(n+2) strong{font-size:max(18px,calc(var(--u)*42))!important;font-weight:800!important;color:var(--n)!important;margin:calc(var(--u)*2) 0!important}
+html body #ap .zqtc strong u{font-size:max(11px,calc(var(--u)*27))!important;color:#0b4fd0!important;font-weight:700!important;margin-left:calc(var(--u)*6)!important}
+html body #ap .zqtc em{font-size:max(8.5px,calc(var(--u)*17))!important;color:var(--g)!important}
+html body #ap .zqap{gap:calc(var(--u)*12)!important;margin-top:calc(var(--u)*14)!important}
+html body #ap .zqgo{height:calc(var(--u)*70)!important;border-radius:calc(var(--u)*14)!important;background:linear-gradient(180deg,#2cb66b,#16913f)!important;font:800 max(11px,calc(var(--u)*23))/1.1 "Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif!important;gap:calc(var(--u)*10)!important;display:flex!important;align-items:center!important;justify-content:center!important;box-shadow:0 calc(var(--u)*4) calc(var(--u)*10) rgba(22,145,63,.3)!important}
+html body #ap .zqgo svg{width:calc(var(--u)*30)!important;height:calc(var(--u)*30)!important}
+html body #ap .zqgo2{height:calc(var(--u)*66)!important;border-radius:calc(var(--u)*14)!important;background:rgba(255,255,255,.1)!important;border:1.5px solid rgba(255,255,255,.6)!important;font:800 max(11px,calc(var(--u)*23))/1.1 "Apple SD Gothic Neo","Pretendard","Noto Sans KR",sans-serif!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:calc(var(--u)*10)!important}
+html body #ap .zqgo2 svg{width:calc(var(--u)*28)!important;height:calc(var(--u)*28)!important}
+/* 계산식 요약 · 팁 */
+html body #ap .zqr{gap:calc(var(--u)*14)!important}
+html body #ap details.zqr1{background:#eef4fd!important;border:1.5px solid #dce8f8!important;border-radius:calc(var(--u)*22)!important;padding:calc(var(--u)*14)!important}
+html body #ap details.zqr1>summary{font-size:max(11px,calc(var(--u)*24))!important;font-weight:800!important;color:var(--n)!important;gap:calc(var(--u)*12)!important}
+html body #ap details.zqr1>summary>i{width:calc(var(--u)*40)!important;height:calc(var(--u)*40)!important;border-radius:calc(var(--u)*11)!important;background:#1d58d8!important}
+html body #ap details.zqr1 .zqfm{background:#fff!important;border:1px solid #e1ebf8!important;border-radius:calc(var(--u)*14)!important;padding:calc(var(--u)*14)!important;font-size:max(10px,calc(var(--u)*19))!important;line-height:1.55!important;color:var(--n)!important}
+html body #ap .zqfm b{color:#0b4fd0!important;font-size:1.08em}
+html body #ap .zqtip{border-radius:calc(var(--u)*18)!important;border:1.5px solid #dce8f8!important}
+/* 하단 내비게이션 · 활성 항목 */
+html body.apopen #gnav .hni.on,html body.apopen #gnav .hni.act,html body.apopen #gnav .hni[aria-current]{background:linear-gradient(180deg,#1c58e0,#0b3fc0)!important;color:#fff!important;border-radius:16px!important;box-shadow:0 4px 12px rgba(11,63,192,.35)!important}
+html body #ap .zqnb{flex:none!important;min-width:calc(var(--u)*58)!important}
+html body #ap .zqs1 .zqnm .zqi input{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;height:100%!important}
+html body #ap details.zqr1>summary{font-size:max(10.5px,calc(var(--u)*21))!important}
+html body #ap .zqtip>div b{font-size:max(9px,calc(var(--u)*16))!important}
+html body #ap .zqtip>div span{font-size:max(10.5px,calc(var(--u)*21))!important}
+html body #ap .zqtip ul{font-size:max(9.5px,calc(var(--u)*18))!important}
+html body.apopen .hnav{max-width:900px!important}
+html body #ap .zqac .zqnb,html body #ap .zqs2 .zqac .zqnb,html body #ap .zqs3 .zqac .zqnb{width:calc(var(--u)*58)!important;height:calc(var(--u)*58)!important;min-width:calc(var(--u)*58)!important;flex:none!important;border-radius:50%!important}
+html body #ap .zqac .zqsh b{font-size:max(13px,calc(var(--u)*28))!important}
+html body #ap .zqac .zqsh small{font-size:max(9.5px,calc(var(--u)*20))!important}
+html body #ap .zqs1 .zqnm .zqi input,html body #ap .zqs1 .zqnm .zqi input[data-ib]{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;height:100%!important;padding:0!important}
+html body #ap .zqs1 .zqnm .zqi[style]{border:0!important}
+html body #ap .zqrh button{padding:0 calc(var(--u)*7)!important}
+html body #ap .zqs1 .zqnm .zqi input[data-ib]:not(#_a):not(#_b):not(#_c){border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;min-height:0!important;height:100%!important;padding:0!important;font-size:max(14px,calc(var(--u)*26))!important;font-weight:800!important}
+html body #ap .zqs1 .zqnm .zqi input[data-ib]:not(#_a):not(#_b):not(#_c):focus{box-shadow:none!important;border-bottom:2px solid #0b4fd0!important}
+</style>
+
 </body></html>
