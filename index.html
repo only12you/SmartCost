@@ -10100,6 +10100,10 @@ html body #ap .zqrh b{flex:1;min-width:0;white-space:nowrap;font-size:max(9.5px,
 html body #ap .zqrh button{flex:none;font-size:max(8.5px,calc(var(--u)*16))!important;padding:0 calc(var(--u)*6)!important}
 html body #ap details.zqr1 .zqfm{font-size:max(9px,calc(var(--u)*18))!important;word-break:keep-all;padding:calc(var(--u)*12) calc(var(--u)*10)!important}
 html body #ap details.zqr1>summary{font-size:max(10px,calc(var(--u)*21))!important}
+/* v438f: 도장 면적 산출 — 오른쪽 산출결과(결과 카드 + 계산식 요약) 스크롤 시 따라다니도록 sticky 고정 */
+html body #ap{--zqst:calc(var(--u)*219 + 8px)}
+html body #ap .zqrc{position:sticky!important;top:var(--zqst)!important;align-self:start!important;z-index:5;max-height:calc(100dvh - var(--gh,calc(52px + env(safe-area-inset-bottom,0px))) - var(--zqst) - 8px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+html body #ap .zqrc::-webkit-scrollbar{display:none}
 </style>
 
 </body></html>
