@@ -5655,7 +5655,7 @@ function initDom(){
   const tl=document.createElement('div');tl.id='dst';tl.className='dst';fp.after(tl);
  }
  const hb=document.getElementById('hx');
- if(hb&&!hb.querySelector('.dshb')){const d=document.createElement('div');d.className='dshb';d.innerHTML=`<button type="button" aria-label="제품 추가" onclick="newP()">${I('plus')}</button><button type="button" aria-label="도구" onclick="dsTools()">${I('gear')}</button>`;hb.appendChild(d)}
+ if(hb&&!hb.querySelector('.dshb')){const d=document.createElement('div');d.className='dshb';d.innerHTML=`<button type="button" aria-label="제품 추가" onclick="newP()">${I('plus')}</button>`;hb.appendChild(d)}
 }
 window.dsTools=()=>{const v=document.getElementById('v1');if(v)v.classList.toggle('tools')};
 window.dsCat=k=>{CF=k;dbl()};window.dsSort=v=>{SO=v;dbl()};window.dsFp=()=>{FP=!FP;dbl()};
@@ -9707,4 +9707,14 @@ const _res=res;res=function(){_res.apply(this,arguments);try{ui()}catch(e){}};
 setTimeout(()=>{try{res()}catch(e){}},0);
 })();
 </script>
+<style id="v435">
+/* v435 제품 DB: 히어로 + 도구 줄 + 검색까지 상단 고정 / 도구 줄 항상 표시(설정 버튼 삭제) / 검색 글자 30% 확대 */
+html body.pg1 #hx .dshb button:nth-child(n+2){display:none!important}
+html body.pg1 #v1>.dbtp{display:grid!important;position:sticky!important;top:var(--sk1,0)!important;z-index:7!important;margin:0 calc(var(--u)*-10) 0!important;padding:calc(var(--u)*12) calc(var(--u)*10) calc(var(--u)*8)!important;background:#f3f7fd!important}
+html body #app #v1 .dsq{position:sticky!important;top:var(--sk2,0)!important;z-index:7!important}
+html body #app #v1 .dsq input#q{font-size:calc(var(--u)*22.75)!important}
+html body #app #v1 .dsq input#q::placeholder{font-size:calc(var(--u)*22.75)!important}
+</style>
+<script>(function(){function sk(){try{if(!document.body.classList.contains('pg1'))return;var v=document.getElementById('v1'),h=document.getElementById('hx');if(!v||!h||v.hidden)return;var t=v.querySelector(':scope>.dbtp'),hh=h.getBoundingClientRect().height,th=t?t.getBoundingClientRect().height:0;v.style.setProperty('--sk1',hh+'px');v.style.setProperty('--sk2',(hh+th)+'px')}catch(e){}}
+window.addEventListener('resize',sk);window.addEventListener('load',function(){sk();setTimeout(sk,300)});setInterval(sk,400)})();</script>
 </body></html>
