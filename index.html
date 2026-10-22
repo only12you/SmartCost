@@ -7407,7 +7407,7 @@ const gr=`<section class="t2-g"><div class="t2-gh"><i>${MI(IBU)}</i><b>${hz}년 
 const top2=`${c1}<div class="sp-h t2-ht"><i>${MI(IBU)}</i>추천 보수 대안</div><div class="t2-ag">${alt(1)}${alt(2)}</div>${gr}`;
 return`<div class="spq">
 <div class="sp-st">${steps}</div>
-<section class="sp-sum"><div class="sp-th">${phB("th",SPT[k=="p"?"p":k=="h"?"h":"x"])}</div><div class="sp-sg"><div class="sp-sr"><div class="sp-sc"><i>${MI(icoOf(a))}</i><div><small>시설</small><b>${hh(fac)}</b></div>${RS.assets.length>1?`<select class="sp-sel" aria-label="대상 설비" onchange="LCCX.si(+this.value)">${RS.assets.map((x,i)=>`<option value="${i}"${i==RS.i?" selected":""}>${hh(x.n).slice(0,24)}</option>`).join("")}</select>`:""}</div><div class="sp-sc"><i>${MI(SPI.sh)}</i><div><small>환경등급</small><b>${cat}</b></div></div><div class="sp-sc"><i>${MI(SPI.tg)}</i><div><small>목표기간</small><b class="sp-hz"><input type="number" inputmode="numeric" value="${hz}" onchange="LCCX.hz(this.value)" aria-label="목표기간(년)">년</b></div></div></div><div class="sp-sr"><div class="sp-sc"><i>${MI(SPI.ly)}</i><div><small>현재 도막두께</small><b>${Math.round(m[0].sc.dft)} μm</b></div></div><div class="sp-sc w2"><i>${MI(SPI.pl)}</i><div><small>열화상태</small><b><u class="sp-dg d${dg.lv}">${dg.t}</u></b></div></div></div></div><div class="sp-rm"><span>경과 <b>${dg.age}년</b></span><span>예상 수명 <b>${m[0].e.toFixed(1)}년</b></span><span>잔존 수명 <b class="${dg.rem<=2?"w":""}">${remy.toFixed(1)}년</b>${dg.rem>0?` <small>(${yr0+Math.round(dg.rem)}년경 보수)</small>`:""}</span></div></section>
+<section class="sp-sum"><div class="sp-th">${phB("th",SPT[k=="p"?"p":k=="h"?"h":"x"])}</div><div class="sp-sg"><div class="sp-sr"><div class="sp-sc"><div><small><i>${MI(icoOf(a))}</i>시설</small><b>${hh(fac)}</b></div>${RS.assets.length>1?`<select class="sp-sel" aria-label="대상 설비" onchange="LCCX.si(+this.value)">${RS.assets.map((x,i)=>`<option value="${i}"${i==RS.i?" selected":""}>${hh(x.n).slice(0,24)}</option>`).join("")}</select>`:""}</div><div class="sp-sc"><div><small><i>${MI(SPI.sh)}</i>환경등급</small><b>${cat}</b></div></div><div class="sp-sc"><div><small><i>${MI(SPI.tg)}</i>목표기간</small><b class="sp-hz"><input type="number" inputmode="numeric" value="${hz}" onchange="LCCX.hz(this.value)" aria-label="목표기간(년)">년</b></div></div></div><div class="sp-sr"><div class="sp-sc"><div><small><i>${MI(SPI.ly)}</i>현재 도막두께</small><b>${Math.round(m[0].sc.dft)} μm</b></div></div><div class="sp-sc w2"><div><small><i>${MI(SPI.pl)}</i>열화상태</small><b><u class="sp-dg d${dg.lv}">${dg.t}</u></b></div></div></div></div><div class="sp-rm"><span>경과 <b>${dg.age}년</b></span><span>예상 수명 <b>${m[0].e.toFixed(1)}년</b></span><span>잔존 수명 <b class="${dg.rem<=2?"w":""}">${remy.toFixed(1)}년</b>${dg.rem>0?` <small>(${yr0+Math.round(dg.rem)}년경 보수)</small>`:""}</span></div></section>
 ${top2}
 <div class="sp-h">ISO 12944 기반 사양 검토<button type="button" class="sp-i" aria-label="안내" onclick="tt('ISO 12944-5 권장 최소 DFT: ${cat} · 내구성 ${dur} 기준 ${iso}μm (참고값)')">${MI(SPI.inf)}</button></div>
 <div class="sp-ch2"><b>환경부식성 등급 선택</b><div class="sp-cs">${chips}</div></div>
@@ -7496,9 +7496,9 @@ function lxStrip(){return`<div class="lxt"><div class="lxtr">${TABS.map((t,i)=>`
 function lxChart(rows,VH){VH=Math.max(232,Math.round(VH||232));const N=Math.max(2,Math.min(RS.dr>0?RS.dr:RS.hz,RS.hz)+1),y0=new Date().getFullYear();
 const S=k=>{const o=[];for(let y=0;y<N;y++)o.push(rows.reduce((s,r)=>s+(r.m[k].cu[y]||0),0)/1000);return o},A=S(0),B=S(2);
 const mx=Math.max(1,...A,...B),p=Math.pow(10,Math.floor(Math.log10(mx/4))),st=([1,2,2.5,5,10].map(s=>s*p).find(s=>s*4>=mx)||p*10),top=st*4;
-const X=i=>46+i*(300/(N-1)),Y=v=>(VH-36)-v/top*(VH-62);
-const grid=[0,1,2,3,4].map(i=>`<line x1="46" x2="346" y1="${Y(st*i)}" y2="${Y(st*i)}" stroke="#e3eaf6"/><text x="38" y="${Y(st*i)+4}" text-anchor="end" font-size="12" fill="#6b7b95">${+(st*i).toFixed(1)}</text>`).join("");
-const nl=Math.min(N,5),xs=[...new Set(Array.from({length:nl},(_,i)=>Math.round(i*(N-1)/(nl-1))))].map(i=>`<text x="${X(i)}" y="${VH-14}" text-anchor="middle" font-size="12" fill="#6b7b95">${y0+i}</text>`).join("");
+const X=i=>64+i*(282/(N-1)),Y=v=>(VH-36)-v/top*(VH-62);
+const grid=[0,1,2,3,4].map(i=>`<line x1="64" x2="346" y1="${Y(st*i)}" y2="${Y(st*i)}" stroke="#e3eaf6"/><text x="58" y="${Y(st*i)+7}" text-anchor="end" font-size="20" fill="#6b7b95">${+(st*i).toFixed(1)}</text>`).join("");
+const nl=Math.min(N,4),xs=[...new Set(Array.from({length:nl},(_,i)=>Math.round(i*(N-1)/(nl-1))))].map(i=>`<text x="${i==N-1?X(i)+10:X(i)}" y="${VH-9}" text-anchor="${i==N-1?"end":"middle"}" font-size="20" fill="#6b7b95">${y0+i}</text>`).join("");
 const pl=s=>s.map((v,i)=>`${X(i)},${Y(v)}`).join(" "),area=`${X(0)},${VH-36} ${pl(A)} ${X(N-1)},${VH-36}`;
 const dots=(s,c)=>N<=11?s.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="${c}"/>`).join(""):"";
 return`<svg viewBox="0 0 360 ${VH}" class="lxsvg" role="img" aria-label="누적 비용 추이">${grid}${xs}<polygon points="${area}" fill="#2a7bf0" opacity=".08"/><polyline points="${pl(A)}" fill="none" stroke="#1d62dc" stroke-width="2.5" stroke-linejoin="round"/><polyline points="${pl(B)}" fill="none" stroke="#12a366" stroke-width="2.5" stroke-linejoin="round"/>${dots(A,"#1d62dc")}${dots(B,"#12a366")}</svg>`}
@@ -10226,8 +10226,8 @@ html body #v9 .lxsp .sp-sum{background:#fff;border:1px solid #dde6f4;border-radi
 html body #v9 .lxsp .sp-th{border-radius:calc(var(--sq)*8);overflow:hidden;background:#dce9fb;min-height:calc(var(--sq)*150)}
 html body #v9 .lxsp .sp-th img{display:block;width:100%;height:100%;object-fit:cover}
 html body #v9 .lxsp .sp-sg{background:#f1f6fe;border-radius:calc(var(--sq)*8);padding:calc(var(--sq)*4) 0;min-width:0}
-html body #v9 .lxsp .sp-sr{display:grid;grid-template-columns:1.3fr .85fr 1.1fr;align-items:center}
-html body #v9 .lxsp .sp-sr+.sp-sr{grid-template-columns:1.3fr 1.95fr;border-top:1px solid #dbe5f4}
+html body #v9 .lxsp .sp-sr{display:grid;grid-template-columns:1.05fr .8fr 1.4fr;align-items:center}
+html body #v9 .lxsp .sp-sr+.sp-sr{grid-template-columns:1.05fr 2.2fr;border-top:1px solid #dbe5f4}
 html body #v9 .lxsp .sp-sc{position:relative;display:flex;align-items:center;gap:calc(var(--sq)*10);padding:calc(var(--sq)*12) calc(var(--sq)*12);min-width:0}
 html body #v9 .lxsp .sp-sc+.sp-sc{border-left:1px solid #dbe5f4}
 html body #v9 .lxsp .sp-sc>i{flex:none;width:calc(var(--sq)*38);height:calc(var(--sq)*38);color:#4a6a9d;display:grid;place-items:center}
@@ -10235,7 +10235,7 @@ html body #v9 .lxsp .sp-sc>i svg{width:100%;height:100%;stroke-width:1.6}
 html body #v9 .lxsp .sp-sc small{display:block;font-size:max(9px,calc(var(--sq)*19));color:#5a6b8a;font-weight:500}
 html body #v9 .lxsp .sp-sc b{display:block;margin-top:calc(var(--sq)*2);font-size:max(12px,calc(var(--sq)*25));font-weight:800;color:#0b2354;white-space:nowrap}
 html body #v9 .lxsp .sp-sel{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;font-size:16px}
-html body #v9 .lxsp .sp-hz input{width:max(36px,calc(var(--sq)*64));min-width:36px;border:0;border-bottom:1.5px dashed #9db6e0;background:transparent;font:800 max(16px,calc(var(--sq)*25)) "Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;color:#0b2354;padding:0;text-align:right}
+html body #v9 .lxsp .sp-hz input{width:max(60px,calc(var(--sq)*130));min-width:60px;box-sizing:border-box;padding:0 6px!important;text-align:center!important;border:0;border-bottom:1.5px dashed #9db6e0;background:transparent;font:800 max(16px,calc(var(--sq)*25)) "Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;color:#0b2354;padding:0;text-align:right}
 html body #v9 .lxsp .sp-dg{display:inline-block;text-decoration:none;padding:calc(var(--sq)*2) calc(var(--sq)*18);border-radius:calc(var(--sq)*8);font-size:max(10px,calc(var(--sq)*20));font-weight:700}
 html body #v9 .lxsp .sp-dg.d0,html body #v9 .lxsp .sp-dg.d1{background:#cdeedb;color:#13804c}
 html body #v9 .lxsp .sp-dg.d2{background:#ffe3c2;color:#b45309}
@@ -10425,5 +10425,13 @@ html body #v9 .lxsp .t2-pi{position:absolute;right:calc(var(--sq)*8);bottom:calc
 html body #v9 .lxsp .t2-pi svg{width:60%;height:60%;stroke-width:2}
 html body #v9 .lxsp .t2-pl.e .t2-pi{display:none}
 html body #v9 .lxsp .t2-px{position:absolute;left:calc(var(--sq)*8);top:calc(var(--sq)*8);z-index:2;display:grid;place-items:center;width:calc(var(--sq)*34);height:calc(var(--sq)*34);border:0;border-radius:50%;background:rgba(10,30,70,.55);color:#fff;font-size:max(14px,calc(var(--sq)*26));line-height:1;padding:0}
+</style>
+
+<style id="v446">
+html body #v9 .lxsp .sp-sc small{display:flex;align-items:center;gap:calc(var(--sq)*6)}
+html body #v9 .lxsp .sp-sc small i{flex:none;display:inline-grid;place-items:center;width:calc(var(--sq)*28);height:calc(var(--sq)*28);color:#4a6a9d}
+html body #v9 .lxsp .sp-sc small i svg{width:100%;height:100%;stroke-width:1.7}
+html body #v9 .lxsp .sp-sc b{margin-top:calc(var(--sq)*4)}
+html body #v9 .lxsp .sp-hz{display:flex;align-items:center;gap:calc(var(--sq)*6)}
 </style>
 </body></html>
