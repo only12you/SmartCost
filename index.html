@@ -7289,10 +7289,10 @@ function csv(){const r=[["구역","유형","구역명(측정)","면적㎡","염�
 function Ak(v){const a=A_();a.kind=v;if(v==="h")a.t="아파트";else if(v!=="x")a.t="공장";a.sp.rec=mkS(rec(a,envI(a)));rsv();R()}
 function Ae(v){A_().etc=String(v).trim();rsv()}
 function Ar(v){const a=A_(),n=Math.max(0,+v||0);if(!(n>0)){at("면적은 0보다 커야 합니다");R();return}const cur=a.zones.reduce((x,z)=>x+(+z.ar||0),0)||0;if(cur>0){const f=n/cur;a.zones.forEach(z=>{z.ar=Math.round(z.ar*f*100)/100});const lz=a.zones[a.zones.length-1],rest=a.zones.slice(0,-1).reduce((x,z)=>x+z.ar,0);lz.ar=Math.max(0,Math.round((n-rest)*100)/100)}else a.zones[0].ar=n;zs0(a);rsv();R()}
-function pAPage(){return`<div class="lx lxp">${lxTop()}<div class="ld"><div class="lsh">${flow()}${pA()}${saveBox()}</div></div></div>${bar()}`}
+function pAPage(){return`<div class="lx lxp">${lxTop()}${lxStepBar()}<div class="ld"><div class="lsh">${flow()}${pA()}${saveBox()}</div></div></div>${bar()}`}
 function dgNav(){return`<div class="dgn"><div class="dgnr">${LXFL.map((f,i)=>`<button type="button" class="dgb f${i+1}${i+1==2?" on":""}" onclick="LCCX.tab(${i+1})">${MI(f[3])}<b>${f[0]}</b><em>0${i+1}</em></button>`).join("")}</div></div>`}
-function pDPage(){return`<div class="lx lxp lxdg">${lxHero(0,1)}${dgNav()}<iframe id="dgf" class="dgf" title="현장진단"></iframe></div>`}
-function pWrap(inner){const a=A_();return`<div class="lx lxp">${lxTop()}<div class="ld"><div class="lsh">${flow()}${inner}</div></div></div>`}
+function pDPage(){return`<div class="lx lxp lxdg">${lxHero(0,1)}${lxStepBar()}<iframe id="dgf" class="dgf" title="현장진단"></iframe></div>`}
+function pWrap(inner){const a=A_();return`<div class="lx lxp">${lxTop()}${lxStepBar()}<div class="ld"><div class="lsh">${flow()}${inner}</div></div></div>`}
 function pDg(){const a=A_();return`<div class="lx lxp">${lxTop()}<div class="ld"><div class="lsh">${flow()}<section class="ldc dgas"><div class="ldt">${MI('<path d="M3 21V9l7-4v16M10 21V11l11-3v13M7 13h.01M7 17h.01M14 14h.01M14 18h.01M18 13h.01M18 17h.01"/>')}<div><b>대상 설비</b><small>진단 결과를 반영할 자산을 선택하세요.</small></div><label class="ldsel"><select onchange="LCCX.si(+this.value)">${RS.assets.map((x,i)=>`<option value="${i}"${RS.i==i?" selected":""}>${hh(x.n).slice(0,18)}</option>`).join("")}</select></label></div></section><iframe id="dgf" class="dgf" title="현장진단"></iframe></div></div></div>`}
 function pD(){return ""}
 function pDold(){const a=A_(),r=all(a);
@@ -7406,7 +7406,7 @@ const gmax=Math.max(...m.map(per),1),gcol=["#aeb8c8","#35b86a","#6a86e8"],gsn=["
 const gr=`<section class="t2-g"><div class="t2-gh"><i>${MI(IBU)}</i><b>${hz}년 총비용 비교</b><small>(원/㎡)</small></div><div class="t2-gs">${m.map((x,i)=>{const d=pc(i),h=Math.max(6,per(x)/gmax*110);return`<div class="t2-gc"><div class="t2-gb">${i?`<em class="p${i}">${d>=0?"약 "+Math.round(d)+"% 절감":"약 "+Math.round(-d)+"% 증가"}</em>`:""}<b class="q${i}">${F(per(x))}</b><i style="height:calc(var(--sq)*${h.toFixed(0)});background:${gcol[i]}"></i></div><div class="t2-gl"><b class="q${i}">${nm[i]}</b><small>${gsn[i]}</small></div></div>`}).join("")}</div></section>`;
 const top2=`${c1}<div class="sp-h t2-ht"><i>${MI(IBU)}</i>추천 보수 대안</div><div class="t2-ag">${alt(1)}${alt(2)}</div>${gr}`;
 return`<div class="spq">
-<div class="sp-st">${steps}</div>
+
 <section class="sp-sum"><div class="sp-th">${phB("th",SPT[k=="p"?"p":k=="h"?"h":"x"])}</div><div class="sp-sg"><div class="sp-sr"><div class="sp-sc"><div><small><i>${MI(icoOf(a))}</i>시설</small><b>${hh(fac)}</b></div>${RS.assets.length>1?`<select class="sp-sel" aria-label="대상 설비" onchange="LCCX.si(+this.value)">${RS.assets.map((x,i)=>`<option value="${i}"${i==RS.i?" selected":""}>${hh(x.n).slice(0,24)}</option>`).join("")}</select>`:""}</div><div class="sp-sc"><div><small><i>${MI(SPI.sh)}</i>환경등급</small><b>${cat}</b></div></div><div class="sp-sc"><div><small><i>${MI(SPI.tg)}</i>목표기간</small><b class="sp-hz"><input type="number" inputmode="numeric" value="${hz}" onchange="LCCX.hz(this.value)" aria-label="목표기간(년)">년</b></div></div></div><div class="sp-sr"><div class="sp-sc"><div><small><i>${MI(SPI.ly)}</i>현재 도막두께</small><b>${Math.round(m[0].sc.dft)} μm</b></div></div><div class="sp-sc w2"><div><small><i>${MI(SPI.pl)}</i>열화상태</small><b><u class="sp-dg d${dg.lv}">${dg.t}</u></b></div></div></div></div><div class="sp-rm"><span>경과 <b>${dg.age}년</b></span><span>예상 수명 <b>${m[0].e.toFixed(1)}년</b></span><span>잔존 수명 <b class="${dg.rem<=2?"w":""}">${remy.toFixed(1)}년</b>${dg.rem>0?` <small>(${yr0+Math.round(dg.rem)}년경 보수)</small>`:""}</span></div></section>
 ${top2}
 <div class="sp-h">ISO 12944 기반 사양 검토<button type="button" class="sp-i" aria-label="안내" onclick="tt('ISO 12944-5 권장 최소 DFT: ${cat} · 내구성 ${dur} 기준 ${iso}μm (참고값)')">${MI(SPI.inf)}</button></div>
@@ -7423,7 +7423,7 @@ ${RS.o.sdet?`<div id="spdet" class="sp-det">${pSdet()}</div>`:""}
 <section class="sp-cc"><div class="sp-cch"><b>${MI(SPI.cmp)}비용 비교 <small>(예시)</small></b><div class="sp-lg">${nm.map((n,i)=>`<span><i style="background:${bc[i]}"></i>${n}</span>`).join("")}</div></div><div class="sp-gs">${chart}</div></section>
 <div class="sp-bar"><i class="sp-bk">${MI(SPI.ck)}</i><div class="sp-bt"><b>추천안 : ${best==0?"현재 사양 유지":nm[best]}</b><small>보수주기와 누적비용을 함께 검토</small></div><button type="button" onclick="LCCX.tab(5)">${MI(SPI.cal)}보수계획 확정${MI(lxCh)}</button></div>
 </div>`}
-function pSPage(){return`<div class="lx lxp lxsp">${lxTop()}<div class="spw">${pS()}</div></div>`}
+function pSPage(){return`<div class="lx lxp lxsp">${lxTop()}${lxStepBar()}<div class="spw">${pS()}</div></div>`}
 
 function spOpen(k){RS.o.sdet=true;RS.o["s"+k]=true;rsv();R();setTimeout(()=>{const e=document.getElementById("q4edit");if(e)scrollTo(0,Math.max(0,e.getBoundingClientRect().top+scrollY-270))},60)}
 function bars(rows,cols){return`<svg viewBox="0 0 320 ${rows.length*54+6}" width="100%">${rows.map((r,i)=>{const mx=Math.max(...r[1],1e-9),y=i*54;return`<text x="0" y="${y+11}" font-size="11" font-weight="700" fill="var(--tx)">${r[0]}</text>`+r[1].map((v,j)=>{const w=Math.max(2,v/mx*215);return`<rect x="0" y="${y+16+j*12}" width="${w}" height="9" rx="3" fill="${cols[j]}"/><text x="${w+4}" y="${y+24+j*12}" font-size="9.5" fill="var(--mu)">${r[2](v)}</text>`}).join("")}).join("")}</svg>`}
@@ -7440,7 +7440,7 @@ ${row("사양",(x,i)=>a.sp[RK[i]].n.slice(0,12))}${row("총 DFT ㎛",x=>x.sc.dft
 function rptMeta(){const d=new Date(),p=n=>String(n).padStart(2,"0");return{dt:d.getFullYear()+"."+p(d.getMonth()+1)+"."+p(d.getDate()),id:"LCC-"+d.getFullYear()+"-"+String(RS.rn||1).padStart(4,"0")}}
 function rnBump(){RS.rn=(RS.rn||1)+1;rsv();R()}
 function rpv(k,u){const a=Math.abs(k);u=u||(a>=100000?"억원":"백만원");return u=="억원"?[(k/100000).toFixed(2),u]:[(k/1000).toFixed(1),u]}
-function pRPage(){return`<div class="lx lxp">${lxTop()}<div class="ld"><div class="lsh">${flow()}${pR()}</div></div></div>`}
+function pRPage(){return`<div class="lx lxp">${lxTop()}${lxStepBar()}<div class="ld"><div class="lsh">${flow()}${pR()}</div></div></div>`}
 function pR(){const R=RS.assets.map(all),n=R.length,cnt={R:0,O:0,Y:0,G:0};R.forEach(r=>cnt[r.B.z]++);
 const hz=RS.hz,T=RK.map((_,j)=>R.reduce((s,r)=>s+r.m[j].tot,0)),cu=RK.map((_,j)=>{const c=Array(hz+1).fill(0);R.forEach(r=>r.m[j].cu.forEach((v,i)=>c[i]+=v));return c});
 const ar=R.reduce((s,r)=>s+(+r.a.ar||0),0),ix=k=>CK.indexOf(k),evs=R.map(r=>r.en.eff).sort((x,y)=>ix(x)-ix(y)),envT=evs[0]==evs[n-1]?evs[0]:evs[0]+"~"+evs[n-1],mt=rptMeta();
@@ -7490,6 +7490,7 @@ const lxCh='<path d="M9 5l7 7-7 7"/>';
 const LXFL=[["자산 등록","설비 기본정보","기본정보",'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h5"/>',1],["진단 평가","현장/상태진단","데이터 수집",'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8.5 11l2 2 3.5-4"/>',2],["사양 설정","최적/개선적용","분석/계산",'<circle cx="12" cy="12" r="3.5"/><path d="M10.4 3h3.2l.5 2.2 1.6.7 1.9-1.2 2.3 2.3-1.2 1.9.7 1.6 2.2.5v3.2l-2.2.5-.7 1.6 1.2 1.9-2.3 2.3-1.9-1.2-1.6.7-.5 2.2h-3.2l-.5-2.2-1.6-.7-1.9 1.2-2.3-2.3 1.2-1.9-.7-1.6L3 13.6v-3.2l2.2-.5.7-1.6-1.2-1.9 2.3-2.3 1.9 1.2 1.6-.7z"/>',3],["비용 분석","LCC비용산출","결과 분석",'<path d="M5 20v-6M10 20V9M15 20v-8M20 20V5"/>',4],["보고서 생성","종합리포트생성","보고서",'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 13l2 2 4-4"/>',5]];
 function lxFit(){try{const w=document.querySelector("#v9 .lx:not(.lxp) .lxcw");if(!w)return;const sv=w.querySelector("svg");if(!sv)return;w.style.minHeight="0";const bw=w.clientWidth,bh=w.clientHeight;if(!bw||!bh)return;const VH=Math.min(520,Math.max(232,Math.round(360*bh/bw)));if(Math.abs(VH-(+w.dataset.vh||232))<6)return;w.dataset.vh=VH;w.innerHTML=lxChart(dRows(),VH)}catch(e){}}
 window.addEventListener("resize",()=>{if(document.body.dataset.pg==9&&RS.tab==0)lxFit()});
+function lxStepBar(){return`<nav class="lxsb" aria-label="LCC 단계">${[["자산등록",1],["열화진단",2],["ISO 사양추천",3],["비용분석",4],["보수계획",5]].map(([t,i])=>`<button type="button" class="${i==RS.tab?"on":""}"${i==RS.tab?' aria-current="step"':""} onclick="LCCX.tab(${i})"><i>${i}</i><span>${t}</span></button>`).join("")}</nav>`}
 function lxTop(){return lxHero(dRows().filter(r=>r.B.z=="R"||r.B.z=="O").length)}
 function lxHero(urg,min){return`<div class="lxh"><div class="lxtx"><div class="lxlogo"><b>LCC</b><svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lxlg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#1b9a63"/><stop offset="1" stop-color="#4fcfee"/></linearGradient></defs><path d="M3 36C3 17 14 4 37 3 37 23 26 37 9 37z" fill="url(#lxlg)"/><path d="M5 35C14 24 22 16 32 9" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" fill="none"/></svg></div><div class="lxsub">Life Cycle Cost</div><p>설비의 생애주기 전체를<br>데이터로 관리합니다.</p></div><div class="lxhb"><button type="button" class="lxhd${RS.tab==0?" on":""}" onclick="LCCX.tab(0)" aria-label="대시보드">${MI(TI[0])}</button>${min?"":`<button type="button" onclick="tt('긴급 보수 대상 ${urg}곳 (R·O 등급)')" aria-label="알림">${MI('<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/>')}${urg?"<i></i>":""}</button><button type="button" onclick="openSettings()" aria-label="설정">${MI('<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>')}</button>`}</div></div>`}
 function lxStrip(){return`<div class="lxt"><div class="lxtr">${TABS.map((t,i)=>`<button type="button" class="${i==RS.tab?"on":""}" onclick="LCCX.tab(${i})">${MI(TI[i])}<span>${t[0]}</span></button>`).join("")}</div><button type="button" class="lxtn" onclick="this.previousElementSibling.scrollBy({left:220,behavior:'smooth'})" aria-label="다음 탭">${MI(lxCh)}</button></div>`}
@@ -10460,5 +10461,20 @@ html body #v9 .lxsp .t2-bp .t2-pl{height:calc(var(--sq)*110)!important;backgroun
 html body #v9 .lxsp .t2-ap .t2-pl{height:calc(var(--sq)*100)!important;background:#eaf0fa!important}
 html body #v9 .lxsp .sp-th .t2-pl img,html body #v9 .lxsp .t2-bp .t2-pl img,html body #v9 .lxsp .t2-ap .t2-pl img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center}
 html body #v9 .lxsp .sp-th .t2-pl.e,html body #v9 .lxsp .t2-bp .t2-pl.e,html body #v9 .lxsp .t2-ap .t2-pl.e{background:transparent!important}
+</style>
+<style id="v449">
+/* v449: LCC 단계 내비게이션 막대(1 자산등록 ~ 5 보수계획) — 대시보드를 뺀 모든 LCC 화면에 적용 · 화면 위에 고정 */
+html body #v9 .lxsb{--sb:calc(min(100vw,900px)/941);position:sticky;top:env(safe-area-inset-top,0px);z-index:45;display:flex;align-items:flex-start;padding:calc(var(--sb)*14) calc(var(--sb)*32) calc(var(--sb)*12);background:#f4f8fe;box-shadow:0 3px 10px rgba(20,60,140,.10);font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif}
+html body #v9 .lxsb::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:env(safe-area-inset-top,0px);background:#f4f8fe}
+html body #v9 .lxsb button{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:calc(var(--sb)*8);padding:0;border:0;background:none;position:relative;color:#5a6b8a;cursor:pointer;font-family:inherit}
+html body #v9 .lxsb button::before{content:"";position:absolute;top:calc(var(--sb)*23);left:0;right:0;height:2px;background:#cfdcf2;z-index:0}
+html body #v9 .lxsb button:first-child::before{left:50%}
+html body #v9 .lxsb button:last-child::before{right:50%}
+html body #v9 .lxsb i{position:relative;z-index:1;display:grid;place-items:center;width:calc(var(--sb)*46);height:calc(var(--sb)*46);min-width:24px;min-height:24px;border-radius:50%;background:#e4edfb;color:#4c78c4;font-style:normal;font-weight:700;font-size:max(11px,calc(var(--sb)*22));line-height:1}
+html body #v9 .lxsb span{font-size:max(10px,calc(var(--sb)*21));font-weight:600;white-space:nowrap;letter-spacing:-.02em}
+html body #v9 .lxsb .on i{background:#1f6fe5;color:#fff;box-shadow:0 calc(var(--sb)*4) calc(var(--sb)*10) rgba(31,111,229,.35)}
+html body #v9 .lxsb .on span{color:#1f6fe5;font-weight:800}
+/* 막대로 대체된 기존 단계 줄 숨김 */
+html body #v9 .fw .lxfl.lxfs,html body #v9 .lxsp .sp-st,html body #v9 .lxdg .dgn{display:none!important}
 </style>
 </body></html>
