@@ -10477,4 +10477,15 @@ html body #v9 .lxsb .on span{color:#1f6fe5;font-weight:800}
 /* 막대로 대체된 기존 단계 줄 숨김 */
 html body #v9 .fw .lxfl.lxfs,html body #v9 .lxsp .sp-st,html body #v9 .lxdg .dgn{display:none!important}
 </style>
+<style id="v450">
+/* v450: 첨부 사진 칸 50% 확대 · 칸 크기를 넘지 않게 고정하고 사진이 칸을 자동으로 채움(cover) */
+html body #v9 .lxsp .sp-sum{grid-template-columns:calc(var(--sq)*261) minmax(0,1fr)!important}
+html body #v9 .lxsp .sp-th .t2-pl{height:calc(var(--sq)*225)!important;max-height:calc(var(--sq)*225)!important;background:#eaf0fa!important}
+html body #v9 .lxsp .t2-bg{grid-template-columns:calc(var(--sq)*314) 1fr 1.15fr!important}
+html body #v9 .lxsp .t2-bp .t2-pl{height:calc(var(--sq)*165)!important;max-height:calc(var(--sq)*165)!important;background:#eaf0fa!important}
+html body #v9 .lxsp .t2-ap .t2-pl{height:calc(var(--sq)*150)!important;max-height:calc(var(--sq)*150)!important;background:#eaf0fa!important}
+html body #v9 .lxsp .sp-th,html body #v9 .lxsp .t2-bp,html body #v9 .lxsp .t2-ap{overflow:hidden!important}
+html body #v9 .lxsp .sp-th .t2-pl img,html body #v9 .lxsp .t2-bp .t2-pl img,html body #v9 .lxsp .t2-ap .t2-pl img{position:absolute;inset:0;width:100%!important;height:100%!important;max-width:100%;max-height:100%;object-fit:cover!important;object-position:center}
+html body #v9 .lxsp .sp-th .t2-pl.e,html body #v9 .lxsp .t2-bp .t2-pl.e,html body #v9 .lxsp .t2-ap .t2-pl.e{background:transparent!important}
+</style>
 </body></html>
