@@ -2910,7 +2910,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v453',d:'2026.10.23'};
+const APPV={v:'v454',d:'2026.10.23'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -7553,6 +7553,48 @@ const J=window.jspdf.jsPDF,pdf=new J({unit:"mm",format:"a4"}),W=210;
 pages.forEach((p,i)=>{const y0=Math.max(0,Math.round(p[0]*SC)),h=Math.min(cv.height-y0,Math.round((p[1]-p[0])*SC)),c2=document.createElement("canvas");c2.width=cv.width;c2.height=h;const g=c2.getContext("2d");g.fillStyle="#f1f6fd";g.fillRect(0,0,c2.width,c2.height);g.drawImage(cv,0,y0,cv.width,h,0,0,cv.width,h);if(i)pdf.addPage();pdf.addImage(c2.toDataURL("image/jpeg",.9),"JPEG",0,0,W,h*W/cv.width,undefined,"FAST")});
 const mt=rptMeta(),nm="LCC_종합분석보고서_"+mt.id+".pdf";dl(pdf.output("blob"),nm);tt("PDF를 저장했습니다<br><small>"+nm+"</small>");rnBump()}
 catch(x){tt("PDF 생성에 실패했습니다<br>온라인 연결을 확인하거나 HTML로 저장하세요")}finally{if(box)box.remove()}}
+/* v454: LCC 비용비교(4단계) — 시안 디자인 (히어로·단계 바는 기존 그대로) */
+const CQI={
+warn:'<path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/>',
+clk:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+cal:'<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M4 10h16M8.5 14h.01M12 14h.01M15.5 14h.01M8.5 17h.01M12 17h.01"/>',
+coin:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+scale:'<path d="M12 4v16M7 20h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/>',
+hour:'<path d="M7 3h10M7 21h10M8 3c0 5 4 5.5 4 9s-4 4-4 9M16 3c0 5-4 5.5-4 9s4 4 4 9"/>',
+crown:'<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z" fill="currentColor"/>',
+trend:'<path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/>',
+bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+chk:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.6h.01"/>'};
+function cqChart(m,hz){const N=hz+1,col=["#8d97aa","#1f6fe5","#1fa05c"],S=m.map(x=>Array.from({length:N},(_,i)=>(x.cu[i]||0)/1000));
+const mx=Math.max(0.1,...S.map(s=>s[N-1]),...S.map(s=>Math.max(...s))),top=Math.max(1,Math.ceil(mx)),X=i=>i/(N-1)*100,Y=v=>100-v/top*100;
+const st=s=>{const p=[];for(let i=0;i<N;i++){if(i>0)p.push(X(i).toFixed(2)+","+Y(s[i-1]).toFixed(2));p.push(X(i).toFixed(2)+","+Y(s[i]).toFixed(2))}return p.join(" ")};
+const ends=S.map((s,j)=>({j,y:Y(s[N-1]),v:s[N-1]})).sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y<ends[i-1].y+17)ends[i].y=ends[i-1].y+17;const ov=ends.length&&ends[ends.length-1].y>100?ends[ends.length-1].y-100:0;ends.forEach(e=>e.y=Math.max(0,e.y-ov));
+const mid=Math.floor(hz/2);
+return`<div class="cqch"><div class="cqpl"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line class="d" x1="0" x2="100" y1="0" y2="0"/><line class="d" x1="0" x2="100" y1="50" y2="50"/><line class="d" x1="50" x2="50" y1="0" y2="100"/><line class="ax" x1="0" x2="0" y1="0" y2="100"/><line class="ax" x1="0" x2="100" y1="100" y2="100"/>${S.map((s,j)=>`<polyline class="l${j}" points="${st(s)}"/>`).join("")}</svg><div class="cqyl"><span style="top:0%">${top}M</span><span style="top:50%">${Math.floor(top/2)}M</span><span style="top:100%">0M</span></div><div class="cqxl"><span style="left:0%">0년</span><span style="left:50%">${mid}년</span><span style="left:100%">${hz}년</span></div>${S.map((s,j)=>`<i class="e${j}" style="top:${Y(s[N-1])}%"></i>`).join("")}${ends.map(e=>`<b class="t${e.j}" style="top:${e.y}%">${e.v.toFixed(1)}백만원</b>`).join("")}</div></div>`}
+function pCQ(){const r=all(A_()),a=r.a,m=r.m,hz=RS.hz,j=judge(a),best=m.reduce((b,x,i)=>x.tot<m[b].tot?i:b,0),mnA=m.reduce((b,x,i)=>x.an<m[b].an?i:b,0),ok=x=>DK.indexOf(x.d)>=DK.indexOf(a.dur),bad=m.map((x,i)=>ok(x)?-1:i).filter(i=>i>=0);
+const vz=j.v[0],T={R:["즉시 보수 필요","#d63a3a","#fff0f0","#e64545"],O:["보수 검토 필요","#f05a0a","#fff7ec","#ffb21f"],Y:["보수 검토 필요","#f05a0a","#fff7ec","#ffb21f"],G:["정상 · 정기 점검","#1f9d57","#eefaf2","#1fa05c"]}[vz];
+const hd=[["현재 도장사양","(기본)","g"],["범용사양","(일반)","b"],["추천사양","(고내구성)","n"]];
+let RW=0;const cell=(i,body,cls)=>`<div class="cqc c${i} r${RW}${cls?" "+cls:""}">${body}</div>`;
+const row=(ic,l,u,f)=>(RW++,`<div class="cql"><i>${ic}</i><span><b>${l}</b><small>${u}</small></span></div>${m.map((x,i)=>f(x,i)).join("")}`);
+const won='<span class="cqw">₩</span>';
+RW=-1;const tbl=`<div class="cqtb"><div></div>${hd.map(h=>`<div class="cqh ${h[2]}"><b>${h[0]}</b><small>${h[1]}</small></div>`).join("")}`
++row(MI(CQI.hour),"도장수명","(년)",(x,i)=>cell(i,`<b>${x.e.toFixed(1)}</b>${ok(x)?"":`<em class="bd">${MI(CQI.warn)}요구 내구성 미달</em>`}`,ok(x)?"":"bad"))
++row(MI(CQI.coin),hz+"년 LCC","(백만원)",(x,i)=>cell(i,`<b>${(x.tot/1000).toFixed(1)}</b>${i==best?`<em class="bt">${MI(CQI.crown)}최저 LCC</em>`:""}`,i==best?"best":""))
++row(won,"연간비용","(원/㎡·년)",(x,i)=>cell(i,`<b>${F(x.an)}</b>${i==mnA?`<em class="mn">최저 비용</em>`:""}`,i==mnA?"min":""))+`</div>`;
+const bw=bad.includes(best),nm=best==0?"현재 도장사양":RN[best];
+const ft=`<div class="cqft${bw?" w":""}"><i>${MI(bw?CQI.alert:CQI.chk)}</i><div><b>최저 LCC는 ${nm}입니다.</b><small>${bw?`단, ${RN[best]}은 요구 내구성(${a.dur})에 못 미칩니다. 사양을 재검토하세요.`:"단, 내구성 기준을 충족하는지 반드시 확인 후 최종 선정하세요."}</small></div></div>`;
+const pts=[`비용만 보면 ${best==0?"현재 사양":RN[best]}이 낮음`,"내구성 기준 충족 여부 확인 후 최종 선정"];if(bad.length)pts.push(`${bad.map(i=>RN[i]).join("·")}은 요구 내구성(${a.dur}) 미달`);pts.push(`보수 시기 판정: ${j.v[1]} (잔여 수명 ${j.rem<=0?"0":j.rem.toFixed(1)}년)`);
+const opts=RS.assets.map((x,i)=>`<option value="${i}"${RS.i==i?" selected":""}>${hh(x.n).slice(0,24)}</option>`).join("");
+return`<div class="cq"><div class="cqw0">
+<section class="cqc0"><div class="cqbn" style="background:${T[2]}"><i style="background:${T[3]}">${vz=="G"?MI(CQI.chk):"!"}</i><div class="cqbt"><b style="color:${T[1]}">${T[0]}</b><label class="cqsub"><span>대상</span><u></u><span class="cqnm">[${hh(kname(a))}] ${hh(a.n)}</span><select onchange="LCCX.si(+this.value)" aria-label="대상 자산 선택">${opts}</select></label></div><div class="cqst"><small>평가기간</small><b>${hz}년</b></div><div class="cqst"><small>보수 인상률</small><b>${RS.esc}%</b></div></div>
+<div class="cqkp"><div><span><i>${MI(CQI.clk)}</i>현재 도장 수명</span><b>${m[0].e.toFixed(1)}<u>년</u></b></div><div><span><i>${MI(CQI.cal)}</i>권장 보수주기</span><b>${m[0].c}<u>년</u></b></div><div><span><i>${MI(CQI.coin)}</i>${hz}년 예상비용</span><b>${(m[0].tot/1000).toFixed(1)}<u>백만원</u></b><small>(현재 사양 기준)</small></div></div></section>
+<section class="cqc0"><div class="cqt"><i>${MI(CQI.scale)}</i><b>대안별 한눈에 비교</b></div>${tbl}${ft}</section>
+<section class="cqc0"><div class="cqt"><i>${MI(CQI.trend)}</i><b>${hz}년 누적 보수비</b><span class="cqlg"><s class="a"></s>현재 사양<s class="b"></s>범용 사양<s class="c"></s>추천 사양</span></div>${cqChart(m,hz)}</section>
+<section class="cqin"><div class="cqt2"><i>${MI(CQI.bulb)}</i><b>현장 설명 포인트</b></div><ul>${pts.map(p=>`<li><i>${MI(CQI.chk)}</i><span>${p}</span></li>`).join("")}</ul></section>
+<div class="cqx"><details${RS.o.cqa?" open":""} ontoggle="LCCX.tg('cqa',this.open)"><summary>분석 조건</summary><div class="cqxg"><label><span>평가기간 (년)</span><input type="text" inputmode="decimal" value="${RS.hz}" onchange="LCCX.hz(this.value)"></label><label><span>보수 인상률 (%)</span><input type="text" inputmode="decimal" value="${RS.esc}" onchange="LCCX.esc(this.value)"></label></div></details><details${RS.o.cqb?" open":""} ontoggle="LCCX.tg('cqb',this.open)"><summary>상세 비교표 · 수명/비용 그래프</summary><div class="cqold">${pC()}</div></details></div>
+</div></div>`}
+function pCPage(){return`<div class="lx lxp lxcq">${lxTop()}${lxStepBar()}${pCQ()}</div>`}
 function pRPage(){return`<div class="lx lxp lxrq">${lxTop()}${lxStepBar()}${pRQ()}</div>`}
 function pR(){const R=RS.assets.map(all),n=R.length,cnt={R:0,O:0,Y:0,G:0};R.forEach(r=>cnt[r.B.z]++);
 const hz=RS.hz,T=RK.map((_,j)=>R.reduce((s,r)=>s+r.m[j].tot,0)),cu=RK.map((_,j)=>{const c=Array(hz+1).fill(0);R.forEach(r=>r.m[j].cu.forEach((v,i)=>c[i]+=v));return c});
@@ -7668,8 +7710,8 @@ return`<section class="ldc fw"><div class="lxfl lxfs">${steps}</div><div class="
 function strip(){return`<div class="lts"><div class="ltr">${TABS.map((t,i)=>`<button class="${i==RS.tab?"on":""}" onclick="LCCX.tab(${i})">${MI(TI[i])}<span>${t[0]}</span></button>`).join("")}</div><button class="ltn" onclick="this.previousElementSibling.scrollBy({left:220,behavior:'smooth'})" aria-label="다음 탭">${MI('<path d="M9 5l7 7-7 7"/>')}</button></div>`}
 
 let PK={};const TABS=[["대시보드",pDash],["자산",pA],["진단",pD],["사양",pS],["비교",pC],["보고서",pR]];
-function R(){const e=document.getElementById("v9");if(!e)return;const y=scrollY,a=A_();if(!(RS.tab>=0&&RS.tab<TABS.length))RS.tab=0;const dash=RS.tab==0,dgp=RS.tab==2;document.body.classList.toggle("lccdash",true);document.body.classList.toggle("lccasset",RS.tab==1);document.body.classList.toggle("lccrpt",RS.tab==5);
-e.innerHTML=dash?pDash():RS.tab==1?pAPage():RS.tab==5?pRPage():dgp?pDPage():RS.tab==3?pSPage():pWrap(TABS[RS.tab][1]());document.body.classList.toggle("lccdiag",RS.tab==2);document.body.classList.toggle("lccspec",RS.tab==3);if(dash)requestAnimationFrame(()=>requestAnimationFrame(lxFit));if(RS.tab==2){const f=document.getElementById("dgf");if(f)f.srcdoc=window.DIAGSRC}scrollTo(0,dash?0:y)}
+function R(){const e=document.getElementById("v9");if(!e)return;const y=scrollY,a=A_();if(!(RS.tab>=0&&RS.tab<TABS.length))RS.tab=0;const dash=RS.tab==0,dgp=RS.tab==2;document.body.classList.toggle("lccdash",true);document.body.classList.toggle("lccasset",RS.tab==1);document.body.classList.toggle("lccrpt",RS.tab==5);document.body.classList.toggle("lcccp",RS.tab==4);
+e.innerHTML=dash?pDash():RS.tab==1?pAPage():RS.tab==5?pRPage():RS.tab==4?pCPage():dgp?pDPage():RS.tab==3?pSPage():pWrap(TABS[RS.tab][1]());document.body.classList.toggle("lccdiag",RS.tab==2);document.body.classList.toggle("lccspec",RS.tab==3);if(dash)requestAnimationFrame(()=>requestAnimationFrame(lxFit));if(RS.tab==2){const f=document.getElementById("dgf");if(f)f.srcdoc=window.DIAGSRC}scrollTo(0,dash?0:y)}
 function pick(r,i){PK={r,i};pqSheet("rppk",`<div class="pqmh"><b>DB 제품 선택</b></div><input id="rpq" placeholder="제품명·제조사 검색" oninput="LCCX.pkq(this.value)"><div id="rpl" style="display:flex;flex-direction:column;gap:6px"></div><button class="pqbc" onclick="pqX('rppk')">닫기</button>`);pkq("")}
 function pkq(q){const L=DB.map((p,j)=>[p,j]).filter(([p])=>!q||(p.n+(p.mf||"")+(p.g||"")).toLowerCase().includes(String(q).toLowerCase())).slice(0,40);document.getElementById("rpl").innerHTML=L.length?L.map(([p,j])=>`<button class="pqml" onclick="LCCX.use(${j})"><span class="pqt"><b>${hh(p.n)}</b><small>${hh((p.mf||"")+" · "+(p.g||p.d||"")+" · SVR "+(p.svr||"-")+"% · "+(p.dft||"-")+"㎛")}</small></span></button>`).join(""):'<div class="k">제품 DB가 비어 있습니다. 더보기 → 제품 DB에서 추가하세요.</div>'}
 function use(j){const p=DB[j],c=A_().sp[PK.r].coats[PK.i],tr=+p.tr||0;c.p=p.n;c.db=p.n;c.vs=+p.svr||c.vs;c.d=+p.dft||c.d;c.th=tr?(tr>1?tr:+(tr*100).toFixed(1)):(+p.trp||c.th);c.pk=+p.mk||+p.pk||c.pk;c.un=/kg|㎏/i.test(p.un||"")?"kg":"L";c.sg=+p.sg||0;c.ts=+p.ts||18;pqX("rppk");rsv();R()}
@@ -10919,5 +10961,125 @@ html body #v9 .rq .rqx ul{margin:0 0 8px;padding-left:18px;font-size:max(9.5px,c
 html body #v9 .rq .rqx ul li{display:list-item;font-size:inherit;font-weight:400;gap:0}
 html body #v9 .rq .rqx details>p{margin:0 0 calc(var(--q)*12);font-size:max(9.5px,calc(var(--q)*12.5));line-height:1.55;color:#6b7b95}
 @media(max-width:560px){html body #v9 .rq .rqxl span:nth-child(even){display:none}}
+</style>
+<style id="cq454">
+/* v454: LCC 비용비교(4단계) — 첨부 시안(852px 기준) · 히어로/단계 바 제외 · 좌우 확장(최대 900px) */
+html body.lcccp[data-pg="9"]{max-width:900px}
+html body.lcccp #v9{margin-left:0!important;margin-right:0!important;padding:0!important;border:0!important;background:#eef4fc!important}
+html body #v9 .lx.lxcq{--lk:calc(min(100vw,900px)/1024);--gx:0px;padding-bottom:calc(var(--gnh,56px) + 24px)!important;background:#eef4fc}
+html body #v9 .cq{--w:calc(min(100vw,900px)/852);color:#10264f;font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,-apple-system,sans-serif;letter-spacing:-.01em;line-height:1.3;background:#eef4fc}
+html body #v9 .cq *{box-sizing:border-box}
+html body #v9 .cq .cqw0{display:flex;flex-direction:column;gap:calc(var(--w)*14);padding:calc(var(--w)*14) calc(var(--w)*20) calc(var(--w)*20)}
+html body #v9 .cq .cqc0{background:#fff;border:1px solid #dfe8f5;border-radius:calc(var(--w)*16);overflow:hidden;box-shadow:0 calc(var(--w)*3) calc(var(--w)*12) rgba(30,70,160,.06)}
+/* 상단 판정 */
+html body #v9 .cq .cqbn{display:flex;align-items:center;gap:calc(var(--w)*14);padding:calc(var(--w)*18) calc(var(--w)*22) calc(var(--w)*14) calc(var(--w)*30)}
+html body #v9 .cq .cqbn>i{flex:none;display:grid;place-items:center;width:max(30px,calc(var(--w)*54));height:max(30px,calc(var(--w)*54));border-radius:50%;color:#fff;font-style:normal;font-size:max(18px,calc(var(--w)*38));font-weight:800;line-height:1}
+html body #v9 .cq .cqbn>i svg{width:60%;height:60%;stroke-width:3}
+html body #v9 .cq .cqbt{flex:1 1 0;min-width:0}
+html body #v9 .cq .cqbt>b{display:block;font-size:max(16px,calc(var(--w)*36));font-weight:800;line-height:1.15;letter-spacing:-.03em;white-space:nowrap}
+html body #v9 .cq .cqsub{position:relative;display:flex;align-items:center;gap:calc(var(--w)*14);margin-top:calc(var(--w)*8);font-size:max(10.5px,calc(var(--w)*22));font-weight:500;color:#1b2f55;cursor:pointer}
+html body #v9 .cq .cqsub>span:first-child{flex:none;white-space:nowrap}
+html body #v9 .cq .cqsub u{flex:none;width:1px;height:max(10px,calc(var(--w)*20));background:#9aa7bd}
+html body #v9 .cq .cqnm{min-width:0;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #v9 .cq .cqsub select{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;font-size:16px;cursor:pointer}
+html body #v9 .cq .cqst{flex:none;display:flex;flex-direction:column;align-items:center;gap:calc(var(--w)*6);padding-left:calc(var(--w)*20);border-left:1px solid #e1d9c9;min-width:calc(var(--w)*150)}
+html body #v9 .cq .cqst small{font-size:max(9.5px,calc(var(--w)*19));font-weight:500;color:#566887;white-space:nowrap}
+html body #v9 .cq .cqst b{font-size:max(15px,calc(var(--w)*32));font-weight:800;color:#10264f;white-space:nowrap}
+html body #v9 .cq .cqkp{display:grid;grid-template-columns:260fr 245fr 253fr;gap:calc(var(--w)*14);padding:calc(var(--w)*12) calc(var(--w)*14) calc(var(--w)*18)}
+html body #v9 .cq .cqkp>div{display:flex;flex-direction:column;justify-content:center;gap:calc(var(--w)*8);min-width:0;min-height:max(66px,calc(var(--w)*127));padding:calc(var(--w)*10) calc(var(--w)*16);background:#eef4fd;border:1px solid #e2ebf8;border-radius:calc(var(--w)*14)}
+html body #v9 .cq .cqkp span{display:flex;align-items:center;gap:calc(var(--w)*10);font-size:max(9.5px,calc(var(--w)*21));font-weight:500;color:#44556f;white-space:nowrap;letter-spacing:-.03em}
+html body #v9 .cq .cqkp span i{flex:none;width:max(15px,calc(var(--w)*38));height:max(15px,calc(var(--w)*38));color:#2a6fe0}
+html body #v9 .cq .cqkp span i svg{width:100%;height:100%;stroke-width:1.7}
+html body #v9 .cq .cqkp b,html body #v9 .cq .cqkp small{padding-left:calc(max(15px,calc(var(--w)*38)) + var(--w)*10)}
+html body #v9 .cq .cqkp b{font-size:max(17px,calc(var(--w)*38));font-weight:800;line-height:1.1;letter-spacing:-.03em;color:#10264f;white-space:nowrap}
+html body #v9 .cq .cqkp>div:last-child b{font-size:max(15px,calc(var(--w)*33))}
+html body #v9 .cq .cqkp b u{text-decoration:none;font-size:max(11px,calc(var(--w)*28));font-weight:800;margin-left:1px}
+html body #v9 .cq .cqkp small{font-size:max(9px,calc(var(--w)*19));color:#6b7b95;white-space:nowrap}
+/* 카드 제목 */
+html body #v9 .cq .cqt{display:flex;align-items:center;flex-wrap:wrap;gap:calc(var(--w)*8) calc(var(--w)*14);padding:calc(var(--w)*20) calc(var(--w)*24) calc(var(--w)*10)}
+html body #v9 .cq .cqt>i{flex:none;width:max(20px,calc(var(--w)*42));height:max(20px,calc(var(--w)*42));color:#2b3f66}
+html body #v9 .cq .cqt>i svg{width:100%;height:100%;stroke-width:1.7}
+html body #v9 .cq .cqt>b{font-size:max(15px,calc(var(--w)*33));font-weight:800;letter-spacing:-.03em;color:#10264f;white-space:nowrap}
+html body #v9 .cq .cqlg{margin-left:auto;display:flex;align-items:center;gap:calc(var(--w)*8);font-size:max(9px,calc(var(--w)*19));color:#566887;white-space:nowrap}
+html body #v9 .cq .cqlg s{display:inline-block;width:max(7px,calc(var(--w)*15));height:max(7px,calc(var(--w)*15));border-radius:50%;margin-left:calc(var(--w)*14);text-decoration:none}
+html body #v9 .cq .cqlg s:first-child{margin-left:0}
+html body #v9 .cq .cqlg .a{background:#8d97aa}html body #v9 .cq .cqlg .b{background:#1f6fe5}html body #v9 .cq .cqlg .c{background:#1fa05c}
+/* 비교 표 */
+html body #v9 .cq .cqtb{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(3,minmax(0,1fr));gap:calc(var(--w)*4);padding:calc(var(--w)*8) calc(var(--w)*16) 0}
+html body #v9 .cq .cqh{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:max(40px,calc(var(--w)*80));padding:4px 2px;color:#fff;border-radius:calc(var(--w)*8) calc(var(--w)*8) 0 0;text-align:center}
+html body #v9 .cq .cqh b{font-size:max(10.5px,calc(var(--w)*22));font-weight:800;line-height:1.2;letter-spacing:-.04em;white-space:nowrap}
+html body #v9 .cq .cqh small{font-size:max(9.5px,calc(var(--w)*20));font-weight:500;line-height:1.2}
+html body #v9 .cq .cqh.g{background:#8b929d}html body #v9 .cq .cqh.b{background:#1f6fe5}html body #v9 .cq .cqh.n{background:#1fa05c}
+html body #v9 .cq .cql{display:flex;align-items:center;gap:calc(var(--w)*12);min-height:max(48px,calc(var(--w)*98));padding:0 calc(var(--w)*14);background:#f1f5fb;border-radius:calc(var(--w)*6)}
+html body #v9 .cq .cql>i{flex:none;display:grid;place-items:center;width:max(16px,calc(var(--w)*34));height:max(16px,calc(var(--w)*34));color:#7b8aa6}
+html body #v9 .cq .cql>i svg{width:100%;height:100%;stroke-width:1.7}
+html body #v9 .cq .cqw{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:#7b8aa6;color:#fff;font-size:max(9px,calc(var(--w)*19));font-weight:800}
+html body #v9 .cq .cql span{min-width:0}
+html body #v9 .cq .cql b{display:block;font-size:max(10.5px,calc(var(--w)*23));font-weight:800;line-height:1.2;color:#10264f;letter-spacing:-.04em}
+html body #v9 .cq .cql small{display:block;font-size:max(8.5px,calc(var(--w)*18));color:#6b7b95;line-height:1.2}
+html body #v9 .cq .cqc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--w)*6);min-height:max(48px,calc(var(--w)*98));padding:4px 2px;border-radius:calc(var(--w)*6);text-align:center}
+html body #v9 .cq .cqc{border:1px solid rgba(190,204,226,.45)}html body #v9 .cq .cqc.c0{background:#f6f7fa}html body #v9 .cq .cqc.c1{background:#eef4fd}html body #v9 .cq .cqc.c2{background:#eef8f0}
+html body #v9 .cq .cqc>b{font-size:max(14px,calc(var(--w)*30));font-weight:500;line-height:1.1;color:#1b2f55}
+html body #v9 .cq .cqc.r0.c1>b{color:#1f5fd0;font-weight:800}
+html body #v9 .cq .cqc.r2.c1>b{font-weight:800}
+html body #v9 .cq .cqc.r1.c2>b{font-weight:700}
+html body #v9 .cq .cqc.c0>b{color:#22304d}
+html body #v9 .cq .cqc.r2.c2>b{font-weight:400}
+html body #v9 .cq .cqc.bad>b{color:#d63a3a;font-weight:800}
+html body #v9 .cq .cqc em{display:inline-flex;align-items:center;justify-content:center;gap:calc(var(--w)*6);font-style:normal;font-size:max(8.5px,calc(var(--w)*17));font-weight:700;line-height:1.15;white-space:nowrap}
+html body #v9 .cq .cqc em svg{flex:none;width:max(10px,calc(var(--w)*20));height:max(10px,calc(var(--w)*20));stroke-width:2.4}
+html body #v9 .cq .cqc em.bd{color:#d63a3a}
+html body #v9 .cq .cqc.best{background:#fff;box-shadow:inset 0 0 0 max(2px,calc(var(--w)*3)) #1fa05c;border-radius:calc(var(--w)*10)}
+html body #v9 .cq .cqc.best>b{color:#17934f;font-weight:700;font-size:max(14px,calc(var(--w)*31))}
+html body #v9 .cq .cqc em.bt{color:#17934f}
+html body #v9 .cq .cqc em.bt svg{fill:currentColor;stroke-width:1}
+html body #v9 .cq .cqc.min>b{color:#17934f;font-weight:500}
+html body #v9 .cq .cqc em.mn{padding:max(1px,calc(var(--w)*3)) calc(var(--w)*14);border-radius:99px;background:#dcf2e3;color:#1b8a4c}
+html body #v9 .cq .cqft{display:flex;align-items:center;gap:calc(var(--w)*16);margin:calc(var(--w)*14) calc(var(--w)*16) calc(var(--w)*20);padding:calc(var(--w)*14) calc(var(--w)*20);background:#e8f7ee;border:1px solid #cfe9da;border-radius:calc(var(--w)*12)}
+html body #v9 .cq .cqft.w{background:#fff4dc;border-color:#f1dcae}
+html body #v9 .cq .cqft>i{flex:none;display:grid;place-items:center;width:max(26px,calc(var(--w)*46));height:max(26px,calc(var(--w)*46));border-radius:50%;background:#1fa05c;color:#fff}
+html body #v9 .cq .cqft.w>i{background:#e69a00}
+html body #v9 .cq .cqft>i svg{width:60%;height:60%;stroke-width:3}
+html body #v9 .cq .cqft b{display:block;font-size:max(12px,calc(var(--w)*24));font-weight:800;line-height:1.25;color:#10264f;letter-spacing:-.03em;word-break:keep-all}
+html body #v9 .cq .cqft small{display:block;margin-top:calc(var(--w)*4);font-size:max(9.5px,calc(var(--w)*19));color:#4d5f80;line-height:1.35;word-break:keep-all}
+/* 누적 그래프 */
+html body #v9 .cq .cqch{position:relative;height:max(140px,calc(var(--w)*250));margin:calc(var(--w)*6) 0 calc(var(--w)*16)}
+html body #v9 .cq .cqpl{position:absolute;left:max(36px,calc(var(--w)*92));right:max(70px,calc(var(--w)*150));top:calc(var(--w)*10);bottom:max(20px,calc(var(--w)*40))}
+html body #v9 .cq .cqpl svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+html body #v9 .cq .cqpl line{vector-effect:non-scaling-stroke}
+html body #v9 .cq .cqpl .d{stroke:#cdd7e6;stroke-width:1;stroke-dasharray:4 4}
+html body #v9 .cq .cqpl .ax{stroke:#cdd7e6;stroke-width:1}
+html body #v9 .cq .cqpl polyline{fill:none;stroke-width:3.4;stroke-linejoin:miter;vector-effect:non-scaling-stroke}
+html body #v9 .cq .cqpl .l0{stroke:#8d97aa}html body #v9 .cq .cqpl .l1{stroke:#1f6fe5}html body #v9 .cq .cqpl .l2{stroke:#1fa05c}
+html body #v9 .cq .cqyl,html body #v9 .cq .cqxl{position:absolute;inset:0;pointer-events:none}
+html body #v9 .cq .cqyl span{position:absolute;right:calc(100% + max(4px,calc(var(--w)*14)));transform:translateY(-50%);font-size:max(9px,calc(var(--w)*18));color:#566887;white-space:nowrap}
+html body #v9 .cq .cqxl span{position:absolute;top:calc(100% + max(4px,calc(var(--w)*12)));transform:translateX(-50%);font-size:max(9px,calc(var(--w)*19));color:#566887;white-space:nowrap}
+html body #v9 .cq .cqxl span:first-child{transform:translateX(-30%)}
+html body #v9 .cq .cqpl i{position:absolute;left:100%;width:max(7px,calc(var(--w)*13));height:max(7px,calc(var(--w)*13));margin:calc(max(7px,calc(var(--w)*13))/-2) 0 0 calc(max(7px,calc(var(--w)*13))/-2);border-radius:50%;border:max(1.5px,calc(var(--w)*2.5)) solid #fff}
+html body #v9 .cq .cqpl i.e0{background:#8d97aa}html body #v9 .cq .cqpl i.e1{background:#1f6fe5}html body #v9 .cq .cqpl i.e2{background:#1fa05c}
+html body #v9 .cq .cqpl b{position:absolute;left:calc(100% + max(8px,calc(var(--w)*16)));transform:translateY(-50%);padding:max(2px,calc(var(--w)*6)) calc(var(--w)*10);border-radius:calc(var(--w)*8);color:#fff;font-size:max(9px,calc(var(--w)*19));font-weight:800;white-space:nowrap}
+html body #v9 .cq .cqpl b.t0{background:#8d97aa}html body #v9 .cq .cqpl b.t1{background:#1f6fe5}html body #v9 .cq .cqpl b.t2{background:#1fa05c}
+/* 설명 포인트 */
+html body #v9 .cq .cqin{padding:calc(var(--w)*14) calc(var(--w)*24) calc(var(--w)*16);background:#f4f8ff;border:1px solid #d9e5f8;border-radius:calc(var(--w)*16)}
+html body #v9 .cq .cqt2{display:flex;align-items:center;gap:calc(var(--w)*12);margin-bottom:calc(var(--w)*8)}
+html body #v9 .cq .cqt2>i{flex:none;width:max(16px,calc(var(--w)*34));height:max(16px,calc(var(--w)*34));color:#2a6fe0}
+html body #v9 .cq .cqt2>i svg{width:100%;height:100%;stroke-width:1.7}
+html body #v9 .cq .cqt2>b{font-size:max(12px,calc(var(--w)*23));font-weight:800;color:#10264f}
+html body #v9 .cq .cqin ul{list-style:none;margin:0;padding:0 0 0 calc(var(--w)*8);display:flex;flex-direction:column;gap:calc(var(--w)*6)}
+html body #v9 .cq .cqin li{display:flex;align-items:flex-start;gap:calc(var(--w)*12);font-size:max(10.5px,calc(var(--w)*21));font-weight:500;line-height:1.35;color:#1b2f55;word-break:keep-all}
+html body #v9 .cq .cqin li>i{flex:none;width:max(12px,calc(var(--w)*24));height:max(12px,calc(var(--w)*24));margin-top:1px;color:#2a6fe0}
+html body #v9 .cq .cqin li>i svg{width:100%;height:100%;stroke-width:3}
+/* 부가 */
+html body #v9 .cq .cqx{display:flex;flex-direction:column;gap:calc(var(--w)*8)}
+html body #v9 .cq .cqx details{background:#fff;border:1px solid #dfe8f5;border-radius:calc(var(--w)*12);padding:0 calc(var(--w)*16);margin:0}
+html body #v9 .cq .cqx summary{display:flex;align-items:center;min-height:max(34px,calc(var(--w)*50));list-style:none;cursor:pointer;font-size:max(11px,calc(var(--w)*20));font-weight:700;color:#1456c8;white-space:normal;padding:0}
+html body #v9 .cq .cqx summary::-webkit-details-marker{display:none}
+html body #v9 .cq .cqx summary::after{content:"";margin-left:auto;width:7px;height:7px;border:solid #7a8aa8;border-width:0 2px 2px 0;transform:rotate(45deg) translateY(-25%);float:none;font:inherit}
+html body #v9 .cq .cqx details[open]>summary::after{transform:rotate(-135deg) translateY(-25%)}
+html body #v9 .cq .cqxg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(var(--w)*12);padding-bottom:calc(var(--w)*14)}
+html body #v9 .cq .cqxg label{display:flex;flex-direction:column;gap:4px;font-size:max(9.5px,calc(var(--w)*17));font-weight:600;color:#566887}
+html body #v9 .cq .cqxg input{width:100%;height:max(34px,calc(var(--w)*48));padding:0 10px;border:1px solid #cfdcf3;border-radius:8px;background:#fff;color:#10264f;font:500 14px "Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif}
+html body #v9 .cq .cqold{padding-bottom:calc(var(--w)*14)}
+html body #v9 .cq .cqold .card{margin:0 0 8px}
 </style>
 </body></html>
