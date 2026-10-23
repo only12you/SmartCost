@@ -3017,8 +3017,8 @@ function syRender(){
   }
  h+=`</div></div>`;
  h+=`<div id="syres"></div><div class="sy-ft"><button type="button" onclick="syDel()">마지막 제품 삭제</button><button type="button" onclick="syClr()">전체 초기화</button></div>`;
- e.innerHTML=`<div class="syp">${h}</div>`;
- syCalc();syAh();
+ e.innerHTML=`<div class="syp"><div id="sylib" class="sylib"></div>${h}</div>`;
+ syLibPage();syCalc();syAh();
 }
 
 function syBasis(act){
@@ -3126,7 +3126,7 @@ function syToLcc(g){const G=SY.groups[g];if(!G)return;const r=G.lr||'cur',nm={cu
  let an='';try{an=LCCX.diagInfo().n||''}catch(e){}
  try{LCCX.applySys(r,g);tt('LCC '+nm+' 사양으로 보냈습니다'+(an?'<br><small>'+esc(String(an).slice(0,18))+'</small>':''))}catch(e){console.error(e);tt('LCC로 보내지 못했습니다')}}
 function syGSave(g,btn){const G=SY.groups[g];if(!G)return;const LB=syLb(),items=[];SY.layers.forEach((l,i)=>{if(l.g==g)items.push(Object.assign({n:l.n,lb:LB[i]=='미지정'?'':LB[i]},['price','tprice','dft','svr','loss','tr'].reduce((o,k)=>{if(l[k]!==undefined&&l[k]!=='')o[k]=l[k];return o},{})))});
- const nm=(G.name||'').trim()||('시스템 '+(g+1)),A=syLibGet(),it={name:nm,ts:Date.now(),items},k=A.findIndex(x=>x.name==nm);if(k>=0)A[k]=it;else A.unshift(it);syLibSet(A);vib(20);
+ const nm=(G.name||'').trim()||('시스템 '+(g+1)),A=syLibGet(),it={name:nm,ts:Date.now(),items},k=A.findIndex(x=>x.name==nm);if(k>=0)A[k]=it;else A.unshift(it);syLibSet(A);try{syLibPage()}catch(e){}vib(20);
  if(btn){const o=btn.textContent;btn.textContent='저장됨 ✓';setTimeout(()=>{try{btn.textContent=o}catch(e){}},1500)}
  if(window.LCCEDIT&&window.LCCEDIT.g===g){const q=window.LCCEDIT;window.LCCEDIT=null;try{LCCX.applySys(q.r,g);tt('LCC 사양에 반영했습니다')}catch(e){console.error(e)}setTimeout(()=>navGo('lcc'),450)}}
 function syLbL(i,x){const l=SY.layers[i];if(!l)return;const LB=syLb();l.lb=LB[i]==x?'':x;syS();syRender()}
@@ -3189,7 +3189,7 @@ function syLibSheet(){
 function syLibUi(){
  const b=$('#syl-l');if(!b)return;const A=syLibGet(),q=(($('#syl-q')||{}).value||'').trim().toLowerCase(),fm=t=>{try{return t&&typeof qtFmt=='function'?qtFmt(t):''}catch(e){return ''}};
  const R=A.map((x,k)=>[x,k]).filter(([x])=>!q||(x.name+' '+x.items.map(i=>i.n).join(' ')).toLowerCase().includes(q));
- b.innerHTML=R.length?R.map(([x,k])=>`<div class="syl-c"><div class="syl-t"><b>${esc(x.name)}</b><span class="bdg b">${x.items.length}개 제품</span><span class="syl-m">${fm(x.ts)}</span></div><div class="syl-d">${x.items.map(i=>esc((i.lb?i.lb+' ':'')+i.n)).join(' · ')}</div><div class="syl-bt"><button class="ok" onclick="syLibUse(${k})">${SYLC[k]?'✓ 불러옴 ×'+SYLC[k]+' (한 번 더)':'불러오기'}</button><button class="rd" onclick="syLibDel(${k})">삭제</button></div></div>`).join(''):`<div class="qhn0">${A.length?'검색 결과가 없습니다':'저장된 시스템이 없습니다<br><small>시스템 카드의 ‘저장’을 누르면 여기에 담깁니다</small>'}</div>`;
+ b.innerHTML=R.length?R.map(([x,k])=>`<div class="syl-c"><div class="syl-t"><b>${esc(x.name)}</b><span class="bdg b">${x.items.length}개 제품</span><span class="syl-m">${fm(x.ts)}</span></div><div class="syl-d">${x.items.map(i=>esc((i.lb?i.lb+' ':'')+i.n)).join(' · ')}</div><div class="syl-bt"><button class="ok" onclick="syLibUse(${k})">${SYLC[k]?'✓ 불러옴 ×'+SYLC[k]+' (한 번 더)':'불러오기'}</button><button class="ed" onclick="syEdOpen(${k})">수정</button><button class="rd" onclick="syLibDel(${k})">삭제</button></div></div>`).join(''):`<div class="qhn0">${A.length?'검색 결과가 없습니다':'저장된 시스템이 없습니다<br><small>시스템 카드의 ‘저장’을 누르면 여기에 담깁니다</small>'}</div>`;
 }
 function syLibUse(k){
  if(window.SYLCC){const f=window.SYLCC;window.SYLCC=null;syClose();return f(k)}
@@ -3200,7 +3200,91 @@ function syLibUse(k){
  ok.forEach(i=>SY.layers.push(Object.assign({n:i.n,lb:i.lb||'',g:gi},['price','tprice','dft','svr','loss','tr'].reduce((o,k)=>{if(i[k]!==undefined)o[k]=i[k];return o},{}))));SY.act=-1;syNorm();syS();syRender();vib(20);
  SYLC[k]=(SYLC[k]||0)+1;syLibUi();if(miss)tt('DB에 없는 제품 '+miss+'개는 제외하고 추가했습니다');
 }
-function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{A.splice(k,1);syLibSet(A);SYLC={};syLibUi()})}
+function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{A.splice(k,1);syLibSet(A);SYLC={};syLibUi();try{syLibPage()}catch(e){}})}
+
+/* ===== v455 시스템 라이브러리 (목록·검색·필터·수정·복사·템플릿) ===== */
+const SYENV={C2:'낮은 부식',C3:'중간 부식',C4:'높은 부식',C5:'매우높은 부식',CX:'극한 부식'},SYSUB=['철재','콘크리트','옥상'];
+const SYTPL=[
+ {name:'[기본] C5 중방식 철재',env:'C5',sub:'철재',life:12,items:[{lb:'하도',n:'에폭시 징크리치',dft:75},{lb:'중도',n:'에폭시 MIO',dft:125},{lb:'상도',n:'폴리우레탄',dft:60}]},
+ {name:'[기본] C3 일반 철재',env:'C3',sub:'철재',life:18,items:[{lb:'하도',n:'에폭시 징크리치',dft:75},{lb:'중도',n:'에폭시 MIO',dft:100},{lb:'상도',n:'폴리우레탄',dft:55}]},
+ {name:'옥상 방수 시스템',env:'',sub:'옥상',life:25,items:[{lb:'하도',n:'수용성 프라이머',dft:100},{lb:'중도',n:'우레탄 방수',dft:1000},{lb:'상도',n:'우레탄 상도',dft:500}]},
+ {name:'콘크리트 외벽 재도장',env:'C3',sub:'콘크리트',life:18,items:[{lb:'하도',n:'수성 에폭시',dft:40},{lb:'중도',n:'아크릴 중도',dft:60},{lb:'상도',n:'아크릴 상도',dft:20}]}];
+let SYF={k:'all',q:''},SYE=null;
+const syIx={
+ edit:SV('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>'),
+ copy:SV('<rect x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path d="M15.5 8.5V6.2a2 2 0 0 0-2-2H6.2a2 2 0 0 0-2 2v7.3a2 2 0 0 0 2 2h2.3"/>'),
+ layers:SV('<path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/>'),
+ star:SV('<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 8.2l1.2 2.5 2.7.4-2 1.9.5 2.7-2.4-1.3-2.4 1.3.5-2.7-2-1.9 2.7-.4z"/>'),
+ heart:SV('<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/>'),
+ filter:SV('<path d="M3 5h18l-7 8.5V20l-4-2v-4.5z"/>'),
+ search:SV('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>'),
+ shield:SV('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5L16 9.5"/>'),
+ globe:SV('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.6 5.2 3.6 8.5S14.6 18 12 20.5M12 3.5C9.4 5.9 8.4 8.7 8.4 12s1 6.1 3.6 8.5"/>'),
+ plus:SV('<path d="M12 5v14M5 12h14"/>'),
+ file:SV('<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'),
+ steel:SV('<path d="M12 3 3 8l9 5 9-5z"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5"/>'),
+ conc:SV('<path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6M8 11h.01M16 11h.01"/>'),
+ roof:SV('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10M10 20v-5h4v5"/>')};
+const syFmtT=t=>t>=1000?(+(t/1000).toFixed(2))+'<small>mm</small>':Math.round(t)+'<small>μm</small>';
+const syFmtD=d=>d>=1000?(+(d/1000).toFixed(2))+'mm':Math.round(d)+'μm';
+const syLibRows=x=>(x.items||[]).map(i=>{const p=P(i.n),d=(i.dft!==undefined&&i.dft!==''?+i.dft:(p?+p.dft:0))||0;return{lb:i.lb||'',n:i.n,d}});
+const syEnvTxt=x=>x.env?x.env+' ('+(SYENV[x.env]||'')+')':(x.sub=='옥상'?'옥상 (자외선/온도변화)':(x.sub||'-'));
+function syThumb(x){const s=x.sub||'철재',c=s=='옥상'?['#8fc4ee','#e9eef6','#c8d3e2']:s=='콘크리트'?['#9ec3ec','#f1f4f9','#b7c4d8']:['#a8c8ea','#dfe7f3','#5f7ea6'];
+ const g=s=='옥상'?'<rect x="0" y="62" width="138" height="32" fill="#dfe6ef"/><path d="M0 62h138" stroke="#b7c4d8"/><rect x="10" y="40" width="10" height="22" fill="#6f87ab"/><rect x="24" y="30" width="12" height="32" fill="#7d94b6"/><rect x="42" y="44" width="9" height="18" fill="#8aa0c0"/>':s=='콘크리트'?'<rect x="34" y="8" width="70" height="86" fill="#f4f7fb" stroke="#b7c4d8"/>'+[0,1,2,3,4].map(r=>[0,1,2].map(q=>`<rect x="${42+q*21}" y="${16+r*16}" width="12" height="9" fill="#9fb8dc"/>`).join('')).join(''):'<path d="M28 90V30M60 90V30M92 90V30M110 90V30M20 38h100M20 62h100M28 30l32 32M60 30l32 32M60 62L28 90M92 62L60 90" stroke="#4c6a93" stroke-width="3.5" fill="none"/>';
+ return `<div class="sl-th"><svg viewBox="0 0 138 94" preserveAspectRatio="xMidYMid slice"><rect width="138" height="94" fill="${c[0]}"/><rect y="70" width="138" height="24" fill="${c[1]}" opacity=".7"/>${g}</svg></div>`}
+function syLibList(){
+ const A=syLibGet(),q=(SYF.q||'').trim().toLowerCase(),k=SYF.k;
+ return A.map((x,i)=>[x,i]).filter(([x])=>(k=='all'||(k=='basic'?x.basic:k=='fav'?x.fav:(x.env==k||x.sub==k)))&&(!q||(x.name+' '+(x.items||[]).map(i=>i.n).join(' ')+' '+(x.env||'')+' '+(x.sub||'')).toLowerCase().includes(q)));
+}
+function syLibPage(){
+ const e=$('#sylib');if(!e)return;const A=syLibGet(),R=syLibList(),fo=document.activeElement&&document.activeElement.id=='sl-q',pos=fo?document.activeElement.selectionStart:0;
+ const pill=(k,t,ic)=>`<button type="button" class="${SYF.k==k?'on':''}" onclick="syLibF('${k}')">${ic?ic:''}${t}</button>`;
+ const card=([x,k])=>{const rows=syLibRows(x),tot=rows.reduce((a,r)=>a+r.d,0),cl=['c1','c2','c3'];
+  return `<div class="sl-c${x.basic?' bs':''}" onclick="syLibTap(event,${k})"><div class="sl-h">${x.basic?'<em class="sl-bd">기본</em>':''}<b class="sl-nm">${esc(x.name)}</b>${x.fav?`<span class="sl-fv">${syIx.heart}</span>`:''}<button type="button" class="sl-ib" onclick="syEdOpen(${k})" aria-label="시스템 수정">${syIx.edit}</button><button type="button" class="sl-ib" onclick="syLibCopy(${k})" aria-label="시스템 복사">${syIx.copy}</button></div>
+  <div class="sl-b">${syThumb(x)}<div class="sl-rw">${rows.map((r,j)=>`<div class="${cl[Math.min(j,2)]}"><span>${esc(r.lb||['하도','중도','상도'][j]||'코트')}</span><b>${esc(r.n)}${r.d?' '+syFmtD(r.d):''}</b></div>`).join('')||'<small>구성 없음</small>'}</div><div class="sl-tt"><small>총도막</small><b>${syFmtT(tot)}</b></div></div>
+  <div class="sl-f"><span>${syIx.shield}<small>예상 수명</small><b>${x.life?x.life+'년':'-'}</b></span><span class="sl-en">${syIx.globe}<small>적용 환경</small><b>${esc(syEnvTxt(x))}</b></span>${x.env?'<em class="sl-iso">ISO12944</em>':''}</div></div>`};
+ e.innerHTML=`<div class="sl-s"><span>${syIx.search}</span><input id="sl-q" type="search" placeholder="시스템명·환경(C3, C5, CX) 검색" value="${esc(SYF.q)}" oninput="SYF.q=this.value;syLibPage()" enterkeyhint="search"><i>${syIx.filter}</i></div>
+ <div class="sl-st"><button type="button" onclick="syLibF('all')"><u>${syIx.layers}</u><span>전체 시스템<b>${A.length}</b></span></button><button type="button" onclick="syLibF('basic')"><u>${syIx.star}</u><span>기본 시스템<b>${A.filter(x=>x.basic).length}</b></span></button><button type="button" onclick="syLibF('fav')"><u>${syIx.heart}</u><span>즐겨찾기<b>${A.filter(x=>x.fav).length}</b></span></button></div>
+ <div class="sl-qh"><span>${syIx.filter}빠른 필터</span><label><select onchange="syLibF(this.value)" aria-label="보기">${[['all','전체 보기'],['basic','기본 시스템'],['fav','즐겨찾기']].map(([v,t])=>`<option value="${v}"${SYF.k==v?' selected':''}>${t}</option>`).join('')}${['all','basic','fav'].includes(SYF.k)?'':`<option value="${SYF.k}" selected>${SYF.k} 필터</option>`}</select></label></div>
+ <div class="sl-pl">${pill('all','전체')}${pill('basic','기본')}${['C2','C3','C4','C5','CX'].map(c=>pill(c,c)).join('')}</div><div class="sl-pl s2">${pill('철재','철재',syIx.steel)}${pill('콘크리트','콘크리트',syIx.conc)}${pill('옥상','옥상',syIx.roof)}</div>
+ <div class="sl-ls">${R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘템플릿 가져오기’ 또는 ‘새 시스템 추가’로 시작하세요</small>'}</div>`}</div>
+ <div class="sl-ac"><button type="button" class="o" onclick="syTplSheet()">${syIx.file}<span>템플릿 가져오기</span></button><button type="button" class="p" onclick="syEdOpen(-1)">${syIx.plus}<span>새 시스템 추가</span></button></div>`;
+ if(fo){const q=$('#sl-q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}}
+}
+function syLibF(k){SYF.k=SYF.k==k&&k!='all'?'all':k;syLibPage()}
+function syLibTap(ev,k){if(ev.target.closest('button'))return;syLibUse(k);try{const a=document.querySelector('#v3 .sy-ar');a&&a.scrollIntoView({behavior:'smooth',block:'start'})}catch(_){}}
+function syLibCopy(k){const A=syLibGet(),x=A[k];if(!x)return;const c=JSON.parse(JSON.stringify(x));let nm=x.name+' (복사)',n=1;while(A.some(a=>a.name==nm)){n++;nm=x.name+' (복사'+n+')'}c.name=nm;c.ts=Date.now();c.basic=false;A.unshift(c);syLibSet(A);syLibPage();tt('시스템을 복사했습니다');vib(20)}
+/* 수정/추가 시트 */
+function syEdOpen(k){const x=k>=0?syLibGet()[k]:null;if(k>=0&&!x)return;
+ SYE={k,e:x?JSON.parse(JSON.stringify(x)):{name:'',env:'',sub:'',life:'',basic:false,fav:false,items:[{lb:'하도',n:'',dft:''},{lb:'중도',n:'',dft:''},{lb:'상도',n:'',dft:''}]}};
+ if(!SYE.e.items||!SYE.e.items.length)SYE.e.items=[{lb:'하도',n:'',dft:''}];syEdUi()}
+function syEdUi(){
+ let e=$('#syed');const fresh=!e;if(fresh){e=document.createElement('div');e.id='syed';e.className='sypk syed';e.onclick=ev=>{if(ev.target===e)syEdClose()};document.body.append(e)}
+ const s=SYE.e,sc=fresh?0:(e.querySelector('.sypk-sc')||{}).scrollTop||0;
+ e.innerHTML=`<div class="sypk-b syed-b"><div class="sypk-h"><b>${SYE.k<0?'새 시스템 추가':'시스템 수정'}</b><button class="sypk-x" onclick="syEdClose()" aria-label="닫기">✕</button></div><div class="sypk-sc syed-sc">
+ <label class="se-l">시스템명<input type="text" value="${esc(s.name)}" placeholder="예: [기본] C5 중방식 철재" oninput="SYE.e.name=this.value"></label>
+ <div class="se-t"><span>${syIx.star}기본 시스템 지정</span><button type="button" class="se-sw${s.basic?' on':''}" onclick="SYE.e.basic=!SYE.e.basic;syEdUi()" aria-pressed="${!!s.basic}"><i></i></button></div>
+ <div class="se-t"><span>${syIx.heart}즐겨찾기</span><button type="button" class="se-sw${s.fav?' on':''}" onclick="SYE.e.fav=!SYE.e.fav;syEdUi()" aria-pressed="${!!s.fav}"><i></i></button></div>
+ <div class="se-g"><span>적용 환경 <small>(ISO 12944)</small></span><div class="se-ch">${Object.keys(SYENV).map(c=>`<button type="button" class="${s.env==c?'on':''}" onclick="SYE.e.env=SYE.e.env=='${c}'?'':'${c}';syEdUi()">${c}</button>`).join('')}</div></div>
+ <div class="se-g"><span>대상</span><div class="se-ch">${SYSUB.map(c=>`<button type="button" class="${s.sub==c?'on':''}" onclick="SYE.e.sub=SYE.e.sub=='${c}'?'':'${c}';syEdUi()">${c}</button>`).join('')}</div></div>
+ <label class="se-l">예상 수명 <small>(년, 선택)</small><input type="number" inputmode="decimal" value="${esc(s.life)}" placeholder="예: 12" onwheel="this.blur()" oninput="SYE.e.life=this.value"></label>
+ <div class="se-g"><span>시스템 구성 <small>(제품명은 DB 제품 선택 또는 직접 입력)</small></span>${s.items.map((c,i)=>{const p=P(c.n);return `<div class="se-r"><select onchange="SYE.e.items[${i}].lb=this.value" aria-label="단계">${SYST.concat(['미지정']).map(x=>`<option${(c.lb||'')==x||(!c.lb&&x=='미지정')?' selected':''}>${x}</option>`).join('')}</select><input type="text" list="sy-dl" value="${esc(c.n)}" placeholder="제품명" oninput="SYE.e.items[${i}].n=this.value;syEdHint(${i})"><div class="se-d"><input type="number" inputmode="decimal" id="se-d${i}" value="${esc(c.dft??'')}" placeholder="${p&&+p.dft?p.dft:'DFT'}" onwheel="this.blur()" oninput="SYE.e.items[${i}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items.splice(${i},1);syEdUi()" aria-label="삭제">✕</button></div>`}).join('')}<button type="button" class="se-add" onclick="SYE.e.items.push({lb:SYST[Math.min(SYE.e.items.length,2)],n:'',dft:''});syEdUi()">${syIx.plus}<span>코트 추가</span></button></div>
+ <datalist id="sy-dl">${(typeof DB!='undefined'?DB:[]).slice(0,3000).map(p=>`<option value="${esc(p.n)}">`).join('')}</datalist></div>
+ <div class="sypk-f ${SYE.k<0?'one':''}">${SYE.k<0?'':'<button class="rd" onclick="syEdDel()">삭제</button>'}<button class="ok" onclick="syEdSave()">저장</button></div></div>`;
+ if(sc){const q=e.querySelector('.sypk-sc');if(q)q.scrollTop=sc}
+}
+function syEdHint(i){const p=P(SYE.e.items[i].n),d=$('#se-d'+i);if(d)d.placeholder=p&&+p.dft?p.dft:'DFT'}
+function syEdClose(){const e=$('#syed');if(e)e.remove();SYE=null}
+function syEdSave(){const s=SYE.e,nm=(s.name||'').trim();if(!nm)return tt('시스템 이름을 입력하세요');
+ const items=s.items.filter(c=>(c.n||'').trim()).map(c=>{const o={n:c.n.trim(),lb:c.lb=='미지정'?'':(c.lb||'')};if(c.dft!==undefined&&c.dft!=='')o.dft=+c.dft;['price','tprice','svr','loss','tr'].forEach(k=>{if(c[k]!==undefined)o[k]=c[k]});return o});
+ if(!items.length)return tt('제품을 1개 이상 입력하세요');
+ const A=syLibGet(),it=Object.assign({},s,{name:nm,items,life:s.life===''?'':+s.life||'',ts:Date.now()});
+ if(SYE.k>=0)A[SYE.k]=it;else A.unshift(it);syLibSet(A);syEdClose();syLibPage();syLibUi();vib(20);tt('저장했습니다')}
+function syEdDel(){const k=SYE.k,x=syLibGet()[k];if(!x)return;ask('시스템 ‘'+esc(x.name)+'’을(를) 삭제할까요?',()=>{const A=syLibGet();A.splice(k,1);syLibSet(A);syEdClose();SYLC={};syLibPage();syLibUi()})}
+/* 템플릿 */
+function syTplSheet(){let e=$('#sytp');if(e)e.remove();e=document.createElement('div');e.id='sytp';e.className='sypk';e.onclick=ev=>{if(ev.target===e)e.remove()};
+ const A=syLibGet();e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>템플릿 가져오기</b><button class="sypk-x" onclick="$('#sytp').remove()" aria-label="닫기">✕</button></div><div class="sypk-hint">예시 시스템입니다. 가져온 뒤 ‘수정’에서 제품·두께를 현장에 맞게 바꾸세요.</div><div class="sypk-sc"><div class="syl-ls">${SYTPL.map((t,i)=>{const tot=t.items.reduce((a,r)=>a+r.dft,0),has=A.some(x=>x.name==t.name);return `<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(tot)}</span></div><div class="syl-d">${t.items.map(r=>esc(r.lb+' '+r.n+' '+syFmtD(r.dft))).join(' · ')}</div><div class="syl-bt"><button class="ok" ${has?'disabled':''} onclick="syTplAdd(${i})">${has?'가져옴':'가져오기'}</button></div></div>`}).join('')}</div></div><div class="sypk-f one"><button class="ok" onclick="$('#sytp').remove()">완료</button></div></div>`;document.body.append(e)}
+function syTplAdd(i){const t=SYTPL[i],A=syLibGet();if(A.some(x=>x.name==t.name))return;A.unshift(Object.assign(JSON.parse(JSON.stringify(t)),{basic:/^\[기본\]/.test(t.name),fav:false,ts:Date.now()}));syLibSet(A);syLibPage();syTplSheet();tt('가져왔습니다')}
 
 /* 공유 */
 function syText(sel){
@@ -11081,5 +11165,92 @@ html body #v9 .cq .cqxg label{display:flex;flex-direction:column;gap:4px;font-si
 html body #v9 .cq .cqxg input{width:100%;height:max(34px,calc(var(--w)*48));padding:0 10px;border:1px solid #cfdcf3;border-radius:8px;background:#fff;color:#10264f;font:500 14px "Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif}
 html body #v9 .cq .cqold{padding-bottom:calc(var(--w)*14)}
 html body #v9 .cq .cqold .card{margin:0 0 8px}
+</style>
+<style id="v455">
+html body #v3 .sylib{--ls:calc(min(100vw,900px)/852);--n:#0b2354;--g:#6b7b9b;font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;color:var(--n);padding:calc(var(--ls)*4) calc(var(--ls)*20) 0;margin-bottom:calc(var(--ls)*8)}
+html body #v3 .sylib svg{width:1.2em;height:1.2em;flex:none}
+html body #v3 .sl-s{display:flex;align-items:center;gap:calc(var(--ls)*14);height:calc(var(--ls)*84);padding:0 calc(var(--ls)*22);border:1.5px solid #c9dcf5;border-radius:calc(var(--ls)*42);background:#fff;box-shadow:0 calc(var(--ls)*6) calc(var(--ls)*18) rgba(30,80,170,.1);font-size:calc(var(--ls)*30);color:#5d7399}
+html body #v3 .sl-s input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:500 calc(var(--ls)*26)/1.2 inherit;color:var(--n);height:100%}
+html body #v3 .sl-s input::placeholder{color:#9fb0cb}
+html body #v3 .sl-s input::-webkit-search-cancel-button{display:none}
+html body #v3 .sl-s i{display:flex;color:#3f7ae0}
+html body #v3 .sl-st{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--ls)*14);margin-top:calc(var(--ls)*22)}
+html body #v3 .sl-st button{display:flex;align-items:center;gap:calc(var(--ls)*14);padding:calc(var(--ls)*18) calc(var(--ls)*16);border:1px solid #dbe7f8;border-radius:calc(var(--ls)*24);background:#fff;box-shadow:0 calc(var(--ls)*4) calc(var(--ls)*14) rgba(30,80,170,.08);text-align:left;font:inherit;color:inherit;cursor:pointer}
+html body #v3 .sl-st u{display:flex;align-items:center;justify-content:center;width:calc(var(--ls)*72);height:calc(var(--ls)*72);border-radius:calc(var(--ls)*20);background:#e8f1ff;color:#2f6fe0;text-decoration:none;font-size:calc(var(--ls)*38);flex:none}
+html body #v3 .sl-st span{display:flex;flex-direction:column;font-size:calc(var(--ls)*22);font-weight:600;min-width:0;white-space:nowrap}
+html body #v3 .sl-st b{font-size:calc(var(--ls)*44);line-height:1.1;font-weight:800}
+html body #v3 .sl-qh{display:flex;align-items:center;justify-content:space-between;margin-top:calc(var(--ls)*26)}
+html body #v3 .sl-qh>span{display:flex;align-items:center;gap:calc(var(--ls)*10);font-size:calc(var(--ls)*28);font-weight:700;color:#1d63d8}
+html body #v3 .sl-qh label{position:relative}
+html body #v3 .sl-qh select{appearance:none;-webkit-appearance:none;border:0;border-radius:calc(var(--ls)*30);background:#eef4fd url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232c5ea8' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") right calc(var(--ls)*14) center/calc(var(--ls)*26) no-repeat;padding:calc(var(--ls)*12) calc(var(--ls)*48) calc(var(--ls)*12) calc(var(--ls)*24);font:600 calc(var(--ls)*24)/1.2 inherit;color:#2a4a80}
+html body #v3 .sl-pl{display:flex;flex-wrap:wrap;gap:calc(var(--ls)*12);margin-top:calc(var(--ls)*16)}
+html body #v3 .sl-pl button{display:flex;align-items:center;gap:calc(var(--ls)*10);height:calc(var(--ls)*60);padding:0 calc(var(--ls)*30);border:1px solid #d3e1f5;border-radius:calc(var(--ls)*30);background:#fff;font:600 calc(var(--ls)*24)/1 inherit;color:#243b66;cursor:pointer;box-shadow:0 calc(var(--ls)*3) calc(var(--ls)*10) rgba(30,80,170,.06)}
+html body #v3 .sl-pl button svg{color:#2f6fe0;font-size:calc(var(--ls)*30)}
+html body #v3 .sl-pl button.on{background:linear-gradient(180deg,#2f7dff,#0f5ee0);border-color:#0f5ee0;color:#fff;box-shadow:0 calc(var(--ls)*6) calc(var(--ls)*14) rgba(15,94,224,.3)}
+html body #v3 .sl-pl button.on svg{color:#fff}
+html body #v3 .sl-ls{display:flex;flex-direction:column;gap:calc(var(--ls)*16);margin-top:calc(var(--ls)*20)}
+html body #v3 .sl-c{border:1.5px solid #c9dcf5;border-radius:calc(var(--ls)*26);background:linear-gradient(180deg,#f2f7ff,#fff 48%);box-shadow:0 calc(var(--ls)*6) calc(var(--ls)*18) rgba(30,80,170,.09);padding:calc(var(--ls)*16) calc(var(--ls)*18) calc(var(--ls)*14);cursor:pointer}
+html body #v3 .sl-h{display:flex;align-items:center;gap:calc(var(--ls)*12)}
+html body #v3 .sl-bd{font-style:normal;background:linear-gradient(180deg,#2f7dff,#0f5ee0);color:#fff;font-weight:700;font-size:calc(var(--ls)*24);padding:calc(var(--ls)*10) calc(var(--ls)*26);border-radius:calc(var(--ls)*26);flex:none}
+html body #v3 .sl-nm{flex:1;min-width:0;font-size:calc(var(--ls)*30);font-weight:800;letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body #v3 .sl-fv{display:flex;color:#e5486b;font-size:calc(var(--ls)*30)}
+html body #v3 .sl-fv svg{fill:currentColor}
+html body #v3 .sl-ib{display:flex;align-items:center;justify-content:center;width:calc(var(--ls)*60);height:calc(var(--ls)*60);padding:0;border:1px solid #d3e1f5;border-radius:calc(var(--ls)*16);background:#fff;color:#2a5fc0;font-size:calc(var(--ls)*32);box-shadow:0 calc(var(--ls)*3) calc(var(--ls)*10) rgba(30,80,170,.1);cursor:pointer;flex:none}
+html body #v3 .sl-b{display:grid;grid-template-columns:calc(var(--ls)*138) minmax(0,1fr) calc(var(--ls)*150);gap:calc(var(--ls)*16);align-items:center;margin-top:calc(var(--ls)*14)}
+html body #v3 .sl-th{width:100%;aspect-ratio:138/94;border-radius:calc(var(--ls)*14);overflow:hidden;border:1px solid #cbdaef}
+html body #v3 .sl-th svg{width:100%;height:100%;display:block}
+html body #v3 .sl-rw{display:flex;flex-direction:column;gap:calc(var(--ls)*8);min-width:0}
+html body #v3 .sl-rw div{display:flex;align-items:center;gap:calc(var(--ls)*14);min-width:0}
+html body #v3 .sl-rw span{flex:none;width:calc(var(--ls)*78);text-align:center;font-size:calc(var(--ls)*21);font-weight:700;padding:calc(var(--ls)*4) 0;border-radius:calc(var(--ls)*8);background:#eaf4fb;color:#0e8a8a}
+html body #v3 .sl-rw .c3 span{background:#f1ecfb;color:#7a4fc4}
+html body #v3 .sl-rw .c1 span{background:#e9f0ff;color:#0f8a8a}
+html body #v3 .sl-rw b{font-size:calc(var(--ls)*21);font-weight:500;color:#2a3a5c;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #v3 .sl-tt{border-left:1px solid #d3e1f5;padding-left:calc(var(--ls)*18);display:flex;flex-direction:column;align-self:stretch;justify-content:center}
+html body #v3 .sl-tt small{font-size:calc(var(--ls)*21);font-weight:600;color:#4a5f86}
+html body #v3 .sl-tt b{font-size:calc(var(--ls)*38);font-weight:800;line-height:1.15;white-space:nowrap}
+html body #v3 .sl-tt b small{font-size:.62em;font-weight:700;color:var(--n)}
+html body #v3 .sl-f{display:flex;align-items:center;gap:calc(var(--ls)*18);margin-top:calc(var(--ls)*14);padding:calc(var(--ls)*10) 0 0;font-size:calc(var(--ls)*20)}
+html body #v3 .sl-f>span{display:flex;align-items:center;gap:calc(var(--ls)*8);min-width:0;white-space:nowrap}
+html body #v3 .sl-f svg{color:#1d63d8;font-size:calc(var(--ls)*30)}
+html body #v3 .sl-f small{font-size:calc(var(--ls)*20);color:#51668c}
+html body #v3 .sl-f b{font-size:calc(var(--ls)*21);font-weight:800}
+html body #v3 .sl-en{flex:1}
+html body #v3 .sl-en b{font-weight:500;overflow:hidden;text-overflow:ellipsis}
+html body #v3 .sl-iso{font-style:normal;margin-left:auto;background:linear-gradient(180deg,#2f7dff,#0f5ee0);color:#fff;font-weight:700;font-size:calc(var(--ls)*21);padding:calc(var(--ls)*8) calc(var(--ls)*20);border-radius:calc(var(--ls)*22);flex:none}
+html body #v3 .sl-ac{display:grid;grid-template-columns:1fr 1.15fr;gap:calc(var(--ls)*16);margin-top:calc(var(--ls)*20)}
+html body #v3 .sl-ac button{display:flex;align-items:center;justify-content:center;gap:calc(var(--ls)*12);height:calc(var(--ls)*86);border-radius:calc(var(--ls)*22);font:700 calc(var(--ls)*28)/1 inherit;cursor:pointer}
+html body #v3 .sl-ac svg{font-size:calc(var(--ls)*38)}
+html body #v3 .sl-ac .o{background:#fff;border:2px solid #2f7dff;color:#1d63d8}
+html body #v3 .sl-ac .p{background:linear-gradient(180deg,#2f8cff,#0a55dc);border:0;color:#fff;box-shadow:0 calc(var(--ls)*8) calc(var(--ls)*18) rgba(15,94,224,.32)}
+html body #v3 .sl-em{padding:28px 12px;text-align:center;color:#5d7399;border:1px dashed #c4d6f0;border-radius:16px;background:#f7faff;font-size:13px}
+.syl-bt .ed{flex:0 0 auto;padding:0 16px;border:1px solid #b9cdee;background:#eef4ff;color:#1d4fb0;border-radius:10px;font-weight:700;cursor:pointer}
+.syl-bt button:disabled{opacity:.5}
+.syed{z-index:40}
+.syed-b{height:92dvh}.syed-sc{overflow:auto;padding:2px 2px 12px;-webkit-overflow-scrolling:touch}
+.syed .se-l{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:#35507f;margin:10px 0}
+.syed .se-l small,.syed .se-g small{font-weight:500;color:#7b8cab}
+.syed .se-l input{height:44px;border:1px solid #c9d8ef;border-radius:11px;padding:0 12px;font:500 15px inherit;color:#0b2354;background:#fff}
+.syed .se-t{display:flex;align-items:center;justify-content:space-between;padding:10px 4px;border-bottom:1px solid #e4ecf8;font-size:14px;font-weight:700;color:#1b3a73}
+.syed .se-t span{display:flex;align-items:center;gap:8px}.syed .se-t svg{color:#2f6fe0}
+.syed .se-sw{width:50px;height:30px;border-radius:15px;border:0;background:#c6d2e6;position:relative;cursor:pointer;padding:0;transition:.15s}
+.syed .se-sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.15s}
+.syed .se-sw.on{background:#2f6fe0}.syed .se-sw.on i{left:23px}
+.syed .se-g{margin-top:12px}.syed .se-g>span{display:block;font-size:12.5px;font-weight:700;color:#35507f;margin-bottom:6px}
+.syed .se-ch{display:flex;flex-wrap:wrap;gap:8px}
+.syed .se-ch button{height:36px;padding:0 18px;border:1px solid #c9d8ef;border-radius:18px;background:#fff;font:700 13.5px inherit;color:#2a4a80;cursor:pointer}
+.syed .se-ch button.on{background:#1d63d8;border-color:#1d63d8;color:#fff}
+.syed .se-r{display:grid;grid-template-columns:68px minmax(0,1fr) 84px 32px;gap:6px;align-items:center;margin-bottom:8px}
+.syed .se-r select,.syed .se-r input{height:40px;border:1px solid #c9d8ef;border-radius:10px;padding:0 8px;font:500 13.5px inherit;color:#0b2354;background:#fff;min-width:0;width:100%;box-sizing:border-box}
+.syed .se-d{position:relative}.syed .se-d em{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-style:normal;font-size:11px;color:#7b8cab;pointer-events:none}
+.syed .se-d input{padding-right:24px}
+.syed .se-x{width:32px;height:32px;border:0;border-radius:50%;background:#fde9ec;color:#c43d52;font-size:13px;cursor:pointer}
+.syed .se-add{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:42px;border:1.5px dashed #9fbbe6;border-radius:11px;background:#f3f8ff;color:#1d63d8;font:700 13.5px inherit;cursor:pointer}
+.syed .sypk-f{display:flex;gap:8px}.syed .sypk-f button{flex:1;height:46px;border-radius:12px;font:700 15px inherit;cursor:pointer}
+.syed .sypk-f .ok{border:0;background:linear-gradient(180deg,#2f8cff,#0a55dc);color:#fff}.syed .sypk-f .rd{border:1px solid #f0b4bd;background:#fff0f2;color:#c43d52;flex:0 0 34%}
+html body #v3 .sl-pl button{width:auto}
+html body #v3 .sl-st button{width:auto}
+.syed .se-ch button{width:auto}
+.syed .sypk-x{width:36px;height:36px;padding:0}
+.syl-bt .ed{width:auto!important}
 </style>
 </body></html>
