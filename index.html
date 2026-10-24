@@ -2910,7 +2910,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v454',d:'2026.10.23'};
+const APPV={v:'v458',d:'2026.10.24'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -7622,13 +7622,13 @@ const s6=S(6,"결론 및 제안","분석 결과를 바탕으로 최적의 방안
 const zc={R:"#d63a3a",O:"#e8780c",Y:"#d9a900",G:"#2e9d5b"};
 const ex=`<div class="rqx rq-nx"><div class="rqxb"><button type="button" onclick="LCCX.saveH()">HTML 저장</button><button type="button" onclick="LCCX.word()">Word 저장</button><button type="button" onclick="LCCX.toCalc('rec')">추천사양 → 일위대가표</button></div><details${RS.o.rqa?" open":""} ontoggle="LCCX.tg('rqa',this.open)"><summary>분석 조건 · 대상 선택</summary><div class="rqxg"><label><span>대상</span><select onchange="LCCX.ds(this.value)"><option value="-1"${dSel()<0?" selected":""}>전체 프로젝트</option>${RS.assets.map((x,i)=>`<option value="${i}"${dSel()==i?" selected":""}>${hh(x.n).slice(0,24)}</option>`).join("")}</select></label><label><span>평가기간 (년)</span><input type="text" inputmode="decimal" value="${RS.hz}" onchange="LCCX.hz(this.value)"></label><label><span>보수 인상률 (%)</span><input type="text" inputmode="decimal" value="${RS.esc}" onchange="LCCX.esc(this.value)"></label></div></details><details${RS.o.rqb?" open":""} ontoggle="LCCX.tg('rqb',this.open)"><summary>자산별 요약</summary><div class="rqsc"><table><tr><th>자산</th><th>Zone</th><th>환경</th><th class="n">수명 현/기/추</th><th class="n">LCC 현/기/추</th></tr>${RS.assets.map(all).map(r=>`<tr><td>${hh(r.a.n).slice(0,14)}</td><td><b class="zb" style="background:${zc[r.B.z]}">${r.B.z}</b></td><td>${r.en.eff}</td><td class="n">${r.m.map(x=>x.e.toFixed(1)).join(" / ")}</td><td class="n">${r.m.map(x=>F(x.tot)).join(" / ")}</td></tr>`).join("")}</table></div></details><details${RS.o.rqc?" open":""} ontoggle="LCCX.tg('rqc',this.open)"><summary>규격·가정</summary><ul><li>ISO 12944-2 / KS M ISO 12944-2: 부식환경 C1~CX (1년차 강 손실 µm)</li><li>ISO 9223·9225 / KS D ISO 9223·9225: 대기 부식성 분류, SO₂·염화물 침적 측정</li><li>ISO 4628: 도막 열화(녹·균열·박리·블리스터·쵸킹) 등급 — 상태지수는 등급(0~5)을 100점 만점으로 환산</li></ul><p>소요량: 이론 ℓ/㎡ = DFT/(10×고형분%), 실제 = 이론/(1−로스). 추정수명 = 기준수명 × 환경계수 × 인자 계수 × 내구성등급 적용한계 초과 시 0.75/단계. LCC = 초기비용×(1+인상률×k), 재도장 시점부터 ${hz}년. 모든 계수와 구간은 가정값이라 현장 데이터로 교정이 필요합니다. 기존안=도장사양, 최적안=추천사양 기준입니다.</p></details></div>`;
 return`<div id="ig" class="rq">${tabs}<div class="rqw">${s1}${s2}${s3}${s4}${s5}${s6}${ex}</div></div>`}
-function rqGo(i){const e=document.getElementById("rq-s"+i);if(e)e.scrollIntoView({behavior:"smooth",block:"start"});document.querySelectorAll("#ig .rqtb button").forEach(b=>b.classList.toggle("on",+b.dataset.i==i))}
-let rqT=0;function rqSpy(){const tb=document.querySelector("#ig .rqtb");if(!tb)return;const sb=document.querySelector("#v9 .lxsb"),sp=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0,off=Math.max((sb?sb.getBoundingClientRect().bottom:0),sp)+40;let cur=1;for(let i=1;i<=6;i++){const e=document.getElementById("rq-s"+i);if(e&&e.getBoundingClientRect().top<=off)cur=i}if(cur>5)cur=5;tb.querySelectorAll("button").forEach(b=>b.classList.toggle("on",+b.dataset.i==cur))}
+function rqGo(i){const e=document.getElementById("rq-s"+i);if(e)e.scrollIntoView({behavior:"smooth",block:"start"});document.querySelectorAll("#ig .rqtb button,#ig .rfst button").forEach(b=>b.classList.toggle("on",+b.dataset.i==i))}
+let rqT=0;function rqSpy(){const tb=document.querySelector("#ig .rqtb,#ig .rfst");if(!tb)return;const sb=document.querySelector("#v9 .lxsb"),sp=parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)||0,off=Math.max((sb?sb.getBoundingClientRect().bottom:0),sp)+40;let cur=1;for(let i=1;i<=6;i++){const e=document.getElementById("rq-s"+i);if(e&&e.getBoundingClientRect().top<=off)cur=i}if(cur>5)cur=5;tb.querySelectorAll("button").forEach(b=>b.classList.toggle("on",+b.dataset.i==cur))}
 window.addEventListener("scroll",()=>{if(rqT)return;rqT=setTimeout(()=>{rqT=0;rqSpy()},80)},{passive:true});
 function rqClone(ig){const c=ig.cloneNode(true);c.querySelectorAll(".rq-nx").forEach(e=>e.remove());return c}
 async function rqPdf(){const ig=document.getElementById("ig");if(!ig){tt("보고서 화면에서 실행하세요");return}
 let box;try{tt("PDF를 만드는 중입니다…");await ldp();await ldj();
-const c=rqClone(ig);c.style.setProperty("--q","1px");c.style.cssText+=";width:852px;position:relative;background:#f1f6fd;padding:0";
+const c=rqClone(ig);c.style.setProperty("--q","1px");c.style.setProperty("--f","1px");c.style.setProperty("--w","1px");c.style.cssText+=";width:852px;position:relative;background:#f1f6fd;padding:0";
 box=document.createElement("div");box.style.cssText="position:fixed;left:-10000px;top:0;width:852px";const w=document.createElement("div");w.id="v9";w.append(c);box.append(w);document.body.append(box);
 await new Promise(r=>setTimeout(r,200));
 const secs=[...c.querySelectorAll(".rq-sec")].map(e=>({y:e.offsetTop,h:e.offsetHeight})),SC=2,cv=await html2canvas(c,{scale:SC,backgroundColor:"#f1f6fd",windowWidth:852,scrollX:0,scrollY:0});
@@ -7679,7 +7679,55 @@ return`<div class="cq"><div class="cqw0">
 <div class="cqx"><details${RS.o.cqa?" open":""} ontoggle="LCCX.tg('cqa',this.open)"><summary>분석 조건</summary><div class="cqxg"><label><span>평가기간 (년)</span><input type="text" inputmode="decimal" value="${RS.hz}" onchange="LCCX.hz(this.value)"></label><label><span>보수 인상률 (%)</span><input type="text" inputmode="decimal" value="${RS.esc}" onchange="LCCX.esc(this.value)"></label></div></details><details${RS.o.cqb?" open":""} ontoggle="LCCX.tg('cqb',this.open)"><summary>상세 비교표 · 수명/비용 그래프</summary><div class="cqold">${pC()}</div></details></div>
 </div></div>`}
 function pCPage(){return`<div class="lx lxp lxcq">${lxTop()}${lxStepBar()}${pCQ()}</div>`}
-function pRPage(){return`<div class="lx lxp lxrq">${lxTop()}${lxStepBar()}${pRQ()}</div>`}
+/* v456: LCC 최종보고서 — 신규 시안 (히어로 제외) */
+const RFI={
+doc:'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h6"/>',
+srch:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
+clk:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',
+okc:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7 5-5.4"/>',
+chk:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+crown:'<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z" fill="currentColor"/>',
+alert:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.6h.01"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5.2M12 7.7v.01"/>',
+coin:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+leaf:'<path d="M20 4C10 4 4.5 9 4.5 15.5c0 2 .8 3.5.8 3.5s1.5.7 3.5.7C15.3 19.7 20 14 20 4z"/><path d="M5.3 19C8 14 11 11 15 8.5"/>',
+bars:'<path d="M5 20v-6M10 20V9M15 20v-9M20 20V5"/><path d="M4 8l5-4 4 3 6-4"/>',
+rep:'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h4"/>'};
+function pRF(){
+const rows=dRows(),n=rows.length,hz=RS.hz,a=A_(),k=kindOf(a),Y=new Date().getFullYear(),ra=rows.find(r=>r.a===a)||all(a),mt=rptMeta();
+const T=RK.map((_,j)=>rqSum(rows,r=>r.m[j].tot)),best=T.reduce((b,t,i)=>t<T[b]?i:b,0),ev=j=>rqSum(rows,r=>r.m[j].e)/n,cv=j=>rqSum(rows,r=>r.m[j].c)/n;
+const J=rows.map(r=>judge(r.a)),remA=Math.max(0,rqSum(J,x=>x.rem)/n),wj=J.reduce((b,x)=>x.rem<b.rem?x:b,J[0]),vz=wj.v[0];
+const gs=rows.map(r=>{const b=r.a.b;return[gR(+b[0]||0),gC(+b[1]||0),gF(+b[2]||0),Math.min(5,+b[3]||0),Math.min(5,+b[4]||0)]}),gm=[0,1,2,3,4].map(i=>rqSum(gs,g=>g[i])/n);
+const idx=Math.max(0,Math.min(100,Math.round(100-(gm[0]+.8*gm[1]+.6*gm[2]+.2*gm[3]+.2*gm[4])/14*100)));
+const GR=idx>=85?["A","우수","#1d9a5a","#d9f1e3"]:idx>=70?["B","양호","#2f8f6a","#d9f0e8"]:idx>=50?["C","보통","#1b7a6b","#d6ece8"]:idx>=30?["D","주의","#e07b10","#fde6c8"]:["E","불량","#d63a3a","#fbdcdc"];
+const lvl=g=>g<2?"경":g<4?"중":"심";
+const DF=[["녹(R)","#d9261c",gm[0]],["박리(O)","#f08a1c",gm[2]],["블리스터","#b9bdc6",gm[3]],["초킹","#3aa68f",gm[4]],["균열(G)","#4a6aa8",gm[1]]];
+const bad=[0,1,2].map(j=>rows.some(r=>DK.indexOf(r.m[j].d)<DK.indexOf(r.a.dur))),anyBad=bad.some(x=>x);
+const SN=["기본사양","범용사양","추천사양"],SS=["(현재 사양)","(대안1)","(대안2)"],bn=x=>(x/1000).toFixed(1);
+const dl=j=>(T[j]-T[0])/1000;
+const S=(i,body)=>`<section class="rfc rq-sec" id="rq-s${i}">${body}</section>`;
+const H=(i,t,s)=>`<div class="rfh"><b><i>${i}</i>${t}</b><span>${s}</span></div>`;
+const ST=[["개요",RFI.doc],["상태진단",RFI.srch],["잔존수명·비용",RFI.clk],["제품선택",RFI.gear],["결론 및 권고",RFI.okc]];
+const step=`<nav class="rfst rq-nx" aria-label="보고서 목차">${ST.map((t,i)=>`<button type="button" class="${i==0?"on":""}" data-i="${i+1}" onclick="LCCX.rqGo(${i+1})"><span class="rfsc">${MI(t[1])}<em>${i+1}</em></span><span class="rfsl">${t[0]}</span></button>`).join("")}</nav>`;
+const lowS=wj.rem<=5;
+const c1=S(1,`<div class="rf1"><div class="rfpo">${rqPh(a,"th",SPT[k=="p"?"p":k=="h"?"h":"x"])}<em>현장 개요</em></div><dl class="rfkv"><div><dt>대상 시설</dt><dd>${n>1?"전체 "+n+"개 자산":hh(kname(a))+" / "+hh(a.n)}</dd></div><div><dt>평가기간</dt><dd>${hz}년 <small>(${Y} ~ ${Y+hz})</small></dd></div><div><dt>평가기준</dt><dd>ISO 12944 / KS 규격</dd></div><div><dt>현장 조건</dt><dd>${CAT[ra.en.eff][0]} 환경 (${ra.en.eff})</dd></div></dl><div class="rfgl"><div><i>${MI(RFI.rep)}</i><b>보고서 목적</b></div><p>도막 상태 진단을 통해 최적의 보수시기와 사양을 제안하고, 경제적·기술적 타당성을 분석하여 비용 절감과 수명 연장을 실현합니다.</p></div></div>`);
+const c2=S(2,`${H(2,"상태진단","도막 상태 및 열화도 분석")}<div class="rf2"><div class="rfpo rfp2">${rqPh(a,"cur","")}</div><div class="rfbx"><h4>주요 열화 현황</h4><ul class="rfdf">${DF.map(d=>`<li><i style="background:${d[1]}"></i><b>${d[0]}</b><u>:</u><strong>${lvl(d[2])}</strong><small>(등급 ${Math.round(d[2])})</small></li>`).join("")}</ul></div><div class="rfbx rfgd"><h4>LCC 등급 진단 결과</h4><div class="rfrg" style="background:${GR[3]}"><span style="background:${GR[2]}">${GR[0]}</span></div><small>도막 수명 등급</small><b style="color:${GR[2]}">${GR[1]}</b></div><div class="rfbx rfsm"><h4>현재 상태 요약</h4><ul>${[idx<90?"도막 열화 진행 중":"도막 상태 양호",vz=="G"?"정기 점검 유지":"일부 구간 보수 필요",vz=="R"||vz=="O"?"설비 안전성에 영향 가능":"안전성 영향 낮음"].map(t=>`<li><i>${MI(RFI.chk)}</i><span>${t}</span></li>`).join("")}</ul></div></div>`);
+const agg=RK.map((_,j)=>({cu:Array.from({length:hz+1},(_,y)=>rqSum(rows,r=>r.m[j].cu[y]||0))}));
+const hh3=[["현재 사양","(기본)","g"],["범용 사양","(대안1)","b"],["추천 사양","(대안2)","n"]];
+const c3=S(3,`${H(3,"잔존 수명 및 비용 분석","대안별 수명과 "+hz+"년 LCC 비교")}<div class="rf3"><div class="rftb"><div class="rfth">구분</div>${hh3.map(h=>`<div class="rfth ${h[2]}"><b>${h[0]}</b><small>${h[1]}</small></div>`).join("")}<div class="rftl">잔존 수명</div>${[remA,ev(1),ev(2)].map((v,i)=>`<div class="rftc c${i}">${v.toFixed(1)}년</div>`).join("")}<div class="rftl">보수 주기</div>${[0,1,2].map(i=>`<div class="rftc c${i}">${Math.round(cv(i))}년</div>`).join("")}<div class="rftl">${hz}년 LCC</div>${T.map((v,i)=>`<div class="rftc c${i}${bn(v).length>6?" lg":""}">${bn(v)}백만원</div>`).join("")}</div><div class="rfcp cq"><b>${hz}년간 누적 보수비용 비교</b><span class="rflg"><s class="a"></s>현재사양<s class="b"></s>범용사양<s class="c"></s>추천사양</span>${cqChart(agg,hz)}</div></div>`);
+const tx=bad[2]?"추천사양(대안2)은 요구 내구성 기준을 충족하지 못합니다.":bad[1]?"범용사양(대안1)은 요구 내구성 기준을 충족하지 못합니다.":bad[0]?"현재 사양은 요구 내구성 기준을 충족하지 못합니다.":"모든 사양이 요구 내구성 기준을 충족합니다.";
+const nm=best==0?"기본사양 (현재 사양)":SN[best]+" "+SS[best];
+const c4=S(4,`${H(4,"제품 선택","최적 대안 및 사양 추천")}<div class="rf4"><div class="rfbs"><div class="rfbt">${MI(RFI.crown)}<b>최적 선택안</b></div><div class="rfsl2"><u></u><em style="left:${best==0?14:best==1?50:86}%">${best==0?"기본":"대안"+best}</em></div><b class="rfbn">${best==0?"기본사양 <small>(현재 사양)</small>":SN[best]+" <small>"+SS[best]+"</small>"}</b><p>${hz}년 LCC <b>${bn(T[best])}백만원</b></p><span class="rfpl ${bad[best]?"am":""}">${bad[best]?"내구성 확인 필요":"비용 효율성 우수"}</span></div><div class="rfcm"><h4>대안별 비교</h4><div class="rfcmg">${[1,2].map(j=>`<div class="rfcc"><b class="${j==1?"b":"n"}">${SN[j].replace("사양"," 사양")} <small>${SS[j]}</small></b><span>${hz}년 LCC</span><strong${bn(T[j]).length>6?' class="lg"':""}>${bn(T[j])}백만원</strong><em class="${dl(j)>0?"up":"dn"}">${dl(j)>0?"+":""}${dl(j).toFixed(1)}백만원</em><small class="${dl(j)>0?"up":"dn"}">${dl(j)>0?"추가비용 발생":dl(j)<0?"비용 절감":"동일"}</small></div>`).join("")}</div></div><div class="rfwn${anyBad?"":" ok"}"><b>${MI(anyBad?RFI.alert:RFI.okc)}${anyBad?"선정 시 주의사항":"내구성 확인"}</b><strong>${tx}</strong><p>${anyBad?"비용 절감만 고려하지 말고 내구성 기준을 반드시 확인하세요.":"선정 전 현장 조건과 시공성도 함께 확인하세요."}</p></div></div>`);
+const sv=(Math.max(...T)-T[best])/1000,es=[0,1,2].map(ev),ext=Math.max(...es)-Math.min(...es);
+const c5=S(5,`<div class="rfex" style="background-image:linear-gradient(90deg,rgba(9,42,98,.92) 0,rgba(9,42,98,.62) 55%,rgba(9,42,98,.25) 100%),url(${SPT[k=="p"?"p":k=="h"?"h":"x"]})"><div class="rfel"><div class="rfet"><b>기대 효과</b><span>비용 절감과 수명 연장, 두 가지 가치를 동시에</span></div><div class="rfeg"><div class="rfek"><i class="gn">${MI(RFI.coin)}</i><div><small>총 유지보수 비용 절감</small><b>${sv.toFixed(1)}<u>백만원 절감</u></b><em>(최고비용 사양 대비)</em></div></div><div class="rfek"><i class="b">${MI(RFI.shield)}</i><div><small>설비 수명 연장</small><b>최대 <span class="rfv">${ext.toFixed(1)}</span><u>년 연장</u></b><em>(최단수명 사양 대비)</em></div></div><div class="rfek"><i class="gn">${MI(RFI.leaf)}</i><div><small>경제적 타당성</small><b class="s">투자 대비 효과 우수</b><em>(LCC 분석 근거)</em></div></div></div></div><div class="rfeb">${MI(RFI.bars)}<p>올바른 사양 선택이<br>지속 가능한 설비 운영과<br>장기적인 비용 절감을<br>가능하게 합니다.</p></div></div>`);
+const c6=S(6,`<div class="rf6"><div class="rfbz"><div class="rfbzt"><i>${MI(RFI.rep)}</i><b>보고서 근거</b></div><ul><li><i>${MI(RFI.chk)}</i><span>ISO 12944-2 / KS M ISO 12944-2 (부식환경 및 도장시스템 기준)</span></li><li><i>${MI(RFI.chk)}</i><span>현장 실측 데이터 및 도막 상태 분석 결과</span></li><li><i>${MI(RFI.chk)}</i><span>LCC 분석 모델(수명·비용·환경 인자 반영)</span></li></ul></div><div class="rfnt"><i>${MI(RFI.info)}</i><p>※ 본 보고서의 수치와 예측 값은 제공된 자료를 기반으로 산출된 결과이며, 현장 조건에 따라 달라질 수 있습니다.</p></div></div>`);
+const zc={R:"#d63a3a",O:"#e8780c",Y:"#d9a900",G:"#2e9d5b"};
+const ex=`<div class="rfx rq-nx"><div class="rfxb"><button type="button" class="pr" onclick="LCCX.rqPdf()">PDF 저장</button><button type="button" onclick="LCCX.saveH()">HTML 저장</button><button type="button" onclick="LCCX.word()">Word 저장</button><button type="button" onclick="LCCX.toCalc('rec')">추천사양 → 일위대가표</button></div><details${RS.o.rqa?" open":""} ontoggle="LCCX.tg('rqa',this.open)"><summary>분석 조건 · 대상 선택</summary><div class="rfxg"><label><span>대상</span><select onchange="LCCX.ds(this.value)"><option value="-1"${dSel()<0?" selected":""}>전체 프로젝트</option>${RS.assets.map((x,i)=>`<option value="${i}"${dSel()==i?" selected":""}>${hh(x.n).slice(0,24)}</option>`).join("")}</select></label><label><span>평가기간 (년)</span><input type="text" inputmode="decimal" value="${RS.hz}" onchange="LCCX.hz(this.value)"></label><label><span>보수 인상률 (%)</span><input type="text" inputmode="decimal" value="${RS.esc}" onchange="LCCX.esc(this.value)"></label></div></details><details${RS.o.rqb?" open":""} ontoggle="LCCX.tg('rqb',this.open)"><summary>자산별 요약</summary><div class="rfsc2"><table><tr><th>자산</th><th>Zone</th><th>환경</th><th class="n">수명 현/기/추</th><th class="n">LCC 현/기/추</th></tr>${RS.assets.map(all).map(r=>`<tr><td>${hh(r.a.n).slice(0,14)}</td><td><b class="zb" style="background:${zc[r.B.z]}">${r.B.z}</b></td><td>${r.en.eff}</td><td class="n">${r.m.map(x=>x.e.toFixed(1)).join(" / ")}</td><td class="n">${r.m.map(x=>F(x.tot)).join(" / ")}</td></tr>`).join("")}</table></div></details><details${RS.o.rqc?" open":""} ontoggle="LCCX.tg('rqc',this.open)"><summary>규격·가정</summary><ul><li>ISO 12944-2 / KS M ISO 12944-2: 부식환경 C1~CX (1년차 강 손실 µm)</li><li>ISO 9223·9225 / KS D ISO 9223·9225: 대기 부식성 분류, SO₂·염화물 침적 측정</li><li>ISO 4628: 도막 열화(녹·균열·박리·블리스터·쵸킹) 등급 — 상태 등급은 등급(0~5)을 100점 만점으로 환산</li></ul><p>소요량: 이론 ℓ/㎡ = DFT/(10×고형분%), 실제 = 이론/(1−로스). 추정수명 = 기준수명 × 환경계수 × 인자 계수 × 내구성등급 적용한계 초과 시 0.75/단계. LCC = 초기비용×(1+인상률×k), 재도장 시점부터 ${hz}년. 모든 계수와 구간은 가정값이라 현장 데이터로 교정이 필요합니다. 기존안=도장사양, 최적안=추천사양 기준입니다. 보고서 ID ${mt.id}.</p></details></div>`;
+const lnav=`<nav class="rflb rq-nx" aria-label="LCC 메뉴">${[["자산등록",1],["열화진단",2],["ISO 사양추천",3],["비용분석",4],["보수계획",5]].map(([t,i])=>`<button type="button" class="${i==RS.tab?"on":""}"${i==RS.tab?' aria-current="page"':""} onclick="LCCX.tab(${i})"><i>${i}</i><span>${t}</span></button>`).join("")}</nav>`;
+return`<div id="ig" class="rf cq">${step}<div class="rfw">${c1}${c2}${c3}${c4}${c5}${c6}${ex}</div>${lnav}</div>`}
+function pRPage(){return`<div class="lx lxp lxrq">${lxTop()}${pRF()}</div>`}
 function pR(){const R=RS.assets.map(all),n=R.length,cnt={R:0,O:0,Y:0,G:0};R.forEach(r=>cnt[r.B.z]++);
 const hz=RS.hz,T=RK.map((_,j)=>R.reduce((s,r)=>s+r.m[j].tot,0)),cu=RK.map((_,j)=>{const c=Array(hz+1).fill(0);R.forEach(r=>r.m[j].cu.forEach((v,i)=>c[i]+=v));return c});
 const ar=R.reduce((s,r)=>s+(+r.a.ar||0),0),ix=k=>CK.indexOf(k),evs=R.map(r=>r.en.eff).sort((x,y)=>ix(x)-ix(y)),envT=evs[0]==evs[n-1]?evs[0]:evs[0]+"~"+evs[n-1],mt=rptMeta();
@@ -7794,7 +7842,7 @@ return`<section class="ldc fw"><div class="lxfl lxfs">${steps}</div><div class="
 function strip(){return`<div class="lts"><div class="ltr">${TABS.map((t,i)=>`<button class="${i==RS.tab?"on":""}" onclick="LCCX.tab(${i})">${MI(TI[i])}<span>${t[0]}</span></button>`).join("")}</div><button class="ltn" onclick="this.previousElementSibling.scrollBy({left:220,behavior:'smooth'})" aria-label="다음 탭">${MI('<path d="M9 5l7 7-7 7"/>')}</button></div>`}
 
 let PK={};const TABS=[["대시보드",pDash],["자산",pA],["진단",pD],["사양",pS],["비교",pC],["보고서",pR]];
-function R(){const e=document.getElementById("v9");if(!e)return;const y=scrollY,a=A_();if(!(RS.tab>=0&&RS.tab<TABS.length))RS.tab=0;const dash=RS.tab==0,dgp=RS.tab==2;document.body.classList.toggle("lccdash",true);document.body.classList.toggle("lccasset",RS.tab==1);document.body.classList.toggle("lccrpt",RS.tab==5);document.body.classList.toggle("lcccp",RS.tab==4);
+function R(){const e=document.getElementById("v9");if(!e)return;const y=scrollY,a=A_();if(!(RS.tab>=0&&RS.tab<TABS.length))RS.tab=0;const dash=RS.tab==0,dgp=RS.tab==2;document.body.classList.toggle("lccdash",true);document.body.classList.toggle("lccasset",RS.tab==1);document.body.classList.toggle("lccrpt",RS.tab==5);document.body.classList.toggle("lcccp",RS.tab==4);{const g=document.getElementById("gnav");document.documentElement.style.setProperty("--gnh",((g&&g.offsetHeight)||60)+"px")}
 e.innerHTML=dash?pDash():RS.tab==1?pAPage():RS.tab==5?pRPage():RS.tab==4?pCPage():dgp?pDPage():RS.tab==3?pSPage():pWrap(TABS[RS.tab][1]());document.body.classList.toggle("lccdiag",RS.tab==2);document.body.classList.toggle("lccspec",RS.tab==3);if(dash)requestAnimationFrame(()=>requestAnimationFrame(lxFit));if(RS.tab==2){const f=document.getElementById("dgf");if(f)f.srcdoc=window.DIAGSRC}scrollTo(0,dash?0:y)}
 function pick(r,i){PK={r,i};pqSheet("rppk",`<div class="pqmh"><b>DB 제품 선택</b></div><input id="rpq" placeholder="제품명·제조사 검색" oninput="LCCX.pkq(this.value)"><div id="rpl" style="display:flex;flex-direction:column;gap:6px"></div><button class="pqbc" onclick="pqX('rppk')">닫기</button>`);pkq("")}
 function pkq(q){const L=DB.map((p,j)=>[p,j]).filter(([p])=>!q||(p.n+(p.mf||"")+(p.g||"")).toLowerCase().includes(String(q).toLowerCase())).slice(0,40);document.getElementById("rpl").innerHTML=L.length?L.map(([p,j])=>`<button class="pqml" onclick="LCCX.use(${j})"><span class="pqt"><b>${hh(p.n)}</b><small>${hh((p.mf||"")+" · "+(p.g||p.d||"")+" · SVR "+(p.svr||"-")+"% · "+(p.dft||"-")+"㎛")}</small></span></button>`).join(""):'<div class="k">제품 DB가 비어 있습니다. 더보기 → 제품 DB에서 추가하세요.</div>'}
@@ -7807,7 +7855,7 @@ sp.coats=nc;RS.link.t=Date.now();if(ar>0&&Math.round(a.ar)!=ar){const o=RS.i;RS.
 function toCalc(r){const a=A_(),s=a.sp[r],miss=s.coats.some(c=>!c.db);
 ask('일위대가표의 Coat를 "'+hh(s.n)+'" 사양으로 바꿀까요?<br><small>면적 '+F(a.ar)+'㎡'+(miss?' · DB 미연결 코트는 직접 입력 제품으로 전달됩니다':'')+'</small>',()=>{S.coats=s.coats.map(c=>({n:c.db||c.p,dft:c.d,svr:c.vs,loss:c.ls,tr:c.th,price:c.price,tprice:c.tp}));S.area=String(Math.round(a.ar));RS.link={i:RS.i,r};rsv();sv();T(0);try{cards()}catch(e){}})}
 function saveH(){const ig=document.getElementById("ig");if(!ig){tt("보고서 탭에서 저장하세요");return}
-const h='<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LCC 인포그래픽</title><style>'+document.getElementById("rp351css").textContent+document.getElementById("rpt414").textContent+document.getElementById("rq453").textContent+'</style></head><body style="margin:0;padding:10px;background:#f2f7fe;--u:calc(min(100vw,560px)/852)"><div id="v9" style="max-width:900px;margin:0 auto">'+rqClone(ig).outerHTML+'</div></body></html>';
+const h='<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LCC 인포그래픽</title><style>'+document.getElementById("rp351css").textContent+document.getElementById("rpt414").textContent+document.getElementById("rq453").textContent+document.getElementById("rf456").textContent+document.getElementById("cq454").textContent+'</style></head><body style="margin:0;padding:10px;background:#f2f7fe;--u:calc(min(100vw,560px)/852)"><div id="v9" style="max-width:900px;margin:0 auto">'+rqClone(ig).outerHTML+'</div></body></html>';
 dl(new Blob([h],{type:"text/html"}),"LCC_인포그래픽.html");tt("인포그래픽을 저장했습니다");rnBump()}
 function word(){const Rr=RS.assets.map(all),t=(h,rows)=>`<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse;font-size:10pt"><tr style="background:#dce6f2">${h.map(x=>`<th>${hh(x)}</th>`).join("")}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${hh(c)}</td>`).join("")}</tr>`).join("")}</table>`;
 const mt=rptMeta();let b=`<h1>도장 수명 진단 및 LCC 보고서</h1><p>보고서 ID ${mt.id} · 작성일 ${mt.dt}</p><h2>1. 자산 요약</h2>`+t(["자산","Zone","부식환경","수명 현/기/추(년)","LCC 현/기/추(천원, "+RS.hz+"년)"],Rr.map(r=>[r.a.n,r.B.z,r.en.eff,r.m.map(x=>x.e.toFixed(1)).join(" / "),r.m.map(x=>F(x.tot)).join(" / ")]));
@@ -11253,4 +11301,206 @@ html body #v3 .sl-st button{width:auto}
 .syed .sypk-x{width:36px;height:36px;padding:0}
 .syl-bt .ed{width:auto!important}
 </style>
-</body></html>
+<style id="rf456">
+/* v456: LCC 최종보고서 — 신규 시안(852px 기준) · 히어로 제외 · 좌우 확장(최대 900px) */
+html body #v9 .rf{--f:calc(min(100vw,900px)/852);--w:calc(min(100vw,900px)/852);color:#10264f;font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,-apple-system,sans-serif;letter-spacing:-.01em;line-height:1.3;background:#f3f7fd}
+html body #v9 .rf *{box-sizing:border-box}
+html body #v9 .rf .rfst{position:sticky;top:env(safe-area-inset-top,0px);z-index:45;display:flex;justify-content:space-between;padding:calc(var(--f)*14) calc(var(--f)*26) calc(var(--f)*8);background:#f3f7fd;box-shadow:0 2px 8px rgba(20,60,140,.06)}
+html body #v9 .rf .rfst::before{content:"";position:absolute;left:calc(var(--f)*80);right:calc(var(--f)*80);top:calc(var(--f)*44);height:2px;background:#cddcf3}
+html body #v9 .rf .rfst button{position:relative;flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:calc(var(--f)*8);min-width:0;margin:0;padding:0;border:0;background:transparent;font-family:inherit;cursor:pointer}
+html body #v9 .rf .rfsc{position:relative;display:grid;place-items:center;width:calc(var(--f)*60);height:calc(var(--f)*60);border-radius:50%;background:#fff;border:calc(var(--f)*2) solid #c9daf3;color:#1a2f5a;box-shadow:0 2px 6px rgba(30,70,160,.10)}
+html body #v9 .rf .rfsc svg{width:52%;height:52%;stroke-width:1.7}
+html body #v9 .rf .rfsc em{position:absolute;right:calc(var(--f)*-14);bottom:calc(var(--f)*-2);font-style:normal;font-size:calc(var(--f)*14);font-weight:700;color:#8aa0c4}
+html body #v9 .rf .rfsl{font-size:calc(var(--f)*21);font-weight:500;color:#1a2f5a;white-space:nowrap;letter-spacing:-.04em}
+html body #v9 .rf .rfst button.on .rfsc{background:linear-gradient(180deg,#2f7be8,#1456c8);border-color:#cfe0fb;color:#fff;box-shadow:0 0 0 calc(var(--f)*5) rgba(47,123,232,.16),0 3px 8px rgba(20,86,200,.3)}
+html body #v9 .rf .rfst button.on .rfsc em{color:#1f6fe5}
+html body #v9 .rf .rfst button.on .rfsl{color:#1456c8;font-weight:800}
+html body #v9 .rf .rfw{display:flex;flex-direction:column;gap:calc(var(--f)*14);padding:calc(var(--f)*12) calc(var(--f)*18) calc(var(--f)*20)}
+html body #v9 .rf .rfc{background:#fff;border:1px solid #dfe8f5;border-radius:calc(var(--f)*14);padding:calc(var(--f)*14);box-shadow:0 calc(var(--f)*3) calc(var(--f)*10) rgba(30,70,160,.06);min-width:0}
+html body #v9 .rf .rfpo{position:relative;overflow:hidden;border-radius:calc(var(--f)*7);background:#e4ecf8}
+html body #v9 .rf .rfpo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+html body #v9 .rf .rfpe,html body #v9 .rf .rqpe{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#6f83a8;background:linear-gradient(160deg,#e3ecf9,#d6e3f6);cursor:pointer}
+html body #v9 .rf .rqpe svg{width:calc(var(--f)*40);height:calc(var(--f)*40);stroke-width:1.6}
+html body #v9 .rf .rqpe small{font-size:calc(var(--f)*14);font-weight:600}
+html body #v9 .rf .rqpe input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px}
+/* 1 */
+html body #v9 .rf .rf1{display:grid;grid-template-columns:225fr 303fr 268fr;gap:0;align-items:stretch}
+html body #v9 .rf .rf1 .rfkv{padding-left:calc(var(--f)*22)}
+html body #v9 .rf .rf1 .rfpo{height:calc(var(--f)*166)}
+html body #v9 .rf .rf1 .rfpo>em{position:absolute;left:calc(var(--f)*10);top:calc(var(--f)*10);z-index:2;padding:calc(var(--f)*4) calc(var(--f)*12);border-radius:calc(var(--f)*6);background:rgba(8,30,70,.6);color:#fff;font-size:calc(var(--f)*18);font-style:normal;font-weight:800}
+html body #v9 .rf .rfkv{margin:0;display:flex;flex-direction:column;justify-content:space-around;min-width:0}
+html body #v9 .rf .rfkv>div{display:flex;align-items:baseline;gap:calc(var(--f)*14);min-width:0}
+html body #v9 .rf .rfkv dt{flex:none;margin:0;font-size:calc(var(--f)*17);font-weight:800;color:#1a56c4;white-space:nowrap}
+html body #v9 .rf .rfkv dd{flex:1;min-width:0;margin:0;font-size:calc(var(--f)*17);font-weight:500;color:#37465f;word-break:keep-all}
+html body #v9 .rf .rfkv dd small{font-size:.9em;color:#7686a3}
+html body #v9 .rf .rfgl{min-width:0;padding:calc(var(--f)*14) calc(var(--f)*18);background:#eef3fb;border-radius:calc(var(--f)*10)}
+html body #v9 .rf .rfgl>div{display:flex;align-items:center;gap:calc(var(--f)*10);margin-bottom:calc(var(--f)*10)}
+html body #v9 .rf .rfgl i{flex:none;width:calc(var(--f)*34);height:calc(var(--f)*34);color:#1f6fe5}
+html body #v9 .rf .rfgl i svg{width:100%;height:100%;stroke-width:1.7}
+html body #v9 .rf .rfgl b{font-size:calc(var(--f)*21);font-weight:800;color:#10264f}
+html body #v9 .rf .rfgl p{margin:0;font-size:calc(var(--f)*14.5);line-height:1.6;color:#33466b;word-break:keep-all}
+/* 섹션 헤더 */
+html body #v9 .rf .rfh{display:flex;align-items:center;gap:calc(var(--f)*14);margin:calc(var(--f)*-8) 0 calc(var(--f)*8) calc(var(--f)*-8)}
+html body #v9 .rf .rfh>b{display:inline-flex;align-items:center;gap:calc(var(--f)*10);padding:calc(var(--f)*6) calc(var(--f)*16) calc(var(--f)*6) calc(var(--f)*10);border-radius:calc(var(--f)*7);background:linear-gradient(90deg,#10306b,#1a4690);color:#fff;font-size:calc(var(--f)*21);font-weight:800;white-space:nowrap;letter-spacing:-.03em}
+html body #v9 .rf .rfh>b i{font-style:normal;font-size:calc(var(--f)*26);font-weight:800;line-height:1}
+html body #v9 .rf .rfh>span{min-width:0;font-size:calc(var(--f)*17);font-weight:500;color:#1a3b72}
+/* 2 */
+html body #v9 .rf .rf2{display:grid;grid-template-columns:167fr 215fr 177fr 194fr;gap:calc(var(--f)*14);align-items:stretch}
+html body #v9 .rf .rfp2{min-height:calc(var(--f)*170)}
+html body #v9 .rf .rfbx{display:flex;flex-direction:column;min-width:0;background:#fff;border:1px solid #e3ebf7;border-radius:calc(var(--f)*8);overflow:hidden}
+html body #v9 .rf .rfbx>h4{margin:0;padding:calc(var(--f)*8) calc(var(--f)*14);background:#f1f5fb;border-bottom:1px solid #e3ebf7;font-size:calc(var(--f)*16);font-weight:800;color:#10264f;white-space:nowrap}
+html body #v9 .rf .rfdf{list-style:none;margin:0;padding:calc(var(--f)*8) calc(var(--f)*12);display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:calc(var(--f)*2)}
+html body #v9 .rf .rfdf li{display:flex;align-items:center;gap:calc(var(--f)*6);font-size:calc(var(--f)*15);white-space:nowrap}
+html body #v9 .rf .rfdf li>i{flex:none;width:calc(var(--f)*14);height:calc(var(--f)*14);border-radius:50%}
+html body #v9 .rf .rfdf b{font-weight:500;color:#10264f}
+html body #v9 .rf .rfdf u{text-decoration:none;color:#8a97ad}
+html body #v9 .rf .rfdf strong{margin-left:auto;font-weight:800;color:#10264f}
+html body #v9 .rf .rfdf small{font-size:calc(var(--f)*12);color:#8a97ad;letter-spacing:-.05em}
+html body #v9 .rf .rfgd{align-items:center;text-align:center;gap:calc(var(--f)*6)}
+html body #v9 .rf .rfgd>h4{align-self:stretch;background:#fff;text-align:left;border-bottom:0;color:#1456c8}
+html body #v9 .rf .rfrg{display:grid;place-items:center;width:calc(var(--f)*88);height:calc(var(--f)*88);margin-top:calc(var(--f)*2);border-radius:50%}
+html body #v9 .rf .rfrg span{display:grid;place-items:center;width:78%;height:78%;border-radius:50%;color:#fff;font-size:calc(var(--f)*40);font-weight:800}
+html body #v9 .rf .rfgd small{font-size:calc(var(--f)*15);color:#566887}
+html body #v9 .rf .rfgd b{font-size:calc(var(--f)*22);font-weight:800}
+html body #v9 .rf .rfsm>h4{background:#eaf1fb;color:#10264f}
+html body #v9 .rf .rfsm ul{list-style:none;margin:0;padding:calc(var(--f)*12) calc(var(--f)*14);display:flex;flex-direction:column;justify-content:space-around;flex:1;gap:calc(var(--f)*8)}
+html body #v9 .rf .rfsm li{display:flex;align-items:center;gap:calc(var(--f)*8);font-size:calc(var(--f)*15);font-weight:500;color:#1b2f55;word-break:keep-all;line-height:1.3}
+html body #v9 .rf .rfsm li>i{flex:none;width:calc(var(--f)*20);height:calc(var(--f)*20);color:#1f6fe5}
+html body #v9 .rf .rfsm li>i svg{width:100%;height:100%;stroke-width:3}
+/* 3 */
+html body #v9 .rf .rf3{display:grid;grid-template-columns:430fr 358fr;gap:calc(var(--f)*8);align-items:stretch}
+html body #v9 .rf .rftb{display:grid;grid-template-columns:minmax(0,.85fr) repeat(3,minmax(0,1fr));gap:calc(var(--f)*3);align-content:stretch;padding:calc(var(--f)*6);background:#f5f7fb;border-radius:calc(var(--f)*8)}
+html body #v9 .rf .rfth{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(var(--f)*58);padding:2px;background:#e9edf3;border-radius:calc(var(--f)*5) calc(var(--f)*5) 0 0;font-size:calc(var(--f)*15);font-weight:700;color:#3a4a66;text-align:center}
+html body #v9 .rf .rfth b{font-size:calc(var(--f)*15);font-weight:800;line-height:1.2;letter-spacing:-.05em;white-space:nowrap}
+html body #v9 .rf .rfth small{font-size:calc(var(--f)*13);font-weight:500;line-height:1.2}
+html body #v9 .rf .rfth.g{background:#858c98;color:#fff}html body #v9 .rf .rfth.b{background:#2386f0;color:#fff}html body #v9 .rf .rfth.n{background:#1fa05c;color:#fff}
+html body #v9 .rf .rftl{display:flex;align-items:center;justify-content:center;min-height:calc(var(--f)*54);background:#eef1f6;font-size:calc(var(--f)*15);font-weight:500;color:#2b3b5a;text-align:center;letter-spacing:-.04em}
+html body #v9 .rf .rftc{display:flex;align-items:center;justify-content:center;min-height:calc(var(--f)*54);font-size:calc(var(--f)*17);font-weight:800;color:#10264f;text-align:center;white-space:nowrap;letter-spacing:-.05em}
+html body #v9 .rf .rftc.lg{font-size:calc(var(--f)*13)}
+html body #v9 .rf .rftc.c1{font-weight:500}
+html body #v9 .rf .rftc.c0{background:#f3f5f9}html body #v9 .rf .rftc.c1{background:#edf4fd}html body #v9 .rf .rftc.c2{background:#edf8f1}
+html body #v9 .rf .rfcp{position:relative;min-width:0;padding:calc(var(--f)*10) calc(var(--f)*10) calc(var(--f)*6);background:#fff;border:1px solid #e3ebf7;border-radius:calc(var(--f)*8);display:flex;flex-direction:column}
+html body #v9 .rf .rfcp>b{font-size:calc(var(--f)*15);font-weight:800;color:#10264f}
+html body #v9 .rf .rflg{display:flex;align-items:center;justify-content:center;gap:calc(var(--f)*6);margin-top:calc(var(--f)*6);font-size:calc(var(--f)*13);color:#566887;white-space:nowrap}
+html body #v9 .rf .rflg s{display:inline-block;width:calc(var(--f)*12);height:calc(var(--f)*12);margin-left:calc(var(--f)*10);border-radius:50%;text-decoration:none}
+html body #v9 .rf .rflg s:first-child{margin-left:0}
+html body #v9 .rf .rflg .a{background:#8d97aa}html body #v9 .rf .rflg .b{background:#1f6fe5}html body #v9 .rf .rflg .c{background:#1fa05c}
+html body #v9 .rf.cq .cqch{height:calc(var(--f)*150);margin:calc(var(--f)*8) 0 calc(var(--f)*6)}
+html body #v9 .rf.cq .cqpl{left:calc(var(--f)*54);right:calc(var(--f)*92);top:calc(var(--f)*6);bottom:calc(var(--f)*28)}
+html body #v9 .rf.cq .cqyl span,html body #v9 .rf.cq .cqxl span{font-size:calc(var(--f)*13)}
+html body #v9 .rf.cq .cqpl b{font-size:calc(var(--f)*12.5);padding:calc(var(--f)*3) calc(var(--f)*7);border-radius:calc(var(--f)*5)}
+html body #v9 .rf.cq .cqpl polyline{stroke-width:2.2}
+/* 4 */
+html body #v9 .rf .rf4{display:grid;grid-template-columns:250fr 304fr 216fr;gap:calc(var(--f)*12);align-items:stretch}
+html body #v9 .rf .rfbs{display:flex;flex-direction:column;gap:calc(var(--f)*8);min-width:0;padding:calc(var(--f)*14);background:#eaf7ef;border:calc(var(--f)*2) solid #8fcba8;border-radius:calc(var(--f)*10)}
+html body #v9 .rf .rfbt{display:flex;align-items:center;gap:calc(var(--f)*8);color:#1b9a5a}
+html body #v9 .rf .rfbt svg{width:calc(var(--f)*34);height:calc(var(--f)*34);stroke-width:1.5}
+html body #v9 .rf .rfbt b{font-size:calc(var(--f)*20);font-weight:800;color:#1b9a5a}
+html body #v9 .rf .rfsl2{position:relative;height:calc(var(--f)*26);margin:calc(var(--f)*2) 0}
+html body #v9 .rf .rfsl2 u{position:absolute;left:0;right:0;top:50%;height:calc(var(--f)*8);transform:translateY(-50%);border-radius:99px;background:#cfe6d8;text-decoration:none}
+html body #v9 .rf .rfsl2 em{position:absolute;top:50%;transform:translate(-50%,-50%);padding:calc(var(--f)*3) calc(var(--f)*18);border-radius:99px;background:#1f9d5a;color:#fff;font-size:calc(var(--f)*15);font-style:normal;font-weight:800;white-space:nowrap}
+html body #v9 .rf .rfbn{font-size:calc(var(--f)*23);font-weight:800;line-height:1.25;color:#10264f;letter-spacing:-.03em;word-break:keep-all}
+html body #v9 .rf .rfbn small{font-size:calc(var(--f)*16);font-weight:500}
+html body #v9 .rf .rfbs p{margin:0;font-size:calc(var(--f)*19);color:#10264f}
+html body #v9 .rf .rfbs p b{font-weight:800;font-size:1.05em}
+html body #v9 .rf .rfpl{align-self:flex-start;margin-top:auto;padding:calc(var(--f)*7) calc(var(--f)*26);border-radius:99px;background:#1f9d5a;color:#fff;font-size:calc(var(--f)*16);font-weight:800;white-space:nowrap}
+html body #v9 .rf .rfpl.am{background:#e69a00}
+html body #v9 .rf .rfcm{min-width:0;padding:calc(var(--f)*10) calc(var(--f)*12);background:#fff;border:1px solid #e3ebf7;border-radius:calc(var(--f)*10)}
+html body #v9 .rf .rfcm h4{margin:0 0 calc(var(--f)*8);font-size:calc(var(--f)*18);font-weight:800;color:#10264f}
+html body #v9 .rf .rfcmg{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--f)*8)}
+html body #v9 .rf .rfcc{display:flex;flex-direction:column;align-items:center;gap:calc(var(--f)*4);min-width:0;padding:calc(var(--f)*8) calc(var(--f)*4) calc(var(--f)*10);background:#fff;border:1px solid #d9e5f7;border-radius:calc(var(--f)*8);text-align:center}
+html body #v9 .rf .rfcc>b{font-size:calc(var(--f)*15);font-weight:800;line-height:1.2;white-space:nowrap;letter-spacing:-.05em}
+html body #v9 .rf .rfcc>b small{font-size:.88em;font-weight:500}
+html body #v9 .rf .rfcc>b.b{color:#1f6fe5}html body #v9 .rf .rfcc>b.n{color:#1b9a5a}
+html body #v9 .rf .rfcc>span{font-size:calc(var(--f)*14);color:#566887}
+html body #v9 .rf .rfcc>strong.lg{font-size:calc(var(--f)*17)}
+html body #v9 .rf .rfcc>strong{font-size:calc(var(--f)*21);font-weight:800;line-height:1.15;color:#10264f;white-space:nowrap;letter-spacing:-.04em}
+html body #v9 .rf .rfcc>em{padding:calc(var(--f)*5) calc(var(--f)*14);border-radius:99px;font-style:normal;font-size:calc(var(--f)*15);font-weight:800;white-space:nowrap}
+html body #v9 .rf .rfcc>em.up{background:#ffe3e5;color:#d63a3a}html body #v9 .rf .rfcc>em.dn{background:#dcf2e3;color:#17934f}
+html body #v9 .rf .rfcc>small{font-size:calc(var(--f)*13);font-weight:600}
+html body #v9 .rf .rfcc>small.up{color:#d63a3a}html body #v9 .rf .rfcc>small.dn{color:#17934f}
+html body #v9 .rf .rfwn{min-width:0;padding:calc(var(--f)*12) calc(var(--f)*14);background:#fff;border:calc(var(--f)*2) solid #e24b4b;border-radius:calc(var(--f)*10)}
+html body #v9 .rf .rfwn.ok{border-color:#8fcba8;background:#f4fbf7}
+html body #v9 .rf .rfwn>b{display:flex;align-items:center;gap:calc(var(--f)*8);font-size:calc(var(--f)*19);font-weight:800;color:#e03232;white-space:nowrap}
+html body #v9 .rf .rfwn.ok>b{color:#1b9a5a}
+html body #v9 .rf .rfwn>b svg{flex:none;width:calc(var(--f)*26);height:calc(var(--f)*26);stroke-width:2.2}
+html body #v9 .rf .rfwn>strong{display:block;margin-top:calc(var(--f)*8);font-size:calc(var(--f)*19);font-weight:800;line-height:1.5;color:#e03232;word-break:keep-all}
+html body #v9 .rf .rfwn.ok>strong{color:#1b9a5a}
+html body #v9 .rf .rfwn p{margin:calc(var(--f)*8) 0 0;font-size:calc(var(--f)*14.5);line-height:1.55;color:#6b7b95;word-break:keep-all}
+/* 5 기대 효과 */
+html body #v9 .rf #rq-s5{padding:0;overflow:hidden;border:0;background:transparent;box-shadow:none}
+html body #v9 .rf .rfex{display:grid;grid-template-columns:minmax(0,1fr) calc(var(--f)*138);gap:calc(var(--f)*8);padding:calc(var(--f)*12) calc(var(--f)*10) calc(var(--f)*12) calc(var(--f)*14);border-radius:calc(var(--f)*12);background-size:cover;background-position:center;color:#fff}
+html body #v9 .rf .rfel{min-width:0}
+html body #v9 .rf .rfet{margin:0 0 calc(var(--f)*10) calc(var(--f)*2)}
+html body #v9 .rf .rfet b{display:block;font-size:calc(var(--f)*26);font-weight:800;letter-spacing:-.03em}
+html body #v9 .rf .rfet span{display:block;margin-top:calc(var(--f)*4);font-size:calc(var(--f)*17);font-weight:500}
+html body #v9 .rf .rfeg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--f)*8);align-items:stretch}
+html body #v9 .rf .rfek{display:flex;align-items:center;gap:calc(var(--f)*8);min-width:0;padding:calc(var(--f)*9) calc(var(--f)*8);background:#fff;border-radius:calc(var(--f)*9);overflow:hidden;color:#10264f}
+html body #v9 .rf .rfek>i{display:block;flex:none;width:calc(var(--f)*40);height:calc(var(--f)*40);color:#2a6fe0}
+html body #v9 .rf .rfek>i.gn{color:#1f9d5a}
+html body #v9 .rf .rfek>i svg{width:100%;height:100%;stroke-width:1.6}
+html body #v9 .rf .rfek>div{min-width:0}
+html body #v9 .rf .rfek small{display:block;font-size:calc(var(--f)*14);font-weight:600;color:#44556f;white-space:nowrap;letter-spacing:-.05em}
+html body #v9 .rf .rfek b{display:block;font-size:calc(var(--f)*22);font-weight:800;line-height:1.15;color:#10264f;white-space:nowrap;letter-spacing:-.04em}
+html body #v9 .rf .rfek b u{text-decoration:none;font-size:calc(var(--f)*15);font-weight:800;color:#1f9d5a;margin-left:2px}
+html body #v9 .rf .rfek b .rfv{color:#1f9d5a;font-size:1.05em}
+html body #v9 .rf .rfek b.s{font-size:calc(var(--f)*14.5)}
+html body #v9 .rf .rfek em{display:block;font-style:normal;font-size:calc(var(--f)*12);color:#6b7b95;white-space:nowrap;letter-spacing:-.05em}
+html body #v9 .rf .rfeb{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(var(--f)*6);padding:calc(var(--f)*10);background:linear-gradient(160deg,#14408a,#0b2a63);border-radius:calc(var(--f)*9);text-align:center;color:#fff}
+html body #v9 .rf .rfeb svg{width:calc(var(--f)*48);height:calc(var(--f)*48);color:#3f95ff;stroke-width:2}
+html body #v9 .rf .rfeb p{margin:0;font-size:calc(var(--f)*13.5);font-weight:700;line-height:1.5;word-break:keep-all}
+/* 6 */
+html body #v9 .rf .rf6{display:grid;grid-template-columns:1fr 218fr;gap:calc(var(--f)*14);align-items:stretch}
+html body #v9 .rf .rf6{grid-template-columns:560fr 220fr}
+html body #v9 .rf .rfbz{padding:calc(var(--f)*8) calc(var(--f)*10);background:#f4f8ff;border:1px solid #dbe6f8;border-radius:calc(var(--f)*8);display:grid;grid-template-columns:auto 1fr;gap:calc(var(--f)*4) calc(var(--f)*14);align-items:center;min-width:0}
+html body #v9 .rf .rfbzt{display:flex;align-items:center;gap:calc(var(--f)*10)}
+html body #v9 .rf .rfbzt i{flex:none;width:calc(var(--f)*34);height:calc(var(--f)*34);color:#2a6fe0}
+html body #v9 .rf .rfbzt i svg{width:100%;height:100%;stroke-width:1.6}
+html body #v9 .rf .rfbzt b{font-size:calc(var(--f)*18);font-weight:800;color:#10264f;white-space:nowrap}
+html body #v9 .rf .rfbz ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:calc(var(--f)*2);min-width:0}
+html body #v9 .rf .rfbz li{display:flex;align-items:flex-start;gap:calc(var(--f)*8);font-size:calc(var(--f)*13);line-height:1.4;color:#3b4d70}
+html body #v9 .rf .rfbz li>i{flex:none;width:calc(var(--f)*15);height:calc(var(--f)*15);margin-top:1px;color:#2a6fe0}
+html body #v9 .rf .rfbz li>i svg{width:100%;height:100%;stroke-width:3}
+html body #v9 .rf .rfnt{display:flex;align-items:center;gap:calc(var(--f)*8);padding:calc(var(--f)*8) calc(var(--f)*10);background:#f4f8ff;border:1px solid #dbe6f8;border-radius:calc(var(--f)*8);min-width:0}
+html body #v9 .rf .rfnt>i{flex:none;width:calc(var(--f)*26);height:calc(var(--f)*26);color:#7aa0d8}
+html body #v9 .rf .rfnt>i svg{width:100%;height:100%;stroke-width:1.6}
+html body #v9 .rf .rfnt p{margin:0;font-size:calc(var(--f)*11.5);line-height:1.45;color:#6b7b95;word-break:keep-all}
+html body #v9 .rf #rq-s6{padding:0;border:0;background:transparent;box-shadow:none}
+/* 부가 */
+html body #v9 .rf .rfx{display:flex;flex-direction:column;gap:calc(var(--f)*8);padding:calc(var(--f)*4) calc(var(--f)*4) 0}
+html body #v9 .rf .rfxb{display:flex;flex-wrap:wrap;align-items:center;gap:calc(var(--f)*8)}
+html body #v9 .rf .rfxb>span{font-size:calc(var(--f)*14);font-weight:700;color:#566887}
+html body #v9 .rf .rfxb button{height:calc(var(--f)*40);margin:0;padding:0 calc(var(--f)*16);border:1px solid #bcd3f7;border-radius:99px;background:#fff;color:#1d62dc;font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;font-size:calc(var(--f)*15)!important;font-weight:700!important;line-height:1;white-space:nowrap;cursor:pointer}
+html body #v9 .rf .rfxb button.pr{background:linear-gradient(180deg,#2a6fe0,#1553c8);border-color:#1553c8;color:#fff}
+html body #v9 .rf .rfxb.sm button{height:calc(var(--f)*34);font-size:calc(var(--f)*13)!important;color:#4d5f80;border-color:#d3dff1}
+html body #v9 .rf .rfx details{background:#fff;border:1px solid #dfe8f5;border-radius:calc(var(--f)*12);padding:0 calc(var(--f)*14);margin:0}
+html body #v9 .rf .rfx summary{display:flex;align-items:center;min-height:calc(var(--f)*46);list-style:none;cursor:pointer;font-size:calc(var(--f)*16);font-weight:700;color:#1456c8;padding:0}
+html body #v9 .rf .rfx summary::-webkit-details-marker{display:none}
+html body #v9 .rf .rfx summary::after{content:"";margin-left:auto;width:7px;height:7px;border:solid #7a8aa8;border-width:0 2px 2px 0;transform:rotate(45deg) translateY(-25%);float:none;font:inherit}
+html body #v9 .rf .rfx details[open]>summary::after{transform:rotate(-135deg) translateY(-25%)}
+html body #v9 .rf .rfxg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(var(--f)*10);padding-bottom:calc(var(--f)*12)}
+html body #v9 .rf .rfxg label{display:flex;flex-direction:column;gap:4px;font-size:calc(var(--f)*13);font-weight:600;color:#566887}
+html body #v9 .rf .rfxg input,html body #v9 .rf .rfxg select{width:100%;height:calc(var(--f)*44);padding:0 8px;border:1px solid #cfdcf3;border-radius:8px;background:#fff;color:#10264f;font:500 14px "Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif}
+html body #v9 .rf .rfsc2{overflow-x:auto;padding-bottom:calc(var(--f)*12)}
+html body #v9 .rf .rfsc2 table{width:100%;border-collapse:collapse;font-size:calc(var(--f)*13)}
+html body #v9 .rf .rfsc2 th,html body #v9 .rf .rfsc2 td{padding:5px 6px;border-bottom:1px solid #e6edf8;text-align:left;white-space:nowrap}
+html body #v9 .rf .rfsc2 th{color:#566887;font-weight:700}html body #v9 .rf .rfsc2 .n{text-align:right}
+html body #v9 .rf .rfsc2 .zb{display:inline-block;min-width:18px;padding:1px 6px;border-radius:99px;color:#fff;text-align:center}
+html body #v9 .rf .rfx ul{margin:0 0 8px;padding-left:18px;font-size:calc(var(--f)*13);line-height:1.55;color:#33466b}
+html body #v9 .rf .rfx details>p{margin:0 0 calc(var(--f)*12);font-size:calc(var(--f)*12.5);line-height:1.55;color:#6b7b95}
+html body #v9 .rf.cq .cqpl i{width:calc(var(--f)*11);height:calc(var(--f)*11);margin:calc(var(--f)*-5.5) 0 0 calc(var(--f)*-5.5);border-width:calc(var(--f)*2)}
+html body #v9 .rf.cq .cqyl span{right:calc(100% + var(--f)*8);font-size:calc(var(--f)*13)}
+html body #v9 .rf.cq .cqxl span{top:calc(100% + var(--f)*8);font-size:calc(var(--f)*13)}
+html body #v9 .rf.cq .cqpl b{left:calc(100% + var(--f)*10);font-size:calc(var(--f)*13);padding:calc(var(--f)*3) calc(var(--f)*8);border-radius:calc(var(--f)*6)}
+html body #v9 .rf.cq .cqch{height:calc(var(--f)*150)}
+</style>
+<style id="rf458">
+html body #v9 .lx.lxrq{padding-bottom:calc(var(--gnh,60px) + 64px)!important}
+html body #v9 .rf .rflb{position:fixed;left:50%;bottom:var(--gnh,60px);transform:translateX(-50%);width:min(100vw,900px);z-index:16;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:6px 8px 6px;background:rgba(255,255,255,.97);border-top:1px solid #cddcf3;border-radius:16px 16px 0 0;box-shadow:0 -4px 14px rgba(20,60,140,.12)}
+html body #v9 .rf .rflb button{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:5px;min-width:0;height:36px;margin:0;padding:0 2px;border:0;border-radius:10px;background:transparent;color:#4d5f80;font-family:"Apple SD Gothic Neo","Pretendard","Noto Sans KR",system-ui,sans-serif;cursor:pointer}
+html body #v9 .rf .rflb button i{flex:none;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#e3ecfb;color:#4a6aa8;font-style:normal;font-size:11px;font-weight:800}
+html body #v9 .rf .rflb button span{font-size:11px!important;font-weight:700!important;white-space:nowrap;letter-spacing:-.04em;line-height:1}
+html body #v9 .rf .rflb button.on{background:#e6f0ff;color:#1456c8}
+html body #v9 .rf .rflb button.on i{background:#1f6fe5;color:#fff}
+@media(max-width:380px){html body #v9 .rf .rflb button{flex-direction:column;gap:2px;height:40px}}
+</style></body></html>
