@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v481',d:'2026.10.25'};
+const APPV={v:'v482',d:'2026.10.26'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3731,15 +3731,36 @@ function syEdUi(){
  <div class="se-g"><span>적용 환경 <small>(ISO 12944)</small></span><div class="se-ch">${Object.keys(SYENV).map(c=>`<button type="button" class="${s.env==c?'on':''}" onclick="SYE.e.env=SYE.e.env=='${c}'?'':'${c}';syEdUi()">${c}</button>`).join('')}</div></div>
  <div class="se-g"><span>대상</span><div class="se-ch">${SYSUB.map(c=>`<button type="button" class="${s.sub==c?'on':''}" onclick="SYE.e.sub=SYE.e.sub=='${c}'?'':'${c}';syEdUi()">${c}</button>`).join('')}</div></div>
  <label class="se-l">예상 수명 <small>(년, 선택)</small><input type="number" inputmode="decimal" value="${esc(s.life)}" placeholder="예: 12" onwheel="this.blur()" oninput="SYE.e.life=this.value"></label>
- <div class="se-g"><span>시스템 구성 <small>(제품명은 DB 제품 선택 또는 직접 입력 · DFT는 1회 도장 기준)</small></span>${s.items.map((c,i)=>{const p=P(c.n),has=c.cnt||c.mth||c.thin||c.mix||c.rc||c.th||c.nt||(c.alt&&c.alt.length)||c.when;return `<div class="se-r"><select onchange="SYE.e.items[${i}].lb=this.value" aria-label="단계">${SYLB.map(x=>`<option${(c.lb||'')==x||(!c.lb&&x=='미지정')?' selected':''}>${x}</option>`).join('')}</select><input type="text" list="sy-dl" value="${esc(c.n)}" placeholder="제품명" oninput="SYE.e.items[${i}].n=this.value;syEdHint(${i})"><div class="se-d"><input type="number" inputmode="decimal" id="se-d${i}" value="${esc(c.dft??'')}" placeholder="${p&&+p.dft?p.dft:'DFT'}" onwheel="this.blur()" oninput="SYE.e.items[${i}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items.splice(${i},1);syEdUi()" aria-label="삭제">✕</button></div>
+ <div class="se-g"><span>시스템 구성 <small>(제품명은 DB 제품 선택 또는 직접 입력 · DFT는 1회 도장 기준)</small></span>${s.items.map((c,i)=>{const p=P(c.n),has=c.cnt||c.mth||c.thin||c.mix||c.rc||c.th||c.nt||(c.alt&&c.alt.length)||c.when;const cur=c.lb||'미지정',pp=p;return `<div class="se-c"><div class="se-lb">${SYLB.slice(0,5).map(x=>`<button type="button" class="${cur==x?'on':''}" onclick="SYE.e.items[${i}].lb=${cur==x?"'미지정'":"'"+x+"'"};syEdUi()">${x}</button>`).join('')}</div><div class="se-r"><input type="text" list="sy-dl" value="${esc(c.n)}" placeholder="제품명 (DB에서 선택 또는 직접 입력)" oninput="SYE.e.items[${i}].n=this.value;syEdHint(${i})"><button type="button" class="se-db" onclick="syEdDb(${i})">제품 DB</button><div class="se-d"><input type="number" inputmode="decimal" id="se-d${i}" value="${esc(c.dft??'')}" placeholder="${p&&+p.dft?p.dft:'DFT'}" onwheel="this.blur()" oninput="SYE.e.items[${i}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items.splice(${i},1);syEdUi()" aria-label="삭제">✕</button></div>${pp?`<div class="se-hn">${esc([pp.mf,pp.g||pp.us].filter(Boolean).join(' · '))||'제품 DB 등록 제품'}</div>`:''}
   <button type="button" class="se-mo${has?' has':''}" onclick="SYE.e.items[${i}]._o=!SYE.e.items[${i}]._o;syEdUi()">${c._o?'▲ 접기':'▼ 상세'}<span>${[+c.cnt>1?c.cnt+'회':'',c.alt&&c.alt.length?'대체 '+c.alt.length:'',c.when?'조건부':'',c.mix?'혼합 '+esc(c.mix):'',c.thin?'희석 '+esc(c.thin):''].filter(Boolean).join(' · ')}</span></button>
   ${c._o?`<div class="se-x2">${I(i,'cnt','횟수','1')}${I(i,'mth','도장방법','B,R,S')}${I(i,'thin','희석(최대)','≤5%')}${I(i,'mix','혼합비','4:1 (부피비)')}${I(i,'rc','재도장 간격','≥24시간')}${I(i,'th','이론소요량','0.12 L/㎡')}${I(i,'pot','가사시간','20℃ 4시간')}${I(i,'svr','고형분 SVR(%)','58')}${I(i,'nt','비고','',1)}
    ${c.when?`<div class="se-wh w2">조건: ${esc(c.when.lb)} = <b>${esc(c.when.n)}</b> 선택 시에만 적용<button type="button" onclick="delete SYE.e.items[${i}].when;syEdUi()">해제</button></div>`:''}
-   <div class="se-al w2"><small>대체 제품 (택1)</small>${(c.alt||[]).map((a,j)=>`<div class="se-ar"><input type="text" list="sy-dl" value="${esc(a.n)}" placeholder="제품명" oninput="SYE.e.items[${i}].alt[${j}].n=this.value"><div class="se-d"><input type="number" inputmode="decimal" value="${esc(a.dft??'')}" placeholder="μm" onwheel="this.blur()" oninput="SYE.e.items[${i}].alt[${j}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items[${i}].alt.splice(${j},1);syEdUi()" aria-label="삭제">✕</button></div>`).join('')}<button type="button" class="se-ad2" onclick="(SYE.e.items[${i}].alt=SYE.e.items[${i}].alt||[]).push({n:'',dft:SYE.e.items[${i}].dft});syEdUi()">+ 대체 제품 추가</button></div></div>`:''}`}).join('')}<button type="button" class="se-add" onclick="SYE.e.items.push({lb:SYST[Math.min(SYE.e.items.length,2)],n:'',dft:''});syEdUi()">${syIx.plus}<span>코트 추가</span></button></div>
+   <div class="se-al w2"><small>대체 제품 (택1)</small>${(c.alt||[]).map((a,j)=>`<div class="se-ar"><input type="text" list="sy-dl" value="${esc(a.n)}" placeholder="제품명" oninput="SYE.e.items[${i}].alt[${j}].n=this.value"><button type="button" class="se-db" onclick="syEdDb(${i},${j})">제품 DB</button><div class="se-d"><input type="number" inputmode="decimal" value="${esc(a.dft??'')}" placeholder="μm" onwheel="this.blur()" oninput="SYE.e.items[${i}].alt[${j}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items[${i}].alt.splice(${j},1);syEdUi()" aria-label="삭제">✕</button></div>`).join('')}<button type="button" class="se-ad2" onclick="(SYE.e.items[${i}].alt=SYE.e.items[${i}].alt||[]).push({n:'',dft:SYE.e.items[${i}].dft});syEdUi()">+ 대체 제품 추가</button></div></div>`:''}</div>`}).join('')}<button type="button" class="se-add" onclick="SYE.e.items.push({lb:SYST[Math.min(SYE.e.items.length,2)],n:'',dft:''});syEdUi()">${syIx.plus}<span>코트 추가</span></button></div>
  <datalist id="sy-dl">${(typeof DB!='undefined'?DB:[]).slice(0,3000).map(p=>`<option value="${esc(p.n)}">`).join('')}</datalist></div>
  <div class="sypk-f ${SYE.k<0?'one':''}">${SYE.k<0?'':'<button class="rd" onclick="syEdDel()">삭제</button>'}<button class="ok" onclick="syEdSave()">저장</button></div></div>`;
  if(sc){const q=e.querySelector('.sypk-sc');if(q)q.scrollTop=sc}
 }
+/* 시스템 수정 시트: 제품 DB에서 제품 불러오기 */
+let SYEP=null;
+function syEdDb(i,j){
+ if(!SYE)return;SYEP={i,j:j==null?-1:j,q:'',mf:'all',lim:60};
+ let e=$('#syedpk');if(e)e.remove();e=document.createElement('div');e.id='syedpk';e.className='sypk syedpk';e.onclick=ev=>{if(ev.target===e)syEdDbClose()};
+ const mfs=[...new Set(DB.map(p=>p.mf||'미지정'))].sort(),c=SYE.e.items[i];
+ e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>제품 DB에서 선택${c&&c.lb&&c.lb!='미지정'?' · '+esc(c.lb):''}</b><button class="sypk-x" onclick="syEdDbClose()" aria-label="닫기">✕</button></div><div class="sypk-r"><input id="syedpk-q" type="search" placeholder="제품명 · 제조사 · 용도 검색" oninput="SYEP.q=this.value;SYEP.lim=60;syEdDbUi()"><select onchange="SYEP.mf=this.value;SYEP.lim=60;syEdDbUi()"><option value="all">제조사 전체</option>${mfs.map(m=>`<option>${esc(m)}</option>`).join('')}</select></div><div class="sypk-sc"><div id="syedpk-l" class="sypk-l"></div></div></div>`;
+ document.body.append(e);syEdDbUi();
+}
+function syEdDbUi(){
+ const l=$('#syedpk-l');if(!l||!SYEP)return;
+ const q=SYEP.q.trim().toLowerCase(),A=DB.filter(p=>(SYEP.mf=='all'||(p.mf||'미지정')==SYEP.mf)&&(!q||(p.n+' '+(p.g||'')+' '+(p.us||'')+' '+(p.mf||'')).toLowerCase().includes(q))),sh=A.slice(0,SYEP.lim);
+ l.innerHTML=sh.map(p=>`<div class="sypk-i" onclick="syEdDbPick(${DB.indexOf(p)})"><span class="sypk-ck">＋</span><span class="sypk-t"><b>${esc(p.n)}</b><small>${esc([p.g||p.us||'',+p.dft?'DFT '+p.dft+'μm':''].filter(Boolean).join(' · '))}</small></span>${p.mf?`<span class="sy-mf">${esc(p.mf)}</span>`:''}</div>`).join('')+(A.length>sh.length?`<button class="sypk-more" onclick="SYEP.lim+=60;syEdDbUi()">더 보기 (${A.length-sh.length}개 남음)</button>`:'')+(A.length?'':`<div class="sypk-e">${DB.length?'일치하는 제품이 없습니다':'제품 DB가 비어 있습니다 (DB 메뉴 → 제품 DB에서 등록)'}</div>`);
+}
+function syEdDbPick(j){
+ const p=DB[j];if(!p||!SYE||!SYEP)return;const c=SYE.e.items[SYEP.i];if(!c)return;
+ const t=SYEP.j>=0?(c.alt||[])[SYEP.j]:c;if(!t)return;
+ t.n=p.n;if((t.dft===''||t.dft==null)&&+p.dft)t.dft=+p.dft;
+ syEdDbClose();syEdUi();vib(15);
+}
+function syEdDbClose(){const e=$('#syedpk');if(e)e.remove();SYEP=null}
 function syEdHint(i){const p=P(SYE.e.items[i].n),d=$('#se-d'+i);if(d)d.placeholder=p&&+p.dft?p.dft:'DFT'}
 function syEdClose(){const e=$('#syed');if(e)e.remove();SYE=null}
 function syEdSave(){const s=SYE.e,nm=(s.name||'').trim();if(!nm)return tt('시스템 이름을 입력하세요');
@@ -12235,5 +12256,77 @@ html body #v3 .spdbp .lb-fl button.ed svg{width:17.6px;height:17.6px}
 html body #v3 .spdbp .lb-fl button.ed span{font-size:11px}
 html body #v3 .spdbp .lb-fl .n{position:absolute;top:-6px;right:-3px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#e5484d;color:#fff;font:700 9.5px/15px -apple-system,system-ui,sans-serif;font-style:normal;text-align:center;box-sizing:border-box}
 html body #v3 .spdbp .sylib{padding-bottom:calc(var(--gnh,56px) + 66px)}
+/* v482 시스템 수정 시트 — 사양 DB 최종 표준 적용: SF Pro + 산돌고딕 · Caption 10 / Body L 12 / H2 14 · 버튼 25(라운드 3) · 여백 절반 */
+html body .syed,html body .syed *{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Apple SD Gothic Neo","Sandoll Gothic Neo","산돌고딕 Neo","SandollGothicNeo","Noto Sans KR",system-ui,sans-serif!important}
+html body .syed .sypk-b{padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;border-radius:8px 8px 0 0!important;gap:4px!important}
+html body .syed .sypk-h{font-size:14px!important;line-height:20px!important}
+html body .syed .sypk-h b{font-size:14px!important;line-height:20px!important;font-weight:600!important;color:#10264f!important}
+html body .syed .sypk-x{width:25px!important;height:25px!important;min-height:25px!important;padding:0!important;border-radius:3px!important;font-size:12px!important;line-height:1!important}
+html body .syed .syed-sc{padding:1px 1px 6px!important}
+html body .syed .se-l{gap:3px!important;margin:5px 0!important;font-size:10px!important;line-height:12px!important;font-weight:600!important;color:#6a7b99!important}
+html body .syed .se-l small,html body .syed .se-g small{font-size:10px!important;font-weight:500!important;color:#6a7b99!important}
+html body .syed .se-l input{height:25px!important;min-height:25px!important;border-radius:3px!important;padding:0 6px!important;font-size:12px!important;line-height:18px!important;font-weight:500!important;color:#10264f!important}
+html body .syed .se-t{padding:5px 2px!important;font-size:12px!important;line-height:18px!important;font-weight:600!important;color:#10264f!important}
+html body .syed .se-t span{gap:4px!important}
+html body .syed .se-t svg{width:14px!important;height:14px!important}
+html body .syed .se-sw{width:25px!important;height:15px!important;border-radius:8px!important}
+html body .syed .se-sw i{top:1.5px!important;left:1.5px!important;width:12px!important;height:12px!important}
+html body .syed .se-sw.on i{left:11.5px!important}
+html body .syed .se-g{margin-top:6px!important}
+html body .syed .se-g>span{font-size:10px!important;line-height:12px!important;font-weight:600!important;color:#6a7b99!important;margin-bottom:3px!important}
+html body .syed .se-ch{gap:4px!important}
+html body .syed .se-ch button{height:25px!important;min-height:25px!important;padding:0 9px!important;border-radius:3px!important;font-size:13px!important;font-weight:600!important;line-height:1!important}
+html body .syed .se-r{grid-template-columns:54px minmax(0,1fr) 58px 25px!important;gap:3px!important;margin-bottom:4px!important}
+html body .syed .se-r select,html body .syed .se-r input{height:25px!important;min-height:25px!important;border-radius:3px!important;padding:0 5px!important;font-size:12px!important;line-height:18px!important;font-weight:500!important}
+html body .syed .se-d em{right:4px!important;font-size:10px!important}
+html body .syed .se-d input{padding-right:16px!important}
+html body .syed .se-x{width:25px!important;height:25px!important;border-radius:3px!important;font-size:11px!important;padding:0!important}
+html body .syed .se-mo{gap:4px!important;margin:-2px 0 4px!important;padding:0 2px!important;font-size:10px!important;line-height:12px!important;font-weight:600!important;color:#6a7b99!important}
+html body .syed .se-x2{gap:3px!important;margin:0 0 5px!important;padding:4px!important;border-radius:4px!important}
+html body .syed .se-x2 small{font-size:10px!important;line-height:12px!important;margin-bottom:1px!important}
+html body .syed .se-x2 input[type=text]{height:25px!important;border-radius:3px!important;padding:0 5px!important;font-size:12px!important;font-weight:500!important}
+html body .syed .se-ar{grid-template-columns:minmax(0,1fr) 58px 25px!important;gap:3px!important;margin-bottom:3px!important}
+html body .syed .se-ar input{height:25px!important;border-radius:3px!important;padding:0 5px!important;font-size:12px!important;font-weight:500!important}
+html body .syed .se-ad2{height:25px!important;border-radius:3px!important;font-size:13px!important;font-weight:600!important}
+html body .syed .se-wh{font-size:10px!important;line-height:14px!important}
+html body .syed .se-wh button{margin-left:4px!important;border-radius:3px!important;padding:1px 5px!important;font-size:10px!important}
+html body .syed .se-add{height:25px!important;min-height:25px!important;gap:3px!important;border-radius:3px!important;font-size:13px!important;font-weight:600!important}
+html body .syed .se-add svg{width:14px!important;height:14px!important}
+html body .syed .se-ph{gap:5px!important}
+html body .syed .se-pl{width:48px!important;min-height:36px!important;border-radius:4px!important}
+html body .syed .se-pl.e{height:36px!important}
+html body .syed .se-pl span{gap:1px!important}
+html body .syed .se-pl span svg{width:14px!important;height:14px!important}
+html body .syed .se-pl small{font-size:10px!important;line-height:12px!important}
+html body .syed .se-pd{height:25px!important;padding:0 9px!important;border-radius:3px!important;font-size:13px!important;font-weight:600!important}
+html body .syed .sypk-f{gap:4px!important;margin-top:2px!important}
+html body .syed .sypk-f button{height:25px!important;min-height:25px!important;border-radius:3px!important;font-size:13px!important;font-weight:600!important;line-height:1!important}
+
+html body .syed{--rc2:3px}
+html body .syed .sypk-b{padding-bottom:calc(var(--gnh,56px) + 6px)!important}
+html body .syed .syed-sc{flex:1 1 auto!important;min-height:0!important}
+html body .syed input:not(#_a):not(#_b):not(#_c),html body .syed select:not(#_a):not(#_b):not(#_c){min-height:25px!important;height:25px!important;padding-top:0!important;padding-bottom:0!important;padding-left:6px!important;padding-right:6px!important;border-radius:3px!important;font-size:12px!important;box-sizing:border-box!important}
+html body .syed .se-r select:not(#_a):not(#_b):not(#_c){padding-left:4px!important;padding-right:2px!important}
+html body .syed .se-d input:not(#_a):not(#_b):not(#_c){padding-right:16px!important}
+html body .syed .se-pl input:not(#_a):not(#_b):not(#_c){height:100%!important;min-height:0!important;padding:0!important}
+html body .syed .sypk-f button:not(#_a):not(#_b):not(#_c),html body .syed .se-ch button:not(#_a):not(#_b):not(#_c),html body .syed .se-add:not(#_a):not(#_b):not(#_c),html body .syed .se-ad2:not(#_a):not(#_b):not(#_c){height:25px!important;min-height:25px!important;font-size:13px!important;border-radius:3px!important}
+/* v482b 시스템 수정: 코트 카드(하도·중도·상도 단계 칩) · 제품 DB 불러오기 · 균형 배치 */
+html body .syed .se-l{display:block!important}
+html body .syed .se-l small{display:inline!important;margin-left:3px}
+html body .syed .se-l input{display:block!important;width:100%!important;margin-top:3px!important;box-sizing:border-box!important}
+html body .syed .se-ch{display:grid!important;grid-auto-flow:column!important;grid-auto-columns:1fr!important;gap:4px!important}
+html body .syed .se-ch button:not(#_a):not(#_b):not(#_c){width:100%!important;padding:0 2px!important}
+html body .syed .se-c{border:1px solid #d9e4f5!important;border-radius:4px!important;background:#fff!important;padding:5px!important;margin-bottom:5px!important}
+html body .syed .se-lb{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:3px!important;margin-bottom:4px!important}
+html body .syed .se-lb button{height:25px!important;min-height:25px!important;padding:0 1px!important;border:1px solid #c9d8ef!important;border-radius:3px!important;background:#fff!important;color:#2a4a80!important;font-size:12px!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important;cursor:pointer}
+html body .syed .se-lb button.on{background:#1d63d8!important;border-color:#1d63d8!important;color:#fff!important}
+html body .syed .se-r{grid-template-columns:minmax(0,1fr) 54px 58px 25px!important;margin-bottom:0!important}
+html body .syed .se-db{height:25px!important;min-height:25px!important;padding:0 2px!important;border:1px solid #1d63d8!important;border-radius:3px!important;background:#eef4ff!important;color:#0b4fd0!important;font-size:12px!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important;cursor:pointer}
+html body .syed .se-ar{grid-template-columns:minmax(0,1fr) 54px 58px 25px!important}
+html body .syed .se-hn{margin:2px 0 0 2px!important;font-size:10px!important;line-height:12px!important;color:#6a7b99!important}
+html body .syed .se-mo{margin:3px 0 0!important}
+html body .syedpk{z-index:50}
+html body .syedpk,html body .syedpk *{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Apple SD Gothic Neo","Sandoll Gothic Neo","산돌고딕 Neo","SandollGothicNeo","Noto Sans KR",system-ui,sans-serif!important}
+html body .syedpk{--rc2:3px}
 </style>
 </body></html>
