@@ -3064,7 +3064,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v478',d:'2026.10.25'};
+const APPV={v:'v479',d:'2026.10.25'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -12205,5 +12205,10 @@ html body #v3 .sylib .lb-rs{display:grid;grid-template-columns:1fr 1fr;gap:calc(
 html body #v3 .sylib .lb-rs button{height:calc(var(--ls)*60);border-radius:calc(var(--ls)*20);border:1.5px solid #e3a6a6;background:#fff;color:#b3261e;font:700 calc(var(--ls)*24)/1 "Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;cursor:pointer}
 html body #v3 .sylib .lb-rs button:disabled{opacity:.4}
 html body #v3 .sylib .lb-mn .rd{color:#b3261e}
+/* v479 사양 카드 '도장 시스템' 행: 제품명을 한 줄로 표시(길면 …) */
+html body #v3 .spdbp .lb-r{flex-wrap:nowrap!important;min-width:0}
+html body #v3 .spdbp .lb-r>span:not(.lb-d){flex:1 1 0!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;overflow-wrap:normal!important;word-break:keep-all!important}
+html body #v3 .spdbp .lb-r em,html body #v3 .spdbp .lb-r .lb-n{flex:none!important;white-space:nowrap!important}
+html body #v3 .spdbp .lb-r .lb-d{flex:none!important;white-space:nowrap!important}
 </style>
 </body></html>
