@@ -3365,6 +3365,7 @@ function syLibUi(){
   ${SYL2.mn===k?`<div class="lc-mn"><button type="button" onclick="SYL2.mn=-1;syLibCopy(${k});syLibUi()">복사</button><button type="button" onclick="SYL2.mn=-1;syLibFav(${k});syLibUi()">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button><button type="button" class="rd" onclick="SYL2.mn=-1;syLibDel(${k})">삭제</button></div>`:''}</div>`};
  b.innerHTML=R.length?R.map(card).join(''):`<div class="qhn0">${A.length?'검색 결과가 없습니다':'저장된 시스템이 없습니다<br><small>‘시스템 등록’ 또는 템플릿 가져오기로 시작하세요</small>'}</div>`;
 }
+function syLibReset(m){const A=syLibGet(),n=m=='all'?A.length:A.filter(x=>x.spec).length;if(!n)return tt('삭제할 사양이 없습니다');ask(m=='all'?'사양 DB의 <b>모든 사양 '+n+'개</b>를 삭제(초기화)할까요?<br><small>삭제 후에는 복구할 수 없습니다. 먼저 백업을 권장합니다.</small>':'<b>도장사양서에서 가져온 사양 '+n+'개</b>를 삭제할까요?<br><small>직접 등록한 사양은 유지됩니다.</small>',()=>{syLibSet(m=='all'?[]:A.filter(x=>!x.spec));SYLC={};syLibUi();try{syLibPage()}catch(e){}tt('삭제했습니다')})}
 function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{A.splice(k,1);syLibSet(A);SYLC={};syLibUi();try{syLibPage()}catch(e){}})}
 
 /* ===== v455 시스템 라이브러리 (목록·검색·필터·수정·복사·템플릿) ===== */
@@ -3418,7 +3419,7 @@ function syLibPage(){
   const show=rows.slice(0,6),more=rows.length-show.length;
   return `<div class="lb-c${x.basic?' bs':''}">${x.basic?`<div class="lb-bd">${lbIx.star}기본 사양</div>`:x.spec?`<div class="lb-bd sp">${lbIx.star}사양서</div>`:''}
   <div class="lb-th"><b class="lb-nm">${esc(x.name)}</b>${x.fav?`<span class="lb-fv">${syIx.heart}</span>`:''}<button type="button" class="lb-dt" onclick="syLibMn(${k},event)" aria-label="메뉴">${lbIx.dots}</button></div>
-  ${SYF.mn===k?`<div class="lb-mn"><button type="button" onclick="SYF.mn=-1;syEdOpen(${k})">수정</button><button type="button" onclick="SYF.mn=-1;syLibCopy(${k})">복사</button><button type="button" onclick="syLibFav(${k})">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button></div>`:''}
+  ${SYF.mn===k?`<div class="lb-mn"><button type="button" onclick="SYF.mn=-1;syEdOpen(${k})">수정</button><button type="button" onclick="SYF.mn=-1;syLibCopy(${k})">복사</button><button type="button" onclick="syLibFav(${k})">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button><button type="button" class="rd" onclick="SYF.mn=-1;syLibDel(${k})">삭제</button></div>`:''}
   <div class="lb-m"><span>${lbIx.cloud}<small>환경등급</small><b>${esc(x.env||'--')}</b></span><span>${syIx.layers}<small>기재</small><b>${esc(x.sub||'-')}</b></span><span>${syIx.shield}<small>예상 내구성</small><b>${x.life?x.life+'년':'-'}</b></span></div>
   ${x.scope?`<div class="lb-sc">${esc(x.scope)}</div>`:''}
   <div class="lb-b"><div class="lb-sy"><b>${syIx.layers}도장 시스템</b>${show.map((r,j)=>`<div class="lb-r"><u class="lb-n">${j+1}</u><em>${esc(r.lb||['하도','중도','상도'][j]||'코트')}</em><span>${esc(r.n)}${r.a?' 외 '+r.a:''}${r.d?' '+syFmtD(r.d):''}${r.c>1?'×'+r.c:''}${r.w?' (조건부)':''}</span></div>`).join('')||'<small>구성 없음</small>'}${more>0?`<div class="lb-more">외 ${more}개 코트</div>`:''}</div>
@@ -3427,7 +3428,8 @@ function syLibPage(){
  e.innerHTML=`<div class="lb-sr"><label class="lb-s"><span>${syIx.search}</span><input id="sl-q" type="search" placeholder="사양명 또는 제품명 검색" value="${esc(SYF.q)}" oninput="SYF.q=this.value;SYF.mn=-1;syLibPage()" enterkeyhint="search"></label><button type="button" class="lb-f${SYF.fo?' on':''}" onclick="syLibFo()">${syIx.filter}<span>필터</span></button></div>
  <div class="lb-pl">${pill('all','전체')}${pill('basic','기본')}${pill('spec','사양서')}${pill('fav','즐겨찾기')}${['C2','C3','C4','C5','CX'].map(c=>pill(c,c)).join('')}</div>${SYF.fo?`<div class="lb-pl s2">${pill('철재','철재',syIx.steel)}${pill('콘크리트','콘크리트',syIx.conc)}${pill('옥상','옥상',syIx.roof)}</div>`:''}
  <div class="lb-ls">${R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘사양서’에서 가져오거나 ‘시스템 등록’으로 시작하세요</small>'}</div>`}</div>
- <div class="lb-ac"><button type="button" class="p" onclick="syEdOpen(-1)">${syIx.plus}<span>시스템 등록</span></button><button type="button" class="o" onclick="syTplSheet()">${lbIx.up}<span>사양서</span></button></div>`;
+ <div class="lb-ac"><button type="button" class="p" onclick="syEdOpen(-1)">${syIx.plus}<span>시스템 등록</span></button><button type="button" class="o" onclick="syTplSheet()">${lbIx.up}<span>사양서</span></button></div>
+ ${A.length?`<div class="lb-rs"><button type="button" onclick="syLibReset('spec')" ${A.some(x=>x.spec)?'':'disabled'}>도장사양서 삭제 (${A.filter(x=>x.spec).length})</button><button type="button" onclick="syLibReset('all')">전체 초기화 (${A.length})</button></div>`:''}`;
  if(fo){const q=$('#sl-q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}}
 }
 function syLibF(k){SYF.k=SYF.k==k&&k!='all'?'all':k;syLibPage()}
@@ -12126,5 +12128,9 @@ html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb{display:flex!imp
 html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb svg{width:calc(var(--u)*38)!important;height:calc(var(--u)*38)!important}
 html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb span{font-size:inherit!important;line-height:1.1}
 html body #v3 .syp.spdbp{padding-top:calc(var(--u)*14)}
+html body #v3 .sylib .lb-rs{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--ls)*16);margin-top:calc(var(--ls)*16)}
+html body #v3 .sylib .lb-rs button{height:calc(var(--ls)*60);border-radius:calc(var(--ls)*20);border:1.5px solid #e3a6a6;background:#fff;color:#b3261e;font:700 calc(var(--ls)*24)/1 "Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;cursor:pointer}
+html body #v3 .sylib .lb-rs button:disabled{opacity:.4}
+html body #v3 .sylib .lb-mn .rd{color:#b3261e}
 </style>
 </body></html>
