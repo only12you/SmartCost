@@ -3512,7 +3512,7 @@ const SYSPEC=(()=>{
 
 /* ===== v459 도장사양서 읽기 (제조사 무관 · 휴리스틱 · 결과는 항상 검토 후 저장) ===== */
 const SYSTG_RE='하\\s*도\\s*실\\s*러|상\\s*도\\s*실\\s*러|하\\s*도|중\\s*도|상\\s*도';
-const syStgN=s=>{s=String(s||'').replace(/\s+/g,'');return s=='하도실러'||s=='상도실러'||s=='하도'||s=='중도'||s=='상도'?s:''};
+const syStgN=s=>{s=String(s||'').replace(/\s+/g,'');return s=='하도실러'||s=='중도실러'||s=='상도실러'||s=='하도'||s=='중도'||s=='상도'?s:''};
 function syNormLine(s){
  return String(s||'').replace(/[ 　]/g,' ')
   .replace(/(^|[^\d])(\d{1,3})\s*([.,])\s*(?=\d)/g,'$1$2$3')
@@ -3716,7 +3716,7 @@ function syAltClose(){const e=$('#syalt');if(e)e.remove();SYALT=null}
 function syAltGo(){if(!SYALT)return;const k=SYALT.k,s=SYALT.sel,x=syLibGet()[k];syAltClose();if(x)syApplySys(x,s,k)}
 
 /* 수정/추가 시트 (횟수·방법·희석·혼합비·재도장·이론소요·비고·대체 제품) */
-const SYLB=['하도','하도실러','중도','상도실러','상도','미지정'];
+const SYLB=['하도','하도실러','중도','중도실러','상도','상도실러','미지정'];
 function syEdOpenDraft(d,im){SYE={k:-1,imp:im,e:JSON.parse(JSON.stringify(d))};if(!SYE.e.items||!SYE.e.items.length)SYE.e.items=[{lb:'하도',n:'',dft:''}];syEdUi()}
 function syEdUi(){
  let e=$('#syed');const fresh=!e;if(fresh){e=document.createElement('div');e.id='syed';e.className='sypk syed';e.onclick=ev=>{if(ev.target===e)syEdClose()};document.body.append(e)}
@@ -3731,36 +3731,30 @@ function syEdUi(){
  <div class="se-g"><span>적용 환경 <small>(ISO 12944)</small></span><div class="se-ch">${Object.keys(SYENV).map(c=>`<button type="button" class="${s.env==c?'on':''}" onclick="SYE.e.env=SYE.e.env=='${c}'?'':'${c}';syEdUi()">${c}</button>`).join('')}</div></div>
  <div class="se-g"><span>대상</span><div class="se-ch">${SYSUB.map(c=>`<button type="button" class="${s.sub==c?'on':''}" onclick="SYE.e.sub=SYE.e.sub=='${c}'?'':'${c}';syEdUi()">${c}</button>`).join('')}</div></div>
  <label class="se-l">예상 수명 <small>(년, 선택)</small><input type="number" inputmode="decimal" value="${esc(s.life)}" placeholder="예: 12" onwheel="this.blur()" oninput="SYE.e.life=this.value"></label>
- <div class="se-g"><span>시스템 구성 <small>(제품명은 DB 제품 선택 또는 직접 입력 · DFT는 1회 도장 기준)</small></span>${s.items.map((c,i)=>{const p=P(c.n),has=c.cnt||c.mth||c.thin||c.mix||c.rc||c.th||c.nt||(c.alt&&c.alt.length)||c.when;const cur=c.lb||'미지정',pp=p;return `<div class="se-c"><div class="se-lb">${SYLB.slice(0,5).map(x=>`<button type="button" class="${cur==x?'on':''}" onclick="SYE.e.items[${i}].lb=${cur==x?"'미지정'":"'"+x+"'"};syEdUi()">${x}</button>`).join('')}</div><div class="se-r"><input type="text" list="sy-dl" value="${esc(c.n)}" placeholder="제품명 (DB에서 선택 또는 직접 입력)" oninput="SYE.e.items[${i}].n=this.value;syEdHint(${i})"><button type="button" class="se-db" onclick="syEdDb(${i})">제품 DB</button><div class="se-d"><input type="number" inputmode="decimal" id="se-d${i}" value="${esc(c.dft??'')}" placeholder="${p&&+p.dft?p.dft:'DFT'}" onwheel="this.blur()" oninput="SYE.e.items[${i}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items.splice(${i},1);syEdUi()" aria-label="삭제">✕</button></div>${pp?`<div class="se-hn">${esc([pp.mf,pp.g||pp.us].filter(Boolean).join(' · '))||'제품 DB 등록 제품'}</div>`:''}
+ <div class="se-g"><span>시스템 구성 <small>(제품명은 DB 제품 선택 또는 직접 입력 · DFT는 1회 도장 기준)</small></span>${s.items.map((c,i)=>{const p=P(c.n),has=c.cnt||c.mth||c.thin||c.mix||c.rc||c.th||c.nt||(c.alt&&c.alt.length)||c.when;const cur=c.lb||'미지정',pp=p;return `<div class="se-c"><div class="se-lb se-ch">${SYLB.slice(0,5).concat(cur=='상도실러'?['상도실러']:[]).map(x=>`<button type="button" class="${cur==x?'on':''}" onclick="SYE.e.items[${i}].lb=${cur==x?"'미지정'":"'"+x+"'"};syEdUi()">${x}</button>`).join('')}</div><div class="se-r"><input type="text" autocomplete="off" value="${esc(c.n)}" placeholder="제품명·코드 입력 (제품 DB 검색)" oninput="SYE.e.items[${i}].n=this.value;syEdHint(${i});syEdSg(${i},-1,this.value)" onfocus="syEdSg(${i},-1,this.value)" onblur="setTimeout(()=>syEdSgHide(${i},-1),250)"><div class="se-d"><input type="number" inputmode="decimal" id="se-d${i}" value="${esc(c.dft??'')}" placeholder="${p&&+p.dft?p.dft:'DFT'}" onwheel="this.blur()" oninput="SYE.e.items[${i}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items.splice(${i},1);syEdUi()" aria-label="삭제">✕</button></div><div class="se-sg" id="se-sg${i}_m" hidden></div>${pp?`<div class="se-hn">${esc([pp.mf,pp.g||pp.us].filter(Boolean).join(' · '))||'제품 DB 등록 제품'}</div>`:''}
   <button type="button" class="se-mo${has?' has':''}" onclick="SYE.e.items[${i}]._o=!SYE.e.items[${i}]._o;syEdUi()">${c._o?'▲ 접기':'▼ 상세'}<span>${[+c.cnt>1?c.cnt+'회':'',c.alt&&c.alt.length?'대체 '+c.alt.length:'',c.when?'조건부':'',c.mix?'혼합 '+esc(c.mix):'',c.thin?'희석 '+esc(c.thin):''].filter(Boolean).join(' · ')}</span></button>
   ${c._o?`<div class="se-x2">${I(i,'cnt','횟수','1')}${I(i,'mth','도장방법','B,R,S')}${I(i,'thin','희석(최대)','≤5%')}${I(i,'mix','혼합비','4:1 (부피비)')}${I(i,'rc','재도장 간격','≥24시간')}${I(i,'th','이론소요량','0.12 L/㎡')}${I(i,'pot','가사시간','20℃ 4시간')}${I(i,'svr','고형분 SVR(%)','58')}${I(i,'nt','비고','',1)}
    ${c.when?`<div class="se-wh w2">조건: ${esc(c.when.lb)} = <b>${esc(c.when.n)}</b> 선택 시에만 적용<button type="button" onclick="delete SYE.e.items[${i}].when;syEdUi()">해제</button></div>`:''}
-   <div class="se-al w2"><small>대체 제품 (택1)</small>${(c.alt||[]).map((a,j)=>`<div class="se-ar"><input type="text" list="sy-dl" value="${esc(a.n)}" placeholder="제품명" oninput="SYE.e.items[${i}].alt[${j}].n=this.value"><button type="button" class="se-db" onclick="syEdDb(${i},${j})">제품 DB</button><div class="se-d"><input type="number" inputmode="decimal" value="${esc(a.dft??'')}" placeholder="μm" onwheel="this.blur()" oninput="SYE.e.items[${i}].alt[${j}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items[${i}].alt.splice(${j},1);syEdUi()" aria-label="삭제">✕</button></div>`).join('')}<button type="button" class="se-ad2" onclick="(SYE.e.items[${i}].alt=SYE.e.items[${i}].alt||[]).push({n:'',dft:SYE.e.items[${i}].dft});syEdUi()">+ 대체 제품 추가</button></div></div>`:''}</div>`}).join('')}<button type="button" class="se-add" onclick="SYE.e.items.push({lb:SYST[Math.min(SYE.e.items.length,2)],n:'',dft:''});syEdUi()">${syIx.plus}<span>코트 추가</span></button></div>
+   <div class="se-al w2"><small>대체 제품 (택1)</small>${(c.alt||[]).map((a,j)=>`<div class="se-ar"><input type="text" autocomplete="off" value="${esc(a.n)}" placeholder="제품명·코드 입력" oninput="SYE.e.items[${i}].alt[${j}].n=this.value;syEdSg(${i},${j},this.value)" onfocus="syEdSg(${i},${j},this.value)" onblur="setTimeout(()=>syEdSgHide(${i},${j}),250)"><div class="se-d"><input type="number" inputmode="decimal" value="${esc(a.dft??'')}" placeholder="μm" onwheel="this.blur()" oninput="SYE.e.items[${i}].alt[${j}].dft=this.value"><em>μm</em></div><button type="button" class="se-x" onclick="SYE.e.items[${i}].alt.splice(${j},1);syEdUi()" aria-label="삭제">✕</button></div><div class="se-sg" id="se-sg${i}_${j}" hidden></div>`).join('')}<button type="button" class="se-ad2" onclick="(SYE.e.items[${i}].alt=SYE.e.items[${i}].alt||[]).push({n:'',dft:SYE.e.items[${i}].dft});syEdUi()">+ 대체 제품 추가</button></div></div>`:''}</div>`}).join('')}<button type="button" class="se-add" onclick="SYE.e.items.push({lb:SYST[Math.min(SYE.e.items.length,2)],n:'',dft:''});syEdUi()">${syIx.plus}<span>코트 추가</span></button></div>
  <datalist id="sy-dl">${(typeof DB!='undefined'?DB:[]).slice(0,3000).map(p=>`<option value="${esc(p.n)}">`).join('')}</datalist></div>
  <div class="sypk-f ${SYE.k<0?'one':''}">${SYE.k<0?'':'<button class="rd" onclick="syEdDel()">삭제</button>'}<button class="ok" onclick="syEdSave()">저장</button></div></div>`;
  if(sc){const q=e.querySelector('.sypk-sc');if(q)q.scrollTop=sc}
 }
-/* 시스템 수정 시트: 제품 DB에서 제품 불러오기 */
-let SYEP=null;
-function syEdDb(i,j){
- if(!SYE)return;SYEP={i,j:j==null?-1:j,q:'',mf:'all',lim:60};
- let e=$('#syedpk');if(e)e.remove();e=document.createElement('div');e.id='syedpk';e.className='sypk syedpk';e.onclick=ev=>{if(ev.target===e)syEdDbClose()};
- const mfs=[...new Set(DB.map(p=>p.mf||'미지정'))].sort(),c=SYE.e.items[i];
- e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>제품 DB에서 선택${c&&c.lb&&c.lb!='미지정'?' · '+esc(c.lb):''}</b><button class="sypk-x" onclick="syEdDbClose()" aria-label="닫기">✕</button></div><div class="sypk-r"><input id="syedpk-q" type="search" placeholder="제품명 · 제조사 · 용도 검색" oninput="SYEP.q=this.value;SYEP.lim=60;syEdDbUi()"><select onchange="SYEP.mf=this.value;SYEP.lim=60;syEdDbUi()"><option value="all">제조사 전체</option>${mfs.map(m=>`<option>${esc(m)}</option>`).join('')}</select></div><div class="sypk-sc"><div id="syedpk-l" class="sypk-l"></div></div></div>`;
- document.body.append(e);syEdDbUi();
-}
-function syEdDbUi(){
- const l=$('#syedpk-l');if(!l||!SYEP)return;
- const q=SYEP.q.trim().toLowerCase(),A=DB.filter(p=>(SYEP.mf=='all'||(p.mf||'미지정')==SYEP.mf)&&(!q||(p.n+' '+(p.g||'')+' '+(p.us||'')+' '+(p.mf||'')).toLowerCase().includes(q))),sh=A.slice(0,SYEP.lim);
- l.innerHTML=sh.map(p=>`<div class="sypk-i" onclick="syEdDbPick(${DB.indexOf(p)})"><span class="sypk-ck">＋</span><span class="sypk-t"><b>${esc(p.n)}</b><small>${esc([p.g||p.us||'',+p.dft?'DFT '+p.dft+'μm':''].filter(Boolean).join(' · '))}</small></span>${p.mf?`<span class="sy-mf">${esc(p.mf)}</span>`:''}</div>`).join('')+(A.length>sh.length?`<button class="sypk-more" onclick="SYEP.lim+=60;syEdDbUi()">더 보기 (${A.length-sh.length}개 남음)</button>`:'')+(A.length?'':`<div class="sypk-e">${DB.length?'일치하는 제품이 없습니다':'제품 DB가 비어 있습니다 (DB 메뉴 → 제품 DB에서 등록)'}</div>`);
-}
-function syEdDbPick(j){
- const p=DB[j];if(!p||!SYE||!SYEP)return;const c=SYE.e.items[SYEP.i];if(!c)return;
- const t=SYEP.j>=0?(c.alt||[])[SYEP.j]:c;if(!t)return;
- t.n=p.n;if((t.dft===''||t.dft==null)&&+p.dft)t.dft=+p.dft;
- syEdDbClose();syEdUi();vib(15);
-}
-function syEdDbClose(){const e=$('#syedpk');if(e)e.remove();SYEP=null}
+/* 시스템 수정 시트: 제품명·코드 입력 시 제품 DB 목록 표시 */
+const syEdN=v=>String(v||'').toLowerCase().replace(/[\s\-_.\/()·,]/g,'');
+function syEdSgBox(i,j){return $('#se-sg'+i+'_'+(j<0?'m':j))}
+function syEdSgHide(i,j){const b=syEdSgBox(i,j);if(b)b.hidden=true}
+function syEdSg(i,j,v){
+ const b=syEdSgBox(i,j);if(!b||!SYE)return;const q=syEdN(v);
+ if(!q){b.hidden=true;return}
+ const sc=p=>{const n=syEdN(p.n);if(n==q)return -1;if(n.startsWith(q))return 0;if(n.includes(q))return 1;const o=syEdN([p.mf,p.g,p.us,p.pre,p.nxt,p.tc].filter(Boolean).join(' '));return o.includes(q)?2:9};
+ const A=DB.map(p=>[p,sc(p)]).filter(x=>x[1]<9).sort((a,c)=>a[1]-c[1]).slice(0,8);
+ if(A.length&&A[0][1]<0&&A.length==1){b.hidden=true;return}
+ b.innerHTML=A.length?A.map(([p])=>`<div class="se-sgi" onclick="syEdSgPick(${i},${j},${DB.indexOf(p)})"><b>${esc(p.n)}</b><small>${esc([p.mf,+p.dft?p.dft+'μm':''].filter(Boolean).join(' · '))}</small></div>`).join(''):'<div class="se-sgn">제품 DB에 없는 제품 · 입력한 이름 그대로 사용</div>';
+ b.hidden=false}
+function syEdSgPick(i,j,k){
+ const p=DB[k];if(!p||!SYE)return;const c=SYE.e.items[i];if(!c)return;const t=j>=0?(c.alt||[])[j]:c;if(!t)return;
+ t.n=p.n;if((t.dft===''||t.dft==null)&&+p.dft)t.dft=+p.dft;syEdUi();vib(15)}
 function syEdHint(i){const p=P(SYE.e.items[i].n),d=$('#se-d'+i);if(d)d.placeholder=p&&+p.dft?p.dft:'DFT'}
 function syEdClose(){const e=$('#syed');if(e)e.remove();SYE=null}
 function syEdSave(){const s=SYE.e,nm=(s.name||'').trim();if(!nm)return tt('시스템 이름을 입력하세요');
@@ -12317,8 +12311,8 @@ html body .syed .se-l input{display:block!important;width:100%!important;margin-
 html body .syed .se-ch{display:grid!important;grid-auto-flow:column!important;grid-auto-columns:1fr!important;gap:4px!important}
 html body .syed .se-ch button:not(#_a):not(#_b):not(#_c){width:100%!important;padding:0 2px!important}
 html body .syed .se-c{border:1px solid #d9e4f5!important;border-radius:4px!important;background:#fff!important;padding:5px!important;margin-bottom:5px!important}
-html body .syed .se-lb{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:3px!important;margin-bottom:4px!important}
-html body .syed .se-lb button{height:25px!important;min-height:25px!important;padding:0 1px!important;border:1px solid #c9d8ef!important;border-radius:3px!important;background:#fff!important;color:#2a4a80!important;font-size:10.8px!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important;cursor:pointer}
+html body .syed .se-lb{display:grid!important;grid-auto-flow:column!important;grid-auto-columns:1fr!important;gap:4px!important;margin-bottom:4px!important}
+html body .syed .se-lb button{letter-spacing:-.3px!important;height:25px!important;min-height:25px!important;padding:0 1px!important;border:1px solid #c9d8ef!important;border-radius:3px!important;background:#fff!important;color:#2a4a80!important;font-size:11.7px!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important;cursor:pointer}
 html body .syed .se-lb button.on{background:#1d63d8!important;border-color:#1d63d8!important;color:#fff!important}
 html body .syed .se-r{grid-template-columns:minmax(0,1fr) 54px 58px 25px!important;margin-bottom:0!important}
 html body .syed .se-db{height:25px!important;min-height:25px!important;padding:0 2px!important;border:1px solid #1d63d8!important;border-radius:3px!important;background:#eef4ff!important;color:#0b4fd0!important;font-size:10.8px!important;font-weight:600!important;line-height:1!important;white-space:nowrap!important;cursor:pointer}
@@ -12328,5 +12322,16 @@ html body .syed .se-mo{margin:3px 0 0!important}
 html body .syedpk{z-index:50}
 html body .syedpk,html body .syedpk *{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Apple SD Gothic Neo","Sandoll Gothic Neo","산돌고딕 Neo","SandollGothicNeo","Noto Sans KR",system-ui,sans-serif!important}
 html body .syedpk{--rc2:3px}
+/* v482e 제품 입력란 — 제품명·코드 입력 시 제품 DB 목록(제품 DB 버튼 제거) */
+html body .syed .se-r{grid-template-columns:minmax(0,1fr) 58px 25px!important}
+html body .syed .se-ar{grid-template-columns:minmax(0,1fr) 58px 25px!important}
+html body .syed .se-sg{margin:2px 0 0!important;border:1px solid #9ec2f2!important;border-radius:3px!important;background:#fff!important;max-height:170px!important;overflow:auto!important;-webkit-overflow-scrolling:touch}
+html body .syed .se-sg[hidden]{display:none!important}
+html body .syed .se-sgi{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;min-height:25px!important;padding:2px 6px!important;border-bottom:1px solid #eef2f9!important;cursor:pointer}
+html body .syed .se-sgi:last-child{border-bottom:0!important}
+html body .syed .se-sgi:active{background:#eef4ff!important}
+html body .syed .se-sgi b{flex:1!important;min-width:0!important;font-size:10.8px!important;line-height:14px!important;font-weight:600!important;color:#10264f!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+html body .syed .se-sgi small{flex:none!important;font-size:9px!important;line-height:12px!important;color:#6a7b99!important}
+html body .syed .se-sgn{padding:5px 6px!important;font-size:9px!important;line-height:12px!important;color:#6a7b99!important}
 </style>
 </body></html>
