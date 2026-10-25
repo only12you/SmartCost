@@ -3172,8 +3172,8 @@ function syRender(){
   }
  h+=`</div></div>`;
  h+=`<div id="syres"></div><div class="sy-ft"><button type="button" onclick="syDel()">마지막 제품 삭제</button><button type="button" onclick="syClr()">전체 초기화</button></div>`;
- e.innerHTML=`<div class="syp"><div id="sylib" class="sylib"></div>${h}</div>`;
- syLibPage();syCalc();syAh();
+ e.innerHTML=`<div class="syp">${h}</div>`;
+ syCalc();syAh();
 }
 
 function syBasis(act){
