@@ -2398,8 +2398,8 @@ const PC=n=>P(n)||{n:n||'직접 입력 제품',g:'',d:'',svr:0,dft:0,mk:18,pk:18
 try{if(LS.sfx!='1'){let n=0;DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+D.mk>0&&(+p.pk!==+D.pk||+p.mk!==+D.mk)){p.pk=D.pk;p.mk=D.mk;if(D.un)p.un=D.un;n++}});if(n)sv();LS.sfx='1'}}catch(e){}
 try{if(LS.thfx!='1'){DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+p.dft>=1000&&+D.dft>0&&+D.dft<1000)p.dft=D.dft;if(+p.svr&&+p.dft)p.th=+(p.svr*10/p.dft).toFixed(4)});sv();LS.thfx='1'}}catch(e){}
 function toTop(){const f=()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'});document.documentElement.scrollTop=0;document.body.scrollTop=0;document.querySelectorAll('#es .zf,#es .zbd,#es .zsc,#vh,#app,.pn').forEach(e=>{e.scrollTop=0})}catch(e){}};f();requestAnimationFrame(f);setTimeout(f,90);setTimeout(f,300)}
-const T=n=>{$('#vh').hidden=n!=2;$('#app').hidden=n==2;$('#v0').hidden=n!=0;$('#v1').hidden=n!=1;$('#v3').hidden=n!=3;$('#v4').hidden=n!=4;$('#v5').hidden=n!=5;$('#v7').hidden=n!=7;{const e=$('#v8');if(e)e.hidden=n!=8}{const e=$('#v9');if(e)e.hidden=n!=9}$('#bb').hidden=n!=0;$('#bb3').hidden=n!=3;$('#ttl').textContent=pqTitle(n);if(n==1)dbl();if(n==3)syRender();if(n==2)dashRender();if(n==4)tpRender();if(n==5)csvRender();if(n==7)admRender();if(n==8)fmRender();document.body.dataset.pg=n;if(n==9&&window.LCCX)LCCX.R();toTop();const sa=$('#saw');if(sa)sa.hidden=n!=0;hdr(n);hh();setTimeout(()=>fit(document),0);try{sessionStorage.vw=n}catch(e){}if(typeof gnav=='function')gnav(n)};
-function hdr(n){const d=n==1;$('#hs1').textContent=d?'Technical Data Sheet':'CoatCost';$('#hs2').textContent=d?'Data Sheet DB':n==3?'Coating System':pqHs2(n)||'Unit Price Table';$('#tb0').classList.toggle('on',n==0||n==2);$('#tb1').classList.toggle('on',d);$('#tb3').classList.toggle('on',n==3);document.body.classList.toggle('cp',n==0);if(n==1)setTimeout(()=>{try{mfTds()}catch(e){}},400)}
+const T=n=>{$('#vh').hidden=n!=2;$('#app').hidden=n==2;$('#v0').hidden=n!=0;$('#v1').hidden=n!=1;$('#v3').hidden=n!=3;$('#v4').hidden=n!=4;$('#v5').hidden=n!=5;$('#v7').hidden=n!=7;{const e=$('#v8');if(e)e.hidden=n!=8}{const e=$('#v9');if(e)e.hidden=n!=9}$('#bb').hidden=n!=0;$('#bb3').hidden=n!=3;$('#ttl').textContent=pqTitle(n);if(n==1)dbl();if(n==3){if(!window.SYK)window.SYM='sys';syRender()}if(n==2)dashRender();if(n==4)tpRender();if(n==5)csvRender();if(n==7)admRender();if(n==8)fmRender();document.body.dataset.pg=n;if(n==9&&window.LCCX)LCCX.R();toTop();const sa=$('#saw');if(sa)sa.hidden=n!=0;hdr(n);hh();setTimeout(()=>fit(document),0);try{sessionStorage.vw=n}catch(e){}if(typeof gnav=='function')gnav(n)};
+function hdr(n){const d=n==1;$('#hs1').textContent=d?'Technical Data Sheet':'CoatCost';$('#hs2').textContent=d?'Data Sheet DB':n==3?(window.SYM=='db'?'Specification DB':'Coating System'):pqHs2(n)||'Unit Price Table';$('#tb0').classList.toggle('on',n==0||n==2);$('#tb1').classList.toggle('on',d);$('#tb3').classList.toggle('on',n==3);document.body.classList.toggle('cp',n==0);if(n==1)setTimeout(()=>{try{mfTds()}catch(e){}},400)}
 try{$('#hxbg').src=$('#vh .hbg').src}catch(e){}
 
 const dl=(b,n)=>{const touch=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),ios=/iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
@@ -3064,7 +3064,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v475',d:'2026.10.25'};
+const APPV={v:'v476',d:'2026.10.25'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3149,9 +3149,10 @@ const syVal=(c,p,k)=>{const v=c[k];if(v!==undefined&&v!==''&&v!==null)return v;c
 window.SYED=window.SYED||{};function syEd(gi){window.SYED[gi]=!window.SYED[gi];syRender()}
 function syRender(){
  const e=$('#v3');if(!e)return;
+ if(window.SYM=='db'){e.innerHTML='<div class="syp spdbp"><div id="sylib" class="sylib"></div></div>';syLibPage();{const b=$('#bb3');if(b)b.hidden=true}return}
  const L=SY.layers,labs=syLb(),act=SY.act;
- let h=(window.LCCEDIT?'<div class="sy-card" style="background:#fff6dc;border:1px solid #efd88f"><div class="sy-hd"><div class="sy-tt"><b>LCC 사양 수정 중</b><small>코트를 수정한 뒤 시스템의 ‘저장’을 누르면 LCC에 반영됩니다</small></div><div class="sy-hbs"><button class="sy-hb b" onclick="window.LCCEDIT=null;navGo(\'lcc\')">LCC로</button></div></div></div>':'')+`<div class="sy-card sy-ar"><div class="sy-hd"><span class="sy-ic">${syIc.area}</span><div class="sy-tt"><b>면적을 입력하세요</b><small>도장할 면적을 입력하면 자동으로 계산됩니다.</small></div></div><div class="sy-iw2"><input type="number" inputmode="decimal" id="sy_ar" placeholder="면적을 입력하세요." value="${esc(SY.area)}" onwheel="this.blur()" oninput="syArea(this.value)"><span class="sy-u2">m²<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></div></div>`;
- h+=`<div class="sy-card sy-main"><div class="sy-hd"><span class="sy-ic">${syIc.roll}</span><div class="sy-tt"><b>도장 시스템</b><small>${L.length?(SY.groups.length+'시스템 '+L.length+'제품'):'미선택'}</small></div><button type="button" class="sy-pick" onclick="syLibSheet()">시스템 선택<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><div class="sy-hbs"><button class="sy-hb a" onclick="syNew()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span>시스템+</span></button><button class="sy-hb b" onclick="syChg()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5L16 9.5"/></svg><span>변경</span></button><button class="sy-hb c" onclick="syLibSheet()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg><span>저장S</span></button></div><div class="sy-bd">`;
+ let h=(window.LCCEDIT?'<div class="sy-card" style="background:#fff6dc;border:1px solid #efd88f"><div class="sy-hd"><div class="sy-tt"><b>LCC 사양 수정 중</b><small>코트를 수정한 뒤 시스템의 ‘저장’을 누르면 LCC에 반영됩니다</small></div><div class="sy-hbs"><button class="sy-hb b" onclick="window.LCCEDIT=null;navGo(\'lcc\')">LCC로</button></div></div></div>':'');const ar=`<div class="sy-card sy-ar"><div class="sy-hd"><span class="sy-ic">${syIc.area}</span><div class="sy-tt"><b>면적을 입력하세요</b><small>도장할 면적을 입력하면 자동으로 계산됩니다.</small></div></div><div class="sy-iw2"><input type="number" inputmode="decimal" id="sy_ar" placeholder="면적을 입력하세요." value="${esc(SY.area)}" onwheel="this.blur()" oninput="syArea(this.value)"><span class="sy-u2">m²<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></div></div>`;
+ h+=`<div class="sy-card sy-main"><div class="sy-hd"><span class="sy-ic">${syIc.roll}</span><div class="sy-tt"><b>도장 시스템</b><small>${L.length?(SY.groups.length+'시스템 '+L.length+'제품'):'미선택'}</small></div></div><div class="sy-hbs sy-hb4"><button type="button" class="sy-hb a" onclick="syNew()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span>사용자사양</span></button><button type="button" class="sy-hb b" onclick="navGo('spdb')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg><span>DB 열기</span></button><button type="button" class="sy-hb c" onclick="syChg()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg><span>사양수정</span></button><button type="button" class="sy-hb d" onclick="syImpPick()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.7 17.2a1.7 1.7 0 0 1-2.4-2.4l7.6-7.6"/></svg><span>사양첨부</span></button></div><div class="sy-bd">`;
  if(!L.length){
   h+=`<div class="sy-empty">${syIc.layers}<div><b>도장 시스템이 비어 있습니다</b><small>먼저 ‘시스템 추가’로 시스템을 만들어 목록에 저장하고, ‘저장된 시스템’에서 불러와 지정하세요.</small></div></div>`;
  }else{
@@ -3169,10 +3170,10 @@ function syRender(){
    h+=lbForm('g',gi,SY.groups[gi]||{})+`</div>`;
   });
   }
- h+=`</div></div>`;
+ h+=`</div></div>`+ar;
  h+=`<div id="syres"></div><div class="sy-ft"><button type="button" onclick="syDel()">마지막 제품 삭제</button><button type="button" onclick="syClr()">전체 초기화</button></div>`;
- e.innerHTML=`<div class="syp"><div id="sylib" class="sylib"></div>${h}</div>`;
- syLibPage();syCalc();syAh();
+ e.innerHTML=`<div class="syp">${h}</div>`;
+ syCalc();syAh();
 }
 
 function syBasis(act){
@@ -3685,6 +3686,7 @@ function syApplySys(x,sel,k){
  const its=x.items||[],R=its.map((it,i)=>{const c=sel[i]|0,a=c>0&&it.alt&&it.alt[c-1];return{it,i,d:a?Object.assign({lb:it.lb,cnt:it.cnt,mth:it.mth},a):it}});
  const keep=R.filter(r=>{const w=r.it.when;if(!w)return true;const b=R.find(q=>!q.it.when&&q.it.lb==w.lb);return !b||b.d.n==w.n});
  if(!keep.length)return tt('추가할 제품이 없습니다');
+ if(window.SYM=='db'){window.SYM='sys';try{navGo('sys')}catch(e){T(3)}}
  let nm=x.name,n=1;while(SY.groups.some(g=>g.name==nm)){n++;nm=x.name+' ('+n+')'}
  const gi=SY.groups.length;SY.groups.push({name:nm,area:'',c:0});let miss=0;
  keep.forEach(({d})=>{const db=P(d.n),o={n:d.n,lb:d.lb||'',g:gi};if(!db)miss++;
@@ -3745,13 +3747,14 @@ function syEdSave(){const s=SYE.e,nm=(s.name||'').trim();if(!nm)return tt('시�
 
 /* 사양서 파일 읽기 (PDF·텍스트·JSON) → 초안 목록 → 확인 후 추가 */
 let SYIMP=null;
-function syImpPick(){let i=$('#syimp-f');if(i)i.remove();i=document.createElement('input');i.type='file';i.id='syimp-f';i.accept='.pdf,.txt,.md,.csv,.json,application/pdf,text/plain,application/json';i.style.display='none';i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)syImpFile(f)};document.body.append(i);i.click()}
+function syImpPick(){let i=$('#syimp-f');if(i)i.remove();i=document.createElement('input');i.type='file';i.id='syimp-f';i.accept='.pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.webp,application/pdf,text/plain,application/json,image/*';i.style.display='none';i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)syImpFile(f)};document.body.append(i);i.click()}
 async function syImpFile(f){
  tt('사양서를 읽는 중…<br><small>'+esc(f.name)+'</small>');let list=[];
  try{
   if(/\.json$/i.test(f.name)){const j=JSON.parse(await f.text()),a=Array.isArray(j)?j:(j.systems||[j]);list=a.filter(x=>x&&Array.isArray(x.items)&&x.items.length).map(x=>Object.assign({name:'시스템',spec:1,src:f.name},x))}
   else{let L=[];
    if(/\.pdf$/i.test(f.name)||f.type=='application/pdf'){L=await pdfText(f,30);if(L.filter(x=>x&&x.length>3).length<8){try{L=await ocrLines(f,m=>tt(m))}catch(e){}}}
+   else if(/^image\//.test(f.type)||/\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name))L=await ocrImg(f,m=>tt(m));
    else L=(await f.text()).split(/\r?\n/);
    list=syParseSpec(L,f.name)}
  }catch(e){console.error(e);return tt('사양서를 읽지 못했습니다<br><small>'+esc(e.message||e)+'</small>')}
@@ -3759,8 +3762,9 @@ async function syImpFile(f){
  SYIMP={file:f.name,list};syImpUi()}
 function syImpUi(){let e=$('#syimp');const fresh=!e;if(fresh){e=document.createElement('div');e.id='syimp';e.className='sypk';e.onclick=ev=>{if(ev.target===e)syImpClose()};document.body.append(e)}
  const L=SYIMP.list,sc=fresh?0:(e.querySelector('.sypk-sc')||{}).scrollTop||0,todo=L.filter(x=>!x.added).length;
- e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>사양서에서 읽은 시스템</b><span>${L.length}개</span><button class="sypk-x" onclick="syImpClose()" aria-label="닫기">✕</button></div><div class="sypk-hint"><b>${esc(SYIMP.file)}</b><br>자동으로 읽은 <b>초안</b>입니다. 제품명·두께·횟수를 원본과 대조한 뒤 추가하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.</div><div class="sypk-sc"><div class="syl-ls tp">${L.map((t,i)=>`<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(syTot(t))}</span></div>${t.scope?`<div class="syl-s">${esc(t.scope)}</div>`:''}<div class="syl-d w">${t.items.map(syItTxt).join(' · ')}</div><div class="syl-bt two"><button class="ed" ${t.added?'disabled':''} onclick="syImpEdit(${i})">수정 후 추가</button><button class="ok" ${t.added?'disabled':''} onclick="syImpAdd(${i})">${t.added?'추가됨':'추가'}</button></div></div>`).join('')}</div></div><div class="sypk-f"><button onclick="syImpClose()">닫기</button><button class="ok" ${todo?'':'disabled'} onclick="syImpAll()">전체 추가${todo?' ('+todo+')':''}</button></div></div>`;
+ e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>사양서에서 읽은 시스템</b><span>${L.length}개</span><button class="sypk-x" onclick="syImpClose()" aria-label="닫기">✕</button></div><div class="sypk-hint"><b>${esc(SYIMP.file)}</b><br>자동으로 읽은 <b>초안</b>입니다. 제품명·두께·횟수를 원본과 대조한 뒤 추가하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.</div><div class="sypk-sc"><div class="syl-ls tp">${L.map((t,i)=>`<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(syTot(t))}</span></div>${t.scope?`<div class="syl-s">${esc(t.scope)}</div>`:''}<div class="syl-d w">${t.items.map(syItTxt).join(' · ')}</div><div class="syl-bt two"><button class="ed" ${t.added?'disabled':''} onclick="syImpEdit(${i})">수정 후 추가</button><button class="ok" ${t.added?'disabled':''} onclick="syImpAdd(${i})">${t.added?'추가됨':'추가'}</button></div><div class="syl-bt"><button class="ok" onclick="syImpUse(${i})">도장 시스템에 바로 적용</button></div></div>`).join('')}</div></div><div class="sypk-f"><button onclick="syImpClose()">닫기</button><button class="ok" ${todo?'':'disabled'} onclick="syImpAll()">전체 추가${todo?' ('+todo+')':''}</button></div></div>`;
  if(sc){const q=e.querySelector('.sypk-sc');if(q)q.scrollTop=sc}}
+function syImpUse(i){const t=SYIMP.list[i];if(!t)return;if(!t.added){syAddSys(syImpClean(t));t.added=1}syImpClose();syLibPage();syLibUi();syLibUse(0)}
 function syImpClose(){const e=$('#syimp');if(e)e.remove()}
 function syImpClean(t){const c=JSON.parse(JSON.stringify(t));delete c.added;c.items=(c.items||[]).filter(i=>(i.n||'').trim());c.src=c.src||SYIMP.file;c.spec=1;return c}
 function syImpAdd(i){const t=SYIMP.list[i];if(!t||t.added)return;syAddSys(syImpClean(t));t.added=1;syLibPage();syLibUi();syImpUi();tt('추가했습니다')}
@@ -4077,7 +4081,7 @@ function pqRcAdd(t,n){const a=pqRc().filter(x=>!(x.t==t&&x.n==n));a.unshift({t,n
 
 /* 하단 메뉴 */
 const NAVI=n=>({2:0,0:1,3:2,5:4,4:4,1:4,7:4,8:4,9:4}[n]??-1);
-const pqTitle=n=>({0:'일위대가표',1:'데이터 시트',2:'일위대가표',3:'도장 시스템',4:'TDS 등록',5:'CSV · 백업',7:'관리자 모드',8:'실란트 소요량 · 메쉬 소요량',9:'LCC'}[n]||'일위대가표');
+const pqTitle=n=>({0:'일위대가표',1:'데이터 시트',2:'일위대가표',3:(window.SYM=='db'?'사양 DB':'도장 시스템'),4:'TDS 등록',5:'CSV · 백업',7:'관리자 모드',8:'실란트 소요량 · 메쉬 소요량',9:'LCC'}[n]||'일위대가표');
 const pqHs2=n=>({4:'TDS Registration',5:'CSV · Backup',7:'Admin Console',8:'Sealant · Mesh Quantity',9:'Life Cycle Cost'}[n]);
 
 /* 대시보드 */
@@ -9401,6 +9405,7 @@ hq:'<rect x="3.5" y="9" width="7" height="12" rx="1"/><rect x="10.5" y="3" width
 lcc:'<circle cx="12" cy="12" r="9"/><path d="M7 9.5l2 6 3-5 3 5 2-6M6.5 12.5h11"/>',
 area:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8.5 15.5l7-7M11.5 8.5h4v4M12.5 15.5h-4v-4"/>',
 db:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
+spdb:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 18l9 5 9-5" opacity=".55"/>',
 aptdb:'<rect x="3.5" y="9" width="7" height="12" rx="1"/><rect x="10.5" y="3" width="10" height="18" rx="1"/><path d="M6 13h2M6 17h2M13.5 7h4M13.5 11h4M13.5 15h4"/>',
 pum:'<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c0-3.6 3-6 6.5-6"/><circle cx="17.5" cy="16.5" r="2"/><path d="M17.5 12.7v1.1M17.5 19.2v1.1M13.7 16.5h1.1M20.2 16.5h1.1"/>',
 backup:'<path d="M7 18a4 4 0 0 1-.6-7.9A5.5 5.5 0 0 1 17 8.7 4.7 4.7 0 0 1 17.5 18z"/>',
@@ -9424,7 +9429,7 @@ const ART={a1:'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAw
 /* 메뉴 정의: page=canonical 페이지 id(이동 기록용), sheet=시트/팝업(기록에 남기지 않음) */
 const IT={
 calc:{n:'일위대가표',k:'일위대가표 일위대가 계산 소요량 도료 산출 단가',page:'calc',o:()=>T(0)},
-sys:{n:'도장시스템',k:'도장시스템 시스템 도막 코팅 coating',page:'sys',o:()=>T(3)},
+sys:{n:'도장시스템',k:'도장시스템 시스템 도막 코팅 coating',page:'sys',o:()=>{window.SYM='sys';T(3)}},
 quote:{n:'견적서',k:'견적서 견적 견적출력 quotation',page:'quote',ov:1,o:()=>pqQuote()},
 fill:{n:'실란트',k:'실란트 실리콘 퍼티 충진 sealant 코킹',page:'fill',o:()=>{T(8);fmTab('fill')}},
 mesh:{n:'메쉬',k:'메쉬 메시 mesh 유리섬유 내화 형강',page:'mesh',o:()=>{T(8);fmTab('mesh')}},
@@ -9432,6 +9437,7 @@ hq:{n:'공동주택',k:'공동주택 공동 아파트 단지별 단지견적 세
 lcc:{n:'LCC',k:'lcc 생애주기 경제성 수명 라이프사이클 분석 사양',page:'lcc',o:()=>T(9)},
 area:{n:'면적',k:'면적 도면 도장위치 평면 외벽면적',page:'area',ov:1,o:()=>apOpen()},
 db:{n:'제품 DB',k:'제품db 제품 tds 데이터시트 기술자료 도료',page:'db',o:()=>T(1)},
+spdb:{n:'사양 DB',k:'사양db 사양 도장사양 시스템 사양서 라이브러리 사용자사양',page:'spdb',o:()=>{window.SYM='db';window.SYK=1;try{T(3)}finally{window.SYK=0}}},
 aptdb:{n:'단지 DB',k:'단지db 단지 아파트db 기본정보 kapt k-apt',page:'aptdb',ov:1,o:()=>aptDbMgr()},
 pum:{n:'품셈(노무비설정)',k:'품셈 노무비 노임 노임단가 할증 생산성 인건비',sheet:1,o:()=>lbSheet()},
 backup:{n:'백업·복원',k:'백업 복원 csv json 내보내기 불러오기',page:'csv',o:()=>goCsv('set')},
@@ -9446,10 +9452,10 @@ menu:{n:'전체 메뉴',k:'전체메뉴 메뉴',page:'menu',o:()=>openMenu()}
 const SEC=[
 {id:'calc',t:'산출',d:'공사비 산출 및 견적에 필요한 메뉴입니다.',c:'#1f6fe5',c2:'#4ea0ff',cb:'#e6f0ff',bg:'#f1f7ff',bd:'#d3e3fa',art:'a1',ic:'s_calc',it:['calc','sys','quote','fill','mesh']},
 {id:'ana',t:'도장 분석',d:'도장 사양, 수명, 경제성 분석에 필요한 메뉴입니다.',c:'#16a06a',c2:'#4cc596',cb:'#e2f6ed',bg:'#f0faf6',bd:'#cfeadf',art:'a2',ic:'s_ana',it:['hq','lcc','area']},
-{id:'db',t:'DB',d:'기준정보를 관리하는 메뉴입니다.',c:'#6a4ad6',c2:'#9a7df0',cb:'#ece7fb',bg:'#f5f2fe',bd:'#ded6f8',art:'a3',ic:'s_db',it:['db','aptdb','pum']},
+{id:'db',t:'DB',d:'기준정보를 관리하는 메뉴입니다.',c:'#6a4ad6',c2:'#9a7df0',cb:'#ece7fb',bg:'#f5f2fe',bd:'#ded6f8',art:'a3',ic:'s_db',it:['db','aptdb','spdb','pum']},
 {id:'adm',t:'관리',d:'프로그램 유지관리 및 안내 메뉴입니다.',c:'#ef7418',c2:'#f9a24e',cb:'#fdeddd',bg:'#fff6ee',bd:'#fadcc3',art:'a4',ic:'s_adm',it:['backup','settings','help','legal','info']}
 ];
-const CAT={calc:'calc',sys:'calc',quote:'calc',fill:'calc',mesh:'calc',hq:'ana',lcc:'ana',area:'ana',db:'db',aptdb:'db',tds:'db',csv:'adm',adm:'adm'};
+const CAT={calc:'calc',sys:'calc',quote:'calc',fill:'calc',mesh:'calc',hq:'ana',lcc:'ana',area:'ana',db:'db',aptdb:'db',spdb:'db',tds:'db',csv:'adm',adm:'adm'};
 const NAV=window.NAV={cur:'home',stack:[],going:0,rc:[]};
 try{NAV.rc=JSON.parse(localStorage.getItem('nav397:rc')||'[]').filter(i=>IT[i])}catch(e){}
 const secOf=id=>SEC.find(s=>s.it.includes(id))||SEC[0];
@@ -9461,7 +9467,7 @@ function track(pid){if(!pid)return;if(NAV.cur!==pid){if(!NAV.going){NAV.stack.pu
 /* ---- v397: 실제 화면 기준으로 현재 위치를 판별 (오버레이를 다른 경로로 열거나 닫아도 뒤로·홈이 항상 동작) ---- */
 const OVL=[['es','quote'],['aptdb','aptdb'],['ap','area'],['hq','hq']];
 function ovs(){return OVL.filter(([id])=>document.getElementById(id)).map(x=>x[1])}
-function baseLive(){const v=document.getElementById('vmenu');if(v&&!v.hidden)return'menu';const pg=+document.body.dataset.pg;if(pg===8)return(window.FM&&FM.tab==='mesh')?'mesh':'fill';return({0:'calc',1:'db',2:'home',3:'sys',4:'tds',5:'csv',7:'adm',9:'lcc'})[pg]||'home'}
+function baseLive(){const v=document.getElementById('vmenu');if(v&&!v.hidden)return'menu';const pg=+document.body.dataset.pg;if(pg===8)return(window.FM&&FM.tab==='mesh')?'mesh':'fill';return({0:'calc',1:'db',2:'home',3:(window.SYM=='db'?'spdb':'sys'),4:'tds',5:'csv',7:'adm',9:'lcc'})[pg]||'home'}
 function owned(){const o=OVL.find(x=>x[1]===NAV.cur);return o?o[0]:null}
 function stray(){const own=owned();return OVL.filter(([id])=>id!==own&&document.getElementById(id)).map(x=>x[0])}
 function here(it){if(it.sheet||!it.page)return false;const pid=it.page;if(pid!==NAV.cur)return false;const o=OVL.find(x=>x[1]===pid);if(o)return!!document.getElementById(o[0])&&!stray().length;return baseLive()===pid&&!ovs().length}
@@ -12112,5 +12118,13 @@ html body .sylb .lc-mn{bottom:52px}
 .se-pl span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#6b86b8}
 .se-pl span svg{width:24px;height:24px;stroke-width:1.6}.se-pl small{font-size:10.5px;font-weight:700}
 .se-pd{height:32px;padding:0 12px;border:1px solid #f0b4bd;border-radius:10px;background:#fff0f2;color:#c43d52;font-size:12px;font-weight:700}
+</style>
+<style id="spcss">
+/* v476 도장 시스템 4버튼(사용자사양·DB 열기·사양수정·사양첨부) 동일 크기 한 줄 */
+html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:calc(var(--u)*10)!important;margin:calc(var(--u)*18) 0 calc(var(--u)*20)!important}
+html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:calc(var(--u)*8)!important;width:100%!important;min-width:0!important;max-width:none!important;height:calc(var(--u)*118)!important;padding:0 2px!important;border-radius:calc(var(--u)*18)!important;font-size:calc(var(--u)*23)!important;font-weight:800!important;white-space:nowrap}
+html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb svg{width:calc(var(--u)*38)!important;height:calc(var(--u)*38)!important}
+html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb span{font-size:inherit!important;line-height:1.1}
+html body #v3 .syp.spdbp{padding-top:calc(var(--u)*14)}
 </style>
 </body></html>
