@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v480',d:'2026.10.25'};
+const APPV={v:'v481',d:'2026.10.25'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3369,7 +3369,15 @@ function syLibUi(){
 }
 const syNU=t=>{const m=String(t).match(/^([\d.,]+)(.*)$/);return m?`<b class="nu">${m[1]}</b><i class="un">${m[2]}</i>`:t};
 let SYSEL={};
-function syLibFl(){const n=Object.keys(SYSEL).length,N=n?` (${n})`:'';return`<button type="button" class="p" onclick="syLibUseSel()">불러오기${N}</button><button type="button" onclick="syImpPick()">PDF등록</button><button type="button" onclick="syEdOpen(-1)">사용자등록</button><button type="button" class="rd" onclick="syLibDelSel()">삭제${N}</button><button type="button" class="rd" onclick="syLibReset('all')">초기화</button>`}
+function syLibFl(){const n=Object.keys(SYSEL).length,B=n?`<i class="n">${n}</i>`:'';
+const b=(c,fn,lab,d,badge)=>`<button type="button" class="${c}" onclick="${fn}" aria-label="${lab}" title="${lab}">${SV(d)}<span>${lab}</span>${badge||''}</button>`;
+return b('p','syLibUseSel()','불러오기','<path d="M12 4v11M7.5 11 12 15.5 16.5 11M5 20h14"/>',B)
++b('','syImpPick()','PDF등록','<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M12 18v-6M9.5 14.5 12 12l2.5 2.5"/>')
++b('','syEdOpen(-1)','사용자등록','<circle cx="10" cy="8" r="3.4"/><path d="M3.5 20c.5-3.6 3.2-5.8 6.5-5.8s6 2.2 6.5 5.8M19 8v6M16 11h6"/>')
++b('ed','syLibEditSel()','사양수정','<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>')
++b('rd','syLibDelSel()','삭제','<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',B)
++b('rd',"syLibReset('all')",'초기화','<path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v5h5"/>')}
+function syLibEditSel(){const A=syLibGet(),ix=A.map((x,i)=>SYSEL[x.name]?i:-1).filter(i=>i>=0);if(!ix.length)return tt('수정할 사양을 체크하세요');if(ix.length>1)return tt('수정은 사양 1개만 체크하세요');syEdOpen(ix[0])}
 function syLibSel(k,on,el){const x=syLibGet()[k];if(!x)return;if(on)SYSEL[x.name]=1;else delete SYSEL[x.name];const c=el&&el.closest('.lb-c');if(c)c.classList.toggle('sel',!!on);const f=$('#lb-fl');if(f)f.innerHTML=syLibFl()}
 function syLibUseSel(){const A=syLibGet(),ix=A.map((x,i)=>SYSEL[x.name]?i:-1).filter(i=>i>=0);if(!ix.length)return tt('불러올 사양을 체크하세요');SYSEL={};if(ix.length==1)return syLibUse(ix[0]);ix.forEach(i=>syApplySys(A[i],{},i));tt(ix.length+'개 사양을 불러왔습니다')}
 function syLibDelSel(){const A=syLibGet(),ix=A.filter(x=>SYSEL[x.name]);if(!ix.length)return tt('삭제할 사양을 체크하세요');ask('체크한 <b>사양 '+ix.length+'개</b>를 삭제할까요?',()=>{syLibSet(A.filter(x=>!SYSEL[x.name]));SYSEL={};SYLC={};syLibUi();try{syLibPage()}catch(e){}tt('삭제했습니다')})}
@@ -12217,5 +12225,15 @@ html body #v3 .spdbp .lb-r .lb-d{flex:none!important;white-space:nowrap!importan
 html body .sypk-v2 .syl-bt.three{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
 html body .sypk-v2 .syl-bt.three button{width:100%!important;min-width:0!important;flex:none!important;padding:0 4px!important;white-space:nowrap!important;height:32px!important;font-size:12.5px!important}
 #tta small{display:block;font-size:12px;opacity:.82;margin-top:2px}
+/* v481 사양 DB 하단 공통 버튼: 아이콘 표시 · 사양수정 추가(+10%) */
+html body #v3 .spdbp .lb-fl{grid-template-columns:1fr 1fr 1fr 1.1fr 1fr 1fr!important;align-items:center;gap:4px;padding:5px}
+html body #v3 .spdbp .lb-fl button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:38px;padding:0 1px;border-radius:5px;font-size:10px!important;line-height:1.1;font-weight:600;white-space:nowrap}
+html body #v3 .spdbp .lb-fl button svg{width:16px;height:16px;flex:none}
+html body #v3 .spdbp .lb-fl button span{font-size:10px;line-height:1.1}
+html body #v3 .spdbp .lb-fl button.ed{height:42px;font-size:11px!important;background:#eef4ff;border-color:#1f6fe5;color:#0b4fd0}
+html body #v3 .spdbp .lb-fl button.ed svg{width:17.6px;height:17.6px}
+html body #v3 .spdbp .lb-fl button.ed span{font-size:11px}
+html body #v3 .spdbp .lb-fl .n{position:absolute;top:-6px;right:-3px;min-width:15px;height:15px;padding:0 3px;border-radius:8px;background:#e5484d;color:#fff;font:700 9.5px/15px -apple-system,system-ui,sans-serif;font-style:normal;text-align:center;box-sizing:border-box}
+html body #v3 .spdbp .sylib{padding-bottom:calc(var(--gnh,56px) + 66px)}
 </style>
 </body></html>
