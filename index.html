@@ -2557,6 +2557,8 @@ function sgst(i,q){const b=$('#cb'+i);if(!b)return;q=(q||'').trim().toLowerCase(
 const pick=(i,j)=>U(i,'n',DB[j].n),chg=(i,v)=>{if(!v||P(v))U(i,'n',v)};
 let UNDO=null,TTM;
 function tt(m){pop(m)}
+function tta(m,ms){let e=document.getElementById('tta');if(!e){e=document.createElement('div');e.id='tta';e.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2147483600;max-width:84%;padding:14px 22px;border-radius:14px;background:rgba(16,38,79,.94);color:#fff;font-size:14px;line-height:1.5;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.3);pointer-events:none;transition:opacity .25s';document.body.append(e)}e.innerHTML=m;e.style.display='block';e.style.opacity='1';clearTimeout(tta.t);if(ms)tta.t=setTimeout(ttaOff,ms)}
+function ttaOff(){const e=document.getElementById('tta');if(!e)return;clearTimeout(tta.t);e.style.opacity='0';setTimeout(()=>{if(e.style.opacity==='0')e.style.display='none'},260)}
 function ask(m,fn){pop(m,fn)}
 function pop(m,fn){let e=$('#pp');if(!e){e=document.createElement('div');e.id='pp';e.style.cssText='position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,.45);z-index:20;align-items:center;justify-content:center;padding:24px';document.body.append(e)}
 e.innerHTML='<div style="background:#fff;border-radius:14px;padding:18px;max-width:340px;width:100%;text-align:center"><div style="margin-bottom:14px;line-height:1.5">'+m+'</div><div style="display:flex;gap:8px">'+(fn?'<button id=pn>취소</button>':'')+'<button id=py style="background:var(--bl);color:#fff">확인</button></div></div>';e.style.display='flex';$('#py').onclick=()=>{e.style.display='none';if(fn){vib([40,60,40]);fn()}};if(fn)$('#pn').onclick=()=>{e.style.display='none'}}
@@ -3064,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v479',d:'2026.10.25'};
+const APPV={v:'v480',d:'2026.10.25'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3740,33 +3742,34 @@ function syEdSave(){const s=SYE.e,nm=(s.name||'').trim();if(!nm)return tt('시�
   if(c.when)o.when=c.when;return o});
  if(!items.length)return tt('제품을 1개 이상 입력하세요');
  const A=syLibGet(),it=Object.assign({},s,{name:nm,items,life:s.life===''?'':+s.life||'',ts:Date.now()});
- const im=SYE.imp;if(SYE.k>=0)A[SYE.k]=it;else A.unshift(it);syLibSet(A);syEdClose();syLibPage();syLibUi();vib(20);tt('저장했습니다');
- if(im!=null&&SYIMP&&SYIMP.list[im]){SYIMP.list[im].added=1;if($('#syimp'))syImpUi()}}
+ const im=SYE.imp;if(SYE.k>=0)A[SYE.k]=it;else A.unshift(it);syLibSet(A);syEdClose();syLibPage();syLibUi();vib(20);if(im==null)tt('저장했습니다');
+ if(im!=null&&SYIMP&&SYIMP.list[im]){SYIMP.list[im].added=1;if($('#syimp'))spImpDone(nm,'저장하고 추가했습니다');else tta('✓ 저장했습니다',1600)}else if(im!=null)tta('✓ 저장했습니다',1600)}
 
 /* 사양서 파일 읽기 (PDF·텍스트·JSON) → 초안 목록 → 확인 후 추가 */
 let SYIMP=null;
 function syImpPick(){let i=$('#syimp-f');if(i)i.remove();i=document.createElement('input');i.type='file';i.id='syimp-f';i.accept='.pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.webp,application/pdf,text/plain,application/json,image/*';i.style.display='none';i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)syImpFile(f)};document.body.append(i);i.click()}
 async function syImpFile(f){
- tt('사양서를 읽는 중…<br><small>'+esc(f.name)+'</small>');let list=[];
+ tta('사양서를 읽는 중…<br><small>'+esc(f.name)+'</small>',0);let list=[];
  try{
   if(/\.json$/i.test(f.name)){const j=JSON.parse(await f.text()),a=Array.isArray(j)?j:(j.systems||[j]);list=a.filter(x=>x&&Array.isArray(x.items)&&x.items.length).map(x=>Object.assign({name:'시스템',spec:1,src:f.name},x))}
   else{let L=[];
-   if(/\.pdf$/i.test(f.name)||f.type=='application/pdf'){L=await pdfText(f,30);if(L.filter(x=>x&&x.length>3).length<8){try{L=await ocrLines(f,m=>tt(m))}catch(e){}}}
-   else if(/^image\//.test(f.type)||/\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name))L=await ocrImg(f,m=>tt(m));
+   if(/\.pdf$/i.test(f.name)||f.type=='application/pdf'){L=await pdfText(f,30);if(L.filter(x=>x&&x.length>3).length<8){try{L=await ocrLines(f,m=>tta(m,0))}catch(e){}}}
+   else if(/^image\//.test(f.type)||/\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name))L=await ocrImg(f,m=>tta(m,0));
    else L=(await f.text()).split(/\r?\n/);
    list=syParseSpec(L,f.name)}
- }catch(e){console.error(e);return tt('사양서를 읽지 못했습니다<br><small>'+esc(e.message||e)+'</small>')}
- if(!list.length)return tt('도장 시스템(하도·중도·상도 표)을 찾지 못했습니다<br><small>‘새 시스템 추가’로 직접 입력하거나 사양 표가 있는 페이지만 올려 보세요</small>');
- SYIMP={file:f.name,list};syImpUi()}
+ }catch(e){console.error(e);return ttaOff(),tt('사양서를 읽지 못했습니다<br><small>'+esc(e.message||e)+'</small>')}
+ if(!list.length)return ttaOff(),tt('도장 시스템(하도·중도·상도 표)을 찾지 못했습니다<br><small>‘새 시스템 추가’로 직접 입력하거나 사양 표가 있는 페이지만 올려 보세요</small>');
+ ttaOff();SYIMP={file:f.name,list};syImpUi()}
 function syImpUi(){let e=$('#syimp');const fresh=!e;if(fresh){e=document.createElement('div');e.id='syimp';e.className='sypk';e.onclick=ev=>{if(ev.target===e)syImpClose()};document.body.append(e)}
  const L=SYIMP.list,sc=fresh?0:(e.querySelector('.sypk-sc')||{}).scrollTop||0,todo=L.filter(x=>!x.added).length;
- e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>사양서에서 읽은 시스템</b><span>${L.length}개</span><button class="sypk-x" onclick="syImpClose()" aria-label="닫기">✕</button></div><div class="sypk-hint"><b>${esc(SYIMP.file)}</b><br>자동으로 읽은 <b>초안</b>입니다. 제품명·두께·횟수를 원본과 대조한 뒤 추가하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.</div><div class="sypk-sc"><div class="syl-ls tp">${L.map((t,i)=>`<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(syTot(t))}</span></div>${t.scope?`<div class="syl-s">${esc(t.scope)}</div>`:''}<div class="syl-d w">${t.items.map(syItTxt).join(' · ')}</div><div class="syl-bt two"><button class="ed" ${t.added?'disabled':''} onclick="syImpEdit(${i})">수정 후 추가</button><button class="ok" ${t.added?'disabled':''} onclick="syImpAdd(${i})">${t.added?'추가됨':'추가'}</button></div><div class="syl-bt"><button class="ok" onclick="syImpUse(${i})">도장 시스템에 바로 적용</button></div></div>`).join('')}</div></div><div class="sypk-f"><button onclick="syImpClose()">닫기</button><button class="ok" ${todo?'':'disabled'} onclick="syImpAll()">전체 추가${todo?' ('+todo+')':''}</button></div></div>`;
+ e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>사양서에서 읽은 시스템</b><span>${L.length}개</span><button class="sypk-x" onclick="syImpClose()" aria-label="닫기">✕</button></div><div class="sypk-hint"><b>${esc(SYIMP.file)}</b><br>자동으로 읽은 <b>초안</b>입니다. 제품명·두께·횟수를 원본과 대조한 뒤 추가하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.</div><div class="sypk-sc"><div class="syl-ls tp">${L.map((t,i)=>`<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(syTot(t))}</span></div>${t.scope?`<div class="syl-s">${esc(t.scope)}</div>`:''}<div class="syl-d w">${t.items.map(syItTxt).join(' · ')}</div><div class="syl-bt three"><button class="ed" ${t.added?'disabled':''} onclick="syImpEdit(${i})">수정 후 추가</button><button class="ok" ${t.added?'disabled':''} onclick="syImpAdd(${i})">${t.added?'추가됨':'추가'}</button><button class="ok" onclick="syImpUse(${i})" title="도장 시스템에 바로 적용">바로 적용</button></div></div>`).join('')}</div></div><div class="sypk-f"><button onclick="syImpClose()">닫기</button><button class="ok" ${todo?'':'disabled'} onclick="syImpAll()">전체 추가${todo?' ('+todo+')':''}</button></div></div>`;
  if(sc){const q=e.querySelector('.sypk-sc');if(q)q.scrollTop=sc}}
-function syImpUse(i){const t=SYIMP.list[i];if(!t)return;if(!t.added){syAddSys(syImpClean(t));t.added=1}syImpClose();syLibPage();syLibUi();syLibUse(0)}
+function syImpUse(i){const t=SYIMP.list[i];if(!t)return;if(!t.added){syAddSys(syImpClean(t));t.added=1}syImpClose();syLibPage();syLibUi();syLibUse(0);if(!document.getElementById('syalt'))tta('✓ 도장 시스템에 적용했습니다',1600)}
 function syImpClose(){const e=$('#syimp');if(e)e.remove()}
 function syImpClean(t){const c=JSON.parse(JSON.stringify(t));delete c.added;c.items=(c.items||[]).filter(i=>(i.n||'').trim());c.src=c.src||SYIMP.file;c.spec=1;return c}
-function syImpAdd(i){const t=SYIMP.list[i];if(!t||t.added)return;syAddSys(syImpClean(t));t.added=1;syLibPage();syLibUi();syImpUi();tt('추가했습니다')}
-function syImpAll(){let n=0;SYIMP.list.slice().reverse().forEach(t=>{if(!t.added){syAddSys(syImpClean(t));t.added=1;n++}});syLibPage();syLibUi();syImpUi();tt(n+'개 시스템을 추가했습니다')}
+function spImpDone(nm,msg){const left=SYIMP?SYIMP.list.filter(x=>!x.added).length:0;tta('✓ '+msg+(nm?'<br><small>'+esc(nm)+'</small>':''),1600);vib(15);if(!left)syImpClose();else syImpUi()}
+function syImpAdd(i){const t=SYIMP.list[i];if(!t||t.added)return;syAddSys(syImpClean(t));t.added=1;syLibPage();syLibUi();spImpDone(t.name,'추가했습니다')}
+function syImpAll(){let n=0;SYIMP.list.slice().reverse().forEach(t=>{if(!t.added){syAddSys(syImpClean(t));t.added=1;n++}});syLibPage();syLibUi();tta('✓ '+n+'개 시스템을 추가했습니다',1600);vib(15);syImpClose()}
 function syImpEdit(i){const t=SYIMP.list[i];if(!t||t.added)return;const d=syImpClean(t);let nm=d.name,n=1;const A=syLibGet();while(A.some(x=>x.name==nm)){n++;nm=d.name+' ('+n+')'}d.name=nm;syEdOpenDraft(d,i)}
 
 
@@ -12210,5 +12213,9 @@ html body #v3 .spdbp .lb-r{flex-wrap:nowrap!important;min-width:0}
 html body #v3 .spdbp .lb-r>span:not(.lb-d){flex:1 1 0!important;min-width:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;overflow-wrap:normal!important;word-break:keep-all!important}
 html body #v3 .spdbp .lb-r em,html body #v3 .spdbp .lb-r .lb-n{flex:none!important;white-space:nowrap!important}
 html body #v3 .spdbp .lb-r .lb-d{flex:none!important;white-space:nowrap!important}
+/* v480 사양서 읽기 시트: 버튼 한 줄 · 자동 알림 */
+html body .sypk-v2 .syl-bt.three{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+html body .sypk-v2 .syl-bt.three button{width:100%!important;min-width:0!important;flex:none!important;padding:0 4px!important;white-space:nowrap!important;height:32px!important;font-size:12.5px!important}
+#tta small{display:block;font-size:12px;opacity:.82;margin-top:2px}
 </style>
 </body></html>
