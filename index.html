@@ -3064,7 +3064,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v476',d:'2026.10.25'};
+const APPV={v:'v477',d:'2026.10.25'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3365,7 +3365,13 @@ function syLibUi(){
   ${SYL2.mn===k?`<div class="lc-mn"><button type="button" onclick="SYL2.mn=-1;syLibCopy(${k});syLibUi()">복사</button><button type="button" onclick="SYL2.mn=-1;syLibFav(${k});syLibUi()">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button><button type="button" class="rd" onclick="SYL2.mn=-1;syLibDel(${k})">삭제</button></div>`:''}</div>`};
  b.innerHTML=R.length?R.map(card).join(''):`<div class="qhn0">${A.length?'검색 결과가 없습니다':'저장된 시스템이 없습니다<br><small>‘시스템 등록’ 또는 템플릿 가져오기로 시작하세요</small>'}</div>`;
 }
-function syLibReset(m){const A=syLibGet(),n=m=='all'?A.length:A.filter(x=>x.spec).length;if(!n)return tt('삭제할 사양이 없습니다');ask(m=='all'?'사양 DB의 <b>모든 사양 '+n+'개</b>를 삭제(초기화)할까요?<br><small>삭제 후에는 복구할 수 없습니다. 먼저 백업을 권장합니다.</small>':'<b>도장사양서에서 가져온 사양 '+n+'개</b>를 삭제할까요?<br><small>직접 등록한 사양은 유지됩니다.</small>',()=>{syLibSet(m=='all'?[]:A.filter(x=>!x.spec));SYLC={};syLibUi();try{syLibPage()}catch(e){}tt('삭제했습니다')})}
+const syNU=t=>{const m=String(t).match(/^([\d.,]+)(.*)$/);return m?`<b class="nu">${m[1]}</b><i class="un">${m[2]}</i>`:t};
+let SYSEL={};
+function syLibFl(){const n=Object.keys(SYSEL).length,N=n?` (${n})`:'';return`<button type="button" class="p" onclick="syLibUseSel()">불러오기${N}</button><button type="button" onclick="syEdOpen(-1)">시스템등록</button><button type="button" onclick="syTplSheet()">사양등록</button><button type="button" class="rd" onclick="syLibDelSel()">삭제${N}</button><button type="button" class="rd" onclick="syLibReset('all')">초기화</button>`}
+function syLibSel(k,on,el){const x=syLibGet()[k];if(!x)return;if(on)SYSEL[x.name]=1;else delete SYSEL[x.name];const c=el&&el.closest('.lb-c');if(c)c.classList.toggle('sel',!!on);const f=$('#lb-fl');if(f)f.innerHTML=syLibFl()}
+function syLibUseSel(){const A=syLibGet(),ix=A.map((x,i)=>SYSEL[x.name]?i:-1).filter(i=>i>=0);if(!ix.length)return tt('불러올 사양을 체크하세요');SYSEL={};if(ix.length==1)return syLibUse(ix[0]);ix.forEach(i=>syApplySys(A[i],{},i));tt(ix.length+'개 사양을 불러왔습니다')}
+function syLibDelSel(){const A=syLibGet(),ix=A.filter(x=>SYSEL[x.name]);if(!ix.length)return tt('삭제할 사양을 체크하세요');ask('체크한 <b>사양 '+ix.length+'개</b>를 삭제할까요?',()=>{syLibSet(A.filter(x=>!SYSEL[x.name]));SYSEL={};SYLC={};syLibUi();try{syLibPage()}catch(e){}tt('삭제했습니다')})}
+function syLibReset(m){const A=syLibGet(),n=m=='all'?A.length:A.filter(x=>x.spec).length;if(!n)return tt('삭제할 사양이 없습니다');ask(m=='all'?'사양 DB의 <b>모든 사양 '+n+'개</b>를 삭제(초기화)할까요?<br><small>삭제 후에는 복구할 수 없습니다. 먼저 백업을 권장합니다.</small>':'<b>도장사양서에서 가져온 사양 '+n+'개</b>를 삭제할까요?<br><small>직접 등록한 사양은 유지됩니다.</small>',()=>{syLibSet(m=='all'?[]:A.filter(x=>!x.spec));SYSEL={};SYLC={};syLibUi();try{syLibPage()}catch(e){}tt('삭제했습니다')})}
 function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{A.splice(k,1);syLibSet(A);SYLC={};syLibUi();try{syLibPage()}catch(e){}})}
 
 /* ===== v455 시스템 라이브러리 (목록·검색·필터·수정·복사·템플릿) ===== */
@@ -3417,19 +3423,17 @@ function syLibPage(){
  const pill=(k,t,ic)=>`<button type="button" class="${SYF.k==k?'on':''}" onclick="SYF.mn=-1;syLibF('${k}')">${ic?ic:''}${t}</button>`;
  const card=([x,k])=>{const rows=syLibRows(x),tot=rows.reduce((a,r)=>a+(r.w?0:r.d),0),tg=x.spec?['사양서']:['견적 · LCC'];if(x.env)tg.push('ISO 12944');
   const show=rows.slice(0,6),more=rows.length-show.length;
-  return `<div class="lb-c${x.basic?' bs':''}">${x.basic?`<div class="lb-bd">${lbIx.star}기본 사양</div>`:x.spec?`<div class="lb-bd sp">${lbIx.star}사양서</div>`:''}
-  <div class="lb-th"><b class="lb-nm">${esc(x.name)}</b>${x.fav?`<span class="lb-fv">${syIx.heart}</span>`:''}<button type="button" class="lb-dt" onclick="syLibMn(${k},event)" aria-label="메뉴">${lbIx.dots}</button></div>
+  return `<div class="lb-c${x.basic?' bs':''}${SYSEL[x.name]?' sel':''}">${x.basic?`<div class="lb-bd">${lbIx.star}기본 사양</div>`:x.spec?`<div class="lb-bd sp">${lbIx.star}사양서</div>`:''}
+  <div class="lb-th"><label class="lb-ck"><input type="checkbox" ${SYSEL[x.name]?'checked':''} onchange="syLibSel(${k},this.checked,this)" aria-label="사양 선택"><i></i></label><b class="lb-nm">${esc(x.name)}</b>${x.fav?`<span class="lb-fv">${syIx.heart}</span>`:''}<button type="button" class="lb-dt" onclick="syLibMn(${k},event)" aria-label="메뉴">${lbIx.dots}</button></div>
   ${SYF.mn===k?`<div class="lb-mn"><button type="button" onclick="SYF.mn=-1;syEdOpen(${k})">수정</button><button type="button" onclick="SYF.mn=-1;syLibCopy(${k})">복사</button><button type="button" onclick="syLibFav(${k})">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button><button type="button" class="rd" onclick="SYF.mn=-1;syLibDel(${k})">삭제</button></div>`:''}
   <div class="lb-m"><span>${lbIx.cloud}<small>환경등급</small><b>${esc(x.env||'--')}</b></span><span>${syIx.layers}<small>기재</small><b>${esc(x.sub||'-')}</b></span><span>${syIx.shield}<small>예상 내구성</small><b>${x.life?x.life+'년':'-'}</b></span></div>
   ${x.scope?`<div class="lb-sc">${esc(x.scope)}</div>`:''}
-  <div class="lb-b"><div class="lb-sy"><b>${syIx.layers}도장 시스템</b>${show.map((r,j)=>`<div class="lb-r"><u class="lb-n">${j+1}</u><em>${esc(r.lb||['하도','중도','상도'][j]||'코트')}</em><span>${esc(r.n)}${r.a?' 외 '+r.a:''}${r.d?' '+syFmtD(r.d):''}${r.c>1?'×'+r.c:''}${r.w?' (조건부)':''}</span></div>`).join('')||'<small>구성 없음</small>'}${more>0?`<div class="lb-more">외 ${more}개 코트</div>`:''}</div>
-  <div class="lb-tt"><small>총 도막두께</small><b>${tot?syFmtT(tot):'-'}</b><div class="lb-tg">${tg.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div></div>
-  <button type="button" class="lb-u ${x.basic?'p':'o'}" onclick="syLibUse(${k})">${syIx.file}<span>불러오기</span></button></div>`};
+  <div class="lb-b"><div class="lb-sy"><b>${syIx.layers}도장 시스템</b>${show.map((r,j)=>`<div class="lb-r"><u class="lb-n">${j+1}</u><em>${esc(r.lb||['하도','중도','상도'][j]||'코트')}</em><span>${esc(r.n)}${r.a?' 외 '+r.a:''}${r.c>1?'×'+r.c:''}${r.w?' (조건부)':''}</span>${r.d?`<span class="lb-d">${syNU(syFmtD(r.d))}</span>`:''}</div>`).join('')||'<small>구성 없음</small>'}${more>0?`<div class="lb-more">외 ${more}개 코트</div>`:''}</div>
+  <div class="lb-tt"><small>총 도막두께</small><b>${tot?syNU(syFmtD(tot)):'-'}</b><div class="lb-tg">${tg.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div></div></div>`};
  e.innerHTML=`<div class="lb-sr"><label class="lb-s"><span>${syIx.search}</span><input id="sl-q" type="search" placeholder="사양명 또는 제품명 검색" value="${esc(SYF.q)}" oninput="SYF.q=this.value;SYF.mn=-1;syLibPage()" enterkeyhint="search"></label><button type="button" class="lb-f${SYF.fo?' on':''}" onclick="syLibFo()">${syIx.filter}<span>필터</span></button></div>
  <div class="lb-pl">${pill('all','전체')}${pill('basic','기본')}${pill('spec','사양서')}${pill('fav','즐겨찾기')}${['C2','C3','C4','C5','CX'].map(c=>pill(c,c)).join('')}</div>${SYF.fo?`<div class="lb-pl s2">${pill('철재','철재',syIx.steel)}${pill('콘크리트','콘크리트',syIx.conc)}${pill('옥상','옥상',syIx.roof)}</div>`:''}
  <div class="lb-ls">${R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘사양서’에서 가져오거나 ‘시스템 등록’으로 시작하세요</small>'}</div>`}</div>
- <div class="lb-ac"><button type="button" class="p" onclick="syEdOpen(-1)">${syIx.plus}<span>시스템 등록</span></button><button type="button" class="o" onclick="syTplSheet()">${lbIx.up}<span>사양서</span></button></div>
- ${A.length?`<div class="lb-rs"><button type="button" onclick="syLibReset('spec')" ${A.some(x=>x.spec)?'':'disabled'}>도장사양서 삭제 (${A.filter(x=>x.spec).length})</button><button type="button" onclick="syLibReset('all')">전체 초기화 (${A.length})</button></div>`:''}`;
+ <div class="lb-fl" id="lb-fl">${syLibFl()}</div>`;
  if(fo){const q=$('#sl-q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}}
 }
 function syLibF(k){SYF.k=SYF.k==k&&k!='all'?'all':k;syLibPage()}
@@ -12127,6 +12131,40 @@ html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4{display:grid!important;grid-t
 html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:calc(var(--u)*8)!important;width:100%!important;min-width:0!important;max-width:none!important;height:calc(var(--u)*118)!important;padding:0 2px!important;border-radius:calc(var(--u)*18)!important;font-size:calc(var(--u)*23)!important;font-weight:800!important;white-space:nowrap}
 html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb svg{width:calc(var(--u)*38)!important;height:calc(var(--u)*38)!important}
 html body #v3 .syp>.sy-card.sy-main>.sy-hbs.sy-hb4 button.sy-hb span{font-size:inherit!important;line-height:1.1}
+/* v477 사양 DB 표준화 — SF Pro + 산돌고딕 · Caption/H2/Body L · 버튼 SMALL(36, 라운드 4) · 플로팅 공통 버튼 */
+html body #v3 .syp.spdbp,html body #v3 .syp.spdbp *{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Apple SD Gothic Neo","Sandoll Gothic Neo","산돌고딕 Neo","SandollGothicNeo","Noto Sans KR",system-ui,sans-serif!important}
+html body #v3 .spdbp .sylib{padding-bottom:calc(var(--gnh,56px) + 76px)}
+html body #v3 .spdbp .lb-sr{gap:8px;align-items:center}
+html body #v3 .spdbp .lb-s{height:36px!important;min-height:36px!important;border-radius:4px!important}
+html body #v3 .spdbp .lb-s input{font-size:16px!important;height:34px!important}
+html body #v3 .spdbp .lb-f,html body #v3 .spdbp .lb-pl button{height:36px!important;min-height:36px!important;border-radius:4px!important;font-size:14px!important;font-weight:600!important;padding:0 12px!important;display:inline-flex;align-items:center;gap:4px}
+html body #v3 .spdbp .lb-c{border-radius:8px!important;padding:16px!important;border:1px solid #d9e4f5!important;position:relative}
+html body #v3 .spdbp .lb-c.sel{border:2px solid #1f6fe5!important;background:#f3f8ff}
+html body #v3 .spdbp .lb-bd{font-size:12px!important;font-weight:600!important;line-height:16px!important;border-radius:4px!important}
+html body #v3 .spdbp .lb-th{display:flex;align-items:center;gap:10px;margin:8px 0}
+html body #v3 .spdbp .lb-nm{flex:1;min-width:0;font-size:20px!important;line-height:28px!important;font-weight:600!important;color:#10264f}
+html body #v3 .spdbp .lb-ck{flex:none;position:relative;display:grid;place-items:center;width:36px;height:36px;margin:-6px 0 -6px -8px;cursor:pointer}
+html body #v3 .spdbp .lb-ck input{position:absolute;inset:0;opacity:0;width:36px;height:36px;margin:0;cursor:pointer}
+html body #v3 .spdbp .lb-ck i{width:22px;height:22px;border-radius:4px;border:2px solid #9db6dc;background:#fff;display:block;box-sizing:border-box}
+html body #v3 .spdbp .lb-ck input:checked+i{background:#1f6fe5 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/16px no-repeat;border-color:#1f6fe5}
+html body #v3 .spdbp .lb-m small{font-size:12px!important;line-height:16px!important;font-weight:500!important;color:#6a7b99}
+html body #v3 .spdbp .lb-m b{font-size:16px!important;line-height:22px!important;font-weight:600!important}
+html body #v3 .spdbp .lb-sc{font-size:16px!important;line-height:24px!important;color:#3c4f72;margin:8px 0}
+html body #v3 .spdbp .lb-sy>b{font-size:12px!important;line-height:16px!important;font-weight:600!important;color:#6a7b99}
+html body #v3 .spdbp .lb-r{display:flex;align-items:center;gap:8px;font-size:16px!important;line-height:24px!important}
+html body #v3 .spdbp .lb-r em{font-style:normal;font-size:12px!important;font-weight:600!important;color:#6a7b99;flex:none}
+html body #v3 .spdbp .lb-r>span:not(.lb-d){flex:1;min-width:0;font-size:16px!important}
+html body #v3 .spdbp .lb-d{flex:none;white-space:nowrap}
+html body #v3 .spdbp .lb-r>span:not(.lb-d){white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere}
+html body #v3 .spdbp b.nu{font-size:20px!important;line-height:28px!important;font-weight:600!important;color:#10264f;font-variant-numeric:tabular-nums}
+html body #v3 .spdbp i.un{font-style:normal;font-size:16px!important;line-height:24px!important;font-weight:400!important;color:#3c4f72;margin-left:1px}
+html body #v3 .spdbp .lb-tt small{font-size:12px!important;line-height:16px!important;color:#6a7b99}
+html body #v3 .spdbp .lb-tg span{font-size:12px!important;border-radius:4px!important}
+html body #v3 .spdbp .lb-mn button{height:36px;border-radius:4px;font-size:14px}
+html body #v3 .spdbp .lb-fl{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--gnh,56px) + 8px);width:min(100% - 16px,544px);z-index:30;display:grid;grid-template-columns:1.15fr 1.2fr 1fr .85fr .95fr;gap:6px;padding:8px;background:rgba(255,255,255,.96);border:1px solid #d6e3f7;border-radius:8px;box-shadow:0 6px 20px rgba(11,42,102,.18);box-sizing:border-box}
+html body #v3 .spdbp .lb-fl button{height:36px;min-width:0;padding:0 2px;border-radius:4px;border:1px solid #9ec2f2;background:#fff;color:#0b4fd0;font-size:13px!important;font-weight:600;white-space:nowrap;cursor:pointer}
+html body #v3 .spdbp .lb-fl button.p{background:#1f6fe5;border-color:#1f6fe5;color:#fff}
+html body #v3 .spdbp .lb-fl button.rd{border-color:#e3a6a6;color:#b3261e}
 html body #v3 .syp.spdbp{padding-top:calc(var(--u)*14)}
 html body #v3 .sylib .lb-rs{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--ls)*16);margin-top:calc(var(--ls)*16)}
 html body #v3 .sylib .lb-rs button{height:calc(var(--ls)*60);border-radius:calc(var(--ls)*20);border:1.5px solid #e3a6a6;background:#fff;color:#b3261e;font:700 calc(var(--ls)*24)/1 "Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;cursor:pointer}
