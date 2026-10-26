@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v485',d:'2026.10.26'};
+const APPV={v:'v486',d:'2026.10.26'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3376,7 +3376,6 @@ return b('p','syLibUseSel()','불러오기','<path d="M12 4v11M7.5 11 12 15.5 16
 +b('','syImpBulkPick()','일괄등록','<path d=\"M5 8v13h11\"/><path d=\"M8 3h6l4 4v10H8z\"/><path d=\"M13 9v6M10 12h6\"/>')
 +b('','syEdOpen(-1)','사용자등록','<circle cx="10" cy="8" r="3.4"/><path d="M3.5 20c.5-3.6 3.2-5.8 6.5-5.8s6 2.2 6.5 5.8M19 8v6M16 11h6"/>')
 +b('ed','syLibEditSel()','사양수정','<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>')
-+b('rd','syLibDelSel()','삭제','<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',B)
 +b('rd',"syLibReset('all')",'초기화','<path d="M4 12a8 8 0 1 0 2.6-5.9M4 4v5h5"/>')}
 function syLibEditSel(){const A=syLibGet(),ix=A.map((x,i)=>SYSEL[x.name]?i:-1).filter(i=>i>=0);if(!ix.length)return tt('수정할 사양을 체크하세요');if(ix.length>1)return tt('수정은 사양 1개만 체크하세요');syEdOpen(ix[0])}
 function syLibSel(k,on,el){const x=syLibGet()[k];if(!x)return;if(on)SYSEL[x.name]=1;else delete SYSEL[x.name];const c=el&&el.closest('.lb-c');if(c)c.classList.toggle('sel',!!on);const f=$('#lb-fl');if(f)f.innerHTML=syLibFl()}
@@ -12367,8 +12366,8 @@ html body .syed .se-sgi small{flex:none!important;font-size:9px!important;line-h
 html body .syed .se-sgn{padding:5.5px 6.6px!important;font-size:9px!important;line-height:12px!important;color:#6a7b99!important}
 /* v483 제품 TDS 보기: 원본 TDS 뷰어(#vw)가 데이터 시트(.dsp, z-index 60) 뒤에 가려지던 문제 → 항상 맨 앞에 표시 */
 html body #vw{z-index:2147483200!important}
-/* v485 사양 DB 하단 바 7칸(일괄등록 추가) */
-.lb-fl{grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr) minmax(0,1.1fr) minmax(0,1.45fr) minmax(0,1.1fr) minmax(0,.8fr) minmax(0,.95fr)!important;gap:3px!important}
+/* v486 사양 DB 하단 바 6칸(일괄등록 추가·삭제 제거) */
+.lb-fl{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important}
 .lb-fl button span{letter-spacing:-.4px}
 </style>
 </body></html>
