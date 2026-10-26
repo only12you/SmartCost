@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v482',d:'2026.10.26'};
+const APPV={v:'v483',d:'2026.10.26'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -12333,5 +12333,7 @@ html body .syed .se-sgi:active{background:#eef4ff!important}
 html body .syed .se-sgi b{flex:1!important;min-width:0!important;font-size:10.8px!important;line-height:14px!important;font-weight:600!important;color:#10264f!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
 html body .syed .se-sgi small{flex:none!important;font-size:9px!important;line-height:12px!important;color:#6a7b99!important}
 html body .syed .se-sgn{padding:5.5px 6.6px!important;font-size:9px!important;line-height:12px!important;color:#6a7b99!important}
+/* v483 제품 TDS 보기: 원본 TDS 뷰어(#vw)가 데이터 시트(.dsp, z-index 60) 뒤에 가려지던 문제 → 항상 맨 앞에 표시 */
+html body #vw{z-index:2147483200!important}
 </style>
 </body></html>
