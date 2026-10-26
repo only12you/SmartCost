@@ -8,7 +8,7 @@
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark}}
+@media print{nav,header,.noprint{display:none!important}}
 </style>
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script>tailwind.config={darkMode:'class'}</script>
@@ -19,7 +19,8 @@ body{margin:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'A
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useMemo, useEffect } = React;
+const { useState, useMemo, useEffect, useRef } = React;
+/* ---------- icons (inline SVG) ---------- */
 const Icon = (inner) => ({ size = 24, className = '', strokeWidth = 2 }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true" dangerouslySetInnerHTML={{ __html: inner }} />
 );
@@ -30,110 +31,105 @@ const FileText = Icon('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 
 const Sun = Icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>');
 const Moon = Icon('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>');
 const CheckCircle2 = Icon('<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>');
+const Award = Icon('<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>');
+const Sparkles = Icon('<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/>');
+const Download = Icon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>');
+const Copy = Icon('<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>');
+const Info = Icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>');
+const Plus = Icon('<path d="M5 12h14M12 5v14"/>');
+const Upload = Icon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>');
+const Camera = Icon('<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>');
+const Trash = Icon('<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>');
+const X = Icon('<path d="M18 6 6 18M6 6l12 12"/>');
+
 const Building2 = Icon('<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/>');
 const FileSpreadsheet = Icon('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2M14 13h2M8 17h2M14 17h2"/>');
 const Share2 = Icon('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>');
 const Sliders = Icon('<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/>');
 const TrendingUp = Icon('<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>');
-const Award = Icon('<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>');
 const ChevronRight = Icon('<path d="m9 18 6-6-6-6"/>');
-const Copy = Icon('<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>');
 const ArrowUpDown = Icon('<path d="m21 16-4 4-4-4M17 20V4M3 8l4-4 4 4M7 4v16"/>');
-const Info = Icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>');
-const Sparkles = Icon('<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/>');
-const Download = Icon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>');
+
+const SRC = {
+  xlsx: 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+  pdf: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+  pdfw: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js',
+  mammoth: 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js',
+  jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+  h2c: 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+  jspdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  tess: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+};
+const loaded = {};
+const loadScript = (src) => new Promise((res, rej) => {
+  if (loaded[src]) return res();
+  const s = document.createElement('script'); s.src = src;
+  s.onload = () => { loaded[src] = 1; res(); }; s.onerror = () => rej(new Error('lib'));
+  document.head.appendChild(s);
+});
+
+async function fileToText(f) {
+  const ext = (f.name.split('.').pop() || '').toLowerCase();
+  if (['txt', 'csv', 'tsv', 'md'].includes(ext)) return await f.text();
+  if (['xlsx', 'xls', 'xlsm'].includes(ext)) {
+    await loadScript(SRC.xlsx);
+    const wb = window.XLSX.read(await f.arrayBuffer(), { type: 'array' });
+    return wb.SheetNames.map((s) => window.XLSX.utils.sheet_to_csv(wb.Sheets[s])).join('\n');
+  }
+  if (ext === 'pdf') {
+    await loadScript(SRC.pdf); window.pdfjsLib.GlobalWorkerOptions.workerSrc = SRC.pdfw;
+    const pdf = await window.pdfjsLib.getDocument({ data: await f.arrayBuffer() }).promise;
+    let t = '';
+    for (let i = 1; i <= Math.min(pdf.numPages, 15); i++) { const c = await (await pdf.getPage(i)).getTextContent(); t += c.items.map((x) => x.str).join(' ') + '\n'; }
+    return t;
+  }
+  if (ext === 'docx') { await loadScript(SRC.mammoth); return (await window.mammoth.extractRawText({ arrayBuffer: await f.arrayBuffer() })).value; }
+  if (ext === 'pptx') {
+    await loadScript(SRC.jszip); const z = await window.JSZip.loadAsync(await f.arrayBuffer()); let t = '';
+    const names = Object.keys(z.files).filter((k) => /^ppt\/slides\/slide\d+\.xml$/.test(k));
+    for (const k of names) { const x = await z.files[k].async('string'); t += (x.match(/<a:t>[^<]*<\/a:t>/g) || []).map((s) => s.replace(/<[^>]+>/g, '')).join(' ') + '\n'; }
+    return t;
+  }
+  if ((f.type || '').startsWith('image/')) { await loadScript(SRC.tess); return (await window.Tesseract.recognize(f, 'kor+eng')).data.text; }
+  throw new Error('unsupported');
+}
+
+function extract(t) {
+  const o = {}; const s = t.replace(/\s+/g, ' '); let m;
+  if ((m = s.match(/(?:고형분|solids?|SVR)[^0-9%]{0,25}?(\d{2,3}(?:\.\d+)?)\s*%/i))) o.svr = m[1];
+  if ((m = s.match(/(\d+(?:\.\d+)?)\s*(?:㎡|m2|m²)\s*\/\s*(?:L|ℓ|l|리터)/i))) o.coverage = m[1];
+  const tm = (re) => { const r = s.match(re); return r ? r[1] + (/분|min/i.test(r[2]) ? '분' : '시간') : null; };
+  const d = tm(/(?:건조\s*시간|지촉|경화|dry(?:ing)?\s*time|touch\s*dry)[^0-9]{0,20}(\d+(?:\.\d+)?)\s*(시간|hrs?|h|분|min)/i); if (d) o.dryTime = d;
+  const pl = tm(/(?:가사\s*시간|pot\s*life|사용\s*가능\s*시간)[^0-9]{0,20}(\d+(?:\.\d+)?)\s*(시간|hrs?|h|분|min)/i); if (pl) o.potLife = pl;
+  if ((m = s.match(/(?:내열|heat\s*resist\w*|max\.?\s*temp\w*)[^0-9]{0,20}(\d{2,3})\s*(?:℃|°C|도)/i))) o.heat = m[1];
+  if ((m = s.match(/(?:단가|가격|price)[^0-9]{0,15}(\d[\d,]{2,})/i))) o.price = m[1].replace(/,/g, '');
+  const c = [...new Set((s.match(/KS\s?M\s?\d{4}(?:\s?\d종)?|ISO\s?\d{4,5}(?:-\d+)?|DNV(?:[-\s]?GL)?|ABS|KR\s?선급(?:인증)?|친환경[^,.;\s]{0,8}인증|HB\s?마크|NSF\s?\d+|UL\s?\d+|FM\s?\d+/gi) || []).map((x) => x.replace(/\s+/g, ' ').trim()))].slice(0, 8);
+  if (c.length) o.certs = c.join(', ');
+  return o;
+}
+
+const n = (v) => parseFloat(String(v == null ? '' : v).replace(/,/g, '')) || 0;
+const list = (s) => String(s || '').split(/[,\n;]/).map((x) => x.trim()).filter(Boolean);
+const covOf = (p) => n(p.coverage) || n(p.svr) / 10;
+const uid = () => Math.random().toString(36).slice(2, 9);
+const blankP = () => ({ id: uid(), name: '', company: '', svr: '', coverage: '', dryTime: '', potLife: '', heat: '', price: '', certs: '', tracks: '', file: null, ext: [] });
+const CLABELS = ['기존 제품', '비교 A', '비교 B', '비교 C', '비교 D', '비교 E'];
+const CCOL = ['#2563eb', '#ea580c', '#059669', '#7c3aed', '#e11d48', '#0891b2'];
+const side = (p) => ({ name: p.name || '(제품명 미입력)', company: p.company || '-', svr: n(p.svr), coverage: covOf(p), dryTime: p.dryTime || '0시간', potLife: p.potLife || '0시간', heatResistance: (n(p.heat) || 0) + '℃', certifications: list(p.certs), tracks: list(p.tracks), unitPriceDefault: n(p.price) });
+const loadCustom = () => { try { const r = JSON.parse(localStorage.getItem('cmp_custom_v4')); if (r && r.prods && r.prods.length > 1) return r; } catch (e) {} return { prods: [blankP(), blankP()], sel: 0, cmp: 1 }; };
 
 // --- DATA DEFINITION (B2B Paint Data) ---
-const PAIR_CATEGORIES = [
-  {
-    id: 'primer',
-    name: '비철/다용도 프라이머 (Primer)',
-    kcc: {
-      name: 'ALLROUNDMASTIC (올라운드마스틱)',
-      company: 'KCC',
-      svr: 82, // 고형분 용적비 %
-      coverage: 8.2, // 100㎛ 기준 이론 도포면적 (㎡/L)
-      dryTime: '4시간 (25℃)',
-      potLife: '6시간 (25℃)',
-      heatResistance: '120℃',
-      certifications: ['KS M 6030', '친환경 표지인증', 'KR 선급인증'],
-      tracks: ['S-OIL 샤힌 프로젝트', 'HD현대중공업 해양플랜트', '삼성엔지니어링 현장'],
-      unitPriceDefault: 18500 // ₩/L
-    },
-    comp: {
-      name: '하나폭시 S600 (Hana Poxy S600)',
-      company: '한진화학',
-      svr: 72,
-      coverage: 7.2,
-      dryTime: '6시간 (25℃)',
-      potLife: '4시간 (25℃)',
-      heatResistance: '100℃',
-      certifications: ['KS M 6030'],
-      tracks: ['중소형 건설사 아파트 현장', '일반 플랜트 도장'],
-      unitPriceDefault: 17200
-    }
-  },
-  {
-    id: 'heavy_duty',
-    name: '중방식 에폭시 하도 (Heavy Duty Epoxy)',
-    kcc: {
-      name: 'KOREPOX EH2350 (코레폭스 EH2350)',
-      company: 'KCC',
-      svr: 80,
-      coverage: 8.0,
-      dryTime: '3시간 (25℃)',
-      potLife: '8시간 (25℃)',
-      heatResistance: '150℃',
-      certifications: ['KS M 6030 1종', 'DNV 선급', 'ABS 인증', '국방부 사양'],
-      tracks: ['DNL 선박 건조', 'GS칼텍스 석유화학단지', '한화오션 해양설비'],
-      unitPriceDefault: 16500
-    },
-    comp: {
-      name: '하나폭시 HB736 (Hana Poxy HB736)',
-      company: '한진화학',
-      svr: 68,
-      coverage: 6.8,
-      dryTime: '5시간 (25℃)',
-      potLife: '5시간 (25℃)',
-      heatResistance: '120℃',
-      certifications: ['KS M 6030 1종'],
-      tracks: ['지역 화학공장 유지보수', '교량 하부 도장'],
-      unitPriceDefault: 15800
-    }
-  },
-  {
-    id: 'topcoat',
-    name: '우레탄 마감 상도 (Urethane Topcoat)',
-    kcc: {
-      name: 'KORETHAN UT6581 (코레탄 UT6581)',
-      company: 'KCC',
-      svr: 65,
-      coverage: 6.5,
-      dryTime: '2.5시간 (25℃)',
-      potLife: '5시간 (25℃)',
-      heatResistance: '110℃',
-      certifications: ['KS M 6020 1종', '초내후성 인증', '친환경 건축자재 HB마크'],
-      tracks: ['SK에너지 울산 콤플렉스', '인천국제공항 4단계 확장', '롯데월드타워 외벽철골'],
-      unitPriceDefault: 21000
-    },
-    comp: {
-      name: '하나탄 #300 (Hanatan #300)',
-      company: '한진화학',
-      svr: 55,
-      coverage: 5.5,
-      dryTime: '4시간 (25℃)',
-      potLife: '3시간 (25℃)',
-      heatResistance: '90℃',
-      certifications: ['KS M 6020'],
-      tracks: ['일반 상업빌딩 외벽', '지형 구조물'],
-      unitPriceDefault: 19500
-    }
-  }
-];
+const PAIR_CATEGORIES = [];
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
-  const [selectedPairId, setSelectedPairId] = useState('primer');
+  const [selectedPairId, setSelectedPairId] = useState('custom');
+  const [custom, setCustom] = useState(loadCustom);
+  const [busy, setBusy] = useState('');
+  const [openIdx, setOpenIdx] = useState(null);
+  const tgt = useRef(0);
+  const fileRef = useRef(null), camRef = useRef(null);
+  useEffect(() => { try { localStorage.setItem('cmp_custom_v4', JSON.stringify({ ...custom, prods: custom.prods.map((p) => ({ ...p, file: p.file ? { name: p.file.name, kind: p.file.kind } : null })) })); } catch (e) {} }, [custom]);
   const [activeTab, setActiveTab] = useState('compare'); // compare, cost, proof, export
   
   // Cost Calculator Inputs
@@ -147,8 +143,12 @@ function App() {
 
   // Current selected category pair
   const currentPair = useMemo(() => {
+    if (selectedPairId === 'custom') {
+      const b = custom.prods[0], c = custom.prods[custom.cmp] || custom.prods[1];
+      return { id: 'custom', name: '데이터시트 직접 비교', kcc: side(c), comp: side(b) };
+    }
     return PAIR_CATEGORIES.find(p => p.id === selectedPairId) || PAIR_CATEGORIES[0];
-  }, [selectedPairId]);
+  }, [selectedPairId, custom]);
 
   // Update default prices when category changes
   useEffect(() => {
@@ -191,26 +191,139 @@ function App() {
     setTimeout(() => setToastMessage(''), 2500);
   };
 
-  const handleCopyLink = () => {
-    try { navigator.clipboard.writeText(window.location.href); } catch (e) {}
-    showToast('공유 링크가 클립보드에 복사되었습니다.');
+  const labels12 = () => (selectedPairId === 'custom' ? ['비교 제품', '기존 제품'] : [currentPair.kcc.company, currentPair.comp.company]);
+  const summaryText = () => {
+    const c = calculations, cp = currentPair, [l1, l2] = labels12();
+    return '[B2B 도료 사양 & 견적비교]\n조건: 면적 ' + area.toLocaleString() + '㎡ · 손실률 ' + lossRate + '% · 목표 DFT ' + targetDft + '㎛\n' + l1 + ': ' + cp.kcc.name + ' — ' + c.kccVolumeNeeded.toLocaleString() + 'L · ' + c.kccTotalCost.toLocaleString() + '원\n' + l2 + ': ' + cp.comp.name + ' — ' + c.compVolumeNeeded.toLocaleString() + 'L · ' + c.compTotalCost.toLocaleString() + '원\n' + l2 + ' 대비 ' + l1 + ' 자재비 ' + (c.costDiff >= 0 ? '절감 ' : '증가 ') + Math.abs(c.costDiff).toLocaleString() + '원 (' + Math.abs(c.savingPercent) + '%)\n※ 참고용 자료이며 시공 전 최신 TDS를 확인하세요.';
+  };
+  const handleCopyLink = async () => {
+    const t = summaryText();
+    try { if (navigator.share) { await navigator.share({ title: 'B2B 도료 사양 & 견적비교', text: t }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(t); showToast('비교 요약이 클립보드에 복사되었습니다.'); } catch (e) { showToast('복사하지 못했습니다.'); }
+  };
+  const handleExportExcel = async () => {
+    const c = calculations, cp = currentPair, k = cp.kcc, m = cp.comp, [l1, l2] = labels12();
+    const aoa = [['B2B 도료 사양 & 견적비교 보고서'], ['도장 면적(㎡)', area, '손실률(%)', lossRate, '목표 DFT(㎛)', targetDft], [], ['항목', l1, l2],
+      ['제품명', k.name, m.name], ['제조사', k.company, m.company], ['고형분 SVR(%)', k.svr, m.svr], ['이론 도포면적(㎡/L)', k.coverage, m.coverage], ['건조시간', k.dryTime, m.dryTime], ['가사시간', k.potLife, m.potLife], ['내열온도', k.heatResistance, m.heatResistance],
+      ['단가(원/L)', kccPrice, compPrice], ['실 소요량(L)', c.kccVolumeNeeded, c.compVolumeNeeded], ['총 자재비(원)', c.kccTotalCost, c.compTotalCost], ['절감액(원, +면 ' + l1 + ' 저렴)', c.costDiff, ''], ['절감률(%)', c.savingPercent, ''],
+      ['인증서', k.certifications.join(', '), m.certifications.join(', ')], ['시공 실적', k.tracks.join(', '), m.tracks.join(', ')]];
+    try {
+      await loadScript(SRC.xlsx); const X = window.XLSX; const wb = X.utils.book_new();
+      X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(aoa), '비교보고서'); X.writeFile(wb, '도료비교보고서.xlsx'); showToast('엑셀(.xlsx) 보고서를 저장했습니다.');
+    } catch (e) {
+      const q = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const blob = new Blob(['\ufeff' + aoa.map((r) => r.map(q).join(',')).join('\n')], { type: 'text/csv;charset=utf-8' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = '도료비교보고서.csv'; document.body.appendChild(a); a.click(); a.remove(); showToast('엑셀 라이브러리를 불러오지 못해 CSV로 저장했습니다.');
+    }
+  };
+  const handleExportPDF = async () => {
+    try {
+      showToast('PDF 생성 중…'); setActiveTab('export'); await new Promise((r) => setTimeout(r, 350));
+      await loadScript(SRC.h2c); await loadScript(SRC.jspdf);
+      const el = document.querySelector('main');
+      const cv = await window.html2canvas(el, { scale: 2, backgroundColor: darkMode ? '#111827' : '#ffffff', useCORS: true });
+      const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4'); const w = 210, h = cv.height * w / cv.width, img = cv.toDataURL('image/jpeg', 0.92);
+      for (let y = 0, i = 0; y < h; y += 297, i++) { if (i) pdf.addPage(); pdf.addImage(img, 'JPEG', 0, -y, w, h); }
+      pdf.save('도료비교보고서.pdf'); showToast('PDF 보고서를 저장했습니다.');
+    } catch (e) { try { window.print(); } catch (x) { showToast('PDF를 만들지 못했습니다. 네트워크를 확인해 주세요.'); } }
   };
 
-  const handleExportExcel = () => {
-    showToast('B2B 도료 일위대가 산출서 (.xlsx) 다운로드 완료');
+  async function onFile(e) {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    const isImg = (f.type || '').startsWith('image/'); const si = tgt.current;
+    const meta = { name: f.name, kind: isImg ? 'image' : 'file', url: isImg ? URL.createObjectURL(f) : '' };
+    const put = (patch) => setCustom((c) => ({ ...c, prods: c.prods.map((p, j) => (j === si ? { ...p, ...patch } : p)) }));
+    put({ file: meta }); setBusy(isImg ? '이미지 글자 인식 중… (처음엔 시간이 걸릴 수 있어요)' : '데이터시트 분석 중…');
+    try {
+      const o = extract(await fileToText(f)); const keys = Object.keys(o);
+      put({ ...o, name: custom.prods[si].name || f.name.replace(/\.[^.]+$/, ''), ext: keys });
+      if (si > 0) setCustom((c) => ({ ...c, cmp: si }));
+      showToast(keys.length ? keys.length + '개 항목을 추출해 자동 비교했습니다' : '자동 추출된 값이 없습니다 · 직접 입력해 주세요');
+    } catch (err) { showToast(err.message === 'unsupported' ? '지원하지 않는 형식입니다 (PDF·엑셀·워드·PPT·이미지·CSV)' : '분석하지 못했습니다 · 네트워크 확인 후 다시 시도하거나 직접 입력하세요'); }
+    setBusy('');
+  }
+  const cInp = 'w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-2.5 py-2 text-base outline-none focus:ring-2 focus:ring-blue-500';
+  const setCF = (k, v) => setCustom((c) => ({ ...c, prods: c.prods.map((p, j) => (j === c.sel ? { ...p, [k]: v, ext: (p.ext || []).filter((x) => x !== k) } : p)) }));
+  const cf = (k, label, ph, suffix, full) => {
+    const P = custom.prods[custom.sel];
+    return (
+      <label key={k} className={'block ' + (full ? 'col-span-2' : '')}>
+        <span className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 flex items-center gap-1">{label}{(P.ext || []).includes(k) && <span className="px-1 rounded bg-amber-100 text-amber-700 text-[10px] font-bold">추출</span>}</span>
+        <div className="relative mt-1"><input className={cInp} value={P[k]} placeholder={ph} inputMode={suffix ? 'decimal' : 'text'} onChange={(e) => setCF(k, e.target.value)} />
+          {suffix && <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[11px] text-gray-400 pointer-events-none">{suffix}</span>}</div>
+      </label>);
   };
-
-  const handleExportPDF = () => {
-    showToast('기술 사양 비교 보고서 (.pdf) 생성 완료');
+  const renderAttachBar = () => {
+    const costs = custom.prods.map((p) => { const cv = covOf(p), pr = n(p.price); return cv && pr && area ? (area / (cv * (100 / targetDft)) / (1 - lossRate / 100)) * pr : 0; });
+    const maxC = Math.max(1, ...costs);
+    return (
+      <div className="px-2 py-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
+        <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">데이터시트 첨부 (첨부하면 자동으로 비교됩니다)</div>
+        <input ref={fileRef} type="file" className="hidden" accept=".pdf,.xlsx,.xls,.xlsm,.csv,.txt,.docx,.pptx,image/*" onChange={onFile} />
+        <input ref={camRef} type="file" className="hidden" accept="image/*" capture="environment" onChange={onFile} />
+        <div className="space-y-1.5">
+          {custom.prods.map((p, i) => {
+            const has = !!p.file || covOf(p) > 0, on = i > 0 && custom.cmp === i;
+            return (
+              <div key={p.id} className="rounded-xl bg-white dark:bg-gray-900 border-2" style={{ borderColor: i === 0 || on ? CCOL[i] : 'rgba(156,163,175,.35)' }}>
+                <div className="flex items-center gap-2 p-2">
+                  <button onClick={() => i > 0 && setCustom((c) => ({ ...c, cmp: i }))} className="flex items-center gap-2 min-w-0 flex-1 text-left">
+                    {p.file && p.file.url ? <img src={p.file.url} alt="" className="w-9 h-9 rounded-md object-cover shrink-0" /> : <span className="w-9 h-9 rounded-md shrink-0 flex items-center justify-center text-white" style={{ background: CCOL[i] }}>{has ? <CheckCircle2 size={18} /> : <FileText size={18} />}</span>}
+                    <span className="min-w-0">
+                      <span className="block text-[11px] font-extrabold" style={{ color: CCOL[i] }}>{CLABELS[i]}{on ? ' · 비교 중' : ''}</span>
+                      <span className="block text-xs truncate text-gray-700 dark:text-gray-200">{has ? (p.name || (p.file && p.file.name) || '입력된 제품') : '데이터시트를 첨부하세요'}</span>
+                    </span>
+                  </button>
+                  <button onClick={() => { tgt.current = i; fileRef.current && fileRef.current.click(); }} className="shrink-0 flex items-center gap-1 px-2.5 py-2 rounded-lg bg-blue-600 text-white text-[11px] font-bold active:scale-95"><Upload size={14} />{has ? '변경' : '첨부'}</button>
+                  <button onClick={() => { tgt.current = i; camRef.current && camRef.current.click(); }} className="shrink-0 p-2 rounded-lg border border-blue-600 text-blue-600 dark:text-blue-400 active:scale-95" aria-label="사진 촬영"><Camera size={15} /></button>
+                  {has && <button onClick={() => { setOpenIdx(openIdx === i ? null : i); setCustom((c) => ({ ...c, sel: i })); }} className="shrink-0 px-2 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-[11px] font-bold text-gray-500">{openIdx === i ? '닫기' : '값'}</button>}
+                  {i > 1 && <button onClick={() => { setOpenIdx(null); setCustom((c) => { const prods = c.prods.filter((_, j) => j !== i); return { ...c, prods, sel: 0, cmp: Math.min(c.cmp >= i ? Math.max(1, c.cmp - 1) : c.cmp, prods.length - 1) }; }); }} className="shrink-0 p-2 text-gray-400" aria-label="제품 삭제"><Trash size={15} /></button>}
+                </div>
+                {openIdx === i && (
+                  <div className="px-2 pb-2">
+                    <p className="text-[10px] text-gray-400 mb-1.5">자동 추출된 값입니다. 원문과 다르면 고쳐 주세요 (화면에는 비교 결과만 표시됩니다).</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {cf('name', '제품명', '제품명', '', true)}{cf('company', '제조사', '예: KCC', '', true)}
+                      {cf('svr', '고형분 SVR', '82', '%')}{cf('coverage', '도포면적(100㎛)', '비우면 SVR÷10', '㎡/L')}
+                      {cf('dryTime', '건조시간', '4시간')}{cf('potLife', '가사시간', '6시간')}
+                      {cf('heat', '내열온도', '120', '℃')}{cf('price', '단가', '18500', '원/L')}
+                      <label className="block col-span-2"><span className="text-[11px] font-semibold text-gray-500">인증서 (쉼표 구분)</span><textarea className={cInp + ' mt-1 min-h-[48px]'} value={p.certs} onChange={(e) => setCF('certs', e.target.value)} /></label>
+                      <label className="block col-span-2"><span className="text-[11px] font-semibold text-gray-500">시공 실적 (쉼표 구분)</span><textarea className={cInp + ' mt-1 min-h-[48px]'} value={p.tracks} onChange={(e) => setCF('tracks', e.target.value)} /></label>
+                    </div>
+                    <div className="flex justify-end mt-2"><button onClick={() => setCustom((c) => ({ ...c, prods: c.prods.map((q, j) => (j === i ? { ...blankP(), id: q.id } : q)) }))} className="px-2.5 py-1 rounded-md bg-gray-200 dark:bg-gray-700 text-xs">비우기</button></div>
+                  </div>)}
+              </div>);
+          })}
+        </div>
+        {custom.prods.length < 5 && <button onClick={() => setCustom((c) => ({ ...c, prods: [...c.prods, blankP()] }))} className="mt-2 w-full py-2 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-xs font-bold text-gray-500 flex items-center justify-center gap-1"><Plus size={14} />비교 제품 추가 (최대 D까지)</button>}
+        {busy && <div className="mt-2 text-xs font-semibold text-blue-600 animate-pulse">{busy}</div>}
+        {custom.prods.length > 2 && costs.filter(Boolean).length > 1 && (
+          <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700 space-y-1.5">
+            <div className="text-[11px] font-bold text-gray-500">전체 제품 총 자재비 순위 (단가 입력 시)</div>
+            {custom.prods.map((p, i) => (<div key={p.id}><div className="flex justify-between text-[11px]"><b style={{ color: CCOL[i] }}>{CLABELS[i]} <span className="font-medium text-gray-600 dark:text-gray-300">{(p.name || '').split(' (')[0]}</span></b><span className="font-bold">{costs[i] ? Math.round(costs[i]).toLocaleString() + '원' : '-'}</span></div>
+              <div className="h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden"><div className="h-full rounded-full" style={{ width: costs[i] ? Math.max(4, costs[i] / maxC * 100) + '%' : 0, background: CCOL[i] }} /></div></div>))}
+          </div>)}
+      </div>);
   };
-
+  const ready = covOf(custom.prods[0]) > 0 && covOf(custom.prods[custom.cmp] || custom.prods[1]) > 0;
+  const guideCard = (
+    <div className="rounded-2xl border border-dashed border-blue-300 dark:border-blue-700 bg-blue-50/60 dark:bg-blue-900/20 p-5 text-center">
+      <div className="mx-auto w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center mb-3"><Upload size={22} /></div>
+      <div className="text-sm font-extrabold">데이터시트를 첨부하면 자동으로 비교합니다</div>
+      <ol className="mt-3 text-xs text-gray-600 dark:text-gray-300 space-y-1.5 text-left inline-block">
+        <li>① <b>기존 제품</b>: 현재 사용 중인 제품의 데이터시트 첨부</li>
+        <li>② <b>비교 A~D</b>: 비교할 제품의 데이터시트 첨부</li>
+        <li>③ 사양·소요량·자재비·인증/실적 비교와 보고서가 자동 생성됩니다</li>
+      </ol>
+      <p className="text-[11px] text-gray-400 mt-3">PDF · 엑셀 · 워드 · PPT · CSV · 사진/그림 파일 지원</p>
+    </div>);
   return (
     <div className={`min-h-screen flex justify-center bg-gray-100 ${darkMode ? 'dark bg-gray-950' : ''} font-sans transition-colors duration-200`}>
       {/* Mobile Frame Container (390px x 844px styling) */}
-      <div className="w-full max-w-[420px] bg-white dark:bg-gray-900 min-h-screen shadow-2xl flex flex-col relative text-gray-800 dark:text-gray-100 overflow-x-hidden border-x border-gray-200 dark:border-gray-800 pb-20">
+      <div className="w-full max-w-[900px] bg-white dark:bg-gray-900 min-h-screen shadow-2xl flex flex-col relative text-gray-800 dark:text-gray-100 overflow-x-hidden border-x border-gray-200 dark:border-gray-800 pb-16">
         
         {/* Top Sticky Header */}
-        <header className="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
+        <header className="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-3 py-3 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/30">
               K
@@ -230,32 +343,14 @@ function App() {
           </button>
         </header>
 
-        {/* Category Selector Bar */}
-        <div className="bg-gray-50 dark:bg-gray-800/50 p-3 border-b border-gray-200 dark:border-gray-800">
-          <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 block">
-            비교 대상 도료 카테고리 선택
-          </label>
-          <div className="relative">
-            <select
-              value={selectedPairId}
-              onChange={(e) => setSelectedPairId(e.target.value)}
-              className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none shadow-sm cursor-pointer"
-            >
-              {PAIR_CATEGORIES.map(pair => (
-                <option key={pair.id} value={pair.id}>
-                  {pair.name}
-                </option>
-              ))}
-            </select>
-            <ArrowUpDown className="absolute right-3 top-3 pointer-events-none text-gray-400" size={14} />
-          </div>
-        </div>
+        {renderAttachBar()}
 
         {/* Main Content Area based on Tab */}
-        <main className="flex-1 p-4 space-y-4">
+        <main className="flex-1 px-2 py-3 space-y-3">
 
+          {!ready && guideCard}
           {/* TAB 1: 1:1 SPEC COMPARISON */}
-          {activeTab === 'compare' && (
+          {ready && activeTab === 'compare' && (
             <div className="space-y-4 animate-fadeIn">
               {/* Product Match Title */}
               <div className="bg-blue-50 dark:bg-blue-950/40 rounded-xl p-3 border border-blue-200 dark:border-blue-900/50 flex items-center justify-between">
@@ -437,7 +532,7 @@ function App() {
           )}
 
           {/* TAB 2: COST & ROI SIMULATOR */}
-          {activeTab === 'cost' && (
+          {ready && activeTab === 'cost' && (
             <div className="space-y-4 animate-fadeIn">
               <div className="bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm space-y-3">
                 <h3 className="text-xs font-extrabold text-gray-900 dark:text-white flex items-center gap-1.5 border-b border-gray-100 dark:border-gray-700 pb-2">
@@ -598,7 +693,7 @@ function App() {
           )}
 
           {/* TAB 3: PROOF & CERTIFICATIONS LEDGER */}
-          {activeTab === 'proof' && (
+          {ready && activeTab === 'proof' && (
             <div className="space-y-4 animate-fadeIn">
               {/* Proof Title Banner */}
               <div className="bg-slate-900 text-white p-3.5 rounded-xl flex items-center justify-between shadow-sm">
@@ -666,7 +761,7 @@ function App() {
           )}
 
           {/* TAB 4: EXPORT & REPORT SUITE */}
-          {activeTab === 'export' && (
+          {ready && activeTab === 'export' && (
             <div className="space-y-4 animate-fadeIn">
               <div className="bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-3">
                 <h3 className="text-xs font-extrabold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-2">
@@ -750,28 +845,16 @@ function App() {
         )}
 
         {/* Bottom Navigation Bar */}
-        <nav className="fixed bottom-0 w-full max-w-[420px] bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 grid grid-cols-4 gap-1 px-3 pt-2 z-40" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 8px)' }}>
-          {[
-            { id: 'compare', label: '사양비교', Ico: Layers },
-            { id: 'cost', label: 'LCC/견적', Ico: Calculator },
-            { id: 'proof', label: '검증/실적', Ico: ShieldCheck },
-            { id: 'export', label: '보고서', Ico: FileText },
-          ].map(({ id, label, Ico }) => {
+        <nav className="fixed bottom-0 w-full max-w-[900px] bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 shadow-[0_-8px_22px_rgba(40,90,170,0.10)] rounded-t-[18px] grid grid-cols-4 gap-1 z-40 noprint" style={{ padding: '3px 6px calc(3px + env(safe-area-inset-bottom, 0px))' }}>
+          {[{ id: 'compare', label: '사양비교', Ico: Layers }, { id: 'cost', label: 'LCC/견적', Ico: Calculator }, { id: 'proof', label: '검증/실적', Ico: ShieldCheck }, { id: 'export', label: '보고서', Ico: FileText }].map(({ id, label, Ico }) => {
             const on = activeTab === id;
             return (
-              <button
-                key={id}
-                onClick={() => setActiveTab(id)}
-                aria-label={label}
-                title={label}
-                className="flex flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95"
-              >
-                <span className={`flex items-center justify-center w-14 h-8 rounded-full transition ${on ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30' : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
-                  <Ico size={22} strokeWidth={on ? 2.4 : 2} />
-                </span>
-                <span className={`text-[10px] leading-none ${on ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-gray-400'}`}>{label}</span>
-              </button>
-            );
+              <button key={id} onClick={() => setActiveTab(id)} aria-label={label} title={label}
+                className={'flex flex-col items-center justify-center gap-px rounded-[10px] transition active:scale-95 ' + (on ? 'text-white shadow-md' : 'text-gray-400 dark:text-gray-500')}
+                style={{ height: 40, padding: '3px 0 2px', background: on ? 'linear-gradient(180deg,#1c58e0,#0b3fc0)' : 'transparent' }}>
+                <Ico size={20} strokeWidth={on ? 2.3 : 2} />
+                <span style={{ fontSize: 10, fontWeight: 700, lineHeight: 1.1, whiteSpace: 'nowrap' }}>{label}</span>
+              </button>);
           })}
         </nav>
 
