@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v487',d:'2026.10.26'};
+const APPV={v:'v488',d:'2026.10.27'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3440,7 +3440,9 @@ function syLibPage(){
   ${x.scope?`<div class="lb-sc">${esc(x.scope)}</div>`:''}
   <div class="lb-b"><div class="lb-sy"><b>${syIx.layers}도장 시스템</b>${show.map((r,j)=>`<div class="lb-r"><u class="lb-n">${j+1}</u><em>${esc(r.lb||['하도','중도','상도'][j]||'코트')}</em><span>${esc(r.n)}${r.a?' 외 '+r.a:''}${r.c>1?'×'+r.c:''}${r.w?' (조건부)':''}</span>${r.d?`<span class="lb-d">${syNU(syFmtD(r.d))}</span>`:''}</div>`).join('')||'<small>구성 없음</small>'}${more>0?`<div class="lb-more">외 ${more}개 코트</div>`:''}</div>
   <div class="lb-tt"><small>총 도막두께</small><b>${tot?syNU(syFmtD(tot)):'-'}</b><div class="lb-tg">${tg.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div></div></div>`};
- e.innerHTML=`<div class="lb-sr"><label class="lb-s"><span>${syIx.search}</span><input id="sl-q" type="search" placeholder="사양명 또는 제품명 검색" value="${esc(SYF.q)}" oninput="SYF.q=this.value;SYF.mn=-1;syLibPage()" enterkeyhint="search"></label><button type="button" class="lb-f${SYF.fo?' on':''}" onclick="syLibFo()">${syIx.filter}<span>필터</span></button></div>
+/* v488 검색 입력 중에는 입력칸을 다시 만들지 않고 목록만 갱신 → 한글 조합(IME) 유지 */
+ if(SYF.qo){SYF.qo=0;const ls=e.querySelector('.lb-ls');if(ls){ls.innerHTML=R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘PDF등록’·‘일괄등록’으로 가져오거나 ‘사용자등록’으로 시작하세요</small>'}</div>`;return}}
+ e.innerHTML=`<div class="lb-sr"><label class="lb-s"><span>${syIx.search}</span><input id="sl-q" type="search" placeholder="사양명 또는 제품명 검색" value="${esc(SYF.q)}" oninput="SYF.q=this.value;SYF.mn=-1;SYF.qo=1;syLibPage()" enterkeyhint="search"></label><button type="button" class="lb-f${SYF.fo?' on':''}" onclick="syLibFo()">${syIx.filter}<span>필터</span></button></div>
  <div class="lb-pl">${pill('all','전체')}${pill('basic','기본')}${pill('spec','사양서')}${pill('fav','즐겨찾기')}${['C2','C3','C4','C5','CX'].map(c=>pill(c,c)).join('')}</div>${SYF.fo?`<div class="lb-pl s2">${pill('철재','철재',syIx.steel)}${pill('콘크리트','콘크리트',syIx.conc)}${pill('옥상','옥상',syIx.roof)}</div>`:''}
  <div class="lb-ls">${R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘PDF등록’·‘일괄등록’으로 가져오거나 ‘사용자등록’으로 시작하세요</small>'}</div>`}</div>
  <div class="lb-fl" id="lb-fl">${syLibFl()}</div>`;
@@ -12369,5 +12371,10 @@ html body #vw{z-index:2147483200!important}
 /* v486 사양 DB 하단 바 6칸(일괄등록 추가·삭제 제거) */
 .lb-fl{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important}
 .lb-fl button span{letter-spacing:-.4px}
+/* v488 사양 DB 검색란: 간격 +10% · 상단 고정 */
+html body #v3 .spdbp .lb-sr{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;gap:8.8px;align-items:center;margin-top:0;padding:4.4px 0;background:#fff;box-shadow:-10px 0 0 #fff,10px 0 0 #fff}
+html body #v3 .spdbp .lb-s{height:27.5px!important;min-height:27.5px!important}
+html body #v3 .spdbp .lb-s input{height:25.5px!important}
+html body #v3 .spdbp .lb-f{height:27.5px!important;min-height:27.5px!important}
 </style>
 </body></html>
