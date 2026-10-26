@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>B2B 도료 사양 &amp; 견적비교</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',sans-serif}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark}}
+</style>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config={darkMode:'class'}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo, useEffect } = React;
+const Icon = (inner) => ({ size = 24, className = '', strokeWidth = 2 }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true" dangerouslySetInnerHTML={{ __html: inner }} />
+);
+const Layers = Icon('<path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>');
+const Calculator = Icon('<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M16 14v4M12 18h.01M8 18h.01"/>');
+const ShieldCheck = Icon('<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>');
+const FileText = Icon('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8M16 13H8M16 17H8"/>');
+const Sun = Icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>');
+const Moon = Icon('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>');
+const CheckCircle2 = Icon('<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>');
+const Building2 = Icon('<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4M10 10h4M10 14h4M10 18h4"/>');
+const FileSpreadsheet = Icon('<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h2M14 13h2M8 17h2M14 17h2"/>');
+const Share2 = Icon('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>');
+const Sliders = Icon('<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M2 14h4M10 8h4M18 16h4"/>');
+const TrendingUp = Icon('<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>');
+const Award = Icon('<circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>');
+const ChevronRight = Icon('<path d="m9 18 6-6-6-6"/>');
+const Copy = Icon('<rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>');
+const ArrowUpDown = Icon('<path d="m21 16-4 4-4-4M17 20V4M3 8l4-4 4 4M7 4v16"/>');
+const Info = Icon('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>');
+const Sparkles = Icon('<path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"/>');
+const Download = Icon('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>');
+
+// --- DATA DEFINITION (B2B Paint Data) ---
+const PAIR_CATEGORIES = [
+  {
+    id: 'primer',
+    name: '비철/다용도 프라이머 (Primer)',
+    kcc: {
+      name: 'ALLROUNDMASTIC (올라운드마스틱)',
+      company: 'KCC',
+      svr: 82, // 고형분 용적비 %
+      coverage: 8.2, // 100㎛ 기준 이론 도포면적 (㎡/L)
+      dryTime: '4시간 (25℃)',
+      potLife: '6시간 (25℃)',
+      heatResistance: '120℃',
+      certifications: ['KS M 6030', '친환경 표지인증', 'KR 선급인증'],
+      tracks: ['S-OIL 샤힌 프로젝트', 'HD현대중공업 해양플랜트', '삼성엔지니어링 현장'],
+      unitPriceDefault: 18500 // ₩/L
+    },
+    comp: {
+      name: '하나폭시 S600 (Hana Poxy S600)',
+      company: '한진화학',
+      svr: 72,
+      coverage: 7.2,
+      dryTime: '6시간 (25℃)',
+      potLife: '4시간 (25℃)',
+      heatResistance: '100℃',
+      certifications: ['KS M 6030'],
+      tracks: ['중소형 건설사 아파트 현장', '일반 플랜트 도장'],
+      unitPriceDefault: 17200
+    }
+  },
+  {
+    id: 'heavy_duty',
+    name: '중방식 에폭시 하도 (Heavy Duty Epoxy)',
+    kcc: {
+      name: 'KOREPOX EH2350 (코레폭스 EH2350)',
+      company: 'KCC',
+      svr: 80,
+      coverage: 8.0,
+      dryTime: '3시간 (25℃)',
+      potLife: '8시간 (25℃)',
+      heatResistance: '150℃',
+      certifications: ['KS M 6030 1종', 'DNV 선급', 'ABS 인증', '국방부 사양'],
+      tracks: ['DNL 선박 건조', 'GS칼텍스 석유화학단지', '한화오션 해양설비'],
+      unitPriceDefault: 16500
+    },
+    comp: {
+      name: '하나폭시 HB736 (Hana Poxy HB736)',
+      company: '한진화학',
+      svr: 68,
+      coverage: 6.8,
+      dryTime: '5시간 (25℃)',
+      potLife: '5시간 (25℃)',
+      heatResistance: '120℃',
+      certifications: ['KS M 6030 1종'],
+      tracks: ['지역 화학공장 유지보수', '교량 하부 도장'],
+      unitPriceDefault: 15800
+    }
+  },
+  {
+    id: 'topcoat',
+    name: '우레탄 마감 상도 (Urethane Topcoat)',
+    kcc: {
+      name: 'KORETHAN UT6581 (코레탄 UT6581)',
+      company: 'KCC',
+      svr: 65,
+      coverage: 6.5,
+      dryTime: '2.5시간 (25℃)',
+      potLife: '5시간 (25℃)',
+      heatResistance: '110℃',
+      certifications: ['KS M 6020 1종', '초내후성 인증', '친환경 건축자재 HB마크'],
+      tracks: ['SK에너지 울산 콤플렉스', '인천국제공항 4단계 확장', '롯데월드타워 외벽철골'],
+      unitPriceDefault: 21000
+    },
+    comp: {
+      name: '하나탄 #300 (Hanatan #300)',
+      company: '한진화학',
+      svr: 55,
+      coverage: 5.5,
+      dryTime: '4시간 (25℃)',
+      potLife: '3시간 (25℃)',
+      heatResistance: '90℃',
+      certifications: ['KS M 6020'],
+      tracks: ['일반 상업빌딩 외벽', '지형 구조물'],
+      unitPriceDefault: 19500
+    }
+  }
+];
+
+function App() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [selectedPairId, setSelectedPairId] = useState('primer');
+  const [activeTab, setActiveTab] = useState('compare'); // compare, cost, proof, export
+  
+  // Cost Calculator Inputs
+  const [area, setArea] = useState(5000); // 도장 면적 (㎡)
+  const [lossRate, setLossRate] = useState(25); // 손실률 (%)
+  const [targetDft, setTargetDft] = useState(100); // 목표 도막 두께 (㎛)
+  
+  // Dynamic Prices (allows custom B2B negotiated unit price)
+  const [kccPrice, setKccPrice] = useState(18500);
+  const [compPrice, setCompPrice] = useState(17200);
+
+  // Current selected category pair
+  const currentPair = useMemo(() => {
+    return PAIR_CATEGORIES.find(p => p.id === selectedPairId) || PAIR_CATEGORIES[0];
+  }, [selectedPairId]);
+
+  // Update default prices when category changes
+  useEffect(() => {
+    setKccPrice(currentPair.kcc.unitPriceDefault);
+    setCompPrice(currentPair.comp.unitPriceDefault);
+  }, [selectedPairId, currentPair]);
+
+  // --- Calculations ---
+  // 실 소요량(L) = (면적 ㎡ * (목표DFT / 100)) / (이론도포면적 ㎡/L * (1 - 손실률/100))
+  const calculations = useMemo(() => {
+    const kccCoverageAdj = currentPair.kcc.coverage * (100 / targetDft);
+    const compCoverageAdj = currentPair.comp.coverage * (100 / targetDft);
+
+    const kccVolumeNeeded = (area / kccCoverageAdj) / (1 - lossRate / 100);
+    const compVolumeNeeded = (area / compCoverageAdj) / (1 - lossRate / 100);
+
+    const kccTotalCost = Math.round(kccVolumeNeeded * kccPrice);
+    const compTotalCost = Math.round(compVolumeNeeded * compPrice);
+
+    const costDiff = compTotalCost - kccTotalCost; // 양수면 KCC가 절감
+    const savingPercent = compTotalCost > 0 ? ((costDiff / compTotalCost) * 100).toFixed(1) : 0;
+    const volumeSaved = compVolumeNeeded - kccVolumeNeeded;
+
+    return {
+      kccVolumeNeeded: Math.ceil(kccVolumeNeeded),
+      compVolumeNeeded: Math.ceil(compVolumeNeeded),
+      kccTotalCost,
+      compTotalCost,
+      costDiff,
+      savingPercent,
+      volumeSaved: Math.ceil(volumeSaved)
+    };
+  }, [area, lossRate, targetDft, kccPrice, compPrice, currentPair]);
+
+  // Share Modal & Toast
+  const [toastMessage, setToastMessage] = useState('');
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 2500);
+  };
+
+  const handleCopyLink = () => {
+    try { navigator.clipboard.writeText(window.location.href); } catch (e) {}
+    showToast('공유 링크가 클립보드에 복사되었습니다.');
+  };
+
+  const handleExportExcel = () => {
+    showToast('B2B 도료 일위대가 산출서 (.xlsx) 다운로드 완료');
+  };
+
+  const handleExportPDF = () => {
+    showToast('기술 사양 비교 보고서 (.pdf) 생성 완료');
+  };
+
+  return (
+    <div className={`min-h-screen flex justify-center bg-gray-100 ${darkMode ? 'dark bg-gray-950' : ''} font-sans transition-colors duration-200`}>
+      {/* Mobile Frame Container (390px x 844px styling) */}
+      <div className="w-full max-w-[420px] bg-white dark:bg-gray-900 min-h-screen shadow-2xl flex flex-col relative text-gray-800 dark:text-gray-100 overflow-x-hidden border-x border-gray-200 dark:border-gray-800 pb-20">
+        
+        {/* Top Sticky Header */}
+        <header className="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/30">
+              K
+            </div>
+            <div>
+              <h1 className="text-sm font-bold tracking-tight text-gray-900 dark:text-white">B2B 도료 사양 & 견적비교</h1>
+              <p className="text-[10px] text-gray-500 dark:text-gray-400">KCC Smart Spec Engine v2.4</p>
+            </div>
+          </div>
+          
+          <button 
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+            aria-label="테마 전환"
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </header>
+
+        {/* Category Selector Bar */}
+        <div className="bg-gray-50 dark:bg-gray-800/50 p-3 border-b border-gray-200 dark:border-gray-800">
+          <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5 block">
+            비교 대상 도료 카테고리 선택
+          </label>
+          <div className="relative">
+            <select
+              value={selectedPairId}
+              onChange={(e) => setSelectedPairId(e.target.value)}
+              className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs font-bold text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none shadow-sm cursor-pointer"
+            >
+              {PAIR_CATEGORIES.map(pair => (
+                <option key={pair.id} value={pair.id}>
+                  {pair.name}
+                </option>
+              ))}
+            </select>
+            <ArrowUpDown className="absolute right-3 top-3 pointer-events-none text-gray-400" size={14} />
+          </div>
+        </div>
+
+        {/* Main Content Area based on Tab */}
+        <main className="flex-1 p-4 space-y-4">
+
+          {/* TAB 1: 1:1 SPEC COMPARISON */}
+          {activeTab === 'compare' && (
+            <div className="space-y-4 animate-fadeIn">
+              {/* Product Match Title */}
+              <div className="bg-blue-50 dark:bg-blue-950/40 rounded-xl p-3 border border-blue-200 dark:border-blue-900/50 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 block">매칭 비교</span>
+                  <span className="text-xs font-extrabold text-blue-900 dark:text-blue-200">KCC vs 타사 1:1 성능 분석</span>
+                </div>
+                <span className="text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
+                  100㎛ 도막 환산
+                </span>
+              </div>
+
+              {/* Side-by-Side Spec Cards */}
+              <div className="grid grid-cols-2 gap-2">
+                {/* KCC Card */}
+                <div className="bg-gradient-to-b from-blue-50/50 to-white dark:from-gray-800 dark:to-gray-900 border-2 border-blue-500 rounded-xl p-3 shadow-sm relative overflow-hidden">
+                  <div className="absolute top-0 right-0 bg-blue-500 text-white text-[9px] font-extrabold px-2 py-0.5 rounded-bl-lg">
+                    추천 (KCC)
+                  </div>
+                  <div className="text-xs font-extrabold text-blue-600 dark:text-blue-400 mt-1">KCC</div>
+                  <h3 className="text-xs font-black text-gray-900 dark:text-white leading-tight mb-2 h-8 flex items-center">
+                    {currentPair.kcc.name}
+                  </h3>
+
+                  <div className="space-y-2 text-[11px]">
+                    <div className="bg-blue-100/60 dark:bg-blue-900/40 p-1.5 rounded-lg text-center">
+                      <span className="text-gray-500 dark:text-gray-400 block text-[9px]">고형분 용적비(SVR)</span>
+                      <strong className="text-sm text-blue-700 dark:text-blue-300 font-extrabold">{currentPair.kcc.svr}%</strong>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-1.5 rounded-lg text-center">
+                      <span className="text-gray-500 dark:text-gray-400 block text-[9px]">이론 도포면적</span>
+                      <strong className="text-xs font-bold text-gray-800 dark:text-gray-200">{currentPair.kcc.coverage} ㎡/L</strong>
+                    </div>
+
+                    <div className="pt-1 border-t border-gray-100 dark:border-gray-800 space-y-1">
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-gray-400">건조시간:</span>
+                        <span className="font-semibold">{currentPair.kcc.dryTime}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-gray-400">가사시간:</span>
+                        <span className="font-semibold">{currentPair.kcc.potLife}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-gray-400">내열온도:</span>
+                        <span className="font-semibold">{currentPair.kcc.heatResistance}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Competitor Card */}
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-sm">
+                  <div className="text-xs font-extrabold text-gray-400 mt-1">타사 (경쟁사)</div>
+                  <h3 className="text-xs font-bold text-gray-700 dark:text-gray-300 leading-tight mb-2 h-8 flex items-center">
+                    {currentPair.comp.name}
+                  </h3>
+
+                  <div className="space-y-2 text-[11px]">
+                    <div className="bg-gray-100 dark:bg-gray-800 p-1.5 rounded-lg text-center">
+                      <span className="text-gray-500 dark:text-gray-400 block text-[9px]">고형분 용적비(SVR)</span>
+                      <strong className="text-sm text-gray-700 dark:text-gray-300 font-bold">{currentPair.comp.svr}%</strong>
+                    </div>
+
+                    <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 p-1.5 rounded-lg text-center">
+                      <span className="text-gray-500 dark:text-gray-400 block text-[9px]">이론 도포면적</span>
+                      <strong className="text-xs font-bold text-gray-800 dark:text-gray-200">{currentPair.comp.coverage} ㎡/L</strong>
+                    </div>
+
+                    <div className="pt-1 border-t border-gray-100 dark:border-gray-800 space-y-1">
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-gray-400">건조시간:</span>
+                        <span className="font-medium text-gray-600 dark:text-gray-400">{currentPair.comp.dryTime}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-gray-400">가사시간:</span>
+                        <span className="font-medium text-gray-600 dark:text-gray-400">{currentPair.comp.potLife}</span>
+                      </div>
+                      <div className="flex justify-between text-[10px]">
+                        <span className="text-gray-400">내열온도:</span>
+                        <span className="font-medium text-gray-600 dark:text-gray-400">{currentPair.comp.heatResistance}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Data Visual Charts */}
+              <div className="bg-white dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-4 shadow-sm">
+                <h4 className="text-xs font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                  <TrendingUp size={14} className="text-blue-500" /> 핵심 성능지표 수치 비교
+                </h4>
+
+                {/* SVR Visual Bar */}
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-[11px] font-semibold">
+                    <span>고형분 용적비 (SVR %) - 높은 수치가 우수</span>
+                    <span className="text-blue-600 dark:text-blue-400">KCC +{currentPair.kcc.svr - currentPair.comp.svr}%p 우수</span>
+                  </div>
+                  
+                  {/* KCC Bar */}
+                  <div className="space-y-1">
+                    <div className="flex items-center text-[10px]">
+                      <span className="w-12 font-bold text-blue-600">KCC</span>
+                      <div className="flex-1 bg-gray-100 dark:bg-gray-700 h-4 rounded-full overflow-hidden relative">
+                        <div 
+                          className="bg-blue-600 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-[10px] text-white font-extrabold"
+                          style={{ width: `${currentPair.kcc.svr}%` }}
+                        >
+                          {currentPair.kcc.svr}%
+                        </div>
+                      </div>
+                    </div>
+                    {/* Comp Bar */}
+                    <div className="flex items-center text-[10px]">
+                      <span className="w-12 text-gray-400">경쟁사</span>
+                      <div className="flex-1 bg-gray-100 dark:bg-gray-700 h-4 rounded-full overflow-hidden relative">
+                        <div 
+                          className="bg-gray-400 dark:bg-gray-500 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-[10px] text-white font-bold"
+                          style={{ width: `${currentPair.comp.svr}%` }}
+                        >
+                          {currentPair.comp.svr}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coverage Visual Bar */}
+                <div className="space-y-1.5 pt-2 border-t border-gray-100 dark:border-gray-700">
+                  <div className="flex justify-between text-[11px] font-semibold">
+                    <span>100㎛ 기준 이론 도포면적 (㎡/L)</span>
+                    <span className="text-blue-600 dark:text-blue-400">
+                      KCC가 약 {(((currentPair.kcc.coverage / currentPair.comp.coverage) - 1) * 100).toFixed(1)}% 더 도포 가능
+                    </span>
+                  </div>
+                  
+                  {/* KCC Bar */}
+                  <div className="space-y-1">
+                    <div className="flex items-center text-[10px]">
+                      <span className="w-12 font-bold text-blue-600">KCC</span>
+                      <div className="flex-1 bg-gray-100 dark:bg-gray-700 h-4 rounded-full overflow-hidden relative">
+                        <div 
+                          className="bg-emerald-500 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-[10px] text-white font-extrabold"
+                          style={{ width: `${(currentPair.kcc.coverage / 10) * 100}%` }}
+                        >
+                          {currentPair.kcc.coverage} ㎡/L
+                        </div>
+                      </div>
+                    </div>
+                    {/* Comp Bar */}
+                    <div className="flex items-center text-[10px]">
+                      <span className="w-12 text-gray-400">경쟁사</span>
+                      <div className="flex-1 bg-gray-100 dark:bg-gray-700 h-4 rounded-full overflow-hidden relative">
+                        <div 
+                          className="bg-gray-400 dark:bg-gray-500 h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2 text-[10px] text-white font-bold"
+                          style={{ width: `${(currentPair.comp.coverage / 10) * 100}%` }}
+                        >
+                          {currentPair.comp.coverage} ㎡/L
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Value Highlight Banner */}
+              <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-3 flex items-start gap-2.5">
+                <Sparkles className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={16} />
+                <div className="text-xs space-y-0.5">
+                  <h5 className="font-bold text-amber-900 dark:text-amber-300">엔지니어링 제안 포인트</h5>
+                  <p className="text-amber-800 dark:text-amber-400/90 leading-relaxed text-[11px]">
+                    KCC 제품은 고고형분(High-Solid) 설계로 타사 대비 <strong>동일 두께 형성 시 소요 도료 리터 수가 적어</strong> B2B 프로젝트의 물류비 및 시공 단가를 획기적으로 낮춰줍니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: COST & ROI SIMULATOR */}
+          {activeTab === 'cost' && (
+            <div className="space-y-4 animate-fadeIn">
+              <div className="bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-4 shadow-sm space-y-3">
+                <h3 className="text-xs font-extrabold text-gray-900 dark:text-white flex items-center gap-1.5 border-b border-gray-100 dark:border-gray-700 pb-2">
+                  <Sliders size={16} className="text-blue-600" /> 프로젝트 시공 조건 입력
+                </h3>
+
+                {/* Area Input */}
+                <div className="space-y-1">
+                  <div className="flex justify-between text-xs">
+                    <label className="font-bold text-gray-700 dark:text-gray-300">총 도장 면적 (㎡)</label>
+                    <span className="font-extrabold text-blue-600">{area.toLocaleString()} ㎡</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="500" 
+                    max="50000" 
+                    step="500"
+                    value={area} 
+                    onChange={(e) => setArea(Number(e.target.value))}
+                    className="w-full accent-blue-600 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[9px] text-gray-400">
+                    <span>500 ㎡ (소형)</span>
+                    <span>10,000 ㎡ (중형)</span>
+                    <span>50,000 ㎡ (대형 플랜트)</span>
+                  </div>
+                </div>
+
+                {/* Loss Rate Input */}
+                <div className="space-y-1 pt-1">
+                  <div className="flex justify-between text-xs">
+                    <label className="font-bold text-gray-700 dark:text-gray-300">현장 로스율 (Loss %)</label>
+                    <span className="font-extrabold text-blue-600">{lossRate}%</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="5" 
+                    max="50" 
+                    step="5"
+                    value={lossRate} 
+                    onChange={(e) => setLossRate(Number(e.target.value))}
+                    className="w-full accent-blue-600 cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[9px] text-gray-400">
+                    <span>5% (붓/롤러 도장)</span>
+                    <span>25% (일반 스프레이)</span>
+                    <span>50% (고소 야외스프레이)</span>
+                  </div>
+                </div>
+
+                {/* Target DFT Input */}
+                <div className="space-y-1 pt-1">
+                  <div className="flex justify-between text-xs">
+                    <label className="font-bold text-gray-700 dark:text-gray-300">목표 건조 도막두께 (DFT ㎛)</label>
+                    <span className="font-extrabold text-blue-600">{targetDft} ㎛</span>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="50" 
+                    max="300" 
+                    step="25"
+                    value={targetDft} 
+                    onChange={(e) => setTargetDft(Number(e.target.value))}
+                    className="w-full accent-blue-600 cursor-pointer"
+                  />
+                </div>
+
+                {/* Unit Price Inputs */}
+                <div className="pt-2 grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="text-[10px] font-bold text-blue-600 dark:text-blue-400 block mb-1">
+                      KCC 단가 (원/L)
+                    </label>
+                    <input 
+                      type="number" 
+                      value={kccPrice}
+                      onChange={(e) => setKccPrice(Number(e.target.value))}
+                      className="w-full bg-gray-50 dark:bg-gray-900 border border-blue-300 dark:border-blue-800 rounded-lg p-2 text-xs font-bold text-blue-900 dark:text-blue-100 text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-gray-500 block mb-1">
+                      타사 단가 (원/L)
+                    </label>
+                    <input 
+                      type="number" 
+                      value={compPrice}
+                      onChange={(e) => setCompPrice(Number(e.target.value))}
+                      className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-2 text-xs font-bold text-gray-800 dark:text-gray-200 text-right focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Simulation Calculation Results Card */}
+              <div className="bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-2xl p-4 shadow-lg space-y-4">
+                <div className="flex justify-between items-center border-b border-blue-800/80 pb-2">
+                  <span className="text-xs font-extrabold text-blue-300 flex items-center gap-1">
+                    <Calculator size={14} /> 최종 LCC 비용 산출 결과
+                  </span>
+                  <span className="text-[10px] bg-emerald-500 text-white px-2 py-0.5 rounded-full font-bold">
+                    실시간 자동계산
+                  </span>
+                </div>
+
+                {/* Big ROI Savings Number */}
+                <div className="text-center py-2 bg-white/5 rounded-xl border border-white/10">
+                  <span className="text-[11px] text-gray-300 block mb-1">KCC 도입 시 예상 비용 절감액</span>
+                  <div className="text-2xl font-black text-emerald-400 tracking-tight">
+                    {calculations.costDiff > 0 ? (
+                      `₩ ${calculations.costDiff.toLocaleString()} 원 절감`
+                    ) : (
+                      `₩ ${Math.abs(calculations.costDiff).toLocaleString()} 원 추가`
+                    )}
+                  </div>
+                  <p className="text-[10px] text-emerald-300/80 mt-1 font-semibold">
+                    {calculations.costDiff > 0 ? `(타사 대비 약 ${calculations.savingPercent}% 총액 절감 효과)` : '단가 재협상 필요'}
+                  </p>
+                </div>
+
+                {/* Comparison Details Grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs pt-1">
+                  {/* KCC Result */}
+                  <div className="bg-blue-950/60 border border-blue-700/50 p-2.5 rounded-xl space-y-1">
+                    <div className="text-[10px] font-bold text-blue-400">KCC 소요 사양</div>
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-gray-400">필요 도료:</span>
+                      <strong className="text-white">{calculations.kccVolumeNeeded.toLocaleString()} L</strong>
+                    </div>
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-gray-400">총 자재비:</span>
+                      <strong className="text-blue-300">{(calculations.kccTotalCost / 10000).toFixed(0)} 만원</strong>
+                    </div>
+                  </div>
+
+                  {/* Competitor Result */}
+                  <div className="bg-gray-800/60 border border-gray-700/50 p-2.5 rounded-xl space-y-1">
+                    <div className="text-[10px] font-bold text-gray-400">타사 소요 사양</div>
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-gray-400">필요 도료:</span>
+                      <strong className="text-gray-200">{calculations.compVolumeNeeded.toLocaleString()} L</strong>
+                    </div>
+                    <div className="flex justify-between text-[11px]">
+                      <span className="text-gray-400">총 자재비:</span>
+                      <strong className="text-gray-300">{(calculations.compTotalCost / 10000).toFixed(0)} 만원</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Key Insight */}
+                <div className="text-[10px] text-gray-300 bg-blue-900/40 p-2 rounded-lg leading-snug border border-blue-700/30">
+                  💡 <strong>리터당 단가가 높더라도</strong> KCC의 높 고형분(SVR {currentPair.kcc.svr}%) 특성으로 
+                  총 필요 도료량이 <strong>{calculations.volumeSaved.toLocaleString()} 리터 절감</strong>되어 
+                  최종 견적이 훨씬 유리합니다.
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: PROOF & CERTIFICATIONS LEDGER */}
+          {activeTab === 'proof' && (
+            <div className="space-y-4 animate-fadeIn">
+              {/* Proof Title Banner */}
+              <div className="bg-slate-900 text-white p-3.5 rounded-xl flex items-center justify-between shadow-sm">
+                <div>
+                  <h3 className="text-xs font-black flex items-center gap-1.5 text-blue-400">
+                    <ShieldCheck size={16} /> 공인 검증 & 납품 실적 레저
+                  </h3>
+                  <p className="text-[10px] text-gray-300">데이터시트 외 객관적 품질 인증 증빙</p>
+                </div>
+                <Award className="text-amber-400" size={24} />
+              </div>
+
+              {/* Certifications List */}
+              <div className="bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-3.5 space-y-3">
+                <h4 className="text-xs font-bold text-gray-900 dark:text-white flex items-center gap-1">
+                  <CheckCircle2 size={14} className="text-emerald-500" /> 보유 공인 인증 (Certifications)
+                </h4>
+                
+                <div className="space-y-2">
+                  {currentPair.kcc.certifications.map((cert, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+                      <div className="flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                        <span className="text-xs font-bold text-gray-800 dark:text-gray-200">{cert}</span>
+                      </div>
+                      <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded">
+                        인증 획득 완료
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Key B2B Project Track Record */}
+              <div className="bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-3.5 space-y-3">
+                <h4 className="text-xs font-bold text-gray-900 dark:text-white flex items-center gap-1">
+                  <Building2 size={14} className="text-blue-500" /> 대형 랜드마크 & B2B 납품 실적
+                </h4>
+
+                <div className="space-y-2">
+                  {currentPair.kcc.tracks.map((track, idx) => (
+                    <div key={idx} className="p-2.5 rounded-xl bg-blue-50/40 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0 font-bold text-xs">
+                        {idx + 1}
+                      </div>
+                      <div>
+                        <div className="text-xs font-extrabold text-gray-900 dark:text-gray-100">{track}</div>
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400">KCC 최고급 산업용 사양 적용 완료 현장</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quality Guarantee Note */}
+              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-xl border border-gray-200 dark:border-gray-700 text-center space-y-1">
+                <p className="text-[11px] font-bold text-gray-700 dark:text-gray-300">
+                  전 세계 주요 선급(DNV, KR, ABS) 및 국방 사양 승인
+                </p>
+                <p className="text-[10px] text-gray-500 dark:text-gray-400">
+                  KCC 중앙연구소 시험성적서 즉시 발급 가능
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: EXPORT & REPORT SUITE */}
+          {activeTab === 'export' && (
+            <div className="space-y-4 animate-fadeIn">
+              <div className="bg-white dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-3">
+                <h3 className="text-xs font-extrabold text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-2">
+                  B2B 보고서 및 견적서 내보내기
+                </h3>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
+                  작성된 사양 비교 결과 및 단가 절감 시뮬레이션 데이터를 다양한 B2B 업무용 포맷으로 내보낼 수 있습니다.
+                </p>
+
+                <div className="space-y-2 pt-1">
+                  {/* PDF Export Button */}
+                  <button 
+                    onClick={handleExportPDF}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-3 text-xs font-bold flex items-center justify-between shadow-md transition active:scale-[0.99]"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <FileText size={18} />
+                      <div className="text-left">
+                        <div>기술 사양 비교 보고서 (PDF)</div>
+                        <div className="text-[9px] font-normal text-blue-200">1:1 성능 비교 및 시험성적서 첨부형</div>
+                      </div>
+                    </div>
+                    <Download size={16} />
+                  </button>
+
+                  {/* Excel Cost Sheet Button */}
+                  <button 
+                    onClick={handleExportExcel}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl p-3 text-xs font-bold flex items-center justify-between shadow-md transition active:scale-[0.99]"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <FileSpreadsheet size={18} />
+                      <div className="text-left">
+                        <div>B2B 도료 일위대가 산출서 (Excel)</div>
+                        <div className="text-[9px] font-normal text-emerald-200">면적별 소요 수량 및 견적 수식 포함</div>
+                      </div>
+                    </div>
+                    <Download size={16} />
+                  </button>
+
+                  {/* Share Link Button */}
+                  <button 
+                    onClick={handleCopyLink}
+                    className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-xl p-3 text-xs font-bold flex items-center justify-between transition border border-gray-200 dark:border-gray-600"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Share2 size={18} />
+                      <div className="text-left">
+                        <div>카카오톡 / 웹 링크 공유</div>
+                        <div className="text-[9px] font-normal text-gray-500 dark:text-gray-400">현재 계산 조건 그대로 공유</div>
+                      </div>
+                    </div>
+                    <Copy size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Summary Preview Box */}
+              <div className="bg-gray-50 dark:bg-gray-900/60 rounded-xl p-3.5 border border-gray-200 dark:border-gray-800 space-y-2">
+                <div className="text-[11px] font-extrabold text-gray-700 dark:text-gray-300">
+                  📋 내보내기 요약 프리뷰
+                </div>
+                <div className="text-[10px] space-y-1 text-gray-600 dark:text-gray-400 font-mono bg-white dark:bg-gray-800 p-2.5 rounded-lg border border-gray-100 dark:border-gray-700">
+                  <div>• 제품: {currentPair.kcc.name}</div>
+                  <div>• 면적/DFT: {area.toLocaleString()}㎡ / {targetDft}㎛ (손실률 {lossRate}%)</div>
+                  <div>• KCC 총 도료 소요량: {calculations.kccVolumeNeeded.toLocaleString()} L</div>
+                  <div>• 예상 총 절감액: ₩ {calculations.costDiff.toLocaleString()} 원 ({calculations.savingPercent}%)</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </main>
+
+        {/* Toast Popup Notification */}
+        {toastMessage && (
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2 border border-gray-700 animate-bounce z-50">
+            <CheckCircle2 size={14} className="text-emerald-400" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
+        {/* Bottom Navigation Bar */}
+        <nav className="fixed bottom-0 w-full max-w-[420px] bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200 dark:border-gray-800 grid grid-cols-4 gap-1 px-3 pt-2 z-40" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 8px)' }}>
+          {[
+            { id: 'compare', label: '사양비교', Ico: Layers },
+            { id: 'cost', label: 'LCC/견적', Ico: Calculator },
+            { id: 'proof', label: '검증/실적', Ico: ShieldCheck },
+            { id: 'export', label: '보고서', Ico: FileText },
+          ].map(({ id, label, Ico }) => {
+            const on = activeTab === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                aria-label={label}
+                title={label}
+                className="flex flex-col items-center justify-center gap-0.5 py-1 transition active:scale-95"
+              >
+                <span className={`flex items-center justify-center w-14 h-8 rounded-full transition ${on ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30' : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'}`}>
+                  <Ico size={22} strokeWidth={on ? 2.4 : 2} />
+                </span>
+                <span className={`text-[10px] leading-none ${on ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-gray-400'}`}>{label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+      </div>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

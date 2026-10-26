@@ -3075,7 +3075,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v492',d:'2026.10.27'};
+const APPV={v:'v493',d:'2026.10.27'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -12609,6 +12609,8 @@ function savedHtml(){
 }
 function render(){
  const e=Q('#v10');if(!e)return;
+ if(e.querySelector('#cpf'))return;
+ e.innerHTML='<iframe id="cpf" src="compare.html" title="제품 비교" style="display:block;width:100%;height:calc(100dvh - 170px);min-height:560px;border:0;border-radius:14px;background:#f3f4f6"></iframe>';return;
  if(!INIT){INIT=1;try{if(!(+C.area>0)&&+S.area>0)C.area=S.area}catch(x){}}
  e.innerHTML=`<div class="cp">
  <div class="cp-hero"><b>제품 비교 · 분석</b><small>두 제품의 소요량·자재비·건조시간을 같은 조건에서 비교해 우위 제품을 보여 줍니다. 제조사는 표시하지 않습니다.</small></div>
