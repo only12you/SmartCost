@@ -2380,7 +2380,7 @@ html body #v9 .ev-ex td:last-child{text-align:left}
 <div class=hint>■ 기술자료 산출을 위한 기본 항목(SVR·도막·출고/혼합규격·희석제·용도)이 DB에 저장됩니다.<br>· CSV 열: 제품명,일반명,용도,출규,혼규,단위,추천도막,SVR,희석제코드,희석율,희석제명,규격,건조시간,TDS링크<br>■ 같은 제품명은 갱신, 새 제품은 추가됩니다.</div>
 <div class=sec>■ 기술자료(TDS) 일괄 등록</div><label class="tdsfb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h6M9 17h6"/></svg><span>TDS 첨부 (PDF · 이미지)</span><input type=file id=bf multiple onchange="bulk(this.files);this.value=''"></label><div class=hint>파일 이름을 제품명과 같게 저장해 올리면 자동으로 제품에 연결됩니다 (예: EH2350.pdf). 연결되지 않은 파일은 대기 보관되고, 같은 이름의 제품이 DB에 추가되면 자동 연결됩니다. 대기 중 <b id=tdp>0</b>개</div><div id=dgl></div><div id=pend></div><div id=brs></div><div class=sec>■ 기술자료 DB 등록</div><div class=g3><button onclick="newP()">+ 제품추가</button><button onclick="$('#fi').click()">CSV 등록</button><button onclick="ex()">DB 내보내기<br>(CSV)</button></div></div><div class=sec style="color:#c9252f">■ 초기화 <small class=hint style="color:#c9252f">⚠ 삭제한 데이터는 복구할 수 없습니다</small></div><div class=g3><button class=rst onclick="bulkReset()">일괄등록<br>초기화</button><button class=rst onclick="tdsAll()">데이터시트<br>전체 초기화</button><button class=rst onclick="dbReset()">DB<br>초기화</button></div><div class=hint>일괄등록 = 미매칭 대기 파일만 · 데이터시트 전체 = 첨부 TDS·건조시간·가사시간 전부 · DB = 직접 추가·수정한 제품</div>
 <div class="pqc afp" id=af hidden><div class="pqh"><span class="pqi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span><div><b id=af_t>제품 추가</b><small>값을 직접 고치거나 TDS 파일로 자동 입력합니다</small></div></div><div class="pqn">· SVR = 고형분 용적비(%) 와 동일합니다.<br>· 기술자료(TDS PDF·사진)를 선택하면 글자·OCR로 항목을 읽고, 검토 화면에서 확인한 뒤 등록합니다. 원문 설명·표·이미지는 저장하지 않습니다.</div><label class="pql">PDF 또는 이미지 파일</label><label class="tdsfb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="M9 13h6M9 17h6"/></svg><span>TDS 첨부 (PDF · 이미지)</span><input type=file id=a_f accept=".pdf,application/pdf,image/*" multiple onchange="afTds(this.files);this.value=''"></label><div class="pqsec2">기본 정보</div><div class="pqg"><div class="pqf w"><label class="pql">제품명</label><input id=a_n class=pqin placeholder="제품명"></div><div class="pqf"><label class="pql">제조사</label><input id=a_mf class=pqin placeholder="예: KCC, 조광페인트"></div><div class="pqf"><label class="pql">일반명</label><input id=a_g class=pqin placeholder="예: 에폭시 하도"></div></div><div class="pqsec2">규격 · 비중</div><div class="pqg"><div class="pqf"><label class="pql">출규</label><input id=a_pk class=pqin type=number inputmode=decimal placeholder=""></div><div class="pqf"><label class="pql">혼규</label><input id=a_mk class=pqin type=number inputmode=decimal placeholder=""></div><div class="pqf"><label class="pql">단위</label><input id=a_un class=pqin placeholder="L 또는 kg"></div><div class="pqf"><label class="pql">비중</label><input id=a_sg class=pqin type=number inputmode=decimal placeholder=""></div></div><div class="pqsec2">소요량 기준</div><div class="pqg"><div class="pqf"><label class="pql">SVR</label><input id=a_svr class=pqin type=number inputmode=decimal placeholder=""></div><div class="pqf"><label class="pql">추천도막</label><input id=a_dft class=pqin type=number inputmode=decimal placeholder="㎛"></div><div class="pqf w"><label class="pql">혼합비기준</label><select id=a_mixt class=pqin><option value="">미확인</option><option>부피비</option><option>중량비</option></select></div><input id=a_th type=hidden></div><div class="pqsec2">희석제</div><div class="pqg"><div class="pqf w"><label class="pql">희석제명</label><input id=a_tn class=pqin placeholder=""></div><div class="pqf"><label class="pql">희석제코드</label><input id=a_tc class=pqin placeholder="예: 002"></div><div class="pqf"><label class="pql">희석율(%)</label><input id=a_tr class=pqin type=number inputmode=decimal placeholder=""></div><div class="pqf"><label class="pql">희석제규격</label><input id=a_ts class=pqin type=number inputmode=decimal placeholder="L/말"></div></div><div class="pqsec2">도장 사양</div><div class="pqg"><div class="pqf w"><label class="pql">건조시간</label><input id=a_dry class=pqin placeholder="20℃/1시간/4시간/24시간/8시간/무제한; 30℃/…"></div><div class="pqf w"><label class="pql">가사시간</label><input id=a_pot class=pqin placeholder="예: 20℃ 8시간"></div><div class="pqf w"><label class="pql">표면처리</label><input id=a_sp class=pqin placeholder="핵심만 20자 이내"></div><div class="pqf w"><label class="pql">선행도장</label><input id=a_pre class=pqin placeholder=""></div><div class="pqf w"><label class="pql">후속도장</label><input id=a_nxt class=pqin placeholder=""></div><div class="pqf w"><label class="pql">포장규격</label><input id=a_pks class=pqin placeholder="예: 4L · 20L"></div></div><div class="pqsec2">출처 · 검증</div><div class="pqg"><div class="pqf w"><label class="pql">TDS출처URL</label><input id=a_src class=pqin placeholder="https://..."></div><div class="pqf"><label class="pql">TDS개정일</label><input id=a_rev class=pqin placeholder="예: 2025-05-14"></div><div class="pqf"><label class="pql">자료확인일</label><input id=a_chk class=pqin placeholder="예: 2026-10-09"></div><div class="pqf w"><label class="pql">검증여부</label><select id=a_ver class=pqin><option value="">미검증</option><option value="1">검증완료</option></select></div><div class="pqf w"><label class="pql">메모</label><input id=a_memo class=pqin placeholder=""></div></div><div class="pqsec2">설명 · 용도 (설명 100자 이내)</div><div class="pqg"><div class="pqf w"><label class="pql">제품설명</label><input id=a_d class=pqin maxlength=100 placeholder="100자 이내 요약"></div><div class="pqf w"><label class="pql">용도</label><input id=a_us class=pqin placeholder="핵심만 20자 이내"></div><div class="pqf w"><label class="pql">파일명 별칭 (쉼표 구분)</label><input id=a_al class=pqin placeholder="이 이름의 파일이 이 제품에 자동 연결됩니다"></div></div><div class="pqbt"><button class="pqb" onclick="saveP()">저장</button><button class="pqb gh" onclick="cancelP()">취소</button></div></div>
-</details><details class="dbs"><summary class="dbsh"><svg class="dbsi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><b>제품 검색</b><svg class="dbc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="dbsb"><div class="dbq"><label class="dbin"><svg class="dbq-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id=q placeholder="제품명 또는 제품번호를 입력하세요." oninput="dbl()" autocomplete="off"><button type="button" class="dbx" aria-label="지우기" onclick="var q=document.getElementById('q');q.value='';dbl();q.focus()"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></label><span id=mfw></span></div><div id="dbch" class="dbch"></div></div></details><div id=dbl></div></div><div id=v3 class=pn hidden></div><div id=v4 class=pn hidden></div><div id=v5 class=pn hidden></div><div id=v7 class=pn hidden></div><div id=v8 class=pn hidden></div><div id=v9 class=pn hidden></div></div></div>
+</details><details class="dbs"><summary class="dbsh"><svg class="dbsi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><b>제품 검색</b><svg class="dbc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary><div class="dbsb"><div class="dbq"><label class="dbin"><svg class="dbq-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id=q placeholder="제품명 또는 제품번호를 입력하세요." oninput="dbl()" autocomplete="off"><button type="button" class="dbx" aria-label="지우기" onclick="var q=document.getElementById('q');q.value='';dbl();q.focus()"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></label><span id=mfw></span></div><div id="dbch" class="dbch"></div></div></details><div id=dbl></div></div><div id=v3 class=pn hidden></div><div id=v4 class=pn hidden></div><div id=v5 class=pn hidden></div><div id=v7 class=pn hidden></div><div id=v8 class=pn hidden></div><div id=v9 class=pn hidden></div><div id=v10 class=pn hidden></div></div></div>
 <div class=bb id=bb hidden style="grid-template-columns:repeat(4,1fr)"><button onclick="vib(40);S.coats.push({});sv();cards()"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 5v14M5 12h14"/></svg><span>Coat 추가</span></button><button onclick="S.coats.length&&ask('마지막 Coat를 삭제할까요?',()=>{S.coats.pop();sv();cards()})"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M5 12h14"/></svg><span>Coat 삭제</span></button><button class=ok onclick="shr()"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="18" cy="18" r="2.3"/><path d="M8 11l8-4M8 13l8 4"/></svg><span>공유</span></button><button class=rst2 onclick="clr()"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M20 11a8 8 0 1 0-2.4 5.7M20 4.5V11h-6.5"/></svg><span>전체 초기화</span></button></div>
 <div id=bb3 hidden><button type="button" class="mn a" onclick="syNew()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><span>사용자사양</span></button><button type="button" class="mn b" onclick="navGo('spdb')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg><span>DB 열기</span></button><button type="button" class="mn c" onclick="syChg()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg><span>사양수정</span></button><button type="button" class="mn d" onclick="syImpPick()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5l-8 8a5 5 0 0 1-7-7l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7L9.7 17.2a1.7 1.7 0 0 1-2.4-2.4l7.6-7.6"/></svg><span>사양첨부</span></button><button type="button" class="ok" onclick="syShare()"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="18" cy="18" r="2.3"/><path d="M8 11l8-4M8 13l8 4"/></svg><span>공유하기</span></button></div>
 <datalist id=dl></datalist>
@@ -2407,7 +2407,7 @@ const PC=n=>PX(n)||{n:n||'직접 입력 제품',g:'',d:'',svr:0,dft:0,mk:18,pk:1
 try{if(LS.sfx!='1'){let n=0;DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+D.mk>0&&(+p.pk!==+D.pk||+p.mk!==+D.mk)){p.pk=D.pk;p.mk=D.mk;if(D.un)p.un=D.un;n++}});if(n)sv();LS.sfx='1'}}catch(e){}
 try{if(LS.thfx!='1'){DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+p.dft>=1000&&+D.dft>0&&+D.dft<1000)p.dft=D.dft;if(+p.svr&&+p.dft)p.th=+(p.svr*10/p.dft).toFixed(4)});sv();LS.thfx='1'}}catch(e){}
 function toTop(){const f=()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'});document.documentElement.scrollTop=0;document.body.scrollTop=0;document.querySelectorAll('#es .zf,#es .zbd,#es .zsc,#vh,#app,.pn').forEach(e=>{e.scrollTop=0})}catch(e){}};f();requestAnimationFrame(f);setTimeout(f,90);setTimeout(f,300)}
-const T=n=>{$('#vh').hidden=n!=2;$('#app').hidden=n==2;$('#v0').hidden=n!=0;$('#v1').hidden=n!=1;$('#v3').hidden=n!=3;$('#v4').hidden=n!=4;$('#v5').hidden=n!=5;$('#v7').hidden=n!=7;{const e=$('#v8');if(e)e.hidden=n!=8}{const e=$('#v9');if(e)e.hidden=n!=9}$('#bb').hidden=n!=0;$('#bb3').hidden=n!=3;$('#ttl').textContent=pqTitle(n);if(n==1)dbl();if(n==3){if(!window.SYK)window.SYM='sys';syRender()}if(n==2)dashRender();if(n==4)tpRender();if(n==5)csvRender();if(n==7)admRender();if(n==8)fmRender();document.body.dataset.pg=n;if(n==9&&window.LCCX)LCCX.R();toTop();const sa=$('#saw');if(sa)sa.hidden=n!=0;hdr(n);hh();setTimeout(()=>fit(document),0);try{sessionStorage.vw=n}catch(e){}if(typeof gnav=='function')gnav(n)};
+const T=n=>{$('#vh').hidden=n!=2;$('#app').hidden=n==2;$('#v0').hidden=n!=0;$('#v1').hidden=n!=1;$('#v3').hidden=n!=3;$('#v4').hidden=n!=4;$('#v5').hidden=n!=5;$('#v7').hidden=n!=7;{const e=$('#v8');if(e)e.hidden=n!=8}{const e=$('#v9');if(e)e.hidden=n!=9}{const e=$('#v10');if(e)e.hidden=n!=10}$('#bb').hidden=n!=0;$('#bb3').hidden=n!=3;$('#ttl').textContent=pqTitle(n);if(n==1)dbl();if(n==3){if(!window.SYK)window.SYM='sys';syRender()}if(n==2)dashRender();if(n==4)tpRender();if(n==5)csvRender();if(n==7)admRender();if(n==8)fmRender();document.body.dataset.pg=n;if(n==9&&window.LCCX)LCCX.R();if(n==10&&window.cmpRender)cmpRender();toTop();const sa=$('#saw');if(sa)sa.hidden=n!=0;hdr(n);hh();setTimeout(()=>fit(document),0);try{sessionStorage.vw=n}catch(e){}if(typeof gnav=='function')gnav(n)};
 function hdr(n){const d=n==1;$('#hs1').textContent=d?'Technical Data Sheet':'CoatCost';$('#hs2').textContent=d?'Data Sheet DB':n==3?(window.SYM=='db'?'Specification DB':'Coating System'):pqHs2(n)||'Unit Price Table';$('#tb0').classList.toggle('on',n==0||n==2);$('#tb1').classList.toggle('on',d);$('#tb3').classList.toggle('on',n==3);document.body.classList.toggle('cp',n==0);if(n==1)setTimeout(()=>{try{mfTds()}catch(e){}},400)}
 try{$('#hxbg').src=$('#vh .hbg').src}catch(e){}
 
@@ -3075,7 +3075,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v491',d:'2026.10.27'};
+const APPV={v:'v492',d:'2026.10.27'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -4146,9 +4146,9 @@ const pqRc=()=>{try{return JSON.parse(LS.rc||'[]')}catch(e){return[]}};
 function pqRcAdd(t,n){const a=pqRc().filter(x=>!(x.t==t&&x.n==n));a.unshift({t,n,d:pqToday()});try{LS.rc=JSON.stringify(a.slice(0,10))}catch(e){}}
 
 /* 하단 메뉴 */
-const NAVI=n=>({2:0,0:1,3:2,5:4,4:4,1:4,7:4,8:4,9:4}[n]??-1);
-const pqTitle=n=>({0:'일위대가표',1:'데이터 시트',2:'일위대가표',3:(window.SYM=='db'?'사양 DB':'도장 시스템'),4:'TDS 등록',5:'CSV · 백업',7:'관리자 모드',8:'실란트 소요량 · 메쉬 소요량',9:'LCC'}[n]||'일위대가표');
-const pqHs2=n=>({4:'TDS Registration',5:'CSV · Backup',7:'Admin Console',8:'Sealant · Mesh Quantity',9:'Life Cycle Cost'}[n]);
+const NAVI=n=>({2:0,0:1,3:2,5:4,4:4,1:4,7:4,8:4,9:4,10:4}[n]??-1);
+const pqTitle=n=>({0:'일위대가표',1:'데이터 시트',2:'일위대가표',3:(window.SYM=='db'?'사양 DB':'도장 시스템'),4:'TDS 등록',5:'CSV · 백업',7:'관리자 모드',8:'실란트 소요량 · 메쉬 소요량',9:'LCC',10:'제품 비교'}[n]||'일위대가표');
+const pqHs2=n=>({4:'TDS Registration',5:'CSV · Backup',7:'Admin Console',8:'Sealant · Mesh Quantity',9:'Life Cycle Cost',10:'Product Comparison'}[n]);
 
 /* 대시보드 */
 function dashRender(){try{dashRender0()}catch(err){const e=document.getElementById('dash');if(e)e.innerHTML='<div class="dsh"><div class="dsr"><b>최근 작업 내역</b><div class="dsl none">표시하지 못했습니다 · '+esc(String(err&&err.message||err).slice(0,80))+'</div></div></div>'}}
@@ -8544,7 +8544,7 @@ html body :is(#ap,#hq) .aph .apht small{font:400 9.5px/1.3 Poppins,"Noto Sans KR
 </style>
 <script id=pg378s>
 (function(){
-const OPT=[['fill','실란트'],['mesh','메쉬'],['hist','작업 내역'],['ap','도장면적'],['hq','공동'],['lcc','LCC']];
+const OPT=[['fill','실란트'],['mesh','메쉬'],['hist','작업 내역'],['ap','도장면적'],['hq','공동'],['lcc','LCC'],['cmp','제품 비교']];
 let pl=null;
 function mk(){if(pl&&document.body.contains(pl))return pl;pl=document.createElement('select');pl.id='pgp';pl.className='scpill';pl.innerHTML=OPT.map(o=>'<option value="'+o[0]+'">'+o[1]+'</option>').join('');
  pl.onchange=function(){const v=this.value;try{
@@ -8552,13 +8552,15 @@ function mk(){if(pl&&document.body.contains(pl))return pl;pl=document.createElem
   else if(v=='ap'){hqClose();apOpen()}
   else if(v=='hq'){apClose();hqOpen()}
   else if(v=='lcc'){apClose();hqClose();T(9)}
+  else if(v=='cmp'){apClose();hqClose();T(10)}
  }catch(x){}};document.body.appendChild(pl);return pl}
 function tick(){try{
- const ap=document.getElementById('ap'),hq=document.getElementById('hq'),v8=document.getElementById('v8'),v9=document.getElementById('v9');
+ const ap=document.getElementById('ap'),hq=document.getElementById('hq'),v8=document.getElementById('v8'),v9=document.getElementById('v9'),v10=document.getElementById('v10');
  let cur=null,tEl=null;
  if(ap){cur='ap';tEl=ap.querySelector('.aph b')}else if(hq){cur='hq';tEl=hq.querySelector('.aph b')}
  else if(v8&&!v8.hidden){cur=(typeof FM!='undefined'&&FM&&FM.tab)||'fill';tEl=document.getElementById('ttl')}
  else if(v9&&!v9.hidden){cur='lcc';tEl=document.getElementById('ttl')}
+ else if(v10&&!v10.hidden){cur='cmp';tEl=document.getElementById('ttl')}
  const s=mk();
  if(!cur||!tEl){s.style.display='none';return}
  s.style.display='';if(s.value!==cur)s.value=cur;
@@ -8606,11 +8608,11 @@ const CH='<svg class="mxv" viewBox="0 0 24 24" fill="none" stroke="currentColor"
 window.moreOpen=function(){
  const G={blue:'linear-gradient(145deg,#5aa0ff,#2f6bd0)',green:'linear-gradient(145deg,#6cbf86,#3d9068)',orange:'linear-gradient(145deg,#f5a742,#e0771c)',teal:'linear-gradient(145deg,#5fb6c9,#2f8ea5)',purple:'linear-gradient(145deg,#a479ee,#7549d0)',indigo:'linear-gradient(145deg,#4d78e6,#2a4fc0)',red:'linear-gradient(145deg,#ee6a6a,#cf3a3a)',sky:'linear-gradient(145deg,#4a9bff,#2a6fe0)',slate:'linear-gradient(145deg,#7686a3,#4f5d7a)'};
  const R1=[['db','제품 DB','T(1)','제품 정보 · TDS 관리','blue'],['hq','단지 DB','aptDbMgr()','면적 · 기본정보 등록','sky'],['save','백업 · 복원',"goCsv('set')",'CSV · JSON 백업','green'],['calc','노무비 설정','lbSheet()','노임단가 · 할증','orange']];
- const R2=[['fm','충진','T(8)','실란트 · 실리콘 퍼티','teal'],['ap','도면','apOpen()','도장 위치 · 면적 관리','purple'],['hq','공동','hqOpen()','공동주택 견적','indigo']];
+ const R2=[['fm','충진','T(8)','실란트 · 실리콘 퍼티','teal'],['ap','도면','apOpen()','도장 위치 · 면적 관리','purple'],['hq','공동','hqOpen()','공동주택 견적','indigo'],['cmp','제품 비교','T(10)','소요량 · 자재비 우위','orange']];
  const R3=[['quote','사용법','helpOpen()','매뉴얼 · 도움말','red'],['set','설정 · 언어','openSettings()','테마 · 언어 · 알림','sky'],['shield','자료 이용 안내','legalOpen()','이용약관 · 개인정보','green'],['info','정보','showInfo()','앱 정보 · 버전','slate']];
  const card=([i,t,f,d,c])=>`<button class="mxc" onclick="pqX('pqmore');${f}"><span class="mxi" style="background:${G[c]}">${PQI[i]||''}</span><b class="mxn">${t}</b>${CH}<span class="mxd">${d}</span></button>`;
  const row=(L,k)=>`<div class="mxr mxr${k}">${L.map(card).join('')}</div>`;
- let h=`<div class="mxh"><div class="mxt"><span class="mxg"><i></i><i></i><i></i><i></i></span>더보기</div><div class="mxs"><span><b>정확한 데이터,</b> 스마트한 계산</span><u></u></div></div>`+row(R1,4)+row(R2,3)+row(R3,4);
+ let h=`<div class="mxh"><div class="mxt"><span class="mxg"><i></i><i></i><i></i><i></i></span>더보기</div><div class="mxs"><span><b>정확한 데이터,</b> 스마트한 계산</span><u></u></div></div>`+row(R1,4)+row(R2,4)+row(R3,4);
  if(typeof IS_ADMIN!='undefined'&&IS_ADMIN)h+=`<button class="mxw" onclick="pqX('pqmore');T(7)"><span class="mxi" style="background:${G.slate};width:38px;height:38px;margin:0;border-radius:10px">${PQI.admin||''}</span><b>관리자 모드</b></button>`;
  h+=`<div class="mxb"><span class="mxbi"><i style="height:35%"></i><i style="height:55%"></i><i style="height:80%"></i></span><div class="mxbt"><small>더 스마트한 도장 계산의 시작</small><b>지금 바로 시작해보세요!</b></div><button class="mxgo" onclick="pqX('pqmore');T(0)">시작하기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div><button class="mxcl" onclick="pqX('pqmore')">닫기</button>`;
  pqSheet('pqmore',h,'mx');
@@ -9469,6 +9471,7 @@ fill:'<path d="M4 15l8-10 5 4-8 10z"/><path d="M13 4l3-2 5 4-2 3M6 20l-2 2"/>',
 mesh:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9.3h16M4 14.7h16M9.3 4v16M14.7 4v16"/>',
 hq:'<rect x="3.5" y="9" width="7" height="12" rx="1"/><rect x="10.5" y="3" width="10" height="18" rx="1"/><path d="M6 13h2M6 17h2M13.5 7h4M13.5 11h4M13.5 15h4"/>',
 lcc:'<circle cx="12" cy="12" r="9"/><path d="M7 9.5l2 6 3-5 3 5 2-6M6.5 12.5h11"/>',
+cmp:'<rect x="3.5" y="4" width="7" height="16" rx="1.6"/><rect x="13.5" y="4" width="7" height="16" rx="1.6"/><path d="M6 15v2M17 11v6M6 9.5h2M17 8h.01"/>',
 area:'<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8.5 15.5l7-7M11.5 8.5h4v4M12.5 15.5h-4v-4"/>',
 db:'<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
 spdb:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 18l9 5 9-5" opacity=".55"/>',
@@ -9501,6 +9504,7 @@ fill:{n:'실란트',k:'실란트 실리콘 퍼티 충진 sealant 코킹',page:'f
 mesh:{n:'메쉬',k:'메쉬 메시 mesh 유리섬유 내화 형강',page:'mesh',o:()=>{T(8);fmTab('mesh')}},
 hq:{n:'공동주택',k:'공동주택 공동 아파트 단지별 단지견적 세대',page:'hq',ov:1,o:()=>hqOpen()},
 lcc:{n:'LCC',k:'lcc 생애주기 경제성 수명 라이프사이클 분석 사양',page:'lcc',o:()=>T(9)},
+cmp:{n:'제품 비교',k:'제품비교 비교 제품 우위 경제성 자재비 소요량 도포율 고형분 svr 스펙 동급',page:'cmp',o:()=>T(10)},
 area:{n:'면적',k:'면적 도면 도장위치 평면 외벽면적',page:'area',ov:1,o:()=>apOpen()},
 db:{n:'제품 DB',k:'제품db 제품 tds 데이터시트 기술자료 도료',page:'db',o:()=>T(1)},
 spdb:{n:'사양 DB',k:'사양db 사양 도장사양 시스템 사양서 라이브러리 사용자사양',page:'spdb',o:()=>{window.SYM='db';window.SYK=1;try{T(3)}finally{window.SYK=0}}},
@@ -9517,11 +9521,11 @@ menu:{n:'전체 메뉴',k:'전체메뉴 메뉴',page:'menu',o:()=>openMenu()}
 };
 const SEC=[
 {id:'calc',t:'산출',d:'공사비 산출 및 견적에 필요한 메뉴입니다.',c:'#1f6fe5',c2:'#4ea0ff',cb:'#e6f0ff',bg:'#f1f7ff',bd:'#d3e3fa',art:'a1',ic:'s_calc',it:['calc','sys','quote','fill','mesh']},
-{id:'ana',t:'도장 분석',d:'도장 사양, 수명, 경제성 분석에 필요한 메뉴입니다.',c:'#16a06a',c2:'#4cc596',cb:'#e2f6ed',bg:'#f0faf6',bd:'#cfeadf',art:'a2',ic:'s_ana',it:['hq','lcc','area']},
+{id:'ana',t:'도장 분석',d:'도장 사양, 수명, 경제성 분석에 필요한 메뉴입니다.',c:'#16a06a',c2:'#4cc596',cb:'#e2f6ed',bg:'#f0faf6',bd:'#cfeadf',art:'a2',ic:'s_ana',it:['hq','lcc','area','cmp']},
 {id:'db',t:'DB',d:'기준정보를 관리하는 메뉴입니다.',c:'#6a4ad6',c2:'#9a7df0',cb:'#ece7fb',bg:'#f5f2fe',bd:'#ded6f8',art:'a3',ic:'s_db',it:['db','aptdb','spdb','pum']},
 {id:'adm',t:'관리',d:'프로그램 유지관리 및 안내 메뉴입니다.',c:'#ef7418',c2:'#f9a24e',cb:'#fdeddd',bg:'#fff6ee',bd:'#fadcc3',art:'a4',ic:'s_adm',it:['backup','settings','help','legal','info']}
 ];
-const CAT={calc:'calc',sys:'calc',quote:'calc',fill:'calc',mesh:'calc',hq:'ana',lcc:'ana',area:'ana',db:'db',aptdb:'db',spdb:'db',tds:'db',csv:'adm',adm:'adm'};
+const CAT={calc:'calc',sys:'calc',quote:'calc',fill:'calc',mesh:'calc',hq:'ana',lcc:'ana',area:'ana',db:'db',aptdb:'db',spdb:'db',tds:'db',cmp:'ana',csv:'adm',adm:'adm'};
 const NAV=window.NAV={cur:'home',stack:[],going:0,rc:[]};
 try{NAV.rc=JSON.parse(localStorage.getItem('nav397:rc')||'[]').filter(i=>IT[i])}catch(e){}
 const secOf=id=>SEC.find(s=>s.it.includes(id))||SEC[0];
@@ -9533,7 +9537,7 @@ function track(pid){if(!pid)return;if(NAV.cur!==pid){if(!NAV.going){NAV.stack.pu
 /* ---- v397: 실제 화면 기준으로 현재 위치를 판별 (오버레이를 다른 경로로 열거나 닫아도 뒤로·홈이 항상 동작) ---- */
 const OVL=[['es','quote'],['aptdb','aptdb'],['ap','area'],['hq','hq']];
 function ovs(){return OVL.filter(([id])=>document.getElementById(id)).map(x=>x[1])}
-function baseLive(){const v=document.getElementById('vmenu');if(v&&!v.hidden)return'menu';const pg=+document.body.dataset.pg;if(pg===8)return(window.FM&&FM.tab==='mesh')?'mesh':'fill';return({0:'calc',1:'db',2:'home',3:(window.SYM=='db'?'spdb':'sys'),4:'tds',5:'csv',7:'adm',9:'lcc'})[pg]||'home'}
+function baseLive(){const v=document.getElementById('vmenu');if(v&&!v.hidden)return'menu';const pg=+document.body.dataset.pg;if(pg===8)return(window.FM&&FM.tab==='mesh')?'mesh':'fill';return({0:'calc',1:'db',2:'home',3:(window.SYM=='db'?'spdb':'sys'),4:'tds',5:'csv',7:'adm',9:'lcc',10:'cmp'})[pg]||'home'}
 function owned(){const o=OVL.find(x=>x[1]===NAV.cur);return o?o[0]:null}
 function stray(){const own=owned();return OVL.filter(([id])=>id!==own&&document.getElementById(id)).map(x=>x[0])}
 function here(it){if(it.sheet||!it.page)return false;const pid=it.page;if(pid!==NAV.cur)return false;const o=OVL.find(x=>x[1]===pid);if(o)return!!document.getElementById(o[0])&&!stray().length;return baseLive()===pid&&!ovs().length}
@@ -9594,7 +9598,7 @@ function buildTop(){document.body.classList.add('gt')}
 /* 기존 흐름 연결: T() 이동 → gnav(n) 훅, 오버레이 열기 함수 래핑 */
 const _g=window.gnav;
 window.gnav=function(n){try{_g&&_g(n)}catch(e){}const m=$('#vmenu');if(m&&!NAV.going)m.hidden=true;subClose();
- const map={0:'calc',1:'db',2:'home',3:'sys',4:'tds',5:'csv',7:'adm',9:'lcc'};let pid=map[n];if(n==8)pid=(FM&&FM.tab==='mesh')?'mesh':'fill';if(pid&&!NAV.going)track(pid);else refresh()};
+ const map={0:'calc',1:'db',2:'home',3:'sys',4:'tds',5:'csv',7:'adm',9:'lcc',10:'cmp'};let pid=map[n];if(n==8)pid=(FM&&FM.tab==='mesh')?'mesh':'fill';if(pid&&!NAV.going)track(pid);else refresh()};
 const W=(name,pid)=>{const f=window[name];if(typeof f!=='function')return;window[name]=function(){if(!NAV.going){subClose();const m=$('#vmenu');if(m)m.hidden=true;track(pid)}return f.apply(this,arguments)}};
 W('apOpen','area');W('hqOpen','hq');W('aptDbMgr','aptdb');W('est','quote');
 const _ft=window.fmTab;if(typeof _ft==='function')window.fmTab=function(t){const r=_ft.apply(this,arguments);if(!NAV.going){const v=document.getElementById('v8');if(v&&!v.hidden)track(t==='mesh'?'mesh':'fill')}return r};
@@ -12394,4 +12398,281 @@ html body #bb3 button.mn.a{background:linear-gradient(180deg,#2e93fc,#0a66ee)!im
 html body #bb3 button.mn.a svg{color:#fff!important}
 html body #bb3 button.ok{flex:1 1 0!important;min-width:0!important;height:calc(var(--u)*84)!important}
 </style>
+<style id=cmp492css>
+/* v492 제품 비교 */
+html body #v10.pn{margin:0!important;padding:10px 10px 150px!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important}
+.cp{--tx:#10264f;--sb:#5a6b8a;--ln:#d6e3f6;--bg:#f1f6fd;--bl:#1f6fe5;font:400 14px/1.5 "Noto Sans KR",system-ui,-apple-system,sans-serif;color:var(--tx);display:flex;flex-direction:column;gap:20px;text-align:left}
+.cp *{box-sizing:border-box}
+.cp.cpx{padding:12px;background:#f1f6fd;gap:12px;width:560px}
+.cp-hero{padding:14px;border-radius:16px;background:linear-gradient(135deg,#1f6fe5,#4ea0ff);color:#fff;display:flex;flex-direction:column;gap:4px}
+.cp-hero b{font-size:18px;font-weight:800}.cp-hero small{font-size:13px;line-height:1.45;opacity:.95}
+.cp-s{display:flex;flex-direction:column;gap:8px}
+.cp-s>h3{margin:0;font-size:16px;font-weight:800;color:var(--tx)}
+.cp-card{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 2px 8px rgba(11,42,102,.05)}
+.cp-card[style*="--c"]{border-top:3px solid var(--c)}
+.cp-ch{display:flex;align-items:center;gap:8px;min-height:36px}.cp-ch b{flex:1;font-size:16px;font-weight:800;min-width:0;overflow-wrap:anywhere}.cp-ch b small{font-size:12px;color:var(--sb);font-weight:600}
+.cp-dot{width:26px;height:26px;border-radius:50%;color:#fff;font-style:normal;font-weight:800;font-size:14px;display:inline-grid;place-items:center;flex:none}
+html body .cp .cp-lk{flex:0 0 auto!important;width:auto!important;height:36px;min-width:44px;padding:0 12px;border-radius:18px;border:1px solid var(--ln);background:#fff;color:var(--sb);font:600 13px "Noto Sans KR",system-ui,sans-serif}
+.cp-f{display:flex;flex-direction:column;gap:4px;min-width:0;margin:0}.cp-f>span{font-size:13px;font-weight:600;color:var(--sb)}.cp-f>span small{font-weight:500;font-size:12px}
+.cp-iw{position:relative}.cp-iw em{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-style:normal;font-size:13px;color:var(--sb);pointer-events:none}
+html body .cp input.cp-in,html body .cp select.cp-in{width:100%;height:48px;min-height:48px;margin:0;padding:0 12px;border:1px solid var(--ln);border-radius:12px;background:#fff;color:var(--tx);font:500 16px "Noto Sans KR",system-ui,sans-serif;outline:0;-webkit-appearance:none;appearance:none}
+html body .cp .cp-iw input.cp-in{padding-right:44px}
+html body .cp select.cp-in{background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a6b8a' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center/18px;padding-right:34px}
+html body .cp input.cp-in:focus,html body .cp select.cp-in:focus,html body .cp textarea.cp-ta:focus{border-color:var(--bl);box-shadow:0 0 0 3px rgba(31,111,229,.15)}
+.cp-g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cp-pk{position:relative}.cp-l{margin-top:4px;max-height:260px;overflow:auto;border:1px solid var(--ln);border-radius:12px;background:#fff;box-shadow:0 8px 20px rgba(11,42,102,.12);-webkit-overflow-scrolling:touch}
+html body .cp .cp-it{display:flex;flex-direction:column;align-items:flex-start;gap:0;width:100%;min-height:44px;padding:6px 12px;border:0;border-bottom:1px solid #eef3fb;background:#fff;text-align:left;font-family:inherit;color:var(--tx)}
+.cp-it b{font-size:14px;font-weight:700}.cp-it small{font-size:12px;color:var(--sb)}
+.cp-nl{padding:12px;font-size:13px;color:var(--sb)}
+.cp-dt{border:1px dashed var(--ln);border-radius:12px;padding:0 10px}.cp-dt>summary{min-height:44px;display:flex;align-items:center;font-size:14px;font-weight:700;color:var(--bl);cursor:pointer}.cp-dt[open]{padding-bottom:10px}.cp-dt[open]>summary{margin-bottom:4px}.cp-dt .cp-g2{margin-top:6px}
+.cp-ck{display:flex;align-items:flex-end;gap:8px;min-height:48px;padding-bottom:12px;font-size:14px;font-weight:600;cursor:pointer}.cp-ck input{position:absolute;opacity:0;width:1px;height:1px}.cp-ck i{width:22px;height:22px;border:2px solid #b9cbe8;border-radius:6px;background:#fff;flex:none;position:relative;top:-1px}.cp-ck input:checked+i{background:var(--bl);border-color:var(--bl)}.cp-ck input:checked+i::after{content:"";position:absolute;left:5px;top:1px;width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+html body .cp .cp-bt{height:48px;min-width:44px;padding:0 16px;border-radius:24px;border:1px solid var(--ln);background:#fff;color:#1d4fb8;font:700 15px "Noto Sans KR",system-ui,sans-serif}
+html body .cp .cp-bt.s{background:var(--bl);border-color:var(--bl);color:#fff}
+html body .cp .cp-bt[disabled]{opacity:.4}
+.cp-sv-row{display:grid;grid-template-columns:1fr auto auto;gap:8px}
+.cp-swap{display:flex;justify-content:center}.cp-swap .cp-bt{height:44px;font-size:14px}
+.cp-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:#e6eefb}
+html body .cp .cp-seg button{height:44px;border:0;border-radius:10px;background:transparent;color:var(--sb);font:700 14px "Noto Sans KR",system-ui,sans-serif}
+html body .cp .cp-seg button.on{background:#fff;color:var(--bl);box-shadow:0 1px 4px rgba(11,42,102,.15)}
+.cp-note{font-size:12px;line-height:1.5;color:var(--sb)}
+.cp-warn{padding:12px;border-radius:12px;background:#fff6e6;border:1px solid #f6dfb0;color:#7a5410;font-size:12px;line-height:1.55}
+.cp-ex{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* 결과 */
+.cp-vd{--c:#1f6fe5;padding:14px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,#fff),#fff 70%);border:1.5px solid var(--c);display:flex;flex-direction:column;gap:8px}
+.cp-vd.off,.cp-vd.tie{--c:#8a97b1}
+.cp-vt{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.cp-chip{padding:3px 10px;border-radius:12px;background:var(--c);color:#fff;font-size:12px;font-weight:800}.cp-vb{font-size:12px;color:var(--sb);font-weight:600}
+.cp-vw{display:flex;align-items:center;gap:8px}.cp-vm{font-size:20px;font-weight:800;line-height:1.25;overflow-wrap:anywhere}.cp-vm em{font-style:normal;color:var(--c);margin-left:4px}
+.cp-vd p{margin:0;font-size:14px;line-height:1.55;color:#23365e}.cp-vd p b{color:var(--c)}
+.cp-t3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cp-t3>div{padding:8px 6px;border-radius:12px;background:#fff;border:1px solid var(--ln);text-align:center;display:flex;flex-direction:column;gap:2px}
+.cp-t3 span{font-size:12px;color:var(--sb)}.cp-t3 b{font-size:16px;font-weight:800;color:var(--c);overflow-wrap:anywhere}.cp-t3 small{font-size:11px;color:var(--sb);line-height:1.3}
+.cp-wn{font-size:12px;color:var(--sb);line-height:1.5}
+.cp-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border-radius:14px;background:#e6eefb;margin-top:8px}
+html body .cp .cp-tabs button{min-height:44px;padding:4px;border:0;border-radius:10px;background:transparent;color:var(--sb);font:700 13px/1.25 "Noto Sans KR",system-ui,sans-serif}
+html body .cp .cp-tabs button.on{background:#fff;color:var(--bl);box-shadow:0 1px 4px rgba(11,42,102,.15)}
+.cp-body{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.cp-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cp-ph{display:flex;align-items:center;gap:6px;padding:8px;border-radius:12px;background:#fff;border:1px solid var(--ln);border-top:3px solid var(--c);min-width:0}.cp-ph b{font-size:13px;font-weight:700;min-width:0;flex:1;overflow-wrap:anywhere;line-height:1.3}
+.cp-wb{padding:2px 8px;border-radius:10px;background:#16a06a;color:#fff;font-size:11px;font-weight:800;flex:none}
+.cp-blk{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px}.cp-blk h4{margin:0;font-size:14px;font-weight:800}
+.cp-br{display:flex;flex-direction:column;gap:3px}.cp-bl{display:flex;justify-content:space-between;gap:8px;font-size:13px}.cp-bl span{color:var(--sb);overflow-wrap:anywhere}.cp-bl b{font-weight:800}
+.cp-bk{height:12px;border-radius:6px;background:#e6eefb;overflow:hidden}.cp-bk i{display:block;height:100%;border-radius:6px}
+.cp-tile{padding:10px;border-radius:12px;border:1px solid var(--ln);border-left:4px solid var(--c);background:#fafcff;display:flex;flex-direction:column;gap:0}.cp-tile span{font-size:12px;font-weight:800;color:var(--c)}.cp-tile b{font-size:20px;font-weight:800}.cp-tile small{font-size:12px;color:var(--sb)}
+.cp-tb{width:100%;border-collapse:collapse;font-size:13px}.cp-tb th{padding:6px 4px;text-align:left;color:var(--sb);font-weight:700;border-bottom:1px solid var(--ln)}.cp-tb td{text-align:left!important;background:transparent!important;white-space:nowrap;font-size:12.5px;padding:8px 4px;border-bottom:1px solid #eef3fb;overflow-wrap:anywhere}.cp-tb td:first-child{color:var(--sb);white-space:normal}.cp-tb th{text-align:left!important;background:transparent!important}.cp-tb td.win{font-weight:800;color:#0f7a4f}.cp-tb tr.cur td{background:#f2f8ff}.cp-no{text-align:center;color:var(--sb)}
+.cp-cb{padding:10px;border-radius:14px;background:#fff;border:1px solid var(--ln);border-top:3px solid var(--c);display:flex;flex-direction:column;gap:4px;min-width:0}.cp-cb.win{background:color-mix(in srgb,var(--c) 7%,#fff);border-color:var(--c)}
+.cp-cbh{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px}.cp-cbh>span:nth-child(2){font-size:13px;font-weight:700;flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.3}
+.cp-kv{display:flex;justify-content:space-between;align-items:baseline;gap:6px;font-size:13px}.cp-kv span{color:var(--sb)}.cp-kv b{font-weight:700;text-align:right}.cp-kv b.big{font-size:15px;font-weight:800;color:var(--c)}
+.cp-sv{--c:#16a06a;padding:12px;border-radius:14px;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 70%,#000));color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px}.cp-sv small{display:block;font-size:12px;opacity:.92}.cp-sv b{font-size:18px;font-weight:800}.cp-sv i{font-style:normal;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.25);font-weight:800;font-size:12px}
+.cp-sv.tie{background:#e6eefb;color:var(--tx);justify-content:center;text-align:center}.cp-sv.tie b{font-size:14px}
+.cp-ps{display:flex;flex-direction:column;gap:2px}.cp-ps b{font-size:13px;color:var(--sb)}.cp-ps ul{margin:0;padding-left:18px;font-size:14px}.cp-ps li{margin:2px 0;overflow-wrap:anywhere}
+html body .cp textarea.cp-ta{width:100%;min-height:76px;margin:0;padding:10px 12px;border:1px solid var(--ln);border-radius:12px;background:#fff;color:var(--tx);font:500 15px/1.5 "Noto Sans KR",system-ui,sans-serif;resize:vertical;outline:0}
+.cp-rh{display:flex;align-items:baseline;justify-content:space-between;padding:4px 2px}.cp-rh b{font-size:20px;font-weight:800}.cp-rh small{color:var(--sb)}
+.cp-rt{margin:8px 0 0;font-size:16px;font-weight:800}
+.cpx .cp-tabs{display:none}
+
+.cp-ch b{display:block;width:auto!important;white-space:normal}
+.cp-kv span{white-space:nowrap}
+</style>
+<script id=cmp492>
+try{PQI.cmp=pqSv('<rect x="3.5" y="4" width="7" height="16" rx="1.6"/><rect x="13.5" y="4" width="7" height="16" rx="1.6"/><path d="M6 15v2M17 11v6M6 9.5h2M17 8h.01"/>')}catch(e){}
+/* v492 제품 비교 페이지 — 제조사 비표시 · 결과는 '어떤 제품 우위'로 표기 */
+(function(){
+'use strict';
+const Q=s=>document.querySelector(s);
+const E=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const N=(x,d)=>isFinite(x)?(+x).toLocaleString('ko-KR',{maximumFractionDigits:d==null?0:d}):'-';
+const COL={a:'#1f6fe5',b:'#e8730c'},LAB={a:'A',b:'B'};
+const blank=()=>({n:'',svr:'',dft:'',pk:'',un:'L',sg:'',price:'',touch:'',hard:'',voc:'',eco:0,certs:'',refs:'',adv:''});
+let C={tab:'spec',mode:'same',area:'',dft:100,loss:10,dftSet:0,a:blank(),b:blank(),cur:-1},SAVED=[],OPEN={a:0,b:0},INIT=0;
+try{const j=JSON.parse(LS.cmp||'null');if(j&&typeof j=='object')C={...C,...j,a:{...blank(),...(j.a||{})},b:{...blank(),...(j.b||{})}}}catch(e){}
+try{const j=JSON.parse(LS.cmps||'[]');if(Array.isArray(j))SAVED=j.filter(x=>x&&x.a&&x.b)}catch(e){}
+const store=()=>{try{LS.cmp=JSON.stringify(C)}catch(e){}};
+const storeList=()=>{try{LS.cmps=JSON.stringify(SAVED)}catch(e){}};
+const toast=m=>{try{tt(m)}catch(e){}};
+
+/* 제조사명은 어디에도 표시하지 않음: 제품명에 섞여 있는 제조사 표기도 제거 */
+const MK=/KCC|건설화학|조광페인트|삼화페인트|노루페인트|강남제비스코|제비스코|던에드워드|한진화학|국제페인트|부자페인트|아크조노벨|AkzoNobel|Jotun|조턴|PPG|Hempel|헴펠|Sigmakalon|시그마칼론/gi;
+const clean=p=>{const n=String((p&&p.n)||'').trim(),mf=String((p&&p.mf)||'').trim();let r=n;if(mf.length>1)r=r.split(mf).join(' ');r=r.replace(MK,' ').replace(/\s{2,}/g,' ').replace(/^[\s\-_·•,()\[\]\/]+|[\s\-_·•,()\[\]\/]+$/g,'').trim();return r||'제품'};
+const dbl=()=>{try{return Array.isArray(DB)?DB:[]}catch(e){return[]}};
+const norm=s=>String(s||'').toLowerCase().replace(/[\s\-_·.()\/]/g,'');
+
+/* ---------- 계산 ---------- */
+function one(p,w){
+ const area=+C.area||0,loss=Math.min(60,Math.max(0,+C.loss||0));
+ const svr=+p.svr||0,dft=C.mode=='own'?(+p.dft||+C.dft||0):(+C.dft||0),ok=svr>0&&dft>0;
+ const kg=p.un=='kg'&&+p.sg>0,pk=+p.pk||0,pkL=pk>0?(kg?pk/(+p.sg):pk):0,price=+p.price||0,priceL=pkL>0&&price>0?price/pkL:0;
+ const cov=ok?svr*10/dft:0,acL=ok?(dft/(svr*10))/(1-loss/100):0,covA=acL>0?1/acL:0,litres=ok&&area>0?Math.ceil(area*acL):0;
+ return{w,name:(p.n||'').trim()||('제품 '+LAB[w]),has:!!(p.n||'').trim(),svr,dft,ok,cov,covA,acL,litres,
+  cans:pkL>0&&litres>0?Math.ceil(litres/pkL):0,areaCan:pkL>0?pkL*covA:0,priceL,cost:priceL>0?litres*priceL:0,costM2:priceL>0?priceL*acL:0,
+  touch:+p.touch||0,hard:+p.hard||0,voc:+p.voc||0,eco:!!p.eco,pkL,price,loss};
+}
+function rows(a,b){
+ const R=[],add=(k,l,f,va,vb,hi,cnt,both)=>{let w=null;const okv=both?(va>0&&vb>0):true;if(okv&&va!==vb&&Math.abs(va-vb)/Math.max(Math.abs(va),Math.abs(vb),1e-9)>=0.0005)w=(hi?va>vb:va<vb)?'a':'b';R.push({k,l,f,va,vb,w,cnt})};
+ add('svr','고형분 용적비 (SVR)',v=>v>0?N(v,1)+'%':'-',a.svr,b.svr,1,0,1);
+ add('cov','이론 도포율 @ 도막 '+(C.mode=='own'?'추천':N(+C.dft)+'㎛'),v=>v>0?(+v).toFixed(2)+' ㎡/L':'-',a.cov,b.cov,1,0,1);
+ add('covA','실제 도포율 (Loss '+N(a.loss,0)+'%)',v=>v>0?(+v).toFixed(2)+' ㎡/L':'-',a.covA,b.covA,1,1,1);
+ add('areaCan','1말(혼합규격) 도장면적',v=>v>0?N(v,1)+' ㎡':'-',a.areaCan,b.areaCan,1,0,1);
+ add('litres','총 소요량',v=>v>0?N(v)+' L':'-',a.litres,b.litres,0,0,1);
+ add('cost','총 자재비',v=>v>0?'₩'+N(v):'-',a.cost,b.cost,0,1,1);
+ add('costM2','㎡당 자재비',v=>v>0?'₩'+N(v):'-',a.costM2,b.costM2,0,0,1);
+ add('touch','지촉건조',v=>v>0?N(v)+'분':'-',a.touch,b.touch,0,1,1);
+ add('hard','경화건조',v=>v>0?N(v)+'시간':'-',a.hard,b.hard,0,1,1);
+ add('voc','VOC 함량',v=>v>0?N(v)+' g/L':'-',a.voc,b.voc,0,1,1);
+ {const w=a.eco&&!b.eco?'a':!a.eco&&b.eco?'b':null;R.push({k:'eco',l:'친환경 인증',f:v=>v?'있음':'-',va:a.eco?1:0,vb:b.eco?1:0,w,cnt:1})}
+ return R;
+}
+function verdict(a,b,R){
+ const V={ready:a.ok&&b.ok,w:null,basis:'',tie:false};
+ if(!V.ready)return V;
+ if(a.cost>0&&b.cost>0){V.basis='총 자재비';const d=Math.abs(a.cost-b.cost)/Math.max(a.cost,b.cost);if(d>=0.005)V.w=a.cost<b.cost?'a':'b';else V.tie=true}
+ else{V.basis='실제 도포율';const d=Math.abs(a.covA-b.covA)/Math.max(a.covA,b.covA);if(d>=0.005)V.w=a.covA>b.covA?'a':'b';else V.tie=true}
+ const cr=R.filter(r=>r.cnt&&r.w);V.total=cr.length;V.won=V.w?cr.filter(r=>r.w==V.w).length:0;
+ V.other=V.w?cr.filter(r=>r.w&&r.w!=V.w).map(r=>r.l.replace(/ \(.*\)/,'')):[];
+ return V;
+}
+const pct=(x,d)=>(x>=0?'+':'−')+N(Math.abs(x),d==null?1:d)+'%';
+
+/* ---------- 결과 화면 ---------- */
+function dot(w){return `<i class="cp-dot" style="background:${COL[w]}">${LAB[w]}</i>`}
+function condLine(){return (C.mode=='own'?'각 제품 추천 도막':'동일 도막 '+N(+C.dft)+'㎛')+' · '+(+C.area>0?N(+C.area)+'㎡':'면적 미입력')+' · Loss '+N(+C.loss)+'%'}
+function verdictHtml(a,b,R,V){
+ if(!V.ready)return `<div class="cp-vd off"><div class="cp-vt"><span class="cp-chip">종합 결과</span></div><b class="cp-vm">비교할 값을 입력하세요</b><p>두 제품의 <b>SVR(%)</b>과 <b>도막 두께(㎛)</b>를 입력하면 어떤 제품이 우위인지 자동으로 표시됩니다. 단가·규격까지 입력하면 자재비로 판정합니다.</p></div>`;
+ if(!V.w)return `<div class="cp-vd tie"><div class="cp-vt"><span class="cp-chip">종합 결과</span><span class="cp-vb">${V.basis} 기준</span></div><b class="cp-vm">두 제품 동등</b><p>${V.basis} 차이가 0.5% 미만입니다. 건조시간·VOC·인증 등 다른 항목으로 비교하세요.</p><div class="cp-wn">${condLine()}</div></div>`;
+ const W=V.w==='a'?a:b,L=V.w==='a'?b:a,c=COL[V.w];
+ const cs=L.cost>0&&W.cost>0?L.cost-W.cost:0,cp=L.cost>0&&cs?cs/L.cost*100:0,cg=L.covA>0?(W.covA/L.covA-1)*100:0,lr=L.litres>0?(L.litres-W.litres)/L.litres*100:0;
+ const t3=[
+  ['고형분 (SVR)',(W.svr-L.svr>=0?'+':'−')+N(Math.abs(W.svr-L.svr),1)+'%p',N(L.svr,1)+'% → '+N(W.svr,1)+'%'],
+  ['소요량',L.litres>0?pct(-lr,1):'-',L.litres>0?N(L.litres)+'L → '+N(W.litres)+'L':'면적 입력 필요'],
+  ['자재비 차이',cs?'₩'+N(Math.abs(cs)):'-',cs?pct(-cp,1)+' ('+N(+C.area)+'㎡)':'단가·규격 입력 필요']];
+ let sum=cs?`자재비 <b>${N(Math.abs(cp),1)}% 절감</b>`:'';
+ sum+=(sum?' · ':'')+`실제 도포면적 <b>${pct(cg,1)}</b>`;
+ return `<div class="cp-vd" style="--c:${c}"><div class="cp-vt"><span class="cp-chip">종합 결과</span><span class="cp-vb">${V.basis} 기준</span></div>
+ <div class="cp-vw">${dot(V.w)}<b class="cp-vm">${E(W.name)} <em>우위</em></b></div>
+ <p>${condLine()} — ${sum}</p>
+ <div class="cp-t3">${t3.map(x=>`<div><span>${x[0]}</span><b>${x[1]}</b><small>${x[2]}</small></div>`).join('')}</div>
+ <div class="cp-wn">비교 ${V.total}개 항목 중 ${V.won}개 우위${V.other.length?` · 제품 ${LAB[V.w=='a'?'b':'a']} 우위 항목: ${E(V.other.join(', '))}`:''}</div></div>`;
+}
+function specHtml(a,b,R,V){
+ const bar=x=>`<div class="cp-br"><div class="cp-bl"><span>${E(x.name)}</span><b>${x.svr>0?N(x.svr,1)+'%':'-'}</b></div><div class="cp-bk"><i style="width:${Math.min(100,x.svr)}%;background:${COL[x.w]}"></i></div></div>`;
+ const win=w=>V.w===w?'<span class="cp-wb">우위</span>':'';
+ const tbl=R.filter(r=>r.va>0||r.vb>0||r.k=='eco'&&(r.va||r.vb)).map(r=>`<tr><td>${r.l}</td><td class="${r.w=='a'?'win':''}">${r.f(r.va)}${r.w=='a'?' ▲':''}</td><td class="${r.w=='b'?'win':''}">${r.f(r.vb)}${r.w=='b'?' ▲':''}</td></tr>`).join('');
+ return `<div class="cp-pair"><div class="cp-ph" style="--c:${COL.a}">${dot('a')}<b>${E(a.name)}</b>${win('a')}</div><div class="cp-ph" style="--c:${COL.b}">${dot('b')}<b>${E(b.name)}</b>${win('b')}</div></div>
+ <div class="cp-blk"><h4>고형분 용적비 (SVR %)</h4>${bar(a)}${bar(b)}</div>
+ <div class="cp-blk"><h4>이론 도포율 (㎡/L) · ${C.mode=='own'?'제품별 추천 도막':'도막 '+N(+C.dft)+'㎛'}</h4><div class="cp-pair"><div class="cp-tile" style="--c:${COL.a}"><span>${LAB.a}</span><b>${a.cov>0?a.cov.toFixed(2):'-'}</b><small>실제 ${a.covA>0?a.covA.toFixed(2):'-'} ㎡/L</small></div><div class="cp-tile" style="--c:${COL.b}"><span>${LAB.b}</span><b>${b.cov>0?b.cov.toFixed(2):'-'}</b><small>실제 ${b.covA>0?b.covA.toFixed(2):'-'} ㎡/L</small></div></div></div>
+ <div class="cp-blk"><h4>항목별 비교표</h4><table class="cp-tb"><thead><tr><th>항목</th><th style="color:${COL.a}">${LAB.a}</th><th style="color:${COL.b}">${LAB.b}</th></tr></thead><tbody>${tbl||'<tr><td colspan=3 class="cp-no">입력된 값이 없습니다</td></tr>'}</tbody></table><small class="cp-note">▲ = 해당 항목 우위 · 건조시간·VOC·인증은 입력한 경우에만 비교합니다.</small></div>`;
+}
+function costHtml(a,b,V){
+ const bx=x=>`<div class="cp-cb${V.w===x.w?' win':''}" style="--c:${COL[x.w]}"><div class="cp-cbh">${dot(x.w)}<span>${E(x.name)}</span>${V.w===x.w?'<span class="cp-wb">우위</span>':''}</div>
+  <div class="cp-kv"><span>소요량</span><b>${x.litres>0?N(x.litres)+' L':'-'}</b></div><div class="cp-kv"><span>필요 수량</span><b>${x.cans>0?N(x.cans)+'말':'-'}</b></div>
+  <div class="cp-kv"><span>총 자재비</span><b class="big">${x.cost>0?'₩'+N(x.cost):'-'}</b></div><div class="cp-kv"><span>㎡당</span><b>${x.costM2>0?'₩'+N(x.costM2):'-'}</b></div></div>`;
+ let sv='';
+ if(a.cost>0&&b.cost>0){const d=a.cost-b.cost;sv=Math.abs(d)/Math.max(a.cost,b.cost)<0.005?`<div class="cp-sv tie"><b>자재비 동등</b></div>`:`<div class="cp-sv" style="--c:${COL[d>0?'b':'a']}"><div><small>${E((d>0?b:a).name)} 선택 시 자재비 절감</small><b>₩${N(Math.abs(d))} (${N(Math.abs(d)/Math.max(a.cost,b.cost)*100,1)}%)</b></div><i>우위</i></div>`}
+ else sv=`<div class="cp-sv tie"><b>단가·혼합규격을 입력하면 자재비 차이가 계산됩니다</b></div>`;
+ const A=[1000,5000,10000,30000,50000];if(+C.area>0&&!A.includes(+C.area))A.push(+C.area);A.sort((x,y)=>x-y);
+ const lines=a.costM2>0&&b.costM2>0?A.map(m=>{const ca=a.costM2*m,cb=b.costM2*m,d=ca-cb,w=Math.abs(d)/Math.max(ca,cb)<0.005?'':d>0?'b':'a';return `<tr class="${m==+C.area?'cur':''}"><td>${N(m)}㎡</td><td>₩${N(ca)}</td><td>₩${N(cb)}</td><td class="${w?'win':''}">${w?LAB[w]+' ₩'+N(Math.abs(d)):'-'}</td></tr>`}).join(''):'';
+ return `<div class="cp-pair">${bx(a)}${bx(b)}</div>${sv}${lines?`<div class="cp-blk"><h4>면적별 자재비 비교 (같은 조건)</h4><table class="cp-tb"><thead><tr><th>면적</th><th style="color:${COL.a}">${LAB.a}</th><th style="color:${COL.b}">${LAB.b}</th><th>차액(우위)</th></tr></thead><tbody>${lines}</tbody></table></div>`:''}
+ <small class="cp-note">자재비 = 소요량(L, 올림) × 단가. 단가는 입력한 말당 단가 ÷ 혼합규격으로 환산합니다. 인건비·운반비·손실 외 부대비용은 포함하지 않습니다.</small>`;
+}
+const lines=t=>String(t||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+function proofHtml(a,b,edit){
+ const card=(w,x)=>{const o=C[w];const sec=(k,t,ph)=>edit?`<label>${t}<textarea class="cp-ta" rows="3" placeholder="${ph}" oninput="CMP.txt('${w}','${k}',this.value)">${E(o[k])}</textarea></label>`:(lines(o[k]).length?`<div class="cp-ps"><b>${t}</b><ul>${lines(o[k]).map(i=>`<li>${E(i)}</li>`).join('')}</ul></div>`:'');
+  return `<div class="cp-card" style="--c:${COL[w]}"><div class="cp-ch">${dot(w)}<b>${E(x.name)}</b></div>${sec('adv','스펙 시트에 나타나지 않는 시공·품질 장점','한 줄에 하나씩 입력')}${sec('certs','공인 인증 · 시험 성적서','예: KS 인증, 시험성적서 번호')}${sec('refs','주요 납품 · 시공 실적','예: 현장명 / 적용 부위')}</div>`};
+ return card('a',a)+card('b',b)+(edit?'<small class="cp-note">입력한 내용은 이 기기에 저장되며 이미지 저장 시 함께 출력됩니다. 근거 자료가 있는 내용만 기재하세요.</small>':'');
+}
+function tabsHtml(){return `<div class="cp-tabs">${[['spec','1:1 스펙 분석'],['cost','경제성 계산'],['proof','강점 · 인증 · 실적']].map(([k,t])=>`<button type="button" class="${C.tab==k?'on':''}" onclick="CMP.tab('${k}')">${t}</button>`).join('')}</div>`}
+function resHtml(){
+ const a=one(C.a,'a'),b=one(C.b,'b'),R=rows(a,b),V=verdict(a,b,R);
+ const body=C.tab=='cost'?costHtml(a,b,V):C.tab=='proof'?proofHtml(a,b,true):specHtml(a,b,R,V);
+ return verdictHtml(a,b,R,V)+tabsHtml()+`<div class="cp-body">${body}</div>`;
+}
+function reportHtml(){
+ const a=one(C.a,'a'),b=one(C.b,'b'),R=rows(a,b),V=verdict(a,b,R),ph=proofHtml(a,b,false);
+ const d=new Date(),ds=d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0');
+ return `<div class="cp-rh"><b>제품 비교 · 분석 보고서</b><small>${ds}</small></div>${verdictHtml(a,b,R,V)}<h3 class="cp-rt">1:1 스펙 분석</h3>${specHtml(a,b,R,V)}<h3 class="cp-rt">경제성 계산</h3>${costHtml(a,b,V)}${ph?`<h3 class="cp-rt">강점 · 인증 · 실적</h3>${ph}`:''}<div class="cp-warn">본 자료는 참고용이며 현장 조건·시공 방법에 따라 실제 사용량·비용은 달라질 수 있습니다. 시공 전 제조사 최신 기술자료(TDS)를 확인하세요. 활용에 따른 판단과 책임은 사용자에게 있습니다.</div>`;
+}
+
+/* ---------- 입력 화면 ---------- */
+const num=(w,k,l,ph,u)=>`<label class="cp-f"><span>${l}</span><div class="cp-iw"><input class="cp-in" type="number" inputmode="decimal" step="any" placeholder="${ph||''}" value="${E(C[w][k])}" oninput="CMP.set('${w}','${k}',this.value)" onwheel="this.blur()">${u?`<em>${u}</em>`:''}</div></label>`;
+function cardHtml(w){
+ const o=C[w],kg=o.un=='kg';
+ return `<div class="cp-card" style="--c:${COL[w]}" id="cp-c-${w}"><div class="cp-ch">${dot(w)}<b>제품 ${LAB[w]} <small>${w=='a'?'(기준)':'(비교)'}</small></b><button type="button" class="cp-lk" onclick="CMP.clr('${w}')">비우기</button></div>
+ <div class="cp-pk"><label class="cp-f"><span>제품명 <small>(입력하면 제품 DB 목록 표시)</small></span><input class="cp-in" id="cp-n-${w}" type="text" autocomplete="off" placeholder="제품명 검색 또는 직접 입력" value="${E(o.n)}" oninput="CMP.nm('${w}',this.value)" onfocus="CMP.nm('${w}',this.value,1)"></label><div class="cp-l" id="cp-l-${w}" hidden></div></div>
+ <div class="cp-g2">${num(w,'svr','SVR (고형분 용적비)','예: 60','%')}${num(w,'dft','추천 도막 (DFT)','예: 100','㎛')}</div>
+ <div class="cp-g2">${num(w,'pk','혼합규격 (1말)','예: 18',o.un)}<label class="cp-f"><span>규격 단위</span><select class="cp-in" onchange="CMP.unit('${w}',this.value)"><option value="L"${kg?'':' selected'}>L (리터)</option><option value="kg"${kg?' selected':''}>kg</option></select></label></div>
+ ${kg?`<div class="cp-g2">${num(w,'sg','비중 (kg/L)','예: 1.45','')}<div></div></div>`:''}
+ ${num(w,'price','말당 단가 (혼합규격 1말 기준)','예: 250,000 → 250000','원')}
+ <details class="cp-dt"${OPEN[w]?' open':''} ontoggle="CMP.opn('${w}',this.open)"><summary>건조시간 · VOC · 인증 (선택 입력)</summary><div class="cp-g2">${num(w,'touch','지촉건조','예: 120','분')}${num(w,'hard','경화건조','예: 16','시간')}</div><div class="cp-g2">${num(w,'voc','VOC 함량','예: 270','g/L')}<label class="cp-ck"><input type="checkbox" ${o.eco?'checked':''} onchange="CMP.eco('${w}',this.checked)"><i></i><span>친환경 인증 있음</span></label></div></details></div>`;
+}
+function savedHtml(){
+ return `<div class="cp-sv-row"><select class="cp-in" onchange="CMP.load(this.value)"><option value="-1">저장된 비교 ${SAVED.length?'('+SAVED.length+')':'없음'}</option>${SAVED.map((s,i)=>`<option value="${i}"${i==C.cur?' selected':''}>${E(s.name)}</option>`).join('')}</select><button type="button" class="cp-bt s" onclick="CMP.save()">저장</button><button type="button" class="cp-bt" onclick="CMP.del()"${C.cur<0?' disabled':''}>삭제</button></div>`;
+}
+function render(){
+ const e=Q('#v10');if(!e)return;
+ if(!INIT){INIT=1;try{if(!(+C.area>0)&&+S.area>0)C.area=S.area}catch(x){}}
+ e.innerHTML=`<div class="cp">
+ <div class="cp-hero"><b>제품 비교 · 분석</b><small>두 제품의 소요량·자재비·건조시간을 같은 조건에서 비교해 우위 제품을 보여 줍니다. 제조사는 표시하지 않습니다.</small></div>
+ <section class="cp-s">${savedHtml()}</section>
+ <section class="cp-s"><h3>01 비교 제품</h3>${cardHtml('a')}<div class="cp-swap"><button type="button" class="cp-bt" onclick="CMP.swap()">⇅ A ↔ B 바꾸기</button></div>${cardHtml('b')}</section>
+ <section class="cp-s"><h3>02 비교 조건</h3><div class="cp-card"><div class="cp-seg"><button type="button" class="${C.mode=='same'?'on':''}" onclick="CMP.mode('same')">동일 도막 기준</button><button type="button" class="${C.mode=='own'?'on':''}" onclick="CMP.mode('own')">제품별 추천 도막</button></div>
+  <div class="cp-g2">${condNum('area','도장 면적','예: 10000','㎡')}${condNum('dft','목표 도막 (DFT)','예: 100','㎛')}</div><div class="cp-g2">${condNum('loss','Loss (손실률)','예: 10','%')}<div></div></div>
+  <small class="cp-note">이론 도포율 = SVR × 10 ÷ DFT [㎡/L] · 실제 소요량 = 이론 소요량 ÷ (1 − Loss%) · 총 소요량 = 면적 × 실제 소요량</small></div></section>
+ <section class="cp-s"><h3>03 비교 결과</h3><div id="cp-res">${resHtml()}</div></section>
+ <section class="cp-s"><div class="cp-ex"><button type="button" class="cp-bt s" onclick="CMP.img()">이미지로 저장</button><button type="button" class="cp-bt" onclick="CMP.reset()">전체 초기화</button></div>
+ <div class="cp-warn">본 자료는 참고용이며 현장 조건에 따라 실제 사용량·비용은 달라질 수 있습니다. 시공 전 제조사 최신 기술자료(TDS)를 확인하세요. 활용에 따른 판단과 책임은 사용자에게 있습니다.</div></section></div>`;
+}
+const condNum=(k,l,ph,u)=>`<label class="cp-f"><span>${l}</span><div class="cp-iw"><input class="cp-in" type="number" inputmode="decimal" step="any" placeholder="${ph}" value="${E(C[k])}" oninput="CMP.cond('${k}',this.value)" onwheel="this.blur()"><em>${u}</em></div></label>`;
+function upd(){store();const r=Q('#cp-res');if(r)r.innerHTML=resHtml()}
+
+/* ---------- 제품 DB 검색 ---------- */
+function suggest(w,q,force){
+ const l=Q('#cp-l-'+w);if(!l)return;const k=norm(q);
+ if(!k&&!force){l.hidden=true;return}
+ const D=dbl(),res=[];
+ for(let i=0;i<D.length&&res.length<400;i++){const p=D[i];if(!p||!p.n)continue;const h=norm([p.n,p.g,p.us,p.mf,p.d].join(' '));if(!k||h.includes(k))res.push([i,p,k&&norm(p.n).startsWith(k)?0:1])}
+ res.sort((x,y)=>x[2]-y[2]);const L=res.slice(0,30);
+ if(!L.length){l.innerHTML=`<div class="cp-nl">${D.length?'일치하는 제품이 없습니다 · 값을 직접 입력하세요':'제품 DB가 비어 있습니다 · 값을 직접 입력하세요'}</div>`;l.hidden=false;return}
+ l.innerHTML=L.map(([i,p])=>`<button type="button" class="cp-it" onclick="CMP.pick('${w}',${i})"><b>${E(clean(p))}</b><small>${E([p.g||p.us||'',+p.svr?'SVR '+p.svr+'%':'',+p.dft?p.dft+'㎛':''].filter(Boolean).join(' · '))}</small></button>`).join('')+(res.length>30?`<div class="cp-nl">상위 30개 표시 · 검색어를 더 입력하세요</div>`:'');
+ l.hidden=false;
+}
+document.addEventListener('click',e=>{if(e.target.closest&&!e.target.closest('.cp-pk'))document.querySelectorAll('.cp-l').forEach(l=>l.hidden=true)});
+
+/* ---------- 외부 인터페이스 ---------- */
+const API={
+ nm(w,v,force){C[w].n=v;suggest(w,v,force);upd()},
+ pick(w,i){const p=dbl()[i];if(!p)return;const o=C[w];o.n=clean(p);o.svr=+p.svr||'';o.dft=+p.dft||'';o.un=/kg|㎏/i.test(p.un||'')?'kg':'L';o.sg=+p.sg||'';o.pk=+p.mk||+p.pk||'';
+  if(w=='a'&&+p.dft&&!C.dftSet)C.dft=+p.dft;store();render()},
+ set(w,k,v){C[w][k]=v;upd()},
+ cond(k,v){C[k]=v;if(k=='dft')C.dftSet=1;upd()},
+ unit(w,v){C[w].un=v;store();render()},
+ eco(w,v){C[w].eco=v?1:0;upd()},
+ txt(w,k,v){C[w][k]=v;store()},
+ opn(w,v){OPEN[w]=v?1:0},
+ mode(m){C.mode=m;store();render()},
+ tab(t){C.tab=t;store();upd()},
+ clr(w){C[w]=blank();store();render()},
+ swap(){const t=C.a;C.a=C.b;C.b=t;store();render()},
+ save(){const a=(C.a.n||'').trim(),b=(C.b.n||'').trim();if(!a&&!b)return toast('저장할 제품 정보를 먼저 입력하세요');
+  const name=((a||'제품 A')+' vs '+(b||'제품 B')).slice(0,60),rec={name,a:{...C.a},b:{...C.b},area:C.area,dft:C.dft,loss:C.loss,mode:C.mode,dftSet:C.dftSet};
+  const j=SAVED.findIndex(s=>s.name==name);if(j>=0)SAVED[j]=rec;else SAVED.unshift(rec);C.cur=SAVED.findIndex(s=>s.name==name);storeList();store();render();toast('비교를 저장했습니다<br><small>'+E(name)+'</small>')},
+ load(i){i=+i;if(i<0||!SAVED[i]){C.cur=-1;store();render();return}const s=SAVED[i];C={...C,a:{...blank(),...s.a},b:{...blank(),...s.b},area:s.area,dft:s.dft,loss:s.loss,mode:s.mode||'same',dftSet:s.dftSet||0,cur:i};store();render()},
+ del(){const i=C.cur;if(i<0||!SAVED[i])return;ask('저장된 비교를 삭제할까요?<br><small>'+E(SAVED[i].name)+'</small>',()=>{SAVED.splice(i,1);C.cur=-1;storeList();store();render()})},
+ reset(){ask('입력한 비교 내용을 모두 지울까요?<br><small>저장된 비교 목록은 유지됩니다</small>',()=>{C={...C,a:blank(),b:blank(),area:'',dft:100,loss:10,dftSet:0,mode:'same',cur:-1,tab:'spec'};INIT=0;store();render()})},
+ async img(){
+  try{
+   await ldp();
+   const box=document.createElement('div');box.style.cssText='position:fixed;left:-9999px;top:0;width:560px';box.innerHTML='<div class="cp cpx">'+reportHtml()+'</div>';document.body.append(box);
+   await new Promise(r=>setTimeout(r,60));
+   const el=box.firstChild,cv=await html2canvas(el,{scale:2,backgroundColor:'#f1f6fd',windowWidth:560,scrollX:0,scrollY:0});box.remove();
+   const d=new Date(),nm='제품비교_'+d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0')+'.png';
+   cv.toBlob(b=>{if(!b)return toast('이미지를 만들지 못했습니다');dl(b,nm);toast('이미지를 저장했습니다')},'image/png');
+  }catch(e){try{document.querySelectorAll('body>div[style*="-9999px"]').forEach(x=>x.remove())}catch(x){}toast('이미지를 만들지 못했습니다<br><small>네트워크 연결 후 다시 시도하세요</small>')}
+ },
+ report:reportHtml,render
+};
+window.CMP=API;
+window.cmpRender=render;
+})();
+
+</script>
 </body></html>

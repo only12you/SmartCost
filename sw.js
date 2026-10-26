@@ -1,4 +1,4 @@
-const C='coatcost-v491',A=['./','apt-db.json','index.html','manifest.json','icon-192.png','icon-512.png','icon-180.png','icon-maskable-512.png'];
+const C='coatcost-v492',A=['./','apt-db.json','index.html','manifest.json','icon-192.png','icon-512.png','icon-180.png','icon-maskable-512.png'];
 const X=['https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js','https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js','https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js','https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js'];
 self.oninstall=e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(async c=>{await Promise.all(A.map(u=>c.add(new Request(u,{cache:'reload'})).catch(()=>{})));await Promise.all(X.map(u=>c.add(u).catch(()=>{})))}))};
 self.onactivate=e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!=C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()));
