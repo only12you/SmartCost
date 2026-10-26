@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v484',d:'2026.10.26'};
+const APPV={v:'v485',d:'2026.10.26'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3373,6 +3373,7 @@ function syLibFl(){const n=Object.keys(SYSEL).length,B=n?`<i class="n">${n}</i>`
 const b=(c,fn,lab,d,badge)=>`<button type="button" class="${c}" onclick="${fn}" aria-label="${lab}" title="${lab}">${SV(d)}<span>${lab}</span>${badge||''}</button>`;
 return b('p','syLibUseSel()','불러오기','<path d="M12 4v11M7.5 11 12 15.5 16.5 11M5 20h14"/>',B)
 +b('','syImpPick()','PDF등록','<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M12 18v-6M9.5 14.5 12 12l2.5 2.5"/>')
++b('','syImpBulkPick()','일괄등록','<path d=\"M5 8v13h11\"/><path d=\"M8 3h6l4 4v10H8z\"/><path d=\"M13 9v6M10 12h6\"/>')
 +b('','syEdOpen(-1)','사용자등록','<circle cx="10" cy="8" r="3.4"/><path d="M3.5 20c.5-3.6 3.2-5.8 6.5-5.8s6 2.2 6.5 5.8M19 8v6M16 11h6"/>')
 +b('ed','syLibEditSel()','사양수정','<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>')
 +b('rd','syLibDelSel()','삭제','<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/>',B)
@@ -3442,7 +3443,7 @@ function syLibPage(){
   <div class="lb-tt"><small>총 도막두께</small><b>${tot?syNU(syFmtD(tot)):'-'}</b><div class="lb-tg">${tg.map(t=>`<span>${esc(t)}</span>`).join('')}</div></div></div></div>`};
  e.innerHTML=`<div class="lb-sr"><label class="lb-s"><span>${syIx.search}</span><input id="sl-q" type="search" placeholder="사양명 또는 제품명 검색" value="${esc(SYF.q)}" oninput="SYF.q=this.value;SYF.mn=-1;syLibPage()" enterkeyhint="search"></label><button type="button" class="lb-f${SYF.fo?' on':''}" onclick="syLibFo()">${syIx.filter}<span>필터</span></button></div>
  <div class="lb-pl">${pill('all','전체')}${pill('basic','기본')}${pill('spec','사양서')}${pill('fav','즐겨찾기')}${['C2','C3','C4','C5','CX'].map(c=>pill(c,c)).join('')}</div>${SYF.fo?`<div class="lb-pl s2">${pill('철재','철재',syIx.steel)}${pill('콘크리트','콘크리트',syIx.conc)}${pill('옥상','옥상',syIx.roof)}</div>`:''}
- <div class="lb-ls">${R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘PDF등록’으로 가져오거나 ‘사용자등록’으로 시작하세요</small>'}</div>`}</div>
+ <div class="lb-ls">${R.length?R.map(card).join(''):`<div class="sl-em">${A.length?'조건에 맞는 시스템이 없습니다':'저장된 시스템이 없습니다<br><small>‘PDF등록’·‘일괄등록’으로 가져오거나 ‘사용자등록’으로 시작하세요</small>'}</div>`}</div>
  <div class="lb-fl" id="lb-fl">${syLibFl()}</div>`;
  if(fo){const q=$('#sl-q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}}
 }
@@ -3771,28 +3772,48 @@ function syEdSave(){const s=SYE.e,nm=(s.name||'').trim();if(!nm)return tt('시�
 /* 사양서 파일 읽기 (PDF·텍스트·JSON) → 초안 목록 → 확인 후 추가 */
 let SYIMP=null;
 function syImpPick(){let i=$('#syimp-f');if(i)i.remove();i=document.createElement('input');i.type='file';i.id='syimp-f';i.accept='.pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.webp,application/pdf,text/plain,application/json,image/*';i.style.display='none';i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)syImpFile(f)};document.body.append(i);i.click()}
-async function syImpFile(f){
- tta('사양서를 읽는 중…<br><small>'+esc(f.name)+'</small>',0);let list=[];
+async function syReadSpecFile(f,pg){
+ let list=[];
  try{
   if(/\.json$/i.test(f.name)){const j=JSON.parse(await f.text()),a=Array.isArray(j)?j:(j.systems||[j]);list=a.filter(x=>x&&Array.isArray(x.items)&&x.items.length).map(x=>Object.assign({name:'시스템',spec:1,src:f.name},x))}
   else{let L=[];
-   if(/\.pdf$/i.test(f.name)||f.type=='application/pdf'){L=await pdfText(f,30);if(L.filter(x=>x&&x.length>3).length<8){try{L=await ocrLines(f,m=>tta(m,0))}catch(e){}}}
-   else if(/^image\//.test(f.type)||/\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name))L=await ocrImg(f,m=>tta(m,0));
+   if(/\.pdf$/i.test(f.name)||f.type=='application/pdf'){L=await pdfText(f,30);if(L.filter(x=>x&&x.length>3).length<8){try{L=await ocrLines(f,pg)}catch(e){}}}
+   else if(/^image\//.test(f.type)||/\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name))L=await ocrImg(f,pg);
    else L=(await f.text()).split(/\r?\n/);
    list=syParseSpec(L,f.name)}
+ }catch(e){throw e}
+ return list}
+async function syImpFile(f){
+ tta('사양서를 읽는 중…<br><small>'+esc(f.name)+'</small>',0);let list=[];
+ try{list=await syReadSpecFile(f,m=>tta(m,0))
  }catch(e){console.error(e);return ttaOff(),tt('사양서를 읽지 못했습니다<br><small>'+esc(e.message||e)+'</small>')}
  if(!list.length)return ttaOff(),tt('도장 시스템(하도·중도·상도 표)을 찾지 못했습니다<br><small>‘새 시스템 추가’로 직접 입력하거나 사양 표가 있는 페이지만 올려 보세요</small>');
  ttaOff();SYIMP={file:f.name,list,f:/\.json$/i.test(f.name)?null:f,fid:''};syImpUi()}
+/* v485 사양서 일괄등록: 여러 파일을 한 번에 읽어 파일별로 구분한 확인 시트 → 전체 추가 */
+function syImpBulkPick(){let i=$('#syimp-f');if(i)i.remove();i=document.createElement('input');i.type='file';i.multiple=true;i.id='syimp-f';i.accept='.pdf,.txt,.md,.csv,.json,.png,.jpg,.jpeg,.webp,application/pdf,text/plain,application/json,image/*';i.style.display='none';i.onchange=()=>{const fs=Array.from(i.files||[]);i.remove();if(fs.length)syImpBulk(fs)};document.body.append(i);i.click()}
+async function syImpBulk(fs){
+ const all=[],fails=[];let nok=0;
+ for(let n=0;n<fs.length;n++){const f=fs[n],tag='<br><small>'+(n+1)+'/'+fs.length+' · '+esc(f.name)+'</small>';
+  tta('사양서를 읽는 중…'+tag,0);
+  try{const L=await syReadSpecFile(f,m=>tta(String(m)+tag,0));
+   if(L.length){nok++;L.forEach(x=>{Object.defineProperty(x,'_f',{value:/\.json$/i.test(f.name)?null:f,enumerable:false,writable:true});x.src=x.src||f.name;all.push(x)})}
+   else fails.push({n:f.name,m:'도장 시스템 표를 찾지 못함'})
+  }catch(e){console.error(e);fails.push({n:f.name,m:String(e&&e.message||e)})}
+ }
+ ttaOff();
+ if(!all.length)return tt('읽을 수 있는 사양서가 없습니다<br><small>'+fails.slice(0,3).map(x=>esc(x.n)+' — '+esc(x.m)).join('<br>')+'</small>');
+ SYIMP={file:fs.length+'개 파일 중 '+nok+'개 읽음',list:all,f:null,fid:'',fm:new Map(),bulk:1,fails};syImpUi()}
 function syImpUi(){let e=$('#syimp');const fresh=!e;if(fresh){e=document.createElement('div');e.id='syimp';e.className='sypk';e.onclick=ev=>{if(ev.target===e)syImpClose()};document.body.append(e)}
  const L=SYIMP.list,sc=fresh?0:(e.querySelector('.sypk-sc')||{}).scrollTop||0,todo=L.filter(x=>!x.added).length;
- e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>사양서에서 읽은 시스템</b><span>${L.length}개</span><button class="sypk-x" onclick="syImpClose()" aria-label="닫기">✕</button></div><div class="sypk-hint"><b>${esc(SYIMP.file)}</b><br>자동으로 읽은 <b>초안</b>입니다. 제품명·두께·횟수를 원본과 대조한 뒤 추가하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.</div><div class="sypk-sc"><div class="syl-ls tp">${L.map((t,i)=>`<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(syTot(t))}</span></div>${t.scope?`<div class="syl-s">${esc(t.scope)}</div>`:''}<div class="syl-d w">${t.items.map(syItTxt).join(' · ')}</div><div class="syl-bt three"><button class="ed" ${t.added?'disabled':''} onclick="syImpEdit(${i})">수정 후 추가</button><button class="ok" ${t.added?'disabled':''} onclick="syImpAdd(${i})">${t.added?'추가됨':'추가'}</button><button class="ok" onclick="syImpUse(${i})" title="도장 시스템에 바로 적용">바로 적용</button></div></div>`).join('')}</div></div><div class="sypk-f"><button onclick="syImpClose()">닫기</button><button class="ok" ${todo?'':'disabled'} onclick="syImpAll()">전체 추가${todo?' ('+todo+')':''}</button></div></div>`;
+ e.innerHTML=`<div class="sypk-b sypk-v2"><div class="sypk-h"><b>사양서에서 읽은 시스템</b><span>${L.length}개</span><button class="sypk-x" onclick="syImpClose()" aria-label="닫기">✕</button></div><div class="sypk-hint"><b>${esc(SYIMP.file)}</b><br>${SYIMP.bulk?'여러 사양서에서 읽은 <b>초안</b>입니다. 파일별로 원본과 대조한 뒤 ‘전체 추가’로 한 번에 등록하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.':'자동으로 읽은 <b>초안</b>입니다. 제품명·두께·횟수를 원본과 대조한 뒤 추가하세요. 틀린 곳은 ‘수정 후 추가’에서 고칠 수 있습니다.'}${SYIMP.fails&&SYIMP.fails.length?'<br><span style="color:#b3261e">읽지 못한 파일 '+SYIMP.fails.length+'개: '+SYIMP.fails.slice(0,3).map(x=>esc(x.n)).join(', ')+(SYIMP.fails.length>3?' 외':'')+'</span>':''}</div><div class="sypk-sc"><div class="syl-ls tp">${L.map((t,i)=>`<div class="syl-c"><div class="syl-t"><b>${esc(t.name)}</b><span class="bdg b">총 ${syFmtD(syTot(t))}</span></div>${SYIMP.bulk?`<div class="syl-s"><b>${esc(t.src||'')}</b></div>`:''}${t.scope?`<div class="syl-s">${esc(t.scope)}</div>`:''}<div class="syl-d w">${t.items.map(syItTxt).join(' · ')}</div><div class="syl-bt three"><button class="ed" ${t.added?'disabled':''} onclick="syImpEdit(${i})">수정 후 추가</button><button class="ok" ${t.added?'disabled':''} onclick="syImpAdd(${i})">${t.added?'추가됨':'추가'}</button><button class="ok" onclick="syImpUse(${i})" title="도장 시스템에 바로 적용">바로 적용</button></div></div>`).join('')}</div></div><div class="sypk-f"><button onclick="syImpClose()">닫기</button><button class="ok" ${todo?'':'disabled'} onclick="syImpAll()">전체 추가${todo?' ('+todo+')':''}</button></div></div>`;
  if(sc){const q=e.querySelector('.sypk-sc');if(q)q.scrollTop=sc}}
 function syImpUse(i){const t=SYIMP.list[i];if(!t)return;if(!t.added){syAddSys(syImpClean(t));t.added=1}syImpClose();syLibPage();syLibUi();syLibUse(0);if(!document.getElementById('syalt'))tta('✓ 도장 시스템에 적용했습니다',1600)}
 function syImpClose(){const e=$('#syimp');if(e)e.remove()}
-function syImpClean(t){const c=JSON.parse(JSON.stringify(t));delete c.added;c.items=(c.items||[]).filter(i=>(i.n||'').trim());c.src=c.src||SYIMP.file;c.spec=1;const fid=syFileKeep();if(fid)c.fid=fid;return c}
+function syImpClean(t){const c=JSON.parse(JSON.stringify(t));delete c.added;c.items=(c.items||[]).filter(i=>(i.n||'').trim());c.src=c.src||SYIMP.file;c.spec=1;const fid=syFileKeep(t);if(fid)c.fid=fid;return c}
 /* v484 사양서 원본 파일 저장·보기: TDS 저장소와 분리된 전용 IndexedDB(spf_) — TDS 초기화·대기파일 목록과 섞이지 않음 */
 const spfDb=(m,k,v)=>new Promise((ok,no)=>{try{const q=indexedDB.open('spf_'+EDITION,1);q.onupgradeneeded=()=>q.result.createObjectStore('f');q.onerror=()=>no(q.error);q.onsuccess=()=>{const d=q.result,tx=d.transaction('f',m=='get'||m=='keys'?'readonly':'readwrite'),s=tx.objectStore('f'),r=m=='get'?s.get(k):m=='keys'?s.getAllKeys():m=='del'?s.delete(k):s.put(v,k);r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);tx.oncomplete=()=>d.close();tx.onabort=()=>d.close()}}catch(e){no(e)}});
-function syFileKeep(){const I=SYIMP;if(!I||!I.f)return'';if(!I.fid){const id=I.fid='sp'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),f=I.f;f.arrayBuffer().then(buf=>spfDb('put',id,{name:f.name,type:ft(f),buf})).catch(()=>{})}return I.fid}
+function syFileKeep(t){const I=SYIMP;if(t&&t._f&&I&&I.fm){const f=t._f;let id=I.fm.get(f);if(!id){id='sp'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);I.fm.set(f,id);f.arrayBuffer().then(buf=>spfDb('put',id,{name:f.name,type:ft(f),buf})).catch(()=>{})}return id}
+if(!I||!I.f)return'';if(!I.fid){const id=I.fid='sp'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),f=I.f;f.arrayBuffer().then(buf=>spfDb('put',id,{name:f.name,type:ft(f),buf})).catch(()=>{})}return I.fid}
 async function spfGc(){try{const used=new Set(syLibGet().map(x=>x.fid).filter(Boolean)),ks=await spfDb('keys');for(const k of ks)if(!used.has(k))await spfDb('del',k)}catch(e){}}
 async function syLibView(k){const x=syLibGet()[k];if(!x)return;
  if(!x.fid)return tt('첨부된 사양서 파일이 없습니다<br><small>PDF등록으로 가져온 사양서만 원본을 볼 수 있습니다</small>');
@@ -12346,5 +12367,8 @@ html body .syed .se-sgi small{flex:none!important;font-size:9px!important;line-h
 html body .syed .se-sgn{padding:5.5px 6.6px!important;font-size:9px!important;line-height:12px!important;color:#6a7b99!important}
 /* v483 제품 TDS 보기: 원본 TDS 뷰어(#vw)가 데이터 시트(.dsp, z-index 60) 뒤에 가려지던 문제 → 항상 맨 앞에 표시 */
 html body #vw{z-index:2147483200!important}
+/* v485 사양 DB 하단 바 7칸(일괄등록 추가) */
+.lb-fl{grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr) minmax(0,1.1fr) minmax(0,1.45fr) minmax(0,1.1fr) minmax(0,.8fr) minmax(0,.95fr)!important;gap:3px!important}
+.lb-fl button span{letter-spacing:-.4px}
 </style>
 </body></html>
