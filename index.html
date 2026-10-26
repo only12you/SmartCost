@@ -2394,7 +2394,16 @@ let MF='all',LFJ=[];
 let DB=JSON.parse(LS.db||'null')||DEF.map(p=>({...p})),S=JSON.parse(LS.st||'null')||{area:'1',labor:0,coats:[{}]};if(!(+S.area>0))S.area='';try{if(LS.av!='2'){S.area='';LS.av='2'}}catch(e){}
 const sv=()=>{try{LS.db=JSON.stringify(DB);LS.st=JSON.stringify(S)}catch(e){}try{window.LCCX&&LCCX.pull&&LCCX.pull()}catch(e){}},P=n=>DB.find(p=>p.n==n);
 /* v265: DB에 없는 제품·직접 입력 값도 공식으로 계산 (포장 18L 기본, 입력한 DFT·SVR·Loss·희석율·단가 사용) */
-const PC=n=>P(n)||{n:n||'직접 입력 제품',g:'',d:'',svr:0,dft:0,mk:18,pk:18,un:'L',sg:0,ts:18,tn:'',tc:'',tr:0,_v:1};
+/* v491 사양 DB ↔ 제품 DB 제품 연결: 이름이 조금 달라도(공백·괄호·제조사명·모델번호) 같은 제품을 찾아 소개·규격을 연동 */
+function pfN(s){return String(s||'').toLowerCase().replace(/㈜|\(주\)/g,'').replace(/[\s\-_.,·()\[\]{}\/\\'"‘’“”]+/g,'')}
+function pfCodes(s){return (String(s||'').toUpperCase().match(/[A-Z]{1,6}[-\s]?\d{2,}[A-Z0-9]*|\d{2,}[A-Z][A-Z0-9]*/g)||[]).map(x=>x.replace(/[-\s]/g,'')).filter(x=>x.length>=4)}
+function PF(n){if(!n)return null;const q=pfN(n);if(q.length<2)return null;
+ let h=DB.find(p=>pfN(p.n)==q);if(h)return h;
+ const c1=DB.filter(p=>{const d=pfN(p.n);return d.length>=4&&q.length>=4&&(d.includes(q)||q.includes(d))});if(c1.length==1)return c1[0];
+ const cs=pfCodes(n);if(cs.length){const c2=DB.filter(p=>{const d=pfN(p.n).toUpperCase();return cs.some(c=>d.includes(c))});if(c2.length==1)return c2[0]}
+ return null}
+function PX(n){return P(n)||PF(n)}
+const PC=n=>PX(n)||{n:n||'직접 입력 제품',g:'',d:'',svr:0,dft:0,mk:18,pk:18,un:'L',sg:0,ts:18,tn:'',tc:'',tr:0,_v:1};
 try{if(LS.sfx!='1'){let n=0;DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+D.mk>0&&(+p.pk!==+D.pk||+p.mk!==+D.mk)){p.pk=D.pk;p.mk=D.mk;if(D.un)p.un=D.un;n++}});if(n)sv();LS.sfx='1'}}catch(e){}
 try{if(LS.thfx!='1'){DB.forEach(p=>{const D=DEF.find(x=>x.n==p.n);if(D&&+p.dft>=1000&&+D.dft>0&&+D.dft<1000)p.dft=D.dft;if(+p.svr&&+p.dft)p.th=+(p.svr*10/p.dft).toFixed(4)});sv();LS.thfx='1'}}catch(e){}
 function toTop(){const f=()=>{try{window.scrollTo({top:0,left:0,behavior:'instant'});document.documentElement.scrollTop=0;document.body.scrollTop=0;document.querySelectorAll('#es .zf,#es .zbd,#es .zsc,#vh,#app,.pn').forEach(e=>{e.scrollTop=0})}catch(e){}};f();requestAnimationFrame(f);setTimeout(f,90);setTimeout(f,300)}
@@ -3066,7 +3075,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v490',d:'2026.10.27'};
+const APPV={v:'v491',d:'2026.10.27'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3187,7 +3196,7 @@ function syBasis(act){
    const m=mx(p),un=UN(p);
    h+=`<div class="sy-g4">${f('도막(DFT)','dft','㎛')}${f('SVR','svr','%')}${f('로스율','loss','%')}${f('희석율','tr','%')}</div>`;
    h+=`<div class="sy-g3">${f('면적','area','m²','기본면적')}${f('제품단가('+F(m.m)+un+')','price','원')}${f('희석제 단가','tprice','원')}</div>`;
-   h+=`<details class="sy-det" ${window.SDO===false?'':'open'} ontoggle="window.SDO=this.open"><summary><span class="sy-di">${syIc.doc}</span><b>제품 정보</b><span class="sy-dc">${syIc.chev}</span></summary><div class="dsemb">${typeof dsSecs=="function"?dsSecs(p):""}</div></details>`;
+   h+=`<details class="sy-det" ${window.SDO===false?'':'open'} ontoggle="window.SDO=this.open"><summary><span class="sy-di">${syIc.doc}</span><b>제품 정보</b><span class="sy-dc">${syIc.chev}</span></summary>${PX(c.n)?`<div class="dsemb">${typeof dsSecs=="function"?dsSecs(p):""}</div>`:`<div class="sy-nt">제품 DB에서 같은 제품을 찾지 못해 소개 자료가 없습니다.<br>제품 DB에 같은 이름으로 등록하면 자동으로 연결됩니다.</div>`}</details>`;
   }
   h+=`</div></div>`;
  return h}
@@ -3410,7 +3419,7 @@ const syIx={
 syIx.cam=SV('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>');
 const syFmtT=t=>t>=1000?(+(t/1000).toFixed(2))+'<small>mm</small>':Math.round(t)+'<small>μm</small>';
 const syFmtD=d=>d>=1000?(+(d/1000).toFixed(2))+'mm':Math.round(d)+'μm';
-const syLibRows=x=>(x.items||[]).map(i=>{const p=P(i.n),d=(i.dft!==undefined&&i.dft!==''?+i.dft:(p?+p.dft:0))||0;const c=+i.cnt>1?+i.cnt:1;return{lb:i.lb||'',n:i.n,d:d*c,c,a:(i.alt||[]).length,w:i.when?1:0}});
+const syLibRows=x=>(x.items||[]).map(i=>{const p=PX(i.n),d=(i.dft!==undefined&&i.dft!==''?+i.dft:(p?+p.dft:0))||0;const c=+i.cnt>1?+i.cnt:1;return{lb:i.lb||'',n:i.n,d:d*c,c,a:(i.alt||[]).length,w:i.when?1:0}});
 const syEnvTxt=x=>x.env?x.env+' ('+(SYENV[x.env]||'')+')':(x.sub=='옥상'?'옥상 (자외선/온도변화)':(x.sub||'-'));
 function syThumb(x){const s=x.sub||'철재',c=s=='옥상'?['#8fc4ee','#e9eef6','#c8d3e2']:s=='콘크리트'?['#9ec3ec','#f1f4f9','#b7c4d8']:['#a8c8ea','#dfe7f3','#5f7ea6'];
  const g=s=='옥상'?'<rect x="0" y="62" width="138" height="32" fill="#dfe6ef"/><path d="M0 62h138" stroke="#b7c4d8"/><rect x="10" y="40" width="10" height="22" fill="#6f87ab"/><rect x="24" y="30" width="12" height="32" fill="#7d94b6"/><rect x="42" y="44" width="9" height="18" fill="#8aa0c0"/>':s=='콘크리트'?'<rect x="34" y="8" width="70" height="86" fill="#f4f7fb" stroke="#b7c4d8"/>'+[0,1,2,3,4].map(r=>[0,1,2].map(q=>`<rect x="${42+q*21}" y="${16+r*16}" width="12" height="9" fill="#9fb8dc"/>`).join('')).join(''):'<path d="M28 90V30M60 90V30M92 90V30M110 90V30M20 38h100M20 62h100M28 30l32 32M60 30l32 32M60 62L28 90M92 62L60 90" stroke="#4c6a93" stroke-width="3.5" fill="none"/>';
@@ -3699,7 +3708,7 @@ function syApplySys(x,sel,k){
  if(window.SYM=='db'){window.SYM='sys';try{navGo('sys')}catch(e){T(3)}}
  let nm=x.name,n=1;while(SY.groups.some(g=>g.name==nm)){n++;nm=x.name+' ('+n+')'}
  const gi=SY.groups.length;SY.groups.push({name:nm,area:'',c:0});let miss=0;
- keep.forEach(({d})=>{const db=P(d.n),o={n:d.n,lb:d.lb||'',g:gi};if(!db)miss++;
+ keep.forEach(({d})=>{const db=PX(d.n),o={n:db?db.n:d.n,lb:d.lb||'',g:gi};if(!db)miss++;
   if(d.dft!==undefined&&d.dft!==''){o.dft=+d.dft*(+d.cnt>1?+d.cnt:1)}
   ['price','tprice','loss','tr'].forEach(q=>{if(d[q]!==undefined)o[q]=d[q]});
   if(d.svr!==undefined&&(!x.spec||!(db&&+db.svr)))o.svr=d.svr;
