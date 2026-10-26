@@ -3066,7 +3066,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v486',d:'2026.10.26'};
+const APPV={v:'v487',d:'2026.10.26'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -3382,7 +3382,7 @@ function syLibSel(k,on,el){const x=syLibGet()[k];if(!x)return;if(on)SYSEL[x.name
 function syLibUseSel(){const A=syLibGet(),ix=A.map((x,i)=>SYSEL[x.name]?i:-1).filter(i=>i>=0);if(!ix.length)return tt('불러올 사양을 체크하세요');SYSEL={};if(ix.length==1)return syLibUse(ix[0]);ix.forEach(i=>syApplySys(A[i],{},i));tt(ix.length+'개 사양을 불러왔습니다')}
 function syLibDelSel(){const A=syLibGet(),ix=A.filter(x=>SYSEL[x.name]);if(!ix.length)return tt('삭제할 사양을 체크하세요');ask('체크한 <b>사양 '+ix.length+'개</b>를 삭제할까요?',()=>{syLibSet(A.filter(x=>!SYSEL[x.name]));SYSEL={};SYLC={};syLibUi();try{syLibPage()}catch(e){}spfGc();tt('삭제했습니다')})}
 function syLibReset(m){const A=syLibGet(),n=m=='all'?A.length:A.filter(x=>x.spec).length;if(!n)return tt('삭제할 사양이 없습니다');ask(m=='all'?'사양 DB의 <b>모든 사양 '+n+'개</b>를 삭제(초기화)할까요?<br><small>삭제 후에는 복구할 수 없습니다. 먼저 백업을 권장합니다.</small>':'<b>도장사양서에서 가져온 사양 '+n+'개</b>를 삭제할까요?<br><small>직접 등록한 사양은 유지됩니다.</small>',()=>{syLibSet(m=='all'?[]:A.filter(x=>!x.spec));SYSEL={};SYLC={};syLibUi();try{syLibPage()}catch(e){}spfGc();tt('삭제했습니다')})}
-function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{A.splice(k,1);syLibSet(A);SYLC={};syLibUi();try{syLibPage()}catch(e){}spfGc()})}
+function syLibDel(k){const A=syLibGet(),x=A[k];if(!x)return;ask('저장된 시스템 ‘'+esc(x.name)+'’을(를) 목록에서 삭제할까요?',()=>{delete SYSEL[x.name];A.splice(k,1);syLibSet(A);SYLC={};syLibUi();try{syLibPage()}catch(e){}spfGc()})}
 
 /* ===== v455 시스템 라이브러리 (목록·검색·필터·수정·복사·템플릿) ===== */
 const SYENV={C2:'낮은 부식',C3:'중간 부식',C4:'높은 부식',C5:'매우높은 부식',CX:'극한 부식'},SYSUB=['철재','콘크리트','옥상'];
@@ -3435,7 +3435,7 @@ function syLibPage(){
   const show=rows.slice(0,6),more=rows.length-show.length;
   return `<div class="lb-c${x.basic?' bs':''}${SYSEL[x.name]?' sel':''}">${x.basic?`<div class="lb-bd">${lbIx.star}기본 사양</div>`:x.spec?`<div class="lb-bd sp">${lbIx.star}사양서</div>`:''}
   <div class="lb-th"><label class="lb-ck"><input type="checkbox" ${SYSEL[x.name]?'checked':''} onchange="syLibSel(${k},this.checked,this)" aria-label="사양 선택"><i></i></label><b class="lb-nm">${esc(x.name)}</b>${x.fav?`<span class="lb-fv">${syIx.heart}</span>`:''}<button type="button" class="lb-dt" onclick="syLibMn(${k},event)" aria-label="메뉴">${lbIx.dots}</button></div>
-  ${SYF.mn===k?`<div class="lb-mn"><button type="button" onclick="SYF.mn=-1;syEdOpen(${k})">수정</button><button type="button" onclick="SYF.mn=-1;syLibCopy(${k})">복사</button><button type="button" onclick="syLibFav(${k})">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button><button type="button" onclick="SYF.mn=-1;syLibPage();syLibView(${k})">보기</button></div>`:''}
+  ${SYF.mn===k?`<div class="lb-mn"><button type="button" onclick="SYF.mn=-1;syEdOpen(${k})">수정</button><button type="button" onclick="SYF.mn=-1;syLibCopy(${k})">복사</button><button type="button" onclick="syLibFav(${k})">${x.fav?'즐겨찾기 해제':'즐겨찾기'}</button><button type="button" onclick="SYF.mn=-1;syLibPage();syLibView(${k})">보기</button><button type="button" class="rd" onclick="SYF.mn=-1;syLibDel(${k})">삭제</button></div>`:''}
   <div class="lb-m"><span>${lbIx.cloud}<small>환경등급</small><b>${esc(x.env||'--')}</b></span><span>${syIx.layers}<small>기재</small><b>${esc(x.sub||'-')}</b></span><span>${syIx.shield}<small>예상 내구성</small><b>${x.life?x.life+'년':'-'}</b></span></div>
   ${x.scope?`<div class="lb-sc">${esc(x.scope)}</div>`:''}
   <div class="lb-b"><div class="lb-sy"><b>${syIx.layers}도장 시스템</b>${show.map((r,j)=>`<div class="lb-r"><u class="lb-n">${j+1}</u><em>${esc(r.lb||['하도','중도','상도'][j]||'코트')}</em><span>${esc(r.n)}${r.a?' 외 '+r.a:''}${r.c>1?'×'+r.c:''}${r.w?' (조건부)':''}</span>${r.d?`<span class="lb-d">${syNU(syFmtD(r.d))}</span>`:''}</div>`).join('')||'<small>구성 없음</small>'}${more>0?`<div class="lb-more">외 ${more}개 코트</div>`:''}</div>
