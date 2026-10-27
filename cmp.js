@@ -384,30 +384,98 @@ function effectBlock(M) {
 
 /* ---------- 화면 조각 ---------- */
 const guide = () => '<div class="x-guide"><div class="x-gi">⬆</div><b>데이터시트를 첨부하면 자동으로 비교합니다</b><ol><li><b>기존 제품</b> — 현재 사용 중인 제품 데이터시트 첨부</li><li><b>비교 A~D</b> — 변경 후보(제안) 제품 데이터시트 첨부</li><li>소요량 · 경제성 · 성능 · 인증 · LCC 비교와 A4 보고서가 자동 생성됩니다</li></ol><small>PDF · 엑셀 · 워드 · PPT · CSV · 사진 지원 · 단가와 캔 용량은 직접 입력</small></div>';
-function slotHtml(i) {
-  const p = S.ps[i], c = calcOne(p, calcAll(S).X), hasD = !!p.file || has(p), o = i === S.ours, op = S.open === i;
-  const inp = (f, lab, ph, extra) => '<label class="x-f ' + (extra || '') + '"><span>' + lab + '</span><input data-f="' + f + '" data-i="' + i + '" inputmode="decimal" value="' + esc(p[f]) + '" placeholder="' + ph + '"></label>';
-  let h = '<div class="x-slot' + (o ? ' ours' : '') + '" style="--c:' + COL[i] + '"><div class="x-sh"><div class="x-st"><b>' + LAB[i] + (i === 0 ? ' (현재 사용)' : '') + '</b>' + (o ? '<em>제안 제품</em>' : '') + '<span class="x-nm">' + (hasD ? esc(pn(i)) : '데이터시트를 첨부하세요') + '</span></div>';
-  h += '<div class="x-sb"><button class="x-bt p" data-a="attach" data-i="' + i + '">' + (hasD ? '변경' : '첨부') + '</button>';
-  if (window.parent && window.parent.CMPB) h += '<button class="x-bt" data-a="db" data-i="' + i + '">DB</button>';
-  if (i > 1) h += '<button class="x-bt" data-a="del" data-i="' + i + '" aria-label="삭제">✕</button>';
-  h += '</div></div>';
-  if (p.file) h += '<div class="x-file">' + (p.file.url ? '<img src="' + p.file.url + '" alt="">' : '📄') + '<span>' + esc(p.file.name) + '</span></div>';
-  h += '<div class="x-row">' + inp('pack', '캔 용량 (L)', '18') + inp('price', '캔당 단가 (원)', '180000') + '</div>';
-  h += '<div class="x-stat" data-st="' + i + '">' + (c ? '㎡당 자재비 <b>' + fm(c.costM2) + '원</b> · 실제 ' + fm(c.actCov, 2) + '㎡/L' : '<span class="x-na">SVR이 인식되면 결과가 표시됩니다</span>') + '</div>';
-  h += '<div class="x-sf">' + (i > 0 ? '<label class="x-rad"><input type="radio" name="ours" data-a="ours" data-i="' + i + '"' + (o ? ' checked' : '') + '> 이 제품을 제안 제품으로</label>' : '<span></span>') + (hasD ? '<button class="x-lk" data-a="open" data-i="' + i + '">' + (op ? '값 닫기' : '추출값 확인·수정') + '</button>' : '') + '</div>';
-  if (op) {
-    h += '<div class="x-det"><p class="x-note">데이터시트에서 자동 추출한 값입니다(읽은 글자 ' + (p.rawLen == null ? '-' : fm(p.rawLen)) + '자 · ' + (p.ext || []).length + '개 항목). 비어 있거나 원문과 다르면 직접 입력해 주세요. <span class="x-tag">추출</span> 표시는 자동 입력 항목입니다.</p><div class="x-g2">';
-    FIELDS.forEach(([k, lab, ty]) => { const t = (p.ext || []).includes(k) ? '<span class="x-tag">추출</span>' : ''; h += '<label class="x-f ' + (ty === 'ta' || k === 'name' || k === 'company' ? 'full' : '') + '"><span>' + lab + t + '</span>' + (ty === 'ta' ? '<textarea data-f="' + k + '" data-i="' + i + '" rows="2">' + esc(p[k]) + '</textarea>' : '<input data-f="' + k + '" data-i="' + i + '" value="' + esc(p[k]) + '"' + (ty === 'n' ? ' inputmode="decimal"' : '') + '>') + '</label>'; });
-    h += '</div><div class="x-sb end"><button class="x-bt" data-a="trk" data-i="' + i + '">실적 파일 첨부</button><button class="x-bt" data-a="clear" data-i="' + i + '">비우기</button></div></div>';
-  }
+/* ---------- v500 제품 비교 화면 (시안 디자인) ---------- */
+const ic = (k, w) => '<svg viewBox="0 0 24 24" width="' + (w || 18) + '" height="' + (w || 18) + '" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ({
+  scale: '<path d="M12 4v16M7 20h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/>',
+  dash: '<path d="M7 5v14M12 8v8M17 5v14M3 10v4M21 10v4"/>',
+  bars: '<rect x="4" y="11" width="4" height="9" rx="1"/><rect x="10" y="4" width="4" height="16" rx="1"/><rect x="16" y="8" width="4" height="12" rx="1"/>',
+  lcc: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5l1.5 3 3.3.5-2.4 2.3.6 3.3-3-1.6-3 1.6.6-3.3-2.4-2.3 3.3-.5z"/>',
+  doc: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/>',
+  sliders: '<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',
+  drop: '<path d="M12 3c3 4 6 7 6 10.5A6 6 0 0 1 6 13.5C6 10 9 7 12 3z"/>',
+  layers: '<path d="M12 3v9M8.5 9L12 12.5 15.5 9M4 16h16M4 20h16"/>',
+  coin: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/>',
+  shield: '<path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/>',
+  leaf: '<path d="M5 19C5 10 10 5 20 4c0 10-5 15-14 15zM5 19l7-7"/>',
+  chev: '<path d="M6 9l6 6 6-6"/>',
+  chevR: '<path d="M9 6l6 6-6 6"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>'
+}[k] || '') + '</svg>';
+const hasDB = () => { try { return !!(window.parent && window.parent.CMPB); } catch (e) { return false; } };
+const TABS = [['prod', '제품 비교', 'scale'], ['dash', '대시보드', 'dash'], ['cmp', '비교분석', 'bars'], ['lcc', 'LCC', 'lcc'], ['rep', '보고서', 'doc']];
+function canSvg(i, col) {
+  const g = 'cg' + i, nm = esc(((S.ps[i].name || '').trim() || LAB[i]).slice(0, 7));
+  return '<svg class="p-can" viewBox="0 0 64 80" aria-hidden="true"><defs><linearGradient id="' + g + '" x1="0" x2="1"><stop offset="0" stop-color="' + col + '" stop-opacity=".8"/><stop offset=".45" stop-color="' + col + '"/><stop offset="1" stop-color="' + col + '" stop-opacity=".7"/></linearGradient></defs>' +
+    '<ellipse cx="32" cy="71" rx="24" ry="6" fill="' + col + '"/><rect x="8" y="15" width="48" height="56" fill="url(#' + g + ')"/><ellipse cx="32" cy="15" rx="24" ry="6" fill="#e2e8f0"/><ellipse cx="32" cy="15" rx="19" ry="4.2" fill="' + col + '" opacity=".55"/>' +
+    '<path d="M22 15Q32 2 42 15" fill="none" stroke="#94a3b8" stroke-width="2"/><rect x="14" y="36" width="36" height="20" rx="3" fill="#fff" opacity=".93"/><text x="32" y="49.5" text-anchor="middle" font-size="8" font-weight="800" fill="' + col + '">' + nm + '</text></svg>';
+}
+function chipsOf(p) {
+  const t = [p.name, p.desc, p.usage, p.func, p.comp].join(' '), out = [];
+  const c = t.match(/(하도|중도|상도|프라이머)/); if (c) out.push(c[1]);
+  const r = t.match(/(에폭시|폴리우레탄|우레탄|아크릴|실리콘|불소|알키드|폴리아스파틱|징크|무기질)/); if (r) out.push(r[1]);
+  const k = t.match(/([123])\s*액\s*형?/); if (k) out.push(k[1] + '액형'); else if (/주제.{0,8}경화제|경화제.{0,8}주제/.test(t)) out.push('2액형');
+  return out;
+}
+const dlt = (v, up) => (v == null || !isFinite(v) ? '' : '<em class="' + (v >= 0 ? 'g' : 'r') + '">' + (v >= 0 ? up : '▼') + ' ' + Math.abs(v).toFixed(1) + '%</em>');
+function pTiles(i, M) {
+  const c = M.C[i], b = M.C[0];
+  if (!c) return '<div class="p-na">SVR(고형분)이 인식되면 결과가 표시됩니다</div>';
+  const cmp = i !== 0 && b;
+  const dc = cmp && b.costM2 > 0 && c.costM2 > 0 ? (1 - c.costM2 / b.costM2) * 100 : null, dv = cmp && b.actCov > 0 && c.actCov > 0 ? (c.actCov / b.actCov - 1) * 100 : null;
+  return '<div class="p-tl"><span class="p-tt">' + ic('coin', 12) + '㎡당 자재비</span><b>' + (c.costM2 > 0 ? fm(c.costM2) + '<small>원</small>' : '-') + '</b>' + dlt(dc, '▲') + '</div>' +
+    '<div class="p-tl"><span class="p-tt">' + ic('drop', 12) + '실제 도포량</span><b>' + (c.actCov > 0 ? fm(c.actCov, 1) + '<small>㎡/L</small>' : '-') + '</b>' + dlt(dv, '↑') + '</div>';
+}
+function pCard(i) {
+  const M = calcAll(S), p = S.ps[i], hasD = !!p.file || has(p), o = i === S.ours && i !== 0, role = i === 0 ? 'base' : o ? 'ours' : 'sub', col = COL[i], op = S.open === i;
+  const badge = i === 0 ? '기존 제품 (현재 사용)' : o ? '추천 제품' : LAB[i];
+  const sub = (p.func || p.desc || p.usage || '').split(/[\n.]/)[0].trim(), chips = chipsOf(p);
+  let h = '<div class="p-card ' + role + '" style="--c:' + col + '"><span class="p-bd">' + badge + '</span>';
+  h += '<div class="p-id">' + canSvg(i, col) + '<div class="p-nm"><b data-nm="' + i + '">' + (hasD ? esc(pn(i)) : '제품 미등록') + '</b><span class="p-sub">' + (esc(sub) || (hasD ? '&nbsp;' : '데이터시트를 첨부하세요')) + '</span>' + (chips.length ? '<div class="p-chips">' + chips.map((x) => '<i>' + esc(x) + '</i>').join('') + '</div>' : '') + '</div></div>';
+  h += '<div class="p-act"><button class="p-sm on" data-a="attach" data-i="' + i + '">' + (hasD ? '변경' : '첨부') + '</button>';
+  if (hasDB()) h += '<button class="p-sm" data-a="db" data-i="' + i + '">DB</button>';
+  if (i > 1) h += '<button class="p-sm" data-a="del" data-i="' + i + '" aria-label="삭제">✕</button>';
+  h += '</div>';
+  if (p.file) h += '<div class="p-file">' + (p.file.url ? '<img src="' + p.file.url + '" alt="">' : '<span>📄</span>') + '<em>' + esc(p.file.name) + '</em></div>';
+  h += '<div class="p-in2"><label class="p-fl"><span>캔 용량 (L)</span><div class="p-sel"><input data-f="pack" data-i="' + i + '" inputmode="decimal" list="pkl" value="' + esc(p.pack) + '" placeholder="18">' + ic('chev', 14) + '</div></label><label class="p-fl"><span>권장 단가 (원)</span><div class="p-sel"><input data-f="price" data-i="' + i + '" inputmode="decimal" value="' + esc(p.price) + '" placeholder="180000"></div></label></div>';
+  h += '<div class="p-tiles" data-st="' + i + '">' + pTiles(i, M) + '</div>';
+  h += '<div class="p-ft">' + (role === 'sub' ? '<button class="p-lk" data-a="ours" data-i="' + i + '">추천 제품으로 선택</button>' : '<span></span>') + (hasD ? '<button class="p-lk" data-a="open" data-i="' + i + '">' + (op ? '값 닫기' : '추출값 확인·수정') + '</button>' : '') + '</div>';
   return h + '</div>';
 }
+function pDet(i) {
+  const p = S.ps[i];
+  let h = '<div class="p-det" id="pDet"><div class="p-dh"><b>추출값 확인·수정</b><span style="color:' + COL[i] + '">' + (i === 0 ? '기존 제품' : i === S.ours ? '추천 제품' : LAB[i]) + ' · ' + esc(pn(i)) + '</span></div><p class="x-note">데이터시트에서 자동 추출한 값입니다(읽은 글자 ' + (p.rawLen == null ? '-' : fm(p.rawLen)) + '자 · ' + (p.ext || []).length + '개 항목). 비어 있거나 원문과 다르면 직접 입력해 주세요. <span class="x-tag">추출</span> 표시는 자동 입력 항목입니다.</p><div class="x-g2">';
+  FIELDS.forEach(([k, lab, ty]) => { const t = (p.ext || []).includes(k) ? '<span class="x-tag">추출</span>' : ''; h += '<label class="x-f ' + (ty === 'ta' || k === 'name' || k === 'company' ? 'full' : '') + '"><span>' + lab + t + '</span>' + (ty === 'ta' ? '<textarea data-f="' + k + '" data-i="' + i + '" rows="2">' + esc(p[k]) + '</textarea>' : '<input data-f="' + k + '" data-i="' + i + '" value="' + esc(p[k]) + '"' + (ty === 'n' ? ' inputmode="decimal"' : '') + '>') + '</label>'; });
+  return h + '</div><div class="x-sb end"><button class="x-bt" data-a="trk" data-i="' + i + '">실적 파일 첨부</button><button class="x-bt" data-a="clear" data-i="' + i + '">비우기</button><button class="x-bt p" data-a="open" data-i="' + i + '">값 닫기</button></div></div>';
+}
+function pAnalysis(M) {
+  const b = M.C[0], o = M.C[S.ours], ok = b && o && S.ours !== 0, X = M.X;
+  const ar = (v, up) => (v == null ? '' : '<em class="' + (v >= 0 ? 'g' : 'r') + '">' + (v >= 0 ? up : '▼') + ' ' + Math.abs(v).toFixed(1) + '%</em>');
+  const bar = (v) => '<div class="p-bar"><i style="width:' + (v == null ? 0 : Math.max(4, Math.min(100, v)).toFixed(0)) + '%"></i></div>';
+  let sv = null, svp = null, svl = '연간 예상 절감액';
+  if (ok) { if (b.life > 0 && o.life > 0 && b.annual > 0) { sv = b.annual - o.annual; svp = (sv / b.annual) * 100; } else if (b.mat > 0 && o.mat > 0) { sv = b.mat - o.mat; svp = (sv / b.mat) * 100; svl = '1회 자재비 절감액'; } }
+  const vr = ok && b.vol > 0 && o.vol > 0 ? (1 - o.vol / b.vol) * 100 : null;
+  const lf = ok && b.life > 0 && o.life > 0 ? (o.life / b.life - 1) * 100 : null;
+  const v0 = N(S.ps[0].voc), v1 = N(S.ps[S.ours].voc), vc = ok && v0 > 0 && v1 > 0 ? (1 - v1 / v0) * 100 : null;
+  return '<div class="p-an"><div class="p-t"><i class="p-ic">' + ic('bars', 20) + '</i><b>비교 분석 결과</b><button class="p-more" data-a="tab" data-v="cmp">상세 분석 보기 ' + ic('chevR', 12) + '</button></div><div class="p-tg">' +
+    '<div class="p-at"><i class="gn">' + ic('coin', 20) + '</i><span>' + svl + '</span><b class="' + (sv != null && sv < 0 ? 'r ' : '') + (sv != null && fm(Math.abs(sv)).length > 8 ? 'p-sm2' : '') + '">' + (sv == null ? '-' : (sv < 0 ? '-' : '') + fm(Math.abs(sv)) + '<small>원</small>') + '</b>' + ar(svp, '▲') + '</div>' +
+    '<div class="p-at"><i class="bl">' + ic('drop', 20) + '</i><span>도포량 절감</span><b>' + (vr == null ? '-' : Math.abs(vr).toFixed(1) + '<small>%</small>') + '</b>' + bar(vr) + '</div>' +
+    '<div class="p-at"><i class="bl">' + ic('shield', 20) + '</i><span>내구성 (년)</span><b class="p-sm2">' + (lf == null ? '-' : fm(b.life, 1) + '년 → ' + fm(o.life, 1) + '년') + '</b>' + (lf == null ? '' : ar(lf, '▲').replace('%', '%') + bar(Math.min(100, (o.life / Math.max(b.life, o.life)) * 100))) + '</div>' +
+    '<div class="p-at"><i class="gn">' + ic('leaf', 20) + '</i><span>환경성</span><b class="p-sm2">' + (vc == null ? '-' : 'VOC ' + Math.abs(vc).toFixed(0) + '% ' + (vc >= 0 ? '↓' : '↑')) + '</b>' + bar(vc == null ? null : Math.max(0, vc)) + '</div></div>' +
+    (ok ? '' : '<p class="x-note">기존 제품과 추천 제품의 데이터시트·단가를 입력하면 결과가 채워집니다.</p>') + '</div>';
+}
 function tabProd() {
-  const g = (k, lab, ph) => '<label class="x-f"><span>' + lab + '</span><input data-g="' + k + '" inputmode="decimal" value="' + esc(S[k]) + '" placeholder="' + (ph || '') + '"></label>';
-  return '<div class="x-card"><div class="x-h">비교 조건</div><div class="x-g3">' + g('area', '도장 면적 (㎡)', '1000') + g('loss', '손실률 (%)', '20') + g('dft', '동일 도막 (㎛)', '비우면 각 제품 값') + '</div></div>' +
-    '<div class="x-h2">데이터시트 첨부 <small>첨부하면 자동으로 비교됩니다</small></div>' + S.ps.map((_, i) => slotHtml(i)).join('') +
-    (S.ps.length < 5 ? '<button class="x-add" data-a="add">＋ 비교 제품 추가 (최대 D까지)</button>' : '');
+  const M = calcAll(S), g = (k, lab, ph, icn) => '<label class="p-cf"><span>' + ic(icn, 16) + lab + '</span><input data-g="' + k + '" inputmode="decimal" value="' + esc(S[k]) + '" placeholder="' + (ph || '') + '"></label>';
+  const others = S.ps.map((_, i) => i).filter((i) => i !== 0 && i !== S.ours);
+  let h = '<datalist id="pkl"><option value="1"><option value="3"><option value="4"><option value="9"><option value="15"><option value="16"><option value="18"><option value="20"></datalist>';
+  h += '<div class="p-cond"><button class="p-t" data-a="cond"><i class="p-ic">' + ic('sliders', 20) + '</i><b>비교 조건</b><span class="p-chv' + (S.cond === false ? '' : ' on') + '">' + ic('chevR', 16) + '</span></button>' + (S.cond === false ? '' : '<div class="p-cg">' + g('area', '도장 면적 (㎡)', '1000', 'sliders') + g('loss', '손실률 (%)', '20', 'drop') + g('dft', '동일 도막 두께 (㎛)', '자동', 'layers') + '</div>') + '</div>';
+  h += '<div class="p-pair">' + pCard(0) + '<span class="p-vs">VS</span>' + pCard(S.ours) + '</div>';
+  if (S.open >= 0 && S.open < S.ps.length && (S.open === 0 || S.open === S.ours)) h += pDet(S.open);
+  if (others.length) h += '<div class="p-oh">다른 비교 제품 <small>추천 제품으로 바꾸려면 ‘추천 제품으로 선택’을 누르세요</small></div><div class="p-oth">' + others.map((i) => pCard(i)).join('') + '</div>';
+  if (S.open >= 0 && others.includes(S.open)) h += pDet(S.open);
+  if (S.ps.length < 5) h += '<button class="p-add" data-a="add">＋ 비교 제품 추가 (최대 D까지)</button>';
+  h += '<div id="pAn">' + pAnalysis(M) + '</div>';
+  h += '<div class="p-cta"><span class="p-cdoc">' + ic('doc', 30) + '</span><div><b>비교 결과를 보고서로 받아보세요</b><small>PDF · Excel · 인쇄 등 다양한 형식으로 간편하게 생성할 수 있습니다.</small></div><button class="p-cb" data-a="tab" data-v="rep">' + ic('doc', 16) + '보고서 생성하기 ' + ic('arrow', 16) + '</button></div>';
+  return h;
 }
 function cmpBody(M, forReport) {
   return '<div class="x-sec">' + ovHtml(0, '현재 사용 제품') + ovHtml(S.ours, '제안 제품') + '</div>' +
@@ -714,9 +782,9 @@ function dashAfter() {
 }
 
 function render() {
-  const root = $('#root'); const T = [['prod', '제품'], ['dash', '대시보드'], ['cmp', '비교'], ['lcc', 'LCC'], ['rep', '보고서']];
+  const root = $('#root'); const T = TABS;
   const sy = window.scrollY;
-  root.innerHTML = '<div class="x-app"><div class="x-top"><b>제품 변경 제안 분석</b><small>데이터시트 기준 · 자동 비교</small><span class="x-th" title="화면 모드(전체 페이지 적용)">' + [['light', '☀ 주간'], ['dark', '☾ 야간'], ['auto', '자동']].map((m) => '<button data-a="th" data-v="' + m[0] + '" class="' + ((window.CCTHEME ? window.CCTHEME.get() : 'light') === m[0] ? 'on' : '') + '">' + m[1] + '</button>').join('') + '</span></div><div class="x-tabs">' + T.map((t) => '<button data-a="tab" data-v="' + t[0] + '" class="' + (S.tab === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') + '</div><div class="x-body" id="body">' +
+  root.innerHTML = '<div class="x-app"><div class="x-top"><b>제품 변경 제안 분석</b><small>데이터시트 기준 · 자동 비교</small><span class="x-th" title="화면 모드(전체 페이지 적용)">' + [['light', '☀ 주간'], ['dark', '☾ 야간'], ['auto', '자동']].map((m) => '<button data-a="th" data-v="' + m[0] + '" class="' + ((window.CCTHEME ? window.CCTHEME.get() : 'light') === m[0] ? 'on' : '') + '">' + m[1] + '</button>').join('') + '</span></div><div class="x-tabs">' + T.map((t) => '<button data-a="tab" data-v="' + t[0] + '" class="' + (S.tab === t[0] ? 'on' : '') + '">' + ic(t[2], 17) + '<span>' + t[1] + '</span></button>').join('') + '</div><div class="x-body" id="body">' +
     (S.tab === 'prod' ? tabProd() : S.tab === 'dash' ? tabDash() : S.tab === 'cmp' ? tabCmp() : S.tab === 'lcc' ? tabLcc() : tabRep()) + '</div><div class="x-busy" id="busy"></div><div class="x-toast" id="toast"></div>' +
     '<input type="file" id="fi" hidden accept=".pdf,.xlsx,.xls,.xlsm,.csv,.txt,.docx,.pptx,image/*"><input type="file" id="fc" hidden accept="image/*" capture="environment"><input type="file" id="ft" hidden accept=".pdf,.xlsx,.xls,.csv,.txt,.docx,.pptx,image/*"></div>';
   if (S.tab === 'dash') dashAfter(); if (S.tab === 'rep') { fill(); fit(); } window.scrollTo(0, S.keepY ? sy : 0); S.keepY = false;
@@ -770,19 +838,23 @@ async function doPdf() {
   } catch (e) { fit(); toast('PDF를 만들지 못했습니다 · 네트워크를 확인하거나 A4 인쇄를 사용하세요'); }
   busy('');
 }
-function live() { if (S.tab === 'lcc') { const o = $('#out'); if (o) o.innerHTML = lccOut(calcAll(S)); } if (S.tab === 'prod') { const X = calcAll(S).X; S.ps.forEach((p, i) => { const e = document.querySelector('[data-st="' + i + '"]'), c = calcOne(p, X); if (e) e.innerHTML = c ? '㎡당 자재비 <b>' + fm(c.costM2) + '원</b> · 실제 ' + fm(c.actCov, 2) + '㎡/L' : '<span class="x-na">SVR이 인식되면 결과가 표시됩니다</span>'; }); } }
+function live() {
+  if (S.tab === 'lcc') { const o = $('#out'); if (o) o.innerHTML = lccOut(calcAll(S)); }
+  if (S.tab === 'prod') { const M = calcAll(S); S.ps.forEach((p, i) => { const e = document.querySelector('[data-st="' + i + '"]'); if (e) e.innerHTML = pTiles(i, M); const n = document.querySelector('[data-nm="' + i + '"]'); if (n) n.textContent = (p.file || has(p)) ? pn(i) : '제품 미등록'; }); const a = $('#pAn'); if (a) a.innerHTML = pAnalysis(M); }
+}
 function init() {
   load(); render();
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, i = +b.dataset.i;
     if (a === 'tab') { S.tab = b.dataset.v; render(); }
+    else if (a === 'cond') { S.cond = S.cond === false; S.keepY = true; render(); }
     else if (a === 'dt') { D.t = b.dataset.v; render(); }
     else if (a === 'th') { try { window.CCTHEME.set(b.dataset.v); } catch (x) {} S.keepY = true; render(); }
     else if (a === 'demo') { D.demo = b.dataset.v !== 'off'; D.area = null; render(); }
     else if (a === 'rs') { D.area = null; render(); }
     else if (a === 'attach') { S.tgt = i; $('#fi').click(); } else if (a === 'cam') { S.tgt = i; $('#fc').click(); } else if (a === 'trk') { S.tgt = i; $('#ft').click(); }
     else if (a === 'db') pickDb(i);
-    else if (a === 'open') { S.open = S.open === i ? -1 : i; S.keepY = true; render(); }
+    else if (a === 'open') { S.open = S.open === i ? -1 : i; S.keepY = true; render(); const dd = $('#pDet'); if (dd && S.open >= 0) dd.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
     else if (a === 'ours') { S.ours = i; save(); S.keepY = true; render(); }
     else if (a === 'add') { S.ps.push(blank()); save(); S.keepY = true; render(); }
     else if (a === 'del') { S.ps.splice(i, 1); if (S.ours >= S.ps.length || S.ours === i) S.ours = 1; else if (S.ours > i) S.ours--; S.open = -1; save(); S.keepY = true; render(); }
