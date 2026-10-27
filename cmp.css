@@ -108,3 +108,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .d-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.d-two .d-row{margin:0}.d-big{font-size:17px;font-weight:900;margin-top:2px}
 .d-sv{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;border:1px solid #6ee7b7;background:#ecfdf5;border-radius:14px;padding:12px}.d-sv big{font-size:21px;font-weight:900;color:#059669}.d-sv small{color:#64748b}
 @media print{.x-th,.d-top,.d-tabs{display:none!important}}
+/* ---- v498 보고서: 제품 소개 카드 · 쪽 자동 채움 ---- */
+.x-ovh{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.x-co{font-size:11px;font-weight:800;color:#475569;background:#f1f5f9;border-radius:99px;padding:2px 9px;white-space:nowrap}
+.x-kcs{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 9px}.x-kc{background:#f1f5f9;border-radius:9px;padding:4px 9px;line-height:1.25}.x-kc small{display:block;font-size:10px;color:#64748b;font-weight:700}.x-kc b{font-size:12.5px}
+.x-ovc{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}.x-ovc>b{color:#64748b;margin-right:4px}
+.x-ov dl{grid-template-columns:44px 1fr}
+.x-pg{display:flex;flex-direction:column}
+.x-pg .x-pb{flex:1;min-height:0;position:relative}
+.x-pg .x-pbi{transform-origin:0 0;display:flex;flex-direction:column;justify-content:space-between}
+.x-pg .x-sc{flex:none;margin:0 0 3mm}
+.x-pg .x-kc small{font-size:12.5px}.x-pg .x-kc b{font-size:15.5px}.x-pg .x-co{font-size:13.5px}.x-pg .x-ovc{font-size:14.5px}

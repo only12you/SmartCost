@@ -198,10 +198,19 @@ function calcTbl(M) {
     ['경제성 (기존 대비 ㎡당 자재비)', (c, i) => (i === 0 ? '기준' : pctVs(c.costM2, M.C[0].costM2, true)), null],
   ]);
 }
+const PKS = [['내후성', /내후|자외선|UV|광택|백화|초킹|변색|황변|옥외|chalk/i], ['내염 · 내약품 · 내수', /내염|염수|내약품|내화학|내수|내알칼리|내산|방청|salt/i], ['부착 · 기계적 성능', /부착|밀착|경도|신장|인장|내충격|내마모|adhesion/i], ['내구성', /내구|수명|장기|보수주기|내식|방식/], ['내열', /내열|고온|열/]];
+function perfSplit(p) {
+  const out = {}; const rest = [];
+  lst(p.perf).forEach((ln) => { const k = PKS.find((q) => q[1].test(ln)); if (k) (out[k[0]] = out[k[0]] || []).push(ln); else rest.push(ln); });
+  if (N(p.life) > 0) (out['내구성'] = out['내구성'] || []).unshift('권장 보수주기 ' + fm(N(p.life)) + '년');
+  if (N(p.heat) > 0) (out['내열'] = out['내열'] || []).unshift('내열온도 ' + fm(N(p.heat)) + '℃');
+  out['기타 성능'] = rest; return out;
+}
 function textTbl(M) {
-  const cs = colsOf(M); const R = [['제품 특징', 'desc'], ['용도', 'usage'], ['기능 · 역할', 'func'], ['성분', 'comp'], ['성능', 'perf'], ['건조시간', 'dry'], ['가사시간', 'pot'], ['내열온도', 'heat'], ['VOC', 'voc']];
+  const cs = colsOf(M), sp = cs.map((i) => perfSplit(S.ps[i]));
+  const R = [['제품 특징', (i) => S.ps[i].desc], ['용도', (i) => S.ps[i].usage], ['기능 · 역할', (i) => S.ps[i].func], ['성분 (수지·경화제·안료)', (i) => S.ps[i].comp]].concat(PKS.map((q) => [q[0], (i, k) => (sp[k][q[0]] || []).join('\n')])).concat([['기타 성능', (i, k) => (sp[k]['기타 성능'] || []).join('\n')], ['건조시간', (i) => S.ps[i].dry], ['가사시간', (i) => S.ps[i].pot], ['VOC', (i) => S.ps[i].voc]]);
   let h = '<div class="x-tw"><table class="x-tbl x-txt"><thead><tr><th></th>' + cs.map(thc).join('') + '</tr></thead><tbody>';
-  R.forEach((r) => { h += '<tr><td class="x-lb">' + r[0] + '</td>' + cs.map((i) => { let v = S.ps[i][r[1]] || ''; if (r[1] === 'heat' && v) v += '℃'; return '<td>' + (esc(v).replace(/\n/g, '<br>') || '<span class="x-na">자료 없음</span>') + '</td>'; }).join('') + '</tr>'; });
+  R.forEach((r) => { const vs = cs.map((i, k) => String(r[1](i, k) || '').trim()); if (!vs.some(Boolean)) return; h += '<tr><td class="x-lb">' + r[0] + '</td>' + vs.map((v) => '<td>' + (esc(v).replace(/\n/g, '<br>') || '<span class="x-na">자료 없음</span>') + '</td>').join('') + '</tr>'; });
   return h + '</tbody></table></div>';
 }
 function certTbl(M) {
@@ -213,9 +222,13 @@ function certTbl(M) {
   return h + '</tbody></table></div><p class="x-note">초록색 인증서는 기존 제품에 없는 추가 인증입니다. 시공 실적 상세는 별도 실적자료로 제공됩니다.</p>';
 }
 function ovHtml(i, role) {
-  const p = S.ps[i];
-  const row = (k, v) => '<dt>' + k + '</dt><dd>' + (esc(v).replace(/\n/g, '<br>') || '<span class="x-na">데이터시트에 기재 없음</span>') + '</dd>';
-  return '<div class="x-ov" style="border-left:5px solid ' + COL[i] + '"><div class="x-role" style="color:' + COL[i] + '">' + role + '</div><h2>' + esc(pn(i)) + '</h2><dl>' + row('특징', p.desc) + row('용도', p.usage) + row('기능', p.func) + row('성분', p.comp) + '</dl></div>';
+  const p = S.ps[i], c = calcOne(p, calcAll(S).X);
+  const kc = (k, v) => (v ? '<span class="x-kc"><small>' + k + '</small><b>' + esc(v) + '</b></span>' : '');
+  const chips = kc('고형분', N(p.svr) > 0 ? fm(N(p.svr)) + '%' : '') + kc('표준 도막', N(p.dft) > 0 ? fm(N(p.dft)) + '㎛' : '') + kc('이론 도포', c && c.theoCov > 0 ? fm(c.theoCov, 1) + '㎡/L' : '') + kc('건조', p.dry) + kc('가사시간', p.pot) + kc('내열', N(p.heat) > 0 ? fm(N(p.heat)) + '℃' : '') + kc('VOC', p.voc) + kc('보수주기', N(p.life) > 0 ? fm(N(p.life)) + '년' : '') + kc('캔 · 단가', N(p.pack) > 0 && N(p.price) > 0 ? fm(N(p.pack)) + 'L · ' + fm(N(p.price)) + '원' : '');
+  const row = (k, v) => (v && String(v).trim() ? '<dt>' + k + '</dt><dd>' + esc(v).replace(/\n/g, '<br>') + '</dd>' : '');
+  const dl = row('특징', p.desc) + row('용도', p.usage) + row('기능', p.func) + row('성분', p.comp) + row('성능', p.perf);
+  const cert = lst(p.certs).map((x) => '<span class="x-chip">' + esc(x) + '</span>').join('');
+  return '<div class="x-ov" style="border-left:5px solid ' + COL[i] + '"><div class="x-ovh"><div><div class="x-role" style="color:' + COL[i] + '">' + role + '</div><h2>' + esc(pn(i)) + '</h2></div>' + (p.company ? '<span class="x-co">' + esc(p.company) + '</span>' : '') + '</div>' + (chips ? '<div class="x-kcs">' + chips + '</div>' : '') + (dl ? '<dl>' + dl + '</dl>' : '<p class="x-na">데이터시트에서 인식된 제품 소개 정보가 없습니다. 제품 탭에서 ‘추출값 확인·수정’으로 입력해 주세요.</p>') + (cert ? '<div class="x-ovc"><b>인증</b>' + cert + '</div>' : '') + '</div>';
 }
 function radarBlock(M) {
   const sc = scores(S, M); const cs = colsOf(M);
@@ -269,7 +282,7 @@ function slotHtml(i) {
   const p = S.ps[i], c = calcOne(p, calcAll(S).X), hasD = !!p.file || has(p), o = i === S.ours, op = S.open === i;
   const inp = (f, lab, ph, extra) => '<label class="x-f ' + (extra || '') + '"><span>' + lab + '</span><input data-f="' + f + '" data-i="' + i + '" inputmode="decimal" value="' + esc(p[f]) + '" placeholder="' + ph + '"></label>';
   let h = '<div class="x-slot' + (o ? ' ours' : '') + '" style="--c:' + COL[i] + '"><div class="x-sh"><div class="x-st"><b>' + LAB[i] + (i === 0 ? ' (현재 사용)' : '') + '</b>' + (o ? '<em>제안 제품</em>' : '') + '<span class="x-nm">' + (hasD ? esc(pn(i)) : '데이터시트를 첨부하세요') + '</span></div>';
-  h += '<div class="x-sb"><button class="x-bt p" data-a="attach" data-i="' + i + '">' + (hasD ? '변경' : '첨부') + '</button><button class="x-bt" data-a="cam" data-i="' + i + '" aria-label="사진">📷</button>';
+  h += '<div class="x-sb"><button class="x-bt p" data-a="attach" data-i="' + i + '">' + (hasD ? '변경' : '첨부') + '</button>';
   if (window.parent && window.parent.CMPB) h += '<button class="x-bt" data-a="db" data-i="' + i + '">DB</button>';
   if (i > 1) h += '<button class="x-bt" data-a="del" data-i="' + i + '" aria-label="삭제">✕</button>';
   h += '</div></div>';
@@ -313,15 +326,47 @@ function reportHtml0() {
   const M = calcAll(S); if (!ready(M)) return '<div class="x-guide">보고서는 기존 제품과 제안 제품의 데이터시트를 첨부하면 자동으로 생성됩니다.</div>';
   const d = new Date(), ds = d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate();
   const cover = '<table class="x-tbl x-be"><tbody><tr><td class="x-lb">고객사</td><td>' + (esc(S.meta.cust) || '-') + '</td><td class="x-lb">작성일</td><td>' + ds + '</td></tr><tr><td class="x-lb">제안사</td><td>' + (esc(S.meta.vend) || '-') + '</td><td class="x-lb">작성자</td><td>' + (esc(S.meta.who) || '-') + '</td></tr><tr><td class="x-lb">변경 대상</td><td colspan="3">' + esc(pn(0)) + ' → <b>' + esc(pn(S.ours)) + '</b></td></tr><tr><td class="x-lb">분석 조건</td><td colspan="3">도장 면적 ' + fm(M.X.area) + '㎡ · 손실률 ' + fm(M.X.loss) + '% · 도막 ' + (M.X.dft > 0 ? fm(M.X.dft) + '㎛ 동일 적용' : '데이터시트 기준') + ' · 분석기간 ' + M.X.H + '년 · 시공비 ' + fm(M.X.labor) + '원/㎡ · 물가상승 ' + fm(M.X.esc, 1) + '%/년</td></tr></tbody></table>';
-  const P = [
-    ['요약 · 현재 사용 제품 · 제안 제품', cover + '<div class="x-h2">종합 결론</div>' + verdictBlock(M) + '<div class="x-h2">현재 사용 제품 · 제안 제품 개요</div>' + ovHtml(0, '현재 사용 제품') + ovHtml(S.ours, '제안 제품') + '<p class="x-note">비교 기준: 각 제조사 기술자료(데이터시트)에 기재된 값입니다. 추출값은 원문과 대조해 확정하였습니다.</p>'],
-    ['소요량 · 단가 · 경제성 비교', '<div class="x-h2">1. 도막 · 소요량 · 단가 · 경제성</div>' + calcTbl(M) + '<p class="x-note">이론 단위당 면적 = SVR(%)×10÷도막(㎛), 실제 = 이론×(1−손실률), ㎡당 자재비 = 단위단가÷실제 단위당 면적, 캔당 면적 = 단위당 면적×캔 용량.</p>'],
-    ['비용 비교 및 손익분기 단가', '<div class="x-h2">2. 비용 막대 그래프</div>' + costBars(M) + '<div class="x-h2">3. 손익분기 단가</div>' + beBlock(M) + '<p class="x-note">손익분기 단가는 ㎡당 도장 자재비(및 LCC)가 두 제품에서 같아지는 단가이며, 이 단가보다 경쟁(기존) 제품이 비싸거나 제안 제품이 저렴하면 변경 효과가 발생합니다.</p>'],
-    ['성능 · 성분 · 용도 비교', '<div class="x-h2">4. 육각 성능 그래프</div>' + radarBlock(M) + '<div class="x-h2">5. 성분 · 성능 · 용도</div>' + textTbl(M)],
-    ['LCC · 보수주기 · 수명 분석', '<div class="x-h2">6. LCC 분석</div>' + lccBlock(M)],
-    ['인증서 비교 및 변경 효과', '<div class="x-h2">7. 인증서 · 실적 비교</div>' + certTbl(M) + '<div class="x-h2">8. 제안 제품으로 변경 시 기대 효과</div>' + effectBlock(M) + '<div class="x-h2">9. 결론</div>' + verdictBlock(M) + '<p class="x-note">본 보고서는 제조사 데이터시트와 입력 조건을 기준으로 한 참고 자료이며, 실제 소요량·비용·수명은 현장 조건(표면 상태, 환경, 시공 방법)에 따라 달라질 수 있습니다. 시공 전 최신 기술자료를 확인하시기 바랍니다.</p>'],
-  ];
-  return P.map((x, k) => pg(k + 1, P.length, x[0], x[1])).join('');
+  let n = 0; const H = (t) => '<div class="x-h2">' + ++n + '. ' + t + '</div>';
+  const others = colsOf(M).filter((i) => i !== 0 && i !== S.ours);
+  const secs = [
+    '<h1>' + esc(S.meta.title || '제품 변경 제안 분석 보고서') + '</h1>' + cover,
+    H('종합 결론') + verdictBlock(M),
+    H('현재 사용 제품 · 제안 제품 소개') + ovHtml(0, '현재 사용 제품') + ovHtml(S.ours, '제안 제품') + others.map((i) => ovHtml(i, LAB[i])).join('') + '<p class="x-note">비교 기준: 각 제조사 기술자료(데이터시트)에 기재된 값입니다. 추출값은 원문과 대조해 확정하였습니다.</p>',
+    H('도막 · 소요량 · 단가 · 경제성') + calcTbl(M) + '<p class="x-note">이론 단위당 면적 = SVR(%)×10÷도막(㎛), 실제 = 이론×(1−손실률), ㎡당 자재비 = 단위단가÷실제 단위당 면적, 캔당 면적 = 단위당 면적×캔 용량.</p>',
+    H('비용 막대 그래프') + costBars(M),
+    H('손익분기 단가') + beBlock(M) + '<p class="x-note">손익분기 단가는 ㎡당 도장 자재비(및 LCC)가 두 제품에서 같아지는 단가입니다. 기존 제품이 이 단가보다 비싸거나 제안 제품이 저렴하면 변경 효과가 발생합니다.</p>',
+    H('육각 성능 그래프') + radarBlock(M),
+    H('인증서 · 실적 비교') + certTbl(M),
+    H('성분 · 성능 · 내구성 · 내후성 비교') + textTbl(M),
+    H('LCC 분석 (보수주기 · 비용 · 수명)') + lccBlock(M),
+    H('제안 제품으로 변경 시 기대 효과') + effectBlock(M),
+    H('결론') + verdictBlock(M) + '<p class="x-note">본 보고서는 제조사 데이터시트와 입력 조건을 기준으로 한 참고 자료이며, 실제 소요량·비용·수명은 현장 조건(표면 상태, 환경, 시공 방법)에 따라 달라질 수 있습니다. 시공 전 최신 기술자료를 확인하시기 바랍니다.</p>',
+  ].map((x) => '<div class="x-sc">' + x + '</div>');
+  return packPages(secs);
+}
+function packPages(secs) {
+  const shell = (inner) => '<section class="x-pg"><header class="x-ph"><b>' + esc(S.meta.title || '제품 변경 제안 분석 보고서') + '</b><span>' + esc(S.meta.cust) + '</span></header><div class="x-pb"><div class="x-pbi">' + inner + '</div></div><footer class="x-pf"><span>' + esc(S.meta.vend) + '</span><span>@N@</span></footer></section>';
+  const host = document.createElement('div'); host.className = 'x-pgs'; host.style.cssText = 'position:absolute;left:-9999px;top:0;visibility:hidden;transform:none';
+  host.innerHTML = shell(''); document.body.appendChild(host);
+  const cap = host.querySelector('.x-pb').clientHeight; host.innerHTML = shell(secs.join(''));
+  const hs = [...host.querySelectorAll('.x-sc')].map((e) => e.offsetHeight + parseFloat(getComputedStyle(e).marginBottom || 0));
+  host.remove();
+  const pages = []; let cur = [], used = 0;
+  secs.forEach((x, k) => { if (cur.length && used + hs[k] > cap) { pages.push(cur); cur = []; used = 0; } cur.push(x); used += hs[k]; });
+  if (cur.length) pages.push(cur);
+  return pages.map((g, k) => shell(g.join('')).replace('@N@', (k + 1) + ' / ' + pages.length)).join('');
+}
+function fill() {
+  document.querySelectorAll('.x-pg').forEach((pg) => {
+    const pb = pg.querySelector('.x-pb'), bi = pg.querySelector('.x-pbi'); if (!pb || !bi) return;
+    bi.style.cssText = ''; const cap = pb.clientHeight; if (bi.scrollHeight > cap + 1) return;
+    let lo = 1, hi = 1.4;
+    for (let t = 0; t < 9; t++) { const k = (lo + hi) / 2; bi.style.width = 100 / k + '%'; bi.style.transform = 'scale(' + k + ')'; if (bi.scrollHeight * k <= cap) lo = k; else hi = k; }
+    bi.style.width = 100 / lo + '%'; bi.style.transform = 'scale(' + lo + ')'; bi.style.minHeight = '';
+    const left = cap / lo - bi.scrollHeight, tr = [...bi.querySelectorAll('tr')];
+    if (left > 6 && tr.length) { const ex = Math.min(22, left / tr.length); tr.forEach((r) => { r.style.height = r.offsetHeight + ex + 'px'; }); }
+    bi.style.minHeight = cap / lo + 'px';
+  });
 }
 function tracksHtml() { FS = 1.5; try { return tracksHtml0(); } finally { FS = 1; } }
 function tracksHtml0() {
@@ -473,7 +518,7 @@ function render() {
   root.innerHTML = '<div class="x-app"><div class="x-top"><b>제품 변경 제안 분석</b><small>데이터시트 기준 · 자동 비교</small><span class="x-th" title="화면 모드(전체 페이지 적용)">' + [['light', '☀ 주간'], ['dark', '☾ 야간'], ['auto', '자동']].map((m) => '<button data-a="th" data-v="' + m[0] + '" class="' + ((window.CCTHEME ? window.CCTHEME.get() : 'light') === m[0] ? 'on' : '') + '">' + m[1] + '</button>').join('') + '</span></div><div class="x-tabs">' + T.map((t) => '<button data-a="tab" data-v="' + t[0] + '" class="' + (S.tab === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') + '</div><div class="x-body" id="body">' +
     (S.tab === 'prod' ? tabProd() : S.tab === 'dash' ? tabDash() : S.tab === 'cmp' ? tabCmp() : S.tab === 'lcc' ? tabLcc() : tabRep()) + '</div><div class="x-busy" id="busy"></div><div class="x-toast" id="toast"></div>' +
     '<input type="file" id="fi" hidden accept=".pdf,.xlsx,.xls,.xlsm,.csv,.txt,.docx,.pptx,image/*"><input type="file" id="fc" hidden accept="image/*" capture="environment"><input type="file" id="ft" hidden accept=".pdf,.xlsx,.xls,.csv,.txt,.docx,.pptx,image/*"></div>';
-  if (S.tab === 'dash') dashAfter(); if (S.tab === 'rep') fit(); window.scrollTo(0, S.keepY ? sy : 0); S.keepY = false;
+  if (S.tab === 'dash') dashAfter(); if (S.tab === 'rep') { fill(); fit(); } window.scrollTo(0, S.keepY ? sy : 0); S.keepY = false;
 }
 function busy(m) { const b = $('#busy'); if (b) { b.textContent = m || ''; b.classList.toggle('on', !!m); } }
 async function attach(i, f, mode) {
