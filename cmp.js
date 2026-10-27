@@ -89,15 +89,25 @@ function section(L, keys, max) {
   }
   return '';
 }
+function near(t, re, lo, hi, win, skip) {
+  const g = new RegExp(re.source, 'gi'); let m;
+  while ((m = g.exec(t))) {
+    if (skip && skip.test(t.slice(Math.max(0, m.index - 6), m.index))) continue;
+    const seg = t.slice(m.index + m[0].length, m.index + m[0].length + (win || 45)).split('\n').slice(0, 2).join(' ');
+    const nr = /(\d+(?:\.\d+)?)(?:\s*[-~～]\s*(\d+(?:\.\d+)?))?/g; let r;
+    while ((r = nr.exec(seg))) { const a = parseFloat(r[1]), b = r[2] ? parseFloat(r[2]) : null; const v = b != null && b >= a ? (a + b) / 2 : a; if (v >= lo && v <= hi) return String(+v.toFixed(2)); }
+  }
+  return '';
+}
 function extract(raw, fname) {
   const t = String(raw || '').replace(/\r/g, '').replace(/[ \t\u00a0]+/g, ' '); const o = {};
   const L = t.split('\n').map((x) => x.trim()).filter(Boolean); let m;
   if ((m = t.match(/(?:제품\s*명|품\s*명|Product\s*Name)\s*[:：]?\s*([^\n]{2,60})/i))) o.name = m[1].trim();
   else { const c = L.find((x) => x.length >= 3 && x.length <= 50 && !/^(page|\d|www|tel|http)/i.test(x)); if (c) o.name = c; }
-  if ((m = t.match(/(?:용적\s*고형분|체적\s*고형분|고형분|solids?\s*by\s*volume|volume\s*solids|SVR)[^0-9\n]{0,30}?(\d{2,3}(?:\.\d+)?)\s*(?:±\s*\d+\s*)?%/i))) o.svr = m[1];
-  if ((m = t.match(/(?:건조\s*도막(?:\s*두께)?|표준\s*도막|도막\s*두께|DFT|dry\s*film(?:\s*thickness)?)[^0-9\n]{0,20}(\d{2,4})(?:\s*[-~]\s*\d+)?\s*(?:㎛|µm|μm|um|micron|마이크론)/i))) o.dft = m[1];
+  { const v = near(t, /용적\s*고형분|체적\s*고형분|용적\s*비\s*고형분|고형분|solids?\s*by\s*volume|volume\s*solids|\bSVR\b|\bVS\b/, 20, 100, 45, /중량|무게|weight|wt|mass/i); if (v) o.svr = v; }
+  { const v = near(t, /건조\s*도막(?:\s*두께)?|표준\s*도막(?:\s*두께)?|권장\s*도막|도막\s*두께|\bDFT\b|dry\s*film(?:\s*thickness)?/, 10, 2000, 40); if (v) o.dft = v; }
   if ((m = t.match(/(\d+(?:\.\d+)?)\s*(?:㎡|m2|m²)\s*\/\s*(?:L|ℓ|l|리터)/i))) o.cov = m[1];
-  if ((m = t.match(/(?:포장\s*단위|포장|용량|Packing|Pack\s*size|Container)[^0-9\n]{0,20}(\d+(?:\.\d+)?)\s*(?:L|ℓ|리터|liters?)\b/i))) o.pack = m[1];
+  { let v = ''; const mm = t.match(/(?:포장\s*단위|포장|용량|Packing|Pack\s*size|Package|Container)[^0-9\n]{0,25}(\d+(?:\.\d+)?)\s*(?:L|ℓ|ℓ|리터|liters?|ltr)\b/i); if (mm) v = mm[1]; else { const m2 = t.match(/(?:^|[^\d.\/])(\d{1,2}(?:\.\d+)?)\s*(?:L|ℓ|리터|liters?)\b(?!\s*\/)/i); if (m2 && +m2[1] >= 1 && +m2[1] <= 25) v = m2[1]; } if (v) o.pack = v; }
   const line = (re) => { const r = t.match(re); return r ? r[0].replace(/\s+/g, ' ').trim().slice(0, 70) : ''; };
   const dry = line(/(?:건조\s*시간|지촉|touch\s*dry|dry\s*to\s*touch|고화|hard\s*dry)[^\n]{0,50}/i); if (dry) o.dry = dry;
   const pot = line(/(?:가사\s*시간|pot\s*life|사용\s*가능\s*시간)[^\n]{0,40}/i); if (pot) o.pot = pot;
@@ -114,37 +124,38 @@ function extract(raw, fname) {
   return o;
 }
 
+let FS = 1;
 /* ---------- SVG 그래프 ---------- */
 function radarSvg(ax, series) {
   const W = 420, Hh = 330, cx = 210, cy = 150, R = 105, pt = (i, f) => { const a = (-90 + i * 60) * Math.PI / 180; return [cx + Math.cos(a) * R * f, cy + Math.sin(a) * R * f]; };
   const poly = (f) => ax.map((_, i) => pt(i, f).join(',')).join(' ');
   let s = '<svg viewBox="0 0 ' + W + ' ' + Hh + '" class="x-svg" role="img" aria-label="육각 비교 그래프">';
   [0.25, 0.5, 0.75, 1].forEach((f) => { s += '<polygon points="' + poly(f) + '" fill="' + (f === 1 ? '#f8fafc' : 'none') + '" stroke="#cbd5e1" stroke-width="1"/>'; });
-  ax.forEach((a, i) => { const [x, y] = pt(i, 1), [lx, ly] = pt(i, 1.2); s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x + '" y2="' + y + '" stroke="#cbd5e1"/><text x="' + lx + '" y="' + (ly + 4) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">' + a + '</text>'; });
-  [25, 50, 75, 100].forEach((v) => { s += '<text x="' + (cx + 3) + '" y="' + (cy - R * v / 100 + 10) + '" font-size="8" fill="#94a3b8">' + v + '</text>'; });
+  ax.forEach((a, i) => { const [x, y] = pt(i, 1), [lx, ly] = pt(i, 1.2); s += '<line x1="' + cx + '" y1="' + cy + '" x2="' + x + '" y2="' + y + '" stroke="#cbd5e1"/><text x="' + lx + '" y="' + (ly + 4) + '" text-anchor="middle" font-size="' + (12 * FS) + '" font-weight="700" fill="#334155">' + a + '</text>'; });
+  [25, 50, 75, 100].forEach((v) => { s += '<text x="' + (cx + 3) + '" y="' + (cy - R * v / 100 + 10) + '" font-size="' + (8 * FS) + '" fill="#94a3b8">' + v + '</text>'; });
   series.forEach((sr) => { if (!sr.v) return; const pts = sr.v.map((v, i) => pt(i, v / 100).join(',')).join(' ');
     s += '<polygon points="' + pts + '" fill="' + sr.color + '" fill-opacity=".16" stroke="' + sr.color + '" stroke-width="2.2"/>';
     sr.v.forEach((v, i) => { const [x, y] = pt(i, v / 100); s += '<circle cx="' + x + '" cy="' + y + '" r="3" fill="' + sr.color + '"/>'; }); });
-  series.forEach((sr, k) => { s += '<rect x="' + (30 + k * 100) + '" y="' + (Hh - 26) + '" width="12" height="12" rx="3" fill="' + sr.color + '"/><text x="' + (47 + k * 100) + '" y="' + (Hh - 16) + '" font-size="11" fill="#334155">' + esc(sr.name) + '</text>'; });
+  series.forEach((sr, k) => { s += '<rect x="' + (30 + k * 100) + '" y="' + (Hh - 26) + '" width="12" height="12" rx="3" fill="' + sr.color + '"/><text x="' + (47 + k * 100) + '" y="' + (Hh - 16) + '" font-size="' + (11 * FS) + '" fill="#334155">' + esc(sr.name) + '</text>'; });
   return s + '</svg>';
 }
 function barsSvg(title, unit, items, f, W0) {
   const W = W0 || 420, Hh = 230, pl = 14, top = 38, bot = 44, n = items.length || 1, mx = Math.max(1, ...items.map((i) => i.v)) * 1.18, bw = Math.min(54, (W - pl * 2) / n - 16);
-  let s = '<svg viewBox="0 0 ' + W + ' ' + Hh + '" class="x-svg" role="img" aria-label="' + esc(title) + '"><text x="' + pl + '" y="18" font-size="13" font-weight="800" fill="#0f172a">' + esc(title) + '</text><text x="' + (W - pl) + '" y="18" text-anchor="end" font-size="10" fill="#64748b">' + esc(unit) + '</text><line x1="' + pl + '" y1="' + (Hh - bot) + '" x2="' + (W - pl) + '" y2="' + (Hh - bot) + '" stroke="#cbd5e1"/>';
+  let s = '<svg viewBox="0 0 ' + W + ' ' + Hh + '" class="x-svg" role="img" aria-label="' + esc(title) + '"><text x="' + pl + '" y="18" font-size="' + (13 * FS) + '" font-weight="800" fill="#0f172a">' + esc(title) + '</text><text x="' + (W - pl) + '" y="18" text-anchor="end" font-size="' + (10 * FS) + '" fill="#64748b">' + esc(unit) + '</text><line x1="' + pl + '" y1="' + (Hh - bot) + '" x2="' + (W - pl) + '" y2="' + (Hh - bot) + '" stroke="#cbd5e1"/>';
   items.forEach((it, i) => { const x = pl + ((W - pl * 2) / n) * (i + 0.5) - bw / 2, h = it.v > 0 ? Math.max(3, (it.v / mx) * (Hh - top - bot)) : 0, y = Hh - bot - h;
-    s += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" rx="4" fill="' + it.color + '"/><text x="' + (x + bw / 2) + '" y="' + (y - 5) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#0f172a">' + (it.v > 0 ? f(it.v) : '-') + '</text><text x="' + (x + bw / 2) + '" y="' + (Hh - bot + 16) + '" text-anchor="middle" font-size="11" fill="#334155">' + esc(it.name) + '</text>'; });
+    s += '<rect x="' + x + '" y="' + y + '" width="' + bw + '" height="' + h + '" rx="4" fill="' + it.color + '"/><text x="' + (x + bw / 2) + '" y="' + (y - 5) + '" text-anchor="middle" font-size="' + (11 * FS) + '" font-weight="800" fill="#0f172a">' + (it.v > 0 ? f(it.v) : '-') + '</text><text x="' + (x + bw / 2) + '" y="' + (Hh - bot + 16) + '" text-anchor="middle" font-size="' + (11 * FS) + '" fill="#334155">' + esc(it.name) + '</text>'; });
   return s + '</svg>';
 }
 function lccSvg(series, H) {
   const W = 460, Hh = 270, pl = 54, pr = 14, pt0 = 16, pb = 56, mx = Math.max(1, ...series.map((s) => s.cum[s.cum.length - 1])) * 1.1;
   const X = (y) => pl + ((W - pl - pr) * y) / H, Y = (v) => Hh - pb - ((Hh - pb - pt0) * v) / mx;
   let s = '<svg viewBox="0 0 ' + W + ' ' + Hh + '" class="x-svg" role="img" aria-label="LCC 누적비용 그래프">';
-  for (let k = 0; k <= 4; k++) { const v = (mx / 4) * k, y = Y(v); s += '<line x1="' + pl + '" y1="' + y + '" x2="' + (W - pr) + '" y2="' + y + '" stroke="#e2e8f0"/><text x="' + (pl - 6) + '" y="' + (y + 3) + '" text-anchor="end" font-size="9" fill="#64748b">' + won(v) + '</text>'; }
-  const step = H <= 12 ? 1 : H <= 30 ? 5 : 10; for (let y = 0; y <= H; y += step) s += '<text x="' + X(y) + '" y="' + (Hh - pb + 14) + '" text-anchor="middle" font-size="9" fill="#64748b">' + y + '년</text>';
+  for (let k = 0; k <= 4; k++) { const v = (mx / 4) * k, y = Y(v); s += '<line x1="' + pl + '" y1="' + y + '" x2="' + (W - pr) + '" y2="' + y + '" stroke="#e2e8f0"/><text x="' + (pl - 6) + '" y="' + (y + 3) + '" text-anchor="end" font-size="' + (9 * FS) + '" fill="#64748b">' + won(v) + '</text>'; }
+  const step = H <= 12 ? 1 : H <= 30 ? 5 : 10; for (let y = 0; y <= H; y += step) s += '<text x="' + X(y) + '" y="' + (Hh - pb + 14) + '" text-anchor="middle" font-size="' + (9 * FS) + '" fill="#64748b">' + y + '년</text>';
   series.forEach((sr) => { let d = ''; sr.cum.forEach((v, y) => { d += (y === 0 ? 'M' : 'L') + X(y) + ' ' + Y(sr.cum[y - 1] != null && y > 0 ? sr.cum[y - 1] : v) + ' L' + X(y) + ' ' + Y(v) + ' '; });
     s += '<path d="' + d + '" fill="none" stroke="' + sr.color + '" stroke-width="2.4" stroke-linejoin="round"/>';
     sr.times.forEach((t) => { const yy = Math.min(H, Math.floor(t + 1e-9)); s += '<circle cx="' + X(t) + '" cy="' + Y(sr.cum[yy]) + '" r="3.6" fill="#fff" stroke="' + sr.color + '" stroke-width="2"/>'; }); });
-  series.forEach((sr, k) => { s += '<rect x="' + (pl + k * 105) + '" y="' + (Hh - 18) + '" width="12" height="12" rx="3" fill="' + sr.color + '"/><text x="' + (pl + 17 + k * 105) + '" y="' + (Hh - 8) + '" font-size="11" fill="#334155">' + esc(sr.name) + '</text>'; });
+  series.forEach((sr, k) => { s += '<rect x="' + (pl + k * 105) + '" y="' + (Hh - 18) + '" width="12" height="12" rx="3" fill="' + sr.color + '"/><text x="' + (pl + 17 + k * 105) + '" y="' + (Hh - 8) + '" font-size="' + (11 * FS) + '" fill="#334155">' + esc(sr.name) + '</text>'; });
   return s + '</svg>';
 }
 
@@ -211,7 +222,7 @@ function radarBlock(M) {
   return '<div class="x-chart">' + radarSvg(sc.ax, cs.map((i) => ({ name: rl(i), color: COL[i], v: sc.v[i] }))) + '</div><p class="x-note">육각 그래프는 제품 간 상대 점수(최고값=100)입니다. 경제성=㎡당 자재비(낮을수록↑), 도막 효율=SVR, 도포 효율=실제 단위당 면적, 작업성=건조·가사시간, 내구성=보수주기, 신뢰도=인증+실적 수.</p>';
 }
 function costBars(M) {
-  const cs = colsOf(M); const it = (f) => cs.map((i) => ({ name: rl(i), color: COL[i], v: f(M.C[i]) }));
+  const cs = colsOf(M); const it = (f) => cs.map((i) => ({ name: rl(i).replace(' 제품', ''), color: COL[i], v: f(M.C[i]) }));
   return '<div class="x-grid3"><div class="x-chart">' + barsSvg('캔당 단가', '원/캔', it((c) => c.priceCan), (v) => fm(v), 270) + '</div><div class="x-chart">' + barsSvg('㎡당 자재비', '원/㎡', it((c) => c.costM2), (v) => fm(v), 270) + '</div><div class="x-chart">' + barsSvg('총 자재비', fm(M.X.area) + '㎡', it((c) => c.mat), (v) => won(v), 270) + '</div></div>';
 }
 function lccBlock(M) {
@@ -226,7 +237,7 @@ function lccBlock(M) {
     ['LCC (기존 대비)', (c, i) => (i === 0 ? '기준' : pctVs(c.lcc, M.C[0].lcc, true)), null],
   ]);
   const ser = cs.map((i) => ({ name: rl(i), color: COL[i], cum: M.C[i].cum, times: M.C[i].times }));
-  return t + '<div class="x-grid2"><div class="x-chart">' + lccSvg(ser, M.X.H) + '<p class="x-note">누적 비용 · ○는 도장 시행 시점(보수주기), 시공비 ' + fm(M.X.labor) + '원/㎡ · 물가상승 ' + fm(M.X.esc, 1) + '%/년 가정</p></div><div class="x-chart">' + barsSvg('분석기간 LCC', '', cs.map((i) => ({ name: rl(i), color: COL[i], v: M.C[i].lcc })), (v) => won(v)) + '</div></div>' +
+  return t + '<div class="x-grid2"><div class="x-chart">' + lccSvg(ser, M.X.H) + '<p class="x-note">누적 비용 · ○는 도장 시행 시점(보수주기), 시공비 ' + fm(M.X.labor) + '원/㎡ · 물가상승 ' + fm(M.X.esc, 1) + '%/년 가정</p></div><div class="x-chart">' + barsSvg('분석기간 LCC', '', cs.map((i) => ({ name: rl(i).replace(' 제품', ''), color: COL[i], v: M.C[i].lcc })), (v) => won(v)) + '</div></div>' +
     (warn.length ? '<p class="x-warn">※ ' + warn.join(', ') + ': 보수주기가 입력되지 않아 초기 도장 1회만 반영했습니다.</p>' : '');
 }
 function beBlock(M) {
@@ -267,7 +278,7 @@ function slotHtml(i) {
   h += '<div class="x-stat" data-st="' + i + '">' + (c ? '㎡당 자재비 <b>' + fm(c.costM2) + '원</b> · 실제 ' + fm(c.actCov, 2) + '㎡/L' : '<span class="x-na">SVR이 인식되면 결과가 표시됩니다</span>') + '</div>';
   h += '<div class="x-sf">' + (i > 0 ? '<label class="x-rad"><input type="radio" name="ours" data-a="ours" data-i="' + i + '"' + (o ? ' checked' : '') + '> 이 제품을 제안 제품으로</label>' : '<span></span>') + (hasD ? '<button class="x-lk" data-a="open" data-i="' + i + '">' + (op ? '값 닫기' : '추출값 확인·수정') + '</button>' : '') + '</div>';
   if (op) {
-    h += '<div class="x-det"><p class="x-note">데이터시트에서 자동 추출한 값입니다. 원문과 다르면 고쳐 주세요. <span class="x-tag">추출</span> 표시는 자동 입력 항목입니다.</p><div class="x-g2">';
+    h += '<div class="x-det"><p class="x-note">데이터시트에서 자동 추출한 값입니다(읽은 글자 ' + (p.rawLen == null ? '-' : fm(p.rawLen)) + '자 · ' + (p.ext || []).length + '개 항목). 비어 있거나 원문과 다르면 직접 입력해 주세요. <span class="x-tag">추출</span> 표시는 자동 입력 항목입니다.</p><div class="x-g2">';
     FIELDS.forEach(([k, lab, ty]) => { const t = (p.ext || []).includes(k) ? '<span class="x-tag">추출</span>' : ''; h += '<label class="x-f ' + (ty === 'ta' || k === 'name' || k === 'company' ? 'full' : '') + '"><span>' + lab + t + '</span>' + (ty === 'ta' ? '<textarea data-f="' + k + '" data-i="' + i + '" rows="2">' + esc(p[k]) + '</textarea>' : '<input data-f="' + k + '" data-i="' + i + '" value="' + esc(p[k]) + '"' + (ty === 'n' ? ' inputmode="decimal"' : '') + '>') + '</label>'; });
     h += '</div><div class="x-sb end"><button class="x-bt" data-a="trk" data-i="' + i + '">실적 파일 첨부</button><button class="x-bt" data-a="clear" data-i="' + i + '">비우기</button></div></div>';
   }
@@ -297,7 +308,8 @@ function tabCmp() { const M = calcAll(S); return ready(M) ? verdictBlock(M) + cm
 
 /* ---------- A4 보고서 ---------- */
 function pg(n, tot, title, inner) { return '<section class="x-pg"><header class="x-ph"><b>' + esc(S.meta.title || '제품 변경 제안 분석 보고서') + '</b><span>' + esc(S.meta.cust) + '</span></header><h1>' + title + '</h1>' + inner + '<footer class="x-pf"><span>' + esc(S.meta.vend) + '</span><span>' + n + ' / ' + tot + '</span></footer></section>'; }
-function reportHtml() {
+function reportHtml() { FS = 1.5; try { return reportHtml0(); } finally { FS = 1; } }
+function reportHtml0() {
   const M = calcAll(S); if (!ready(M)) return '<div class="x-guide">보고서는 기존 제품과 제안 제품의 데이터시트를 첨부하면 자동으로 생성됩니다.</div>';
   const d = new Date(), ds = d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate();
   const cover = '<table class="x-tbl x-be"><tbody><tr><td class="x-lb">고객사</td><td>' + (esc(S.meta.cust) || '-') + '</td><td class="x-lb">작성일</td><td>' + ds + '</td></tr><tr><td class="x-lb">제안사</td><td>' + (esc(S.meta.vend) || '-') + '</td><td class="x-lb">작성자</td><td>' + (esc(S.meta.who) || '-') + '</td></tr><tr><td class="x-lb">변경 대상</td><td colspan="3">' + esc(pn(0)) + ' → <b>' + esc(pn(S.ours)) + '</b></td></tr><tr><td class="x-lb">분석 조건</td><td colspan="3">도장 면적 ' + fm(M.X.area) + '㎡ · 손실률 ' + fm(M.X.loss) + '% · 도막 ' + (M.X.dft > 0 ? fm(M.X.dft) + '㎛ 동일 적용' : '데이터시트 기준') + ' · 분석기간 ' + M.X.H + '년 · 시공비 ' + fm(M.X.labor) + '원/㎡ · 물가상승 ' + fm(M.X.esc, 1) + '%/년</td></tr></tbody></table>';
@@ -311,7 +323,8 @@ function reportHtml() {
   ];
   return P.map((x, k) => pg(k + 1, P.length, x[0], x[1])).join('');
 }
-function tracksHtml() {
+function tracksHtml() { FS = 1.5; try { return tracksHtml0(); } finally { FS = 1; } }
+function tracksHtml0() {
   const idx = [S.ours, 0].filter((i, k, a) => a.indexOf(i) === k && has(S.ps[i]) || lst(S.ps[i].tracks).length);
   const body = idx.map((i) => '<div class="x-h2" style="color:' + COL[i] + '">' + rl(i) + ' · ' + esc(pn(i)) + ' (' + lst(S.ps[i].tracks).length + '건)</div>' + (lst(S.ps[i].tracks).length ? '<ol class="x-ol">' + lst(S.ps[i].tracks).map((t) => '<li>' + esc(t) + '</li>').join('') + '</ol>' : '<p class="x-na">등록된 실적이 없습니다.</p>')).join('');
   const t = S.meta.title; S.meta.title = '시공 실적 자료'; const h = pg(1, 1, '시공 실적 자료', body || '<p class="x-na">실적 정보가 없습니다. 제품의 추출값 확인 화면에서 실적을 입력하거나 실적 파일을 첨부하세요.</p>'); S.meta.title = t; return h;
@@ -349,6 +362,11 @@ async function unzip(buf) {
   return out;
 }
 const xmlText = (x) => x.replace(/<\/(?:w:p|a:p|w:tr)>/g, '\n').replace(/<\/w:tc>/g, ' | ').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&amp;/g, '&');
+async function pdfOcr(f) {
+  const P = await lib('pdf'), T = await lib('tess'); const pdf = await P.getDocument({ data: await f.arrayBuffer() }).promise; let out = '';
+  for (let i = 1; i <= Math.min(3, pdf.numPages); i++) { const pg = await pdf.getPage(i), vp = pg.getViewport({ scale: 2 }); const cv = document.createElement('canvas'); cv.width = vp.width; cv.height = vp.height; await pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise; out += (await T.recognize(cv, 'kor+eng')).data.text + '\n'; }
+  return out;
+}
 async function fileText(f) {
   const ext = (f.name.split('.').pop() || '').toLowerCase();
   if (['txt', 'csv', 'tsv', 'md'].includes(ext)) return await f.text();
@@ -356,6 +374,7 @@ async function fileText(f) {
   if (ext === 'pdf') {
     const P = await lib('pdf'); const pdf = await P.getDocument({ data: await f.arrayBuffer() }).promise; let out = '';
     for (let i = 1; i <= Math.min(pdf.numPages, 20); i++) { const c = await (await pdf.getPage(i)).getTextContent(); let y = null, line = ''; c.items.forEach((it) => { const yy = Math.round(it.transform[5]); if (y !== null && Math.abs(yy - y) > 2) { out += line.trim() + '\n'; line = ''; } y = yy; line += it.str + ' '; }); out += line + '\n'; }
+    if (out.replace(/\s/g, '').length < 50) { busy('글자가 없는 PDF입니다 · 이미지 인식 중…'); return await pdfOcr(f); }
     return out;
   }
   if (ext === 'docx' || ext === 'pptx') { const z = await unzip(await f.arrayBuffer()); return Object.keys(z).sort().map((k) => xmlText(z[k])).join('\n'); }
@@ -384,7 +403,7 @@ async function attach(i, f, mode) {
   try {
     const txt = await fileText(f);
     if (mode === 'trk') { const L = txt.split('\n').map((x) => x.replace(/\s+/g, ' ').trim()).filter((x) => x.length >= 4 && x.length <= 90 && !/^[\d.,\s|-]+$/.test(x)).slice(0, 80); S.ps[i].tracks = [...new Set([...lst(S.ps[i].tracks), ...L])].join('\n'); toast('실적 ' + L.length + '건을 불러왔습니다'); }
-    else { const o = extract(txt, f.name); const keys = Object.keys(o); const p = S.ps[i]; Object.assign(p, o); p.ext = keys; p.file = { name: f.name, url: img ? URL.createObjectURL(f) : '' }; toast(keys.length ? keys.length + '개 항목을 추출해 자동 비교했습니다' : '자동 추출된 값이 없습니다 · 추출값 확인에서 직접 입력하세요'); }
+    else { const o = extract(txt, f.name); const keys = Object.keys(o); const p = S.ps[i]; Object.assign(p, o); p.ext = keys; p.rawLen = txt.replace(/\s/g, '').length; p.file = { name: f.name, url: img ? URL.createObjectURL(f) : '' }; toast(keys.length ? keys.length + '개 항목을 추출해 자동 비교했습니다' : '자동 추출된 값이 없습니다 · 추출값 확인에서 직접 입력하세요'); }
   } catch (e) { toast(e.message === 'unsupported' ? '지원하지 않는 형식입니다' : '분석하지 못했습니다 · 네트워크를 확인하거나 직접 입력하세요'); }
   busy(''); save(); S.keepY = true; render();
 }
