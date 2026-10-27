@@ -1,5 +1,5 @@
 (()=>{'use strict';
-/* ===== CoatCost 제품 비교 v495 · 코어(계산·추출·그래프) ===== */
+/* ===== CoatCost 제품 비교 v498 · 코어(계산·추출·그래프) ===== */
 const COL = ['#1c58e0', '#ea580c', '#059669', '#7c3aed', '#e11d48'];
 const LAB = ['기존 제품', '비교 A', '비교 B', '비교 C', '비교 D'];
 const N = (v) => { const x = parseFloat(String(v == null ? '' : v).replace(/,/g, '')); return isFinite(x) ? x : 0; };
@@ -389,13 +389,91 @@ let tm = 0;
 function save() { clearTimeout(tm); tm = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify({ ...S, ps: S.ps.map((p) => ({ ...p, file: p.file ? { name: p.file.name } : null })) })); } catch (e) {} }, 300); }
 const $ = (s) => document.querySelector(s);
 function toast(m) { const t = $('#toast'); if (!t) return; t.textContent = m; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), 3200); }
+/* ---------- 대시보드 (SMARTCOST 형식: 요약 ROI · 기술스펙 · LCC 분석 · 견적 산출 / 움직이는 차트) ---------- */
+const D = { t: 'roi', demo: false, area: null, loss: null, dft: null };
+function demoS() {
+  const mk = (o) => ({ ...blank(), ...o });
+  return { ...S, ps: [mk({ name: '기존 제품 (예시)', svr: 45, dft: 50, pack: 9, price: 82000, life: 5 }), mk({ name: '제안 제품 (예시)', svr: 58, dft: 50, pack: 15, price: 80000, life: 10 }), mk({ name: '비교 B (예시)', svr: 50, dft: 50, pack: 15, price: 180000, life: 7 })], ours: 1, area: 1500, loss: 20, dft: 50, H: 30, labor: 4500, esc: 3 };
+}
+function dctx() {
+  const src = D.demo ? demoS() : S, M = calcAll(src), b = M.C[0], o = M.C[src.ours];
+  if (!b || !o) return null;
+  let oi = -1; src.ps.forEach((p, i) => { if (oi < 0 && i !== 0 && i !== src.ours && M.C[i]) oi = i; });
+  const nm = (i) => (src.ps[i].name || '').trim() || (i === 0 ? '기존 제품' : i === src.ours ? '제안 제품' : LAB[i]);
+  return { src, M, b, o, oi, x: oi >= 0 ? M.C[oi] : null, nm };
+}
+const dTabs = [['roi', '요약 ROI'], ['spec', '기술스펙'], ['lcc', 'LCC 분석'], ['est', '견적 산출']];
+const dCn = (v, f) => '<b data-cn="' + v + '" data-cf="' + f + '">0</b>';
+function dFmt(v, f) { return f === 'pct' ? v.toFixed(1) + '%' : f === 'x' ? v.toFixed(1) + '배' : f === 'won' ? fm(v) + '원' : fm(v); }
+function tabDash() {
+  const h = '<div class="d-top"><i></i>SMARTCOST AI<small>도료 스펙 &amp; LCC 대시보드</small></div><div class="d-tabs">' + dTabs.map((t) => '<button data-a="dt" data-v="' + t[0] + '" class="' + (D.t === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') + '</div>';
+  const c = dctx();
+  if (!c) return h + '<div class="x-card"><div class="x-h">대시보드를 표시할 데이터가 없습니다</div><p class="x-na">‘제품’ 탭에서 기존 제품과 제안 제품의 데이터시트를 첨부하면(고형분·도막·단가 인식) 자동으로 채워집니다.</p><div class="x-sb"><button class="x-bt p" data-a="demo">예시 데이터로 미리보기</button><button class="x-bt" data-a="tab" data-v="prod">제품 탭으로</button></div></div>';
+  return h + (D.demo ? '<div class="d-demo">예시 데이터입니다 · <button data-a="demo" data-v="off">내 데이터로 돌아가기</button></div>' : '') + (D.t === 'roi' ? dRoi(c) : D.t === 'spec' ? dSpec(c) : D.t === 'lcc' ? dLcc(c) : dEst(c));
+}
+function dRoi(c) {
+  const { b, o, src } = c, cut = b.costM2 > 0 ? (1 - o.costM2 / b.costM2) * 100 : 0, mul = b.canArea > 0 ? o.canArea / b.canArea : 0, lc = b.lcc > 0 ? (1 - o.lcc / b.lcc) * 100 : 0;
+  const row = (p, cc, cls, t) => '<div class="d-row ' + cls + '"><div class="d-sp"><span>' + t + ': <b>' + esc(c.nm(p)) + '</b></span><span>단가: ' + fm(cc.priceCan) + '원 (' + fm(cc.pack) + 'L)</span></div><div>실제 소요량: <b class="' + (cls ? 'g' : '') + '">' + cc.actUse.toFixed(3) + ' L/㎡</b> <small>(손실 ' + fm(c.M.X.loss) + '% 기준 · 고형분 ' + fm(cc.svr) + '%)</small></div></div>';
+  return '<div class="x-card"><div class="x-h">현재 사양 vs 제안 사양 요약</div>' + row(0, b, '', '기존 사용') + row(src.ours, o, 'p', '제안 제품') + '</div>' +
+    '<div class="x-card"><div class="d-kp"><div><small>㎡당 자재비 절감</small>' + dCn(cut, 'pct') + '</div><div><small>캔당 도포 면적</small>' + dCn(mul, 'x') + '</div><div><small>' + c.M.X.H + '년 LCC 절감</small>' + dCn(lc, 'pct') + '</div></div></div>' +
+    '<div class="x-card"><div class="x-h">✔ 경영진 제안 및 총평</div><p class="d-tx">초기 ㎡당 자재비 ' + fm(b.costM2) + '원 → ' + fm(o.costM2) + '원(' + cut.toFixed(1) + '% ' + (cut >= 0 ? '절감' : '증가') + '), 고형분(SVR) ' + fm(b.svr) + '% → ' + fm(o.svr) + '%로 캔당 도포 면적이 ' + fm(b.canArea, 1) + '㎡에서 ' + fm(o.canArea, 1) + '㎡로 ' + mul.toFixed(1) + '배 달라집니다.' + (b.lcc > 0 && o.lcc > 0 ? ' ' + c.M.X.H + '년 LCC는 ' + won(b.lcc) + ' → ' + won(o.lcc) + '입니다.' : '') + '</p></div>';
+}
+const dAx = (i, k, r) => { const a = -Math.PI / 2 + i * Math.PI / 3; return [160 + r * k * Math.cos(a), 150 + r * k * Math.sin(a)]; };
+const dPts = (v, k) => v.map((x, i) => dAx(i, k, 95 * x / 100).map((n) => n.toFixed(1)).join(',')).join(' ');
+function dSpec(c) {
+  const sc = scores(c.src, c.M), ids = [0, c.src.ours].concat(c.oi >= 0 ? [c.oi] : []), cols = ids.map((i) => c.M.C[i]);
+  const best = (f, hi) => { const v = cols.map(f); const t = hi ? Math.max(...v) : Math.min(...v.filter((x) => x > 0)); return v.map((x) => x > 0 && x === t); };
+  const R = [['고형분 SVR (%)', (q) => q.svr, 0, 1], ['적용 도막 두께 (㎛)', (q) => q.dft, 0, 0], ['이론 단위면적 (㎡/L)', (q) => q.theoCov, 1, 1], ['이론 소요량 (L/㎡)', (q) => q.theoUse, 3, 0], ['실제 소요량 (L/㎡)', (q) => q.actUse, 3, 0], ['실제 단위면적 (㎡/L)', (q) => q.actCov, 2, 1], ['캔 용량 (L)', (q) => q.pack, 0, 1], ['캔당 실제 면적 (㎡)', (q) => q.canArea, 1, 1], ['캔당 단가 (원)', (q) => q.priceCan, 0, 0]];
+  const hex = (k) => dPts([100, 100, 100, 100, 100, 100], k);
+  const poly = ids.map((id, k) => sc.v[id] ? '<polygon class="d-poly" data-v="' + sc.v[id].join(',') + '" points="' + dPts(sc.v[id], 0) + '" fill="' + COL[k] + '" fill-opacity=".28" stroke="' + COL[k] + '" stroke-width="' + (k === 1 ? 3 : 1.6) + '"/>' : '').join('');
+  return '<div class="x-card"><div class="d-sp"><div class="x-h">6대 육각 물성 밸런스 비교</div><small>상대 점수 (100점 만점)</small></div><svg viewBox="0 0 320 300" class="d-svg">' + [.25, .5, .75, 1].map((k) => '<polygon points="' + hex(k) + '" fill="none" stroke="#cbd5e1"/>').join('') + sc.ax.map((t, i) => { const p = dAx(i, 1.24, 95); return '<text x="' + p[0] + '" y="' + (p[1] + 3) + '" text-anchor="middle">' + t + '</text>'; }).join('') + poly + '</svg><div class="d-leg">' + ids.map((id, k) => '<span><i style="background:' + COL[k] + '"></i>' + esc(c.nm(id)) + '</span>').join('') + '</div></div>' +
+    '<div class="x-card"><div class="d-sp"><div class="x-h">기술 스펙 Matrix 상세 비교</div><small class="g">★ 우수 항목</small></div><div class="x-tw"><table class="x-tbl d-tbl"><tr><th>검토 항목</th>' + ids.map((id, k) => '<th style="color:' + COL[k] + '">' + esc(c.nm(id)) + '</th>').join('') + '</tr>' + R.map((r) => { const bs = best(r[1], r[3]); const same = new Set(cols.map(r[1])).size < 2; return '<tr><td class="x-lb">' + r[0] + '</td>' + cols.map((q, k) => '<td class="' + (bs[k] && !same ? 'd-best' : '') + '">' + fm(r[1](q), r[2]) + (bs[k] && !same ? ' ★' : '') + '</td>').join('') + '</tr>'; }).join('') + '</table></div></div>';
+}
+const dY = (v, mx) => 190 - (v / mx) * 175, dX = (i, n) => 40 + (i * 280) / Math.max(1, n);
+function dLcc(c) {
+  const H = c.M.X.H, lines = [c.b, c.o].concat(c.x ? [c.x] : []), mx = Math.max(1, ...lines.map((q) => q.cum[q.cum.length - 1] || 0)) * 1.08, step = Math.pow(10, Math.floor(Math.log10(mx))) , tk = [0, .25, .5, .75, 1].map((f) => mx * f);
+  const path = (q) => q.cum.map((v, i) => (i ? 'L' : 'M') + dX(i, H).toFixed(1) + ',' + dY(v, mx).toFixed(1)).join('');
+  const yrs = [0, Math.round(H / 4), Math.round(H / 2), Math.round((3 * H) / 4), H];
+  const sv = c.b.lcc - c.o.lcc, svp = c.b.lcc > 0 ? (sv / c.b.lcc) * 100 : 0;
+  const mats = [c.b, c.o].concat(c.x ? [c.x] : []), mm = Math.max(1, ...mats.map((q) => q.costM2));
+  return '<div class="x-card"><div class="x-h">' + H + '년 수명주기비용 (LCC) 시뮬레이션</div><small>보수 주기·경과 연수별 누적 유지비용 (원, 면적 ' + fm(c.M.X.area) + '㎡ 기준)</small><svg viewBox="0 0 340 230" class="d-svg"><defs><clipPath id="dcp"><rect id="dcr" x="0" y="0" width="0" height="230"/></clipPath></defs>' + tk.map((v) => '<line x1="40" x2="320" y1="' + dY(v, mx) + '" y2="' + dY(v, mx) + '" stroke="#cbd5e1" stroke-dasharray="3 4"/><text x="36" y="' + (dY(v, mx) + 3) + '" text-anchor="end">' + won(v) + '</text>').join('') + yrs.map((y) => '<text x="' + dX(y, H) + '" y="212" text-anchor="middle">' + (y ? y + '년' : '초기') + '</text>').join('') + '<g clip-path="url(#dcp)">' + lines.map((q, k) => '<path d="' + path(q) + '" fill="none" stroke="' + COL[k] + '" stroke-width="' + (k === 1 ? 3.5 : 2.4) + '"' + (k === 2 ? ' stroke-dasharray="5 4"' : '') + '/>' + q.times.map((t) => '<circle cx="' + dX(t, H).toFixed(1) + '" cy="' + dY(q.cum[Math.min(H, Math.floor(t + 1e-9))], mx).toFixed(1) + '" r="4" fill="#fff" stroke="' + COL[k] + '" stroke-width="2"/>').join('')).join('') + '</g></svg><div class="d-leg">' + lines.map((q, k) => '<span><i style="background:' + COL[k] + '"></i>' + esc(c.nm(k === 0 ? 0 : k === 1 ? c.src.ours : c.oi)) + '</span>').join('') + '</div>' +
+    '<div class="d-row p" style="margin-top:10px"><div class="d-sp"><b>' + H + '년 LCC 최종 절감액</b><b class="g">' + (b0(sv) ? '' : '') + '<span data-cn="' + sv + '" data-cf="won">0</span> (' + svp.toFixed(1) + '%)</b></div><small>초기 자재비 차이와 보수 주기(수명) 차이가 함께 반영됩니다. 보수 횟수: ' + c.b.n + '회 → ' + c.o.n + '회</small></div></div>' +
+    '<div class="x-card"><div class="x-h">초기 ㎡당 자재비 직관 비교</div><div class="d-bars">' + mats.map((q, k) => '<div data-h="' + (q.costM2 / mm * 100).toFixed(1) + '" style="background:' + COL[k] + '"><span>' + fm(q.costM2) + '원</span></div>').join('') + '</div><div class="d-lb">' + mats.map((q, k) => '<span>' + esc(c.nm(k === 0 ? 0 : k === 1 ? c.src.ours : c.oi)) + '</span>').join('') + '</div></div>';
+}
+const b0 = (v) => !isFinite(v);
+function dEst(c) {
+  const X = c.M.X; if (D.area == null) { D.area = X.area || 1000; D.loss = X.loss; D.dft = X.dft || c.b.dft || 50; }
+  const sl = (id, lab, v, mn, mx, st, col, u) => '<label class="d-sl"><span>' + lab + '<b id="v' + id + '" style="color:' + col + '">' + fm(v) + ' ' + u + '</b></span><input type="range" id="s' + id + '" min="' + mn + '" max="' + mx + '" step="' + st + '" value="' + v + '"></label>';
+  const box = (t, cls) => '<div class="d-row ' + cls + '"><b>' + t + '</b><div>소요 캔 수: <b id="' + cls + 'n"></b></div><div>캔당 면적: <b id="' + cls + 's"></b></div><hr><small>총 자재비</small><div class="d-big" id="' + cls + 'c"></div></div>';
+  return '<div class="x-card"><div class="d-sp"><div class="x-h">현장 도장 파라미터 실시간 조정</div><button class="x-lk" data-a="rs">⟳ 초기화</button></div>' + sl('a', '총 도장 면적 (㎡)', D.area, 100, 20000, 100, '#1c58e0', '㎡') + sl('l', '현장 손실률 (Loss %)', D.loss, 0, 50, 1, '#ea580c', '%') + sl('t', '목표 도막 두께 (㎛)', D.dft, 20, 300, 5, '#059669', '㎛') + '</div>' +
+    '<div class="x-card"><div class="x-h">실시간 견적 산출 비교 결과</div><div class="d-two">' + box(esc(c.nm(0)), 'a') + box(esc(c.nm(c.src.ours)), 'o') + '</div><div class="d-sv"><span>현장 총 자재비 절감액<br><small id="dar"></small></span><span style="text-align:right"><big id="dd"></big><br><small id="dpc"></small></span></div></div>';
+}
+let dSh = { a: 0, o: 0 };
+function dCalc() {
+  const c = dctx(); if (!c) return; const g = (id) => document.getElementById(id); if (!g('sa')) return;
+  D.area = +g('sa').value; D.loss = +g('sl').value; D.dft = +g('st').value;
+  g('va').textContent = fm(D.area) + ' ㎡'; g('vl').textContent = D.loss + ' %'; g('vt').textContent = D.dft + ' ㎛';
+  const X = { ...c.M.X, area: D.area, loss: D.loss, dft: D.dft }, A = calcOne(c.src.ps[0], X), O = calcOne(c.src.ps[c.src.ours], X);
+  const to = { a: A.cans * A.priceCan, o: O.cans * O.priceCan }, from = { ...dSh };
+  g('an').textContent = A.cans + '캔'; g('on').textContent = O.cans + '캔'; g('as').textContent = fm(A.canArea, 1) + '㎡'; g('os').textContent = fm(O.canArea, 1) + '㎡'; g('dar').textContent = '(' + fm(D.area) + '㎡ 시공 기준)';
+  anim((e) => { const a = from.a + (to.a - from.a) * e, o = from.o + (to.o - from.o) * e; dSh = { a, o }; g('ac').textContent = fm(a) + '원'; g('oc').textContent = fm(o) + '원'; g('dd').textContent = (a - o >= 0 ? '-' : '+') + fm(Math.abs(a - o)) + '원'; g('dpc').textContent = '(' + (a > 0 ? Math.abs((a - o) / a * 100).toFixed(1) : '0.0') + '% 비용 ' + (a >= o ? '절감' : '증가') + ')'; }, 450);
+}
+function anim(fn, d) { const s = performance.now(); (function t(n) { const k = Math.min(1, (n - s) / d), e = 1 - Math.pow(1 - k, 3); fn(e); if (k < 1) requestAnimationFrame(t); })(s); }
+function dashAfter() {
+  document.querySelectorAll('[data-cn]').forEach((el) => { const v = +el.dataset.cn, f = el.dataset.cf; anim((e) => { el.textContent = (f === 'won' && v < 0 ? '-' : f === 'won' ? '' : '') + dFmt(f === 'won' ? Math.abs(v) * e : v * e, f); }, 1200); });
+  const P = [...document.querySelectorAll('.d-poly')]; if (P.length) anim((e) => P.forEach((p) => p.setAttribute('points', dPts(p.dataset.v.split(',').map(Number), e))), 1400);
+  const cr = document.getElementById('dcr'); if (cr) { cr.style.transition = 'none'; cr.style.width = '0px'; requestAnimationFrame(() => requestAnimationFrame(() => { cr.style.transition = 'width 2s ease'; cr.style.width = '340px'; })); }
+  const B = document.querySelectorAll('.d-bars div'); if (B.length) setTimeout(() => B.forEach((d) => { d.style.height = d.dataset.h * 1.6 + 'px'; }), 150);
+  if (document.getElementById('sa')) { dSh = { a: 0, o: 0 }; ['sa', 'sl', 'st'].forEach((id) => { document.getElementById(id).oninput = dCalc; }); dCalc(); }
+}
+
 function render() {
-  const root = $('#root'); const T = [['prod', '제품'], ['cmp', '비교'], ['lcc', 'LCC'], ['rep', '보고서']];
+  const root = $('#root'); const T = [['prod', '제품'], ['dash', '대시보드'], ['cmp', '비교'], ['lcc', 'LCC'], ['rep', '보고서']];
   const sy = window.scrollY;
-  root.innerHTML = '<div class="x-app"><div class="x-top"><b>제품 변경 제안 분석</b><small>데이터시트 기준 · 자동 비교</small></div><div class="x-tabs">' + T.map((t) => '<button data-a="tab" data-v="' + t[0] + '" class="' + (S.tab === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') + '</div><div class="x-body" id="body">' +
-    (S.tab === 'prod' ? tabProd() : S.tab === 'cmp' ? tabCmp() : S.tab === 'lcc' ? tabLcc() : tabRep()) + '</div><div class="x-busy" id="busy"></div><div class="x-toast" id="toast"></div>' +
+  root.innerHTML = '<div class="x-app"><div class="x-top"><b>제품 변경 제안 분석</b><small>데이터시트 기준 · 자동 비교</small><span class="x-th" title="화면 모드(전체 페이지 적용)">' + [['light', '☀ 주간'], ['dark', '☾ 야간'], ['auto', '자동']].map((m) => '<button data-a="th" data-v="' + m[0] + '" class="' + ((window.CCTHEME ? window.CCTHEME.get() : 'light') === m[0] ? 'on' : '') + '">' + m[1] + '</button>').join('') + '</span></div><div class="x-tabs">' + T.map((t) => '<button data-a="tab" data-v="' + t[0] + '" class="' + (S.tab === t[0] ? 'on' : '') + '">' + t[1] + '</button>').join('') + '</div><div class="x-body" id="body">' +
+    (S.tab === 'prod' ? tabProd() : S.tab === 'dash' ? tabDash() : S.tab === 'cmp' ? tabCmp() : S.tab === 'lcc' ? tabLcc() : tabRep()) + '</div><div class="x-busy" id="busy"></div><div class="x-toast" id="toast"></div>' +
     '<input type="file" id="fi" hidden accept=".pdf,.xlsx,.xls,.xlsm,.csv,.txt,.docx,.pptx,image/*"><input type="file" id="fc" hidden accept="image/*" capture="environment"><input type="file" id="ft" hidden accept=".pdf,.xlsx,.xls,.csv,.txt,.docx,.pptx,image/*"></div>';
-  if (S.tab === 'rep') fit(); window.scrollTo(0, S.keepY ? sy : 0); S.keepY = false;
+  if (S.tab === 'dash') dashAfter(); if (S.tab === 'rep') fit(); window.scrollTo(0, S.keepY ? sy : 0); S.keepY = false;
 }
 function busy(m) { const b = $('#busy'); if (b) { b.textContent = m || ''; b.classList.toggle('on', !!m); } }
 async function attach(i, f, mode) {
@@ -444,6 +522,10 @@ function init() {
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, i = +b.dataset.i;
     if (a === 'tab') { S.tab = b.dataset.v; render(); }
+    else if (a === 'dt') { D.t = b.dataset.v; render(); }
+    else if (a === 'th') { try { window.CCTHEME.set(b.dataset.v); } catch (x) {} S.keepY = true; render(); }
+    else if (a === 'demo') { D.demo = b.dataset.v !== 'off'; D.area = null; render(); }
+    else if (a === 'rs') { D.area = null; render(); }
     else if (a === 'attach') { S.tgt = i; $('#fi').click(); } else if (a === 'cam') { S.tgt = i; $('#fc').click(); } else if (a === 'trk') { S.tgt = i; $('#ft').click(); }
     else if (a === 'db') pickDb(i);
     else if (a === 'open') { S.open = S.open === i ? -1 : i; S.keepY = true; render(); }

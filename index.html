@@ -1,4 +1,4 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><title>CoatCost</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" type="image/png" href="icon-192.png"><meta name="theme-color" content="#52a5ea"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CoatCost">
+<!doctype html><html lang="ko"><head><script src="theme.js"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><title>CoatCost</title><link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-180.png"><link rel="icon" type="image/png" href="icon-192.png"><meta name="theme-color" content="#52a5ea"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CoatCost">
 <style>
 :root{--bl:#3d5a8c;--rd:#c9525c;--b:#dde3ee}
 *{box-sizing:border-box}[hidden]{display:none!important}
@@ -4165,7 +4165,7 @@ function pqQuote(){if(typeof est=='function')est()}
 
 /* 더보기 · 자료 이용 안내 */
 function moreOpen(){
- const L=[['db','제품 DB','T(1)','제품 정보 · TDS 관리'],['save','백업 · 복원','goCsv(\'set\')','CSV · JSON 백업'],['calc','노무비 설정','lbSheet()','노임단가 · 할증'],['fm','충진','T(8)'],['ap','도면','apOpen()'],['hq','공동','hqOpen()'],['lc','LCC','T(9)'],['quote','사용법','helpOpen()'],['set','설정 · 언어','openSettings()'],['shield','자료 이용 안내','legalOpen()'],['info','정보','showInfo()']];
+ const L=[['db','제품 DB','T(1)','제품 정보 · TDS 관리'],['save','백업 · 복원','goCsv(\'set\')','CSV · JSON 백업'],['calc','노무비 설정','lbSheet()','노임단가 · 할증'],['fm','충진','T(8)'],['ap','도면','apOpen()'],['hq','공동','hqOpen()'],['lc','LCC','T(9)'],['quote','사용법','helpOpen()'],['set','화면 모드 (주간·야간)','themeOpen()','전체 화면에 적용'],['set','설정 · 언어','openSettings()'],['shield','자료 이용 안내','legalOpen()'],['info','정보','showInfo()']];
  if(IS_ADMIN)L.push(['admin','관리자 모드','T(7)']);
  pqSheet('pqmore','<div class="pqmh"><b>더보기</b></div>'+'<div class="pqmg">'+L.map(([i,t,f,d])=>`<button class="pqml" onclick="pqX('pqmore');${f}"><span class="pqi">${PQI[i]}</span><span class="pqt"><b>${t}</b>${d?`<small>${d}</small>`:''}</span></button>`).join('')+'</div>'+'<button class="pqbc" onclick="pqX(\'pqmore\')">닫기</button>');
 }
