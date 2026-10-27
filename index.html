@@ -3075,7 +3075,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v493',d:'2026.10.27'};
+const APPV={v:'v494',d:'2026.10.27'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -12609,7 +12609,7 @@ function savedHtml(){
 }
 function render(){
  const e=Q('#v10');if(!e)return;
- if(e.querySelector('#cpf'))return;
+ if(e.querySelector('#cpf')){try{e.querySelector('#cpf').contentWindow.CMPAPP.refresh()}catch(x){}return}
  e.innerHTML='<iframe id="cpf" src="compare.html" title="제품 비교" style="display:block;width:100%;height:calc(100dvh - 170px);min-height:560px;border:0;border-radius:14px;background:#f3f4f6"></iframe>';return;
  if(!INIT){INIT=1;try{if(!(+C.area>0)&&+S.area>0)C.area=S.area}catch(x){}}
  e.innerHTML=`<div class="cp">
@@ -12677,4 +12677,23 @@ window.cmpRender=render;
 })();
 
 </script>
+<script id=cmpb>
+/* v494 제품 비교 ↔ 본체 다리: 제품 DB · 도장 시스템 읽기 / 제품 변경 적용 (compare.html 이 같은 출처 iframe 으로 사용) */
+window.CMPB=(function(){
+ const pkL=p=>{const m=mx(p).m;return m>0?(UN(p)=='kg'&&+p.sg>0?m/+p.sg:m):0};
+ const dryTx=p=>{const R=String(p.dry||'').split(/[;\n]/).map(x=>x.trim()).filter(Boolean).map(r=>r.split('/').map(x=>x.trim()));if(!R.length)return'';let b=R[0];R.forEach(r=>{if(Math.abs((parseFloat(r[0])||20)-20)<Math.abs((parseFloat(b[0])||20)-20))b=r});const h=v=>v&&v!='-';return [h(b[1])?'지촉 '+b[1]:'',h(b[2])?'고화 '+b[2]:''].filter(Boolean).join(' / ')+(h(b[0])?' ('+b[0]+(/℃|°/.test(b[0])?'':'℃')+')':'')};
+ const nz=s=>String(s||'').toLowerCase().replace(/[\s\-_·.()\/]/g,'');
+ const rowOf=p=>({n:p.n,mf:p.mf||'',g:p.g||'',us:p.us||'',svr:+p.svr||0,dft:+p.dft||0,packL:pkL(p),dry:dryTx(p),pot:p.pot||'',mixr:'',re:'',certs:''});
+ function layer(i){const c=SY.layers[i];if(!c||!c.n)return null;const p=PC(c.n),e=ev(c,p),g=SY.groups[c.g]||{},A=+c.area||+g.area||+SY.area||0,k=pkL(p);
+  return{i,lb:syLbFull(i),n:c.n,mf:p.mf||'',svr:e.svr,dft:e.dft,loss:e.loss,priceL:k>0&&+c.price>0?+c.price/k:0,pkL:k,area:A,dry:dryTx(p),pot:p.pot||''}}
+ return{
+  db(q,max){const k=nz(q),out=[];for(let i=0;i<DB.length&&out.length<(max||40);i++){const p=DB[i];if(!p||!p.n)continue;if(!k||nz([p.n,p.g,p.us,p.mf,p.d].join(' ')).includes(k))out.push(rowOf(p))}return out},
+  layers(){return SY.layers.map((c,i)=>layer(i)).filter(Boolean)},
+  layer,
+  apply(i,name,priceL){const c=SY.layers[i];if(!c)return{ok:false,msg:'도장 시스템 코트를 찾지 못했습니다'};const p=PX(name);if(!p)return{ok:false,msg:'제품 DB에서 「'+name+'」을(를) 찾지 못했습니다'};
+   c.n=p.n;delete c.svr;const k=pkL(p);if(priceL>0&&k>0)c.price=Math.round(priceL*k);syS();try{syRender()}catch(e){}try{tt('도장 시스템 제품을 변경했습니다<br><small>'+esc(p.n)+'</small>')}catch(e){}return{ok:true}},
+  pdfText:(f,m)=>pdfText(f,m),ocrImg:(f,s)=>ocrImg(f,s),lx:()=>lx()
+ }})();
+</script>
+
 </body></html>
