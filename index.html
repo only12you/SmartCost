@@ -3075,7 +3075,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v499',d:'2026.10.28'};
+const APPV={v:'v501',d:'2026.10.28'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -5393,6 +5393,7 @@ const ugSv=(n,c)=>`<svg class="${c||''}" viewBox="0 0 24 24" fill="none" stroke=
 function ugClose(){const e=document.getElementById('ugp');if(e)e.remove();document.documentElement.classList.remove('pdlock')}
 function ugGo(f){ugClose();try{(new Function(f))()}catch(e){}}
 function ugZoom(){const z=document.getElementById('ugz');if(z){z.remove();return}const d=document.createElement('div');d.id='ugz';d.innerHTML=`<div class="ugzb"><img src="${UGIMG}" alt="사용 설명서" onclick="event.stopPropagation()"></div><button type="button" class="ugzx" onclick="ugZoom()">닫기 ✕</button>`;document.body.appendChild(d)}
+window.mnOpen=function(sec){var o=document.getElementById('mnp');if(o)o.remove();var e=document.createElement('div');e.id='mnp';e.style.cssText='position:fixed;left:0;right:0;top:0;bottom:var(--gnh,56px);z-index:100000;background:#eef3fa;display:flex;flex-direction:column';e.innerHTML='<div style="flex:none;display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top,0px) + 8px) 10px 8px;background:#1d4ed8;color:#fff"><button type="button" id="mnx" aria-label="닫기" style="border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;height:36px;padding:0 12px;font:800 14px sans-serif">‹ 닫기</button><b style="font-size:15px">사용 설명서</b></div><iframe title="사용 설명서" src="manual.html'+(sec?'#'+sec:'')+'" style="flex:1;width:100%;border:0;background:#eef3fa"></iframe>';document.body.appendChild(e);document.getElementById('mnx').onclick=function(){e.remove()}};
 function helpOpen(){
  const old=document.getElementById('ugp');if(old)old.remove();
  const sec=(ic,t,body,open)=>`<details class="ugs"><summary class="ugh"><span class="ugi">${ugSv(ic)}</span><b>${t}</b>${ugSv('chev','ugc')}</summary><div class="ugb">${body}</div></details>`;
@@ -5405,6 +5406,7 @@ function helpOpen(){
 <div class="ugbody">
 <div class="ugin"><div class="ugt1">SmartCost V2</div><div class="ugt2">더 정확하게, 더 빠르게, 더 스마트하게</div><p>도료 · 실란트 · 메쉬 등 자재의 소요량과 비용을 일위대가표로 쉽고 빠르게 계산하는 현장용 프로그램입니다. 제품 DB와 기술자료(TDS)의 값을 불러와 계산하고, 노무비와 견적서까지 한 번에 만들 수 있습니다.</p>
 <button type="button" class="ugim" onclick="ugZoom()"><img src="${UGIMG}" alt="사용 설명서 안내 이미지" loading="lazy"><span>${ugSv('img')}안내 이미지 크게 보기</span></button></div>
+<button type="button" class="ugim" onclick="mnOpen()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin:10px 0;padding:14px;border:0;border-radius:14px;background:linear-gradient(180deg,#2f6bff,#1c4fd8);color:#fff;font-weight:800;font-size:15px;box-shadow:0 6px 16px rgba(37,99,235,.35)">📖 페이지별 상세 설명서 열기</button>
 ${sec('list','주요 기능',`<div class="ugfg" style="grid-template-columns:repeat(3,minmax(0,1fr))">${feat('calc','일위대가표','제품별 소요량 · 단가','코트 단위 계산','T(0)')}${feat('layers','도장 시스템','하도 · 중도 · 상도','시스템 단위 계산','T(3)')}${feat('db','제품 DB','제품 · TDS 관리','데이터 시트 조회','T(1)')}${feat('tube','실란트 · 메쉬','충진 · 메쉬 소요량','단가 적용','T(8)')}${feat('labor','노무비','노임단가 · 할증','공수 계산','lbSheet()')}${feat('doc','견적서','계산 결과 반영','이미지 · 텍스트 공유','pqQuote()')}${feat('chart','LCC 분석','수명 · 보수 시기','생애주기 비용','T(9)')}</div><p class="ugh2">항목을 누르면 해당 화면으로 이동합니다.</p>`,1)}
 ${sec('check','이런 점이 좋습니다!',`<div class="ugck"><div>${ugSv('check')}제품 DB · TDS에서 DFT · SVR 등 추천값 자동 적용</div><div>${ugSv('check')}일위대가표 · 도장 시스템 · 실란트 · 메쉬 · 노무비까지 한 앱에서 계산</div><div>${ugSv('check')}계산 결과로 바로 견적서 작성 · 공유</div><div>${ugSv('check')}인터넷 없이도 사용, 데이터는 내 기기에만 저장</div><div>${ugSv('check')}JSON 백업 · 복원, CSV 가져오기 · 내보내기</div></div><p class="ugq">당신의 노하우를 지금, SmartCost V2로 경험하세요!</p>`,1)}
 ${sec('book','사용 방법',step(1,'프로그램 실행','브라우저에서 앱을 열면 홈 화면에 최근 작업 내역이 나타납니다. 하단 메뉴는 홈 · 일위대가표 · 도장 시스템 · 견적서 · 더보기입니다.')+step(2,'제품 준비','더보기 → 제품 DB에서 제품을 검색하고 카드를 눌러 데이터 시트를 확인합니다. 없는 제품은 TDS 등록 또는 제품 수기 추가로 넣습니다.')+step(3,'계산하기','일위대가표에서 기본면적과 제품을 입력해 코트별로 계산하거나, 도장 시스템에서 하도 · 중도 · 상도를 묶어 계산합니다. 제품을 고르면 DFT · SVR 등이 자동으로 채워집니다.')+step(4,'결과 확인 · 견적서','소요량 · 캔(말) 수 · 금액이 자동 계산됩니다. 하단 견적서 버튼으로 견적서를 만들어 공유합니다.'),1)}
