@@ -234,3 +234,7 @@ html,body{font-family:"Pretendard","Noto Sans KR",-apple-system,BlinkMacSystemFo
 .p-tg{grid-template-columns:minmax(0,1.25fr) minmax(0,.95fr) minmax(0,1.2fr) minmax(0,1fr);gap:5px}
 .p-at{padding:8px 5px}.p-at>span{font-size:10px}
 .p-at>b.p-sm2{font-size:11.5px;letter-spacing:-.5px}
+
+.r-trk{margin:10px 0 14px}.r-trkadd{display:grid;grid-template-columns:2fr 1fr .8fr 1.2fr auto;gap:6px;margin-bottom:6px}.r-trkadd input,.r-trkta{width:100%;box-sizing:border-box;border:1px solid #cfdcf0;border-radius:8px;padding:8px;font:inherit;font-size:13px}.r-trkta{resize:vertical}@media(max-width:560px){.r-trkadd{grid-template-columns:1fr 1fr}.r-trkadd input:first-child{grid-column:1/3}}
+/* v511 제품 비교 화면 좌우 확장 */
+.x-app{max-width:none!important}.x-tabs{margin:2px 2px 0!important}.x-body{margin:0 2px!important;padding:10px 6px 18px!important}.x-top{padding-left:6px!important;padding-right:6px!important}
