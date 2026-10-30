@@ -1,4 +1,4 @@
-/* CoatCost 화면 모드(주간·야간·자동) — 전체 페이지 공통. index.html 과 compare.html 이 같이 사용 */
+/* 코트 온 화면 모드(주간·야간·자동) — 전체 페이지 공통. index.html 과 compare.html 이 같이 사용 */
 (function () {
   'use strict';
   var K = 'cc_theme', mq = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : { matches: false };
