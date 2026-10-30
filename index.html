@@ -4249,13 +4249,11 @@ function dashRender0(){
  const tile=(cls,ic,t,s,f)=>`<button class="cd-tl ${cls}" ${go(f)}><span class="cd-ti">${IC[ic]}</span><b>${t}</b><small>${s}</small><span class="cd-ta">${IC.arr}</span></button>`;
  let h=`<div class="cdw">`;
  h+=`<div class="cd-tiles">${tile('t1','calc','일위대가표','PQC','T(0)')}${tile('t2','shield','도장시스템','Paint System','T(3)')}${tile('t3','house','공동주택<br>재도장공사','Repainting','hqOpen()')}${tile('t4','cycle','LCC<br>생애주기','Life Cycle','T(9)')}${tile('t5','chip','AI진단','Inspection','cdDiag()')}</div>`;
- h+=`<div class="cd-g2"><div class="cd-cd cd-wk"><div class="cd-h"><span class="cd-hi">${IC.doc}</span><b>최근 작업 현황</b><a ${go('cdAll()')}>전체보기 ${IC.arr}</a></div><div class="cd-st"><div><small>진행중</small><b>${wRun}<em>건</em></b><i style="--w:${wRun/wMax*100}%;--c:#2d7df6"></i></div><div><small>완료</small><b>${wDone}<em>건</em></b><i style="--w:${wDone/wMax*100}%;--c:#1fb5a0"></i></div><div><small>보류</small><b>${wHold}<em>건</em></b><i style="--w:${wHold/wMax*100}%;--c:#f2a13a"></i></div></div></div>`;
+ h+=`<div class="cd-g2"><div class="cd-cd cd-wk"><div class="cd-h"><span class="cd-hi">${IC.doc}</span><b>최근 작업 현황</b>${SM?'<em class="cd-ex">예시</em>':''}<a ${go('cdAll()')}>전체보기 ${IC.arr}</a></div><div class="cd-st"><div><small>진행중</small><b>${wRun}<em>건</em></b><i style="--w:${wRun/wMax*100}%;--c:#2d7df6"></i></div><div><small>완료</small><b>${wDone}<em>건</em></b><i style="--w:${wDone/wMax*100}%;--c:#1fb5a0"></i></div><div><small>보류</small><b>${wHold}<em>건</em></b><i style="--w:${wHold/wMax*100}%;--c:#f2a13a"></i></div></div></div>`;
  h+=`<div class="cd-cd cd-mo"><div class="cd-h"><span class="cd-hi fill">${IC.calc}</span><b>이번 달 총 산출량</b></div><div class="cd-dt">${IC.cal}<span>${cur.replace('-','.')}</span></div><div class="cd-big">${Fm(aC)}<em>㎡</em></div><div class="cd-df">${dl(dMo)}<small>(전월 대비)</small></div></div></div>`;
  h+=`<div class="cd-g3"><div class="cd-cd cd-s"><span class="cd-si">${IC.coins}</span><div><small>예상 견적 금액</small><b>${q0?'₩ '+Fm(q0):'₩ 0'}</b>${dl(dQ,Q.length?'최근 견적서 기준':'견적서 발송 시 표시')}</div></div><div class="cd-cd cd-s"><span class="cd-si">${IC.doc}</span><div><small>등록된 제품 수</small><b>${Fm(nP)}<em>개</em></b>${pD}</div></div><div class="cd-cd cd-s"><span class="cd-si">${IC.bld}</span><div><small>등록된 현장 수</small><b>${Fm(nS)}<em>개</em></b>${sD}</div></div></div>`;
  h+=`<div class="cd-g2 cd-g2b"><div class="cd-cd cd-rc"><div class="cd-h"><span class="cd-hi fill2">${IC.bars}</span><b>최근 산출 내역</b><a ${go('cdAll()')}>전체보기 ${IC.arr}</a></div>${recent.length?recent.map(x=>`<div class="cd-rw"><span class="cd-ch ${cc(x.t)}">${esc(x.t)}</span><span class="cd-rn">${esc(x.n)}</span><span class="cd-rd">${esc(x.d)}</span><span class="cd-rv">${IC.chev}</span></div>`).join(''):'<div class="cd-none">아직 작업 내역이 없습니다</div>'}</div>`;
  h+=`<div class="cd-cd cd-pr"><div class="cd-h"><span class="cd-hi fill2">${IC.pie}</span><b>제품별 사용 비중</b></div><div class="cd-dw">${donut}</div><div class="cd-lg">${legend||'<div class="cd-none" style="grid-column:1/-1">사용 기록이 쌓이면 표시됩니다</div>'}</div></div></div>`;
- if(SM)h+='<div class="cd-sm">※ 예시 화면입니다 · 견적서 발송·작업 기록이 쌓이면 실제 값으로 바뀝니다</div>';
- h+=`<div class="cd-bn"><svg class="cd-rl" viewBox="0 0 120 80" fill="none"><rect x="14" y="14" width="64" height="24" rx="10" transform="rotate(-24 46 26)" fill="#7fd0ff"/><path d="M74 14l16 8-4 10-22-8" stroke="#cfeeff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M70 30l-14 28" stroke="#cfeeff" stroke-width="5" stroke-linecap="round"/><rect x="48" y="56" width="12" height="20" rx="5" fill="#eaf6ff"/></svg><div class="cd-bt"><b>더 정확한 계산, 더 나은 결과</b><small>COAT ON이 도장산업의 가치를 높입니다.</small></div><button ${go('cdGuide()')}>이용 가이드 ${IC.arr}</button></div></div>`;
  if(IS_ADMIN)h=h.replace(/<\/div>$/,'<button class="dsa" onclick="T(7)">'+PQI.admin+'<span><b>관리자 모드</b><small>배포용 데이터 관리 · 이용조건 확인 · 내보내기</small></span>'+PQI.chev+'</button></div>');
  e.innerHTML=h;
  /* ---- 헤더 ---- */
@@ -8786,7 +8784,7 @@ window.moreOpen=function(){
  const G={blue:'linear-gradient(145deg,#5aa0ff,#2f6bd0)',green:'linear-gradient(145deg,#6cbf86,#3d9068)',orange:'linear-gradient(145deg,#f5a742,#e0771c)',teal:'linear-gradient(145deg,#5fb6c9,#2f8ea5)',purple:'linear-gradient(145deg,#a479ee,#7549d0)',indigo:'linear-gradient(145deg,#4d78e6,#2a4fc0)',red:'linear-gradient(145deg,#ee6a6a,#cf3a3a)',sky:'linear-gradient(145deg,#4a9bff,#2a6fe0)',slate:'linear-gradient(145deg,#7686a3,#4f5d7a)'};
  const R1=[['db','제품 DB','T(1)','제품 정보 · TDS 관리','blue'],['hq','단지 DB','aptDbMgr()','면적 · 기본정보 등록','sky'],['save','백업 · 복원',"goCsv('set')",'CSV · JSON 백업','green'],['calc','노무비 설정','lbSheet()','노임단가 · 할증','orange']];
  const R2=[['fm','충진','T(8)','실란트 · 실리콘 퍼티','teal'],['ap','도면','apOpen()','도장 위치 · 면적 관리','purple'],['hq','공동','hqOpen()','공동주택 견적','indigo'],['cmp','제품 비교','T(10)','소요량 · 자재비 우위','orange']];
- const R4=[['calc','소요량 공식 · 경고','infoOpen()','산출 공식 · 용어 매칭표','orange']];
+ const R4=[['calc','소요량 공식 · 경고','infoOpen()','산출 공식 · 용어 매칭표','orange'],['quote','이용 가이드','cdGuide()','더 정확한 계산, 더 나은 결과','blue']];
  const R3=[['quote','사용법','helpOpen()','매뉴얼 · 도움말','red'],['set','설정 · 언어','openSettings()','테마 · 언어 · 알림','sky'],['shield','자료 이용 안내','legalOpen()','이용약관 · 개인정보','green'],['info','정보','showInfo()','앱 정보 · 버전','slate']];
  const card=([i,t,f,d,c])=>`<button class="mxc" onclick="pqX('pqmore');${f}"><span class="mxi" style="background:${G[c]}">${PQI[i]||''}</span><b class="mxn">${t}</b>${CH}<span class="mxd">${d}</span></button>`;
  const row=(L,k)=>`<div class="mxr mxr${k}">${L.map(card).join('')}</div>`;
@@ -13181,6 +13179,7 @@ html body #vh.cd #dash,html body #vh.cd #dash .dsh{flex:1 1 auto;display:flex;fl
 html body #vh.cd .cdw{flex:1 1 auto;justify-content:space-between}
 html body #vh.cd.cdc details.hi{display:none}
 
+html body #vh.cd .cd-ex{font-style:normal;margin-left:6px;padding:1px 7px;border-radius:99px;background:#eef2f9;color:#7a869c;font-size:max(8px,calc(var(--k)*14));font-weight:600;align-self:center}
 /* v527 홈 하단 안내(소요량 공식·경고) 제거 → 더보기 안으로 이동 */
 html body #vh #hinfo,html body #vh.cd details.hi{display:none!important}
 .pqif{max-height:62vh;overflow:auto;font-size:13px;line-height:1.55;padding:2px 4px 10px;color:#14233f}
