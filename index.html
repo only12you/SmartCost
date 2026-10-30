@@ -13215,7 +13215,7 @@ function fit(){
   const imp=(p,v)=>vh.style.setProperty(p,v,'important');
   const need=f=>{vh.style.setProperty('--vf',String(f));imp('padding-bottom','0px');imp('min-height','0px');return bottomOf(vh)<=target};
   /* 자연 높이(배율 1)에서 시작 → 넘치면 줄이고, 남으면 늘림 */
-  let lo=.42,hi=1.5,best=lo;
+  let lo=.42,hi=2.6,best=lo;
   let ok=need(lo);
   if(!ok){vh.classList.add('cdc');ok=need(lo)}   // 아주 낮은 화면: 접이식 안내를 숨기고 다시 시도
   if(ok){for(let i=0;i<9;i++){const m=(lo+hi)/2;if(need(m)){best=m;lo=m}else hi=m}}
