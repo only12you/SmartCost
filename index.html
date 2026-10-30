@@ -3112,7 +3112,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v526',d:'2026.10.30'};
+const APPV={v:'v527',d:'2026.10.30'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -4273,6 +4273,15 @@ function cdGuide(){try{(window.ugOpen||helpOpen)()}catch(_){}}
 function cdDiag(){T(9);setTimeout(()=>{const b=[...document.querySelectorAll('button,[role=tab],.tab,a')].find(x=>x.offsetParent&&/^\s*(③\s*)?(AI\s*)?(현장\s*)?진단\s*$/.test(x.textContent));if(b)b.click()},350)}
 
 function pqQuote(){if(typeof est=='function')est()}
+
+
+/* 소요량 공식 · 경고 · 용어 매칭표 (홈 하단 안내 → 더보기로 이동) */
+function infoOpen(){
+ const d=document.getElementById('hinfo');if(!d)return;
+ const c=d.cloneNode(true);c.querySelectorAll('summary').forEach(x=>x.remove());c.removeAttribute('id');c.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));
+ let g='';try{g=glossHTML()}catch(_){}
+ pqSheet('pqinfo','<div class="pqmh"><b>소요량 공식 · 경고 · 용어 매칭표</b></div><div class="pqif">'+c.innerHTML.replace(/<div class="?hgl"?><\/div>/,'')+'<div class="pqig">'+g+'</div></div><button class="pqbc" onclick="pqX(\'pqinfo\')">닫기</button>');
+}
 
 /* 더보기 · 자료 이용 안내 */
 function moreOpen(){
@@ -8777,10 +8786,11 @@ window.moreOpen=function(){
  const G={blue:'linear-gradient(145deg,#5aa0ff,#2f6bd0)',green:'linear-gradient(145deg,#6cbf86,#3d9068)',orange:'linear-gradient(145deg,#f5a742,#e0771c)',teal:'linear-gradient(145deg,#5fb6c9,#2f8ea5)',purple:'linear-gradient(145deg,#a479ee,#7549d0)',indigo:'linear-gradient(145deg,#4d78e6,#2a4fc0)',red:'linear-gradient(145deg,#ee6a6a,#cf3a3a)',sky:'linear-gradient(145deg,#4a9bff,#2a6fe0)',slate:'linear-gradient(145deg,#7686a3,#4f5d7a)'};
  const R1=[['db','제품 DB','T(1)','제품 정보 · TDS 관리','blue'],['hq','단지 DB','aptDbMgr()','면적 · 기본정보 등록','sky'],['save','백업 · 복원',"goCsv('set')",'CSV · JSON 백업','green'],['calc','노무비 설정','lbSheet()','노임단가 · 할증','orange']];
  const R2=[['fm','충진','T(8)','실란트 · 실리콘 퍼티','teal'],['ap','도면','apOpen()','도장 위치 · 면적 관리','purple'],['hq','공동','hqOpen()','공동주택 견적','indigo'],['cmp','제품 비교','T(10)','소요량 · 자재비 우위','orange']];
+ const R4=[['calc','소요량 공식 · 경고','infoOpen()','산출 공식 · 용어 매칭표','orange']];
  const R3=[['quote','사용법','helpOpen()','매뉴얼 · 도움말','red'],['set','설정 · 언어','openSettings()','테마 · 언어 · 알림','sky'],['shield','자료 이용 안내','legalOpen()','이용약관 · 개인정보','green'],['info','정보','showInfo()','앱 정보 · 버전','slate']];
  const card=([i,t,f,d,c])=>`<button class="mxc" onclick="pqX('pqmore');${f}"><span class="mxi" style="background:${G[c]}">${PQI[i]||''}</span><b class="mxn">${t}</b>${CH}<span class="mxd">${d}</span></button>`;
  const row=(L,k)=>`<div class="mxr mxr${k}">${L.map(card).join('')}</div>`;
- let h=`<div class="mxh"><div class="mxt"><span class="mxg"><i></i><i></i><i></i><i></i></span>더보기</div><div class="mxs"><span><b>정확한 데이터,</b> 스마트한 계산</span><u></u></div></div>`+row(R1,4)+row(R2,4)+row(R3,4);
+ let h=`<div class="mxh"><div class="mxt"><span class="mxg"><i></i><i></i><i></i><i></i></span>더보기</div><div class="mxs"><span><b>정확한 데이터,</b> 스마트한 계산</span><u></u></div></div>`+row(R1,4)+row(R2,4)+row(R3,4)+row(R4,4);
  if(typeof IS_ADMIN!='undefined'&&IS_ADMIN)h+=`<button class="mxw" onclick="pqX('pqmore');T(7)"><span class="mxi" style="background:${G.slate};width:38px;height:38px;margin:0;border-radius:10px">${PQI.admin||''}</span><b>관리자 모드</b></button>`;
  h+=`<div class="mxb"><span class="mxbi"><i style="height:35%"></i><i style="height:55%"></i><i style="height:80%"></i></span><div class="mxbt"><small>더 스마트한 도장 계산의 시작</small><b>지금 바로 시작해보세요!</b></div><button class="mxgo" onclick="pqX('pqmore');T(0)">시작하기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div><button class="mxcl" onclick="pqX('pqmore')">닫기</button>`;
  pqSheet('pqmore',h,'mx');
@@ -13170,6 +13180,16 @@ html body #vh.cd .hpn{flex:1 1 auto!important;display:flex!important;flex-direct
 html body #vh.cd #dash,html body #vh.cd #dash .dsh{flex:1 1 auto;display:flex;flex-direction:column}
 html body #vh.cd .cdw{flex:1 1 auto;justify-content:space-between}
 html body #vh.cd.cdc details.hi{display:none}
+
+/* v527 홈 하단 안내(소요량 공식·경고) 제거 → 더보기 안으로 이동 */
+html body #vh #hinfo,html body #vh.cd details.hi{display:none!important}
+.pqif{max-height:62vh;overflow:auto;font-size:13px;line-height:1.55;padding:2px 4px 10px;color:#14233f}
+.pqif>b{display:block;margin:4px 0 6px;font-size:14px;color:#0b2a66}
+.pqif .hr{margin-top:8px;font-weight:700;color:#0b2a66}
+.pqif .hf{background:#eef4ff;border:1px solid #c5d6f2;border-radius:8px;padding:6px 10px;margin:3px 0;font-weight:700}
+.pqif .hn{display:block;margin-top:8px;color:#5a6a85}
+.pqif .hw{margin-top:12px;padding:10px 12px;border-radius:10px;background:#fff4e5;border:1px solid #f3d3a2;color:#7a4a00}
+.pqif .pqig{margin-top:12px}
 </style>
 <script id="fit526">
 /* v526: 첫 대시보드 한 화면 맞춤 — 기기 높이에 맞는 세로 배율(--vf) 계산 */
