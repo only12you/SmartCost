@@ -3130,7 +3130,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'v583',d:'2026.11.01'};
+const APPV={v:'v584',d:'2026.11.01'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -14418,5 +14418,26 @@ document.addEventListener('DOMContentLoaded',q);setTimeout(q,800);
 .ztd .ztdv span{font:600 10px/1 system-ui,sans-serif;color:#7a8bab}
 .ztd .ztde{padding:14px 10px;text-align:center;border:1.5px dashed #d0def5;border-radius:12px;color:#6b7fa8;font:600 12px/1.5 system-ui,sans-serif}
 .ztd .ztdnote{margin:6px 2px;padding:8px 10px;border-radius:10px;background:#f4f8ff;color:#33466d;font:500 11.5px/1.5 system-ui,sans-serif}
+</style>
+<script id="fz584">
+(function(){
+const K=1.2;
+function scale(){const v=document.getElementById('v9');if(!v||!document.body.classList.contains('lccrpt')||document.body.dataset.pg!='9')return;
+ const L=[];v.querySelectorAll('*').forEach(e=>{if(e.dataset.fz||/^(SCRIPT|STYLE|IMG|PATH|CIRCLE|RECT|LINE|G|DEFS)$/i.test(e.tagName))return;
+  let own=false;for(const n of e.childNodes)if(n.nodeType==3&&n.nodeValue.trim()){own=true;break}
+  if(!own)return;L.push([e,parseFloat(getComputedStyle(e).fontSize)])});
+ L.forEach(([e,f])=>{if(!(f>0))return;e.dataset.fz=f;e.style.setProperty('font-size',(f*K).toFixed(2)+'px','important')});
+ /* 칸을 넘치는 글자는 20% 확대 안에서 필요한 만큼만 줄임(최소 원래 크기) */
+ L.forEach(([e,f])=>{if(!(f>0))return;let k=K,n=0;const bad=()=>{const p=e.parentElement;if(!p)return false;const r=e.getBoundingClientRect(),q=p.getBoundingClientRect();return e.scrollWidth>e.clientWidth+1||(r.width>0&&(r.right>q.right+1||r.left<q.left-1))||p.scrollWidth>p.clientWidth+2||(p.parentElement&&p.parentElement.scrollWidth>p.parentElement.clientWidth+2)};
+  while(n<10&&k>1.001&&bad()){k=Math.max(1,k-.025);e.style.setProperty('font-size',(f*k).toFixed(2)+'px','important');n++}})}
+let t=0;const q=()=>{clearTimeout(t);t=setTimeout(scale,60)};
+try{new MutationObserver(q).observe(document.getElementById('v9'),{childList:true,subtree:true})}catch(e){}
+document.addEventListener('DOMContentLoaded',q);setTimeout(q,600);
+})();
+</script>
+<style id="fz584c">
+html body.lccrpt #v9 nav.rflb{display:flex!important;overflow-x:auto;gap:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+html body.lccrpt #v9 nav.rflb::-webkit-scrollbar{display:none}
+html body.lccrpt #v9 nav.rflb>button{flex:none!important;width:auto!important;white-space:nowrap;padding-left:10px!important;padding-right:10px!important}
 </style>
 </body></html>
