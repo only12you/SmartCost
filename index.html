@@ -3130,7 +3130,7 @@ if(s.tn)s.tn=s.tn.replace(/^\/\s*|\s*(?:저장\s*기간|포장\s*규격|색상|�
 return s};
 parseDry=L=>D(normL(L).filter(l=>!NZ.test(l)));parsePot=L=>P(normL(L).filter(l=>!NZ.test(l)))}
 
-const APPV={v:'calc-lcc-v5',d:'2026.11.01'};
+const APPV={v:'calc-lcc-v6',d:'2026.11.04'};
 function gnav(n){document.body.classList.toggle('inapp',n!=2);document.querySelectorAll('#gnav .hni').forEach((b,i)=>b.classList.toggle('on',i==NAVI(n)))}
 const APPMK={n:'',c:''};/* 제작자 정보: 현재 비공개. 값을 넣으면 '저작권·이용 안내'에 제작자 행이 나타납니다 */
 function showInfo(){
@@ -8754,7 +8754,7 @@ html body #v0 .lbc{margin:calc(var(--u)*6) 0!important;padding:calc(var(--u)*10)
 </style>
 <script id=rc364s>
 (function(){
-const V='var(--rc2)',EX=/(dot|swit|knob|toggle|track|prog|spinner|radio|handle|\bsw\b|thumb|scroll|scpill)/i;
+const V='var(--rc2)',EX=/(dot|swit|knob|toggle|track|prog|spinner|radio|handle|\bsw\b|thumb|scroll|scpill|#mh|#lhd|\.mh-|\.lh-|\bmh-|\blh-)/i;
 const split=s=>{const o=[];let d=0,c='';for(const ch of s){if(ch=='(')d++;if(ch==')')d--;if(ch==' '&&d==0){if(c)o.push(c);c=''}else c+=ch}if(c)o.push(c);return o};
 const isZero=t=>/^0(px|%)?$/.test(t);
 function nv(val){if(!val)return null;const v=val.trim();if(/50%/.test(v)||/var\(--rc2\)/.test(v))return null;const t=split(v.replace(/\s*!important/,'').replace(/\s*\/\s*.*$/,''));if(!t.length)return null;if(t.every(isZero))return null;return t.map(x=>isZero(x)?'0':V).join(' ')}
@@ -8763,9 +8763,9 @@ function fixRule(r){if(r.__rc)return;if(r.cssRules&&!r.style){for(const x of r.c
  if(r.cssRules&&r.style&&r.cssRules.length)for(const x of r.cssRules)fixRule(x);
  for(const n of names){const val=st.getPropertyValue(n),nw=nv(val);if(nw)st.setProperty(n,nw,'important')}}
 function sheets(){for(const ss of document.styleSheets){let rs;try{rs=ss.cssRules}catch(e){continue}if(!rs)continue;for(const r of rs)fixRule(r)}}
-function inl(root){const l=root.nodeType==1?[root,...root.querySelectorAll('[style*="radius"]')]:[];for(const e of l){if(!e.style||!/radius/.test(e.getAttribute('style')||''))continue;if(EX.test(e.className||''))continue;const v=e.style.borderRadius,nw=nv(v);if(nw)e.style.setProperty('border-radius',nw,'important')}}
+function inl(root){if(root.closest&&root.closest('#mh,#lhd'))return;const l=root.nodeType==1?[root,...root.querySelectorAll('[style*="radius"]')]:[];for(const e of l){if(!e.style||!/radius/.test(e.getAttribute('style')||''))continue;if(EX.test(e.className||''))continue;const v=e.style.borderRadius,nw=nv(v);if(nw)e.style.setProperty('border-radius',nw,'important')}}
 
-function comp(root){const rs=document.documentElement.style.getPropertyValue('--rc2');const els=root.nodeType==1?[root,...root.querySelectorAll('*')]:[];for(const e of els){if(e.namespaceURI&&e.namespaceURI.indexOf('svg')>=0)continue;const c=getComputedStyle(e),v=c.borderTopLeftRadius;if(v==='0px'||v.indexOf('%')>=0)continue;if(EX.test(typeof e.className=='string'?e.className:''))continue;const w=e.offsetWidth,h=e.offsetHeight;if(!w||!h)continue;const px=parseFloat(v);if(Math.abs(w-h)<3&&px>=w/2-1)continue;if(e.__rcd===v)continue;const t=document.createElement('i').style;t.borderRadius='var(--rc2)';const ref=getComputedStyle(document.body).getPropertyValue('--rc2');e.style.setProperty('border-radius',V,'important');e.__rcd=getComputedStyle(e).borderTopLeftRadius}}
+function comp(root){if(root.closest&&root.closest('#mh,#lhd'))return;const rs=document.documentElement.style.getPropertyValue('--rc2');const els=root.nodeType==1?[root,...root.querySelectorAll('*')]:[];for(const e of els){if(e.namespaceURI&&e.namespaceURI.indexOf('svg')>=0)continue;if(e.closest&&e.closest('#mh,#lhd'))continue;const c=getComputedStyle(e),v=c.borderTopLeftRadius;if(v==='0px'||v.indexOf('%')>=0)continue;if(EX.test(typeof e.className=='string'?e.className:''))continue;const w=e.offsetWidth,h=e.offsetHeight;if(!w||!h)continue;const px=parseFloat(v);if(Math.abs(w-h)<3&&px>=w/2-1)continue;if(e.__rcd===v)continue;const t=document.createElement('i').style;t.borderRadius='var(--rc2)';const ref=getComputedStyle(document.body).getPropertyValue('--rc2');e.style.setProperty('border-radius',V,'important');e.__rcd=getComputedStyle(e).borderTopLeftRadius}}
 function run(){try{sheets();inl(document.body);comp(document.body)}catch(e){}}
 run();window.addEventListener('load',()=>{run();setTimeout(run,800);setTimeout(run,2500)});
 setInterval(run,1500);let t=0;new MutationObserver(m=>{let s=0,n=[];for(const x of m){for(const a of x.addedNodes){if(a.nodeType!=1)continue;if(a.tagName=='STYLE'||a.tagName=='LINK')s=1;n.push(a)}}if(s)run();n.forEach(a=>{try{inl(a);comp(a)}catch(e){}})}).observe(document.documentElement,{childList:true,subtree:true});
@@ -14429,7 +14429,7 @@ function stats(){var r={n:0,sv:null,co:null,cp:null,dur:null,life:null,urg:0};
  }catch(e){}return r}
 function cnt(){var o={db:0,sy:0,dg:0};try{o.db=(typeof DB!='undefined'&&DB.length)||0}catch(e){}try{o.sy=(typeof syLibGet=='function'&&syLibGet().length)||0}catch(e){}try{o.dg=(JSON.parse(localStorage.getItem('pqu:lcci:h')||'[]')||[]).length}catch(e){}return o}
 var Z=function(v,u,d){return v==null?'<b>–</b>':'<b>'+v+(u?'<em>'+u+'</em>':'')+(d||'')+'</b>'};
-function ring(){return '<svg viewBox="0 0 120 120"><defs><linearGradient id="mhrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4d21f"/><stop offset=".32" stop-color="#ff9f1a"/><stop offset=".62" stop-color="#8e6cf2"/><stop offset="1" stop-color="#1b78f0"/></linearGradient></defs><circle cx="60" cy="60" r="46" fill="#fff" stroke="url(#mhrg)" stroke-width="15"/><circle cx="60" cy="60" r="35" fill="none" stroke="#dbe8fb" stroke-width="2"/></svg>'}
+function ring(){return '<i class="mh-rg"></i>'}
 var MI={
  coin:'<svg viewBox="0 0 32 32"><ellipse cx="16" cy="9" rx="9" ry="4" fill="#ffb02e"/><path d="M7 9v5c0 2.2 4 4 9 4s9-1.8 9-4V9" fill="#f6921e"/><path d="M7 15v5c0 2.2 4 4 9 4s9-1.8 9-4v-5" fill="#ee7d0f"/></svg>',
  shield:'<svg viewBox="0 0 32 32"><path d="M16 3l11 4v8c0 7-4.6 11.4-11 14C9.600 26.400 5 22 5 15V7z" fill="#2a79f0"/><path d="M11 16l4 4 7-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -14450,6 +14450,9 @@ function slide(kind,s,c){
   return '<div class="mh-s"><div><span class="mh-pill">AI 진단 '+CH+'</span><h2>사진 한 장으로<br>도막 상태를 진단하세요</h2><p>녹 · 균열 · 박리 · 블리스터 등<br>도막 결함을 판정합니다</p><button class="mh-go" data-go="dg">진단하기 '+CH+'</button></div>'
   +'<div class="mh-ring">'+ring()+'<div><b>AI</b><small>Coating Diagnosis</small></div></div>'
   +'<div class="mh-m"><div>'+MI.shield+'<span><small>진단 이력</small><b>'+c.dg+'건</b></span></div><div>'+MI.leaf+'<span><small>보수 긴급</small><b>'+s.urg+'곳</b></span></div></div></div>'}
+ if(kind==3){return '<div class="mh-s"><div><span class="mh-pill">사양 비교 '+CH+'</span><h2>도장 사양을<br>한눈에 비교하세요</h2><p>도장사양 · 범용사양 · 추천사양<br>수명과 LCC를 함께 봅니다</p><button class="mh-go" data-go="cmp">비교하기 '+CH+'</button></div>'
+  +'<div class="mh-ring">'+ring()+'<div><b>SPEC</b><small>Compare</small></div></div>'
+  +'<div class="mh-m"><div>'+MI.coin+'<span><small>자산</small><b>'+s.n+'개</b></span></div><div>'+MI.shield+'<span><small>사양 DB</small><b>'+c.sy+'건</b></span></div></div></div>'}
  return '<div class="mh-s"><div><span class="mh-pill">보고서 '+CH+'</span><h2>분석 결과를<br>보고서로 만드세요</h2><p>LCC 분석 · 사양 비교 결과를<br>PDF 보고서로 출력합니다</p><button class="mh-go" data-go="rp">보고서 보기 '+CH+'</button></div>'
   +'<div class="mh-ring">'+ring()+'<div><b>RPT</b><small>Report</small></div></div>'
   +'<div class="mh-m"><div>'+MI.coin+'<span><small>자산</small><b>'+s.n+'개</b></span></div><div>'+MI.shield+'<span><small>사양 DB</small><b>'+c.sy+'건</b></span></div></div></div>'}
@@ -14470,12 +14473,12 @@ function html(){
  +'<button class="mh-t t3" data-go="db">'+ic('db')+'<b>DB</b><small>제품·사양</small><span class="c">'+CH+'</span></button>'
  +'<button class="mh-t t4" data-go="dg">'+ic('brain')+'<b>AI 진단</b><small>도막·열화분석</small><span class="c">'+CH+'</span></button>'
  +'<button class="mh-t t5" data-go="rp">'+ic('doc')+'<b>보고서</b><small>분석보고서</small><span class="c">'+CH+'</span></button></div>'
- +'<div class="mh-lcc"><div class="mh-sl" id="mhsl">'+slide(0,s,c)+slide(1,s,c)+slide(2,s,c)+'</div><div class="mh-dots" id="mhdt"><i class="on"></i><i></i><i></i></div></div>'
+ +'<div class="mh-lcc"><div class="mh-sl" id="mhsl">'+slide(0,s,c)+slide(1,s,c)+slide(3,s,c)+slide(2,s,c)+'</div><div class="mh-dots" id="mhdt"><i class="on"></i><i></i><i></i><i></i></div></div>'
  +'<div class="mh-g">'
  +'<button class="mh-c c1" data-go="lcc0"><div class="h">'+ic('leafc')+'<b>환경·ESG 분석</b><span class="a">'+CH+'</span></div><div class="bd"><small>탄소배출 절감량</small>'+(co==null?'<b>–</b>':'<b>'+F1(co)+'<em>tCO₂</em></b>')+PIC.globe+'</div></button>'
- +'<button class="mh-c c2" data-go="env"><div class="h">'+ic('leafc')+'<b>플랜트 도장분석</b><span class="a">'+CH+'</span></div><div class="bd"><small>산업시설 최적화<br>수명 예측</small>'+(s.life==null?'':'<b>'+F1(s.life)+'<em>년</em></b>')+PIC.plant+'</div></button>'
+ +'<button class="mh-c c2" data-go="env"><div class="h">'+ic('leafc')+'<b>플랜트 도장분석</b><span class="a">'+CH+'</span></div><div class="bd"><small>산업시설 최적화<br>수명 예측</small>'+PIC.plant+'</div></button>'
  +'<button class="mh-c c3" data-go="db"><div class="h">'+ic('db')+'<b>데이터베이스</b><span class="a">'+CH+'</span></div><div class="bd"><small>제품 · 사양 DB</small><b>총 '+F(c.db+c.sy)+'<em>건</em></b>'+PIC.dbs+'</div></button>'
- +'<button class="mh-c c4" data-go="dg"><div class="h">'+ic('cam')+'<b>도막 진단 (AI)</b><span class="a">'+CH+'</span></div><div class="bd"><small>사진으로 진단하는<br>스마트 진단</small><b>'+c.dg+'<em>건</em></b>'+PIC.rust+'</div></button></div>'
+ +'<button class="mh-c c4" data-go="dg"><div class="h">'+ic('cam')+'<b>도막 진단 (AI)</b><span class="a">'+CH+'</span></div><div class="bd"><small>사진으로 진단하는<br>스마트 진단</small>'+PIC.rust+'</div></button></div>'
  +'<nav class="mh-nav"><button class="on" data-go="home">'+ic('home','')+'<span>홈</span></button><button data-go="calc">'+ic('calc','')+'<span>산출</span></button><button data-go="lcc0">'+ic('chart','')+'<span>분석</span></button><button data-go="db">'+ic('db','')+'<span>DB</span></button><button data-go="menu">'+ic('more','')+'<span>더보기</span></button></nav>'}
 function lccTab(i){try{T(9);setTimeout(function(){try{LCCX.tab(i)}catch(e){}},30)}catch(e){}}
 function go(k){
@@ -14487,6 +14490,7 @@ function go(k){
   if(k=='env')return lccTab(1);
   if(k=='dg')return lccTab(2);
   if(k=='rp')return lccTab(5);
+  if(k=='cmp')return lccTab(4);
   if(k=='set'&&typeof openSettings=='function')return openSettings();
   if(k=='bell'){var s=stats();return tt(s.urg?('긴급 보수 대상 '+s.urg+'곳 (R·O 등급)'):'새 알림이 없습니다')}
   if(k=='menu'){var q=document.getElementById('qmb');if(q){q.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,clientY:0}));q.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,clientY:0}))}return}
@@ -14733,7 +14737,7 @@ function html(){
  h+='<div class="lh-two"><button class="lh-card" data-go="dg" style="text-align:left"><div class="lh-ch">'+SHIELD+'<div class="mtx"><h3>현장 진단 현황</h3></div><span class="ch">'+CH+'</span></div>'
  +'<div class="lh-dg">'+RUST+'<div><div class="rw"><span>부식등급</span><span class="or">'+(ok?esc(M.env):'–')+'</span></div><div class="rw"><span>도막상태</span><span>'+(ok?(ZT[M.zone]||'–'):'–')+'</span></div><div class="rw"><span>잔존수명</span><span>'+(ok?F1(life)+'년':'–')+'</span></div></div></div><div class="lh-bar"><i style="width:'+pr.toFixed(0)+'%"></i></div></button>'
  +'<button class="lh-card" data-go="env" style="text-align:left"><div class="lh-ch">'+LEAFI+'<div class="mtx"><h3>환경 분석</h3></div><span class="ch">'+CH+'</span></div>'
- +'<div class="lh-env" style="--ec:'+ec+'"><div class="rw"><div class="m">'+THERM+'<div><small>염분(Cl)</small><b>'+(ok&&M.cl!=null?F1(+M.cl):'–')+'</b></div></div><div class="m">'+DROP+'<div><small>습도</small><b>'+(ok&&M.rh!=null?F0(+M.rh)+'%':'–')+'</b></div></div></div>'
+ +'<div class="lh-env" style="--ec:'+ec+'"><div class="rw"><div class="m">'+THERM+'<div><small>염분</small><b>'+(ok&&M.cl!=null?F1(+M.cl):'–')+'</b></div></div><div class="m">'+DROP+'<div><small>습도</small><b>'+(ok&&M.rh!=null?F0(+M.rh)+'%':'–')+'</b></div></div></div>'
  +'<div class="bd"><small>부식환경</small><b>'+(ok?(ENVT[env]||'–'):'–')+'</b><s>('+(ok?esc(env):'–')+'등급)</s></div>'+SKY
  +'<div class="lf">'+CLK+'예측 수명 <b>'+(ok?(Math.round(M.lmin)==Math.round(M.lmax)?F0(M.lmin):F0(M.lmin)+'~'+F0(M.lmax))+'년':'–')+'</b></div></div></button></div>';
  /* 사양 추천 및 비교 */
@@ -14788,4 +14792,63 @@ function mount(){var v=document.getElementById('v9');if(!v)return;
 })();
 })();
 </script>
+<style id=mh800c>
+html body #mh .mh-go{width:auto!important;justify-self:start;margin-top:calc(var(--u)*10)}
+html body #mh .mh-pill{width:auto!important}
+html body #mh .mh-s{grid-template-columns:minmax(0,1fr) calc(var(--u)*107) calc(var(--u)*66);gap:calc(var(--u)*8);min-height:calc(var(--u)*164);padding:calc(var(--u)*14) calc(var(--u)*14) calc(var(--u)*24)}
+html body #mh .mh-ring{width:calc(var(--u)*107);height:calc(var(--u)*107)}
+html body #mh .mh-rg{position:absolute;inset:0;border-radius:50%!important;background:conic-gradient(from 0deg,#b6e01c 0,#ffc21a 14%,#ff8a14 28%,#c56ee0 46%,#7b6cf2 58%,#2f7bf3 72%,#1fa2f7 86%,#7fd4a0 94%,#b6e01c 100%);-webkit-mask:radial-gradient(circle closest-side,transparent 65%,#000 66%);mask:radial-gradient(circle closest-side,transparent 65%,#000 66%)}
+html body #mh .mh-ring::after{content:"";position:absolute;inset:calc(var(--u)*-6);border-radius:50%!important;border:calc(var(--u)*1.5) solid rgba(120,170,255,.28);pointer-events:none}
+html body #mh .mh-ring div{inset:calc(var(--u)*18);background:#fff;border-radius:50%!important;box-shadow:inset 0 0 0 calc(var(--u)*1.5) #e6efff}
+html body #mh .mh-ring b{font-size:calc(var(--u)*22)}
+html body #mh .mh-ring small{font-size:calc(var(--u)*8.5);white-space:nowrap}
+html body #mh .mh-m{min-width:0}
+html body #mh .mh-m b{font-size:calc(var(--u)*18)}
+html body #mh .mh-c{height:calc(var(--u)*88)}
+html body #mh .mh-c .h{height:calc(var(--u)*30)}
+html body #mh .mh-c .bd{height:calc(var(--u)*58);padding:calc(var(--u)*9) calc(var(--u)*10)}
+html body #mh .mh-c .bd svg.p{height:calc(var(--u)*50)}
+html body #mh .mh-dots i{border-radius:99px!important}
+html body #mh .mh-dots i.on{width:calc(var(--u)*20)}
+html body.mhp{max-width:900px!important}
+html body #mh{--u:calc(min(100vw,900px)/390);max-width:900px}
+html body #mh .mh-hero,html body #mh .mh-kpi{max-width:none}
+html body #mh .mh-kpi .go,html body #mh .mh-t .c,html body #mh .mh-c .h .a,html body #mh .mh-ib{border-radius:50%!important}
+html body #mh .mh-go,html body #mh .mh-pill{border-radius:999px!important}
+html body #mh .mh-kpi{border-radius:calc(var(--u)*33)!important}
+html body #mh .mh-t{border-radius:calc(var(--u)*13)!important}
+html body #mh .mh-lcc{border-radius:calc(var(--u)*20)!important}
+html body #mh .mh-c{border-radius:calc(var(--u)*15)!important}
+html body #lhd .lh-ib{border-radius:50%!important}
+html body #mh .mh-nav{max-width:900px;height:calc(var(--u)*70 + env(safe-area-inset-bottom));border-radius:calc(var(--u)*22) calc(var(--u)*22) 0 0!important}
+html body #mh .mh-nav button{font-size:calc(var(--u)*11.5);gap:calc(var(--u)*3)}
+html body #mh .mh-nav button svg{width:calc(var(--u)*26);height:calc(var(--u)*26)}
+html body #mh .mh-ib{width:calc(var(--u)*34);height:calc(var(--u)*34)}
+html body #mh .mh-ib svg{width:calc(var(--u)*23);height:calc(var(--u)*23)}
+html body #mh .mh-hero{padding-left:calc(var(--u)*18);padding-right:calc(var(--u)*18)}
+html body #mh .mh-kpi,html body #mh .mh-tiles,html body #mh .mh-lcc,html body #mh .mh-g{margin-left:calc(var(--u)*12);margin-right:calc(var(--u)*12)}
+html body #mh .mh-pill svg,html body #mh .mh-go svg{width:calc(var(--u)*10);height:calc(var(--u)*10)}
+html body #mh .mh-kpi .go svg{width:calc(var(--u)*15);height:calc(var(--u)*15)}
+html body #mh .mh-c .h .a svg{width:calc(var(--u)*9);height:calc(var(--u)*9)}
+html body #mh .mh-dots{gap:calc(var(--u)*5)}
+html body #mh .mh-dots i{width:calc(var(--u)*6);height:calc(var(--u)*6)}
+</style>
+<style id=lh800c>
+html body #lhd .lh-env .rw{width:calc(100% - var(--k)*172);left:calc(var(--k)*14);gap:calc(var(--k)*6)}
+html body #lhd .lh-env .m{gap:calc(var(--k)*5)}
+html body #lhd .lh-env .m+.m{padding-left:calc(var(--k)*8)}
+html body #lhd .lh-env .m svg{width:calc(var(--k)*22);height:calc(var(--k)*30)}
+html body #lhd .lh-env .m small{font-size:calc(var(--k)*16)}
+html body #lhd .lh-env .m b{font-size:calc(var(--k)*23);white-space:nowrap}
+html body #lhd .lh-env .bd{width:calc(var(--k)*128);height:calc(var(--k)*128);right:calc(var(--k)*10);top:calc(var(--k)*2)}
+html body #lhd .lh-op .bd{gap:calc(var(--k)*12)}
+html body #lhd .lh-op svg.ly{width:calc(var(--k)*108);height:calc(var(--k)*90)}
+html body #lhd .lh-op li{font-size:calc(var(--k)*19);line-height:calc(var(--k)*32);padding-left:calc(var(--k)*32)}
+html body #lhd .lh-op li::before{width:calc(var(--k)*21);height:calc(var(--k)*21)}
+html body #lhd .lh-op li::after{left:calc(var(--k)*7);top:calc(var(--k)*10)}
+html body #lhd .lh-kpi .k1{flex:0 0 calc(var(--k)*310);padding-left:calc(var(--k)*22);padding-right:calc(var(--k)*10);gap:calc(var(--k)*12)}
+html body #lhd .lh-kpi .k1 b{max-width:calc(var(--k)*215);font-size:calc(var(--k)*25)}
+html body #lhd .lh-kpi .k2{flex:0 0 calc(var(--k)*240)}
+html body #lhd .lh-kpi svg.ki{width:calc(var(--k)*46);height:calc(var(--k)*46)}
+</style>
 </body></html>
