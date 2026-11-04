@@ -3225,11 +3225,12 @@ function syRender(){
   syGr().forEach((g,gi)=>{
    h+=`<div class="sy-sg${gi?' nx':''}${window.SYED&&window.SYED[gi]?' ed':''}"><div class="sy-sgh"><span class="sy-sgn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="sy-gtx"><input class="sy-gn" value="${esc(g.name)}" oninput="syGn(${gi},this.value)" aria-label="시스템 이름" placeholder="시스템 이름"><span class="sy-gsub">${g.idx.map(i=>labs[i]).join(' · ')}</span></div><button class="sy-fold" onclick="syEd(${gi})" aria-label="시스템 편집(이름·면적·저장·삭제·제품 추가)" aria-expanded="${window.SYED&&window.SYED[gi]?'true':'false'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><div class="sy-gact"><span class="sy-sgc">${g.idx.length}개</span><label class="carea sy-car"><span>면적 [m²]</span><input type="number" inputmode="decimal" placeholder="면적 ㎡" value="${esc(SY.groups[gi].area||'')}" onwheel="this.blur()" oninput="syGa(${gi},this.value)" aria-label="${esc(g.name)} 면적"></label><button class="zs1x sv" onclick="syGSave(${gi},this)">저장</button><button class="zdlx" onclick="syDelG(${gi})" aria-label="삭제">삭제</button><button class="all" onclick="syPick(${gi})">제품+</button></div><div class="sy-lcard"><div class="sy-lcc"><div class="sy-lo"><span class="sy-lt">LCC 사양</span>${[['cur','기존'],['base','범용'],['rec','추천']].map(([v,t])=>`<button type="button" class="${(SY.groups[gi].lr||'cur')==v?'on':''}" onclick="syLccSel(${gi},'${v}')">${t}</button>`).join('')}</div><button type="button" class="sy-ls" onclick="syToLcc(${gi})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 13l2 2 4-4"/></svg>LCC로 보내기</button></div>`;
    g.idx.forEach((i,k)=>{
-    const c=L[i],p=PC(c.n),on=act==i,pk=p?(+p.mk||+p.pk||0):0,u=p?UN(p):'';
-    h+=`<div class="sy-t ${on?'on':''}" style="--lc:${syCol[k]}"><div class="sy-th" onclick="syAct(${i})"><span class="sy-tn">${k+1}</span><span class="sy-sw"><select class="sy-sel" aria-label="단계" onclick="event.stopPropagation()" onchange="syLbL(${i},this.value)">${SYST.map(x=>`<option value="${x}"${labs[i]==x?' selected':''}>${x}</option>`).join('')}</select></span><span class="sy-tm">${esc(c.n)}${p?'':' <small>(DB에서 삭제됨)</small>'}</span>${p&&p.mf?`<span class="sy-mf">${esc(p.mf)}</span>`:''}<span class="sy-cv">${syIc.chev}</span></div>`;
-    if(on&&p)h+=`<div class="sy-tb"><div><span>제품명</span><b>${esc(c.n)}</b></div><div><span>규격</span><b>${pk?F(pk)+u:'-'}</b></div><div><span>제조사</span><b>${esc(p.mf||'-')}</b></div></div>`;
-    if(on)h+=`<div class="sy-ctl"><span class="sy-sp"></span><button class="rm" onclick="syRmL(${i})">삭제</button></div>`;
-    if(on)h+=syBasis(i);
+    const c=L[i],p=PC(c.n),on=act==i,nm=String(c.n||'').replace(/"/g,''),rc=p?rec(p):{},m=p?mx(p):{},u=p?UN(p):'ℓ',
+    f=(l,key,ic,ph)=>`<div class="cell k-${key}"><div class=lb>${CI[ic]||''}<span>${l}</span></div><input type=number inputmode=decimal data-k=${key} placeholder="${ph||(p&&rc[key]!==undefined&&rc[key]!==''?rc[key]:(EXP[key]||''))}" value="${esc(String(c[key]??''))}" onwheel="this.blur()" oninput="syIn(${i},'${key}',this.value)"></div>`;
+    h+=`<div class="cc sy-cc${on?' sy-on':''}" style="${cvars(k)}"><div class=ch onclick="syAct(${i})"><div class=cht><div class=chn><i class="chk${on?' on':''}"></i><span style="color:var(--cd)">${od(k+1)} ·</span><span class="sy-sw"><select class="sy-sel" aria-label="단계" onclick="event.stopPropagation()" onchange="syLbL(${i},this.value)">${SYST.map(x=>`<option value="${x}"${labs[i]==x?' selected':''}>${x}</option>`).join('')}</select></span>${nm?`<em class=chp>${esc(nm)}${p?'':' (DB에서 삭제됨)'}</em>`:''}</div><div id="syh${i}" class="cv chs"></div></div><button type=button class=chsel onclick="event.stopPropagation();syDelAsk(${i})">${SV('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>')}<span>삭제</span></button><span class=chv style="transform:rotate(${on?180:0}deg)">${SV('<path d="M6 9l6 6 6-6"/>')}</span></div>`;
+    if(on)h+=`<div class=cbd><div><div class="cbox neon"><div class=prow><div class=pin><input value="${esc(nm)}" readonly placeholder="제품"><span class=pdv><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></div>${p&&m.m>0?`<div class=pspec><small>규격</small><b>${F(m.m)}${u}</b></div>`:''}<button type=button class="gb gen" onclick="syReset(${i})">추천값</button></div>
+<div class=rec>${p?`추천 도막 ${rc.dft}㎛ · SVR ${rc.svr}% · Loss ${rc.loss}% · 희석 ${rc.tr}% · 전용 희석제 ${p.tn&&p.tn!='무희석'?p.tn+(p.tc&&p.tc!=p.tn?' ('+p.tc+')':''):'무희석'}`:'DB에서 삭제된 제품입니다. 시스템에서 제품을 다시 선택하세요.'}</div>
+<div class=ccard><div class=cch><span class=cci>${CI.flask}</span><div><b>소요량 및 조건</b><small>Consumption &amp; Condition</small></div><label class=carea><span>면적 [m²]</span><input type=number inputmode=decimal data-k=area placeholder="기본면적" value="${esc(c.area??'')}" onwheel="this.blur()" oninput="syIn(${i},'area',this.value)"></label></div><div class="cg3 cg4">${f('DFT [μm]','dft','dft')}${f('SVR (%)','svr','svr')}${f('Loss (%)','loss','loss')}${f('희석율 (%)','tr','tr')}</div><div class="cg3 cgp">${f('제품단가 [원/1말]','price','price','')}${f('희석제 단가 [원]','tprice','price','')}</div><details class=addc ${window.SDO===false?'':'open'} ontoggle="window.SDO=this.open"><summary class=pshd><span class=pst><span class=pstx><b>제품소개</b><small>${p?esc(p.n):'제품을 선택하세요.'}</small></span></span>${syTdsPill(i,nm)}</summary>${p&&PX(c.n)?`<div class="dsemb">${typeof dsSecs=="function"?dsSecs(p):""}</div>`:`<div class="sy-nt">제품 DB에서 같은 제품을 찾지 못해 소개 자료가 없습니다.</div>`}</details><div class="cg3 cgr"><div class="cell ro"><div class=lb>${CI.th}<span>이론 소요량 (${u}/m²)</span></div><div class="rov emp" id="syth${i}">-</div></div><div class="cell ro"><div class=lb>${CI.th}<span>실제 소요량 (${u}/m²)</span></div><div class="rov emp" id="syac${i}">-</div></div><div class="cell ro"><div class=lb>${CI.area}<span>캔당 면적 (m²)</span></div><div class="rov emp" id="syca${i}">-</div></div></div><div class=sy-mv><button type=button class=gb onclick="syMvL(${i},-1)">▲ 위로</button><button type=button class=gb onclick="syMvL(${i},1)">▼ 아래로</button></div></div></div></div></div>`;
     h+=`</div>`;
    });
    h+=`</div>`;
@@ -14852,30 +14853,35 @@ html body #lhd .lh-kpi .k2{flex:0 0 calc(var(--k)*240)}
 html body #lhd .lh-kpi svg.ki{width:calc(var(--k)*46);height:calc(var(--k)*46)}
 </style>
 <style id=sy800c>
-html body #v3 .syp .sy-lcard>.sy-t{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;margin:0 0 10px!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th{display:flex;align-items:center;gap:8px;min-height:54px;padding:8px 12px!important;border:0!important;border-radius:14px!important;color:#fff!important;background:linear-gradient(100deg,#4f9aee,#2f78dc)!important;box-shadow:0 4px 12px rgba(30,100,210,.25)}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-tn{flex:none;width:30px!important;height:30px!important;border-radius:50%!important;background:#fff!important;color:#2f78dc!important;box-shadow:none!important;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-tm{flex:1;min-width:0;color:#fff!important;font-weight:800!important;font-size:14px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-mf{background:rgba(255,255,255,.22)!important;color:#fff!important;border:0!important;flex:none}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-cv{color:#fff!important;flex:none}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-cv svg{stroke:#fff!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-grip{background:rgba(255,255,255,.22)!important;color:#fff!important;border:0!important;border-radius:8px!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-sw{flex:none;position:relative;display:inline-block}
-html body #v3 .syp .sy-lcard>.sy-t .sy-sw::after{content:"";position:absolute;right:11px;top:50%;width:7px;height:7px;margin-top:-6px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg);pointer-events:none}
-html body #v3#v3#v3 .syp .sy-lcard>.sy-t .sy-th select.sy-sel{width:auto!important;height:34px!important;min-width:76px;margin:0!important;padding:0 28px 0 14px!important;border:1.5px solid rgba(255,255,255,.75)!important;border-radius:999px!important;background:rgba(255,255,255,.22) none!important;background-color:rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px!important;font-weight:800!important;font-family:inherit;-webkit-appearance:none;appearance:none;box-shadow:none!important;opacity:1!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-sel option{color:#0b2a66;background:#fff}
-html body #v3 .syp .sy-lcard>.sy-t .sy-tb{display:flex!important;flex-wrap:wrap;gap:6px;margin:8px 2px 0!important;padding:0!important;border:0!important;background:transparent!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-tb>div{display:inline-flex;gap:5px;align-items:baseline;padding:4px 10px;border:1px solid #d6e3f7;border-radius:999px;background:#f3f7ff;font-size:11px}
-html body #v3 .syp .sy-lcard>.sy-t .sy-tb span{color:#6a7da3}html body #v3 .syp .sy-lcard>.sy-t .sy-tb b{color:#14264d}
-html body #v3 .syp .sy-lcard>.sy-t .sy-ctl{display:flex!important;justify-content:flex-end;padding:6px 2px 0!important;margin:0!important;background:transparent!important;border:0!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-ctl .rm{width:auto!important;height:28px!important;padding:0 12px!important;border-radius:999px!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-card.sy-in{margin:8px 0 0!important;padding:10px!important;border:2px solid #52d683!important;border-radius:16px!important;background:#fff!important;box-shadow:0 0 0 3px rgba(82,214,131,.16)!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-hd{background:#f4f8ff!important;border:0!important;border-radius:12px!important;padding:8px 10px!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-f{background:#fff!important;border:1.5px solid #dbe6f8!important;border-radius:13px!important;padding:8px 9px 9px!important;box-shadow:none!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-f.need{background:#fff!important;border-color:#dbe6f8!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-fl{color:#0b2a66!important;font-weight:800!important;font-size:12.5px!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-iw{border:1.5px solid #cfdcf3!important;border-radius:11px!important;background:#fff!important;box-shadow:none!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-det{border:1.5px solid #dbe6f8!important;border-radius:13px!important;background:#fff!important}
-html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-rs2{border-radius:12px!important}
+html body #v3 .syp .sy-cc{margin:0 0 8px!important}
+html body #v3 .syp .sy-cc .sy-sw{position:relative;display:inline-block;margin:0 6px;flex:none}
+html body #v3 .syp .sy-cc .sy-sw::after{content:"";position:absolute;right:9px;top:50%;width:6px;height:6px;margin-top:-5px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);pointer-events:none;color:var(--cd,#1a4fb5)}
+html body #v3#v3#v3 .syp .sy-cc .sy-sel{width:auto!important;height:26px!important;min-width:64px;margin:0!important;padding:0 22px 0 10px!important;border:1.5px solid var(--cd,#1a4fb5)!important;border-radius:999px!important;background:rgba(255,255,255,.7) none!important;color:var(--cd,#1a4fb5)!important;-webkit-text-fill-color:var(--cd,#1a4fb5)!important;font-size:12.5px!important;font-weight:800!important;font-family:inherit;-webkit-appearance:none;appearance:none;box-shadow:none!important}
+html body #v3 .syp .sy-cc .chsel{width:auto!important}
+html body #v3 .syp .sy-mv{display:flex;gap:6px;margin-top:8px}
+html body #v3 .syp .sy-mv .gb{flex:1;height:30px!important;font-size:11px!important;border-radius:9px!important}
+html body #v3 .syp .sy-cc .addc{margin-top:6px}
+html body #v3 .syp .sy-cc .chn .chk.on::after{border-style:solid!important;border-color:var(--cd,#0d3f9e)!important;border-width:0 2.5px 2.5px 0!important}
 </style>
+<script id=sy800s>
+(function(){
+window.syTdsPill=function(i,nm){var st='event.preventDefault();event.stopPropagation();',ex='SY.layers['+i+'].n';return '<span class=psb><button type=button class="zsp no" data-t="'+(nm||'~c'+i)+'" onclick="'+st+'tds('+ex+','+i+')">'+IC.doc+'<span>미첨부</span></button><button type=button class="zsp at" onclick="'+st+'att('+ex+','+i+')"><span>첨부</span></button><button type=button class="zsp dl" onclick="'+st+'tdel('+ex+','+i+')"><span>삭제</span></button><button type=button class="zsp ed" onclick="'+st+'syPdEdt('+i+')"><span>제품 수정</span></button></span>'};
+window.syPdEdt=function(i){var c=SY.layers[i],p=c&&PC(c.n),j=p?DB.indexOf(p):-1;if(j<0)return tt('DB에 등록된 제품만 수정할 수 있습니다');pdOpen(j)};
+window.syDelAsk=function(i){try{ask('이 코트를 삭제할까요?',function(){syRmL(i)})}catch(e){syRmL(i)}};
+var _sc=syCalc;syCalc=function(){var r=_sc.apply(this,arguments);try{syCCup()}catch(e){}return r};
+window.syCCup=function(){try{SY.layers.forEach(function(c,i){var d=syLay(i),h=document.getElementById('syh'+i),te=document.getElementById('syth'+i),ae=document.getElementById('syac'+i),ce=document.getElementById('syca'+i);
+ var st=function(e,t,emp){if(e){e.textContent=t;e.classList.toggle('emp',!!emp)}};
+ if(!d.r){if(h)h.textContent='';st(te,'자동 계산됩니다.',1);st(ae,'자동 계산됩니다.',1);st(ce,'자동 계산됩니다.',1);return}
+ var s=d.r.reduce(function(a,x){return a+x.amt},0),cA=d.a.ac>0?d.a.pk/d.a.ac:0;
+ if(h)h.textContent='실제 '+F(d.a.ac)+d.u+'/㎡ · ㎡당 '+F(s,0)+'원'+(cA>0?' · 캔당 '+F(cA,1)+'㎡':'');
+ st(te,F(d.a.th));st(ae,F(d.a.ac));st(ce,cA>0?F(cA,1):'자동 계산됩니다.',cA<=0)})}catch(e){}};
+/* 일위대가표(#cs) 스타일을 도장 시스템(#v3)에도 그대로 적용 */
+var done=0;function clone(){if(done)return;done=1;var out=[];
+ function walk(rs,wrap){for(var i=0;i<rs.length;i++){var r=rs[i];if(r.cssRules&&!r.selectorText){var inner=[];walk(r.cssRules,inner);if(inner.length){var head=r.cssText.slice(0,r.cssText.indexOf('{')+1);out.push(head+inner.join('\n')+'}')}continue}
+  if(r.selectorText&&/#cs\b/.test(r.selectorText)){var sel=r.selectorText.split(',').filter(function(x){return /#cs\b/.test(x)}).map(function(x){return x.replace(/#cs\b/g,'#v3')}).join(',');var t=r.cssText.slice(r.cssText.indexOf('{'));(wrap||out).push(sel+t)}}}
+ for(var j=0;j<document.styleSheets.length;j++){var ss=document.styleSheets[j];if(ss.ownerNode&&ss.ownerNode.id=='sy800clone')continue;var rs;try{rs=ss.cssRules}catch(e){continue}if(rs)walk(rs,null)}
+ var st=document.createElement('style');st.id='sy800clone';st.textContent=out.join('\n');document.head.appendChild(st)}
+if(document.readyState=='complete')setTimeout(clone,0);else window.addEventListener('load',function(){setTimeout(clone,0)});
+})();
+</script>
 </body></html>
