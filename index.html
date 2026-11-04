@@ -3226,9 +3226,9 @@ function syRender(){
    h+=`<div class="sy-sg${gi?' nx':''}${window.SYED&&window.SYED[gi]?' ed':''}"><div class="sy-sgh"><span class="sy-sgn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div class="sy-gtx"><input class="sy-gn" value="${esc(g.name)}" oninput="syGn(${gi},this.value)" aria-label="시스템 이름" placeholder="시스템 이름"><span class="sy-gsub">${g.idx.map(i=>labs[i]).join(' · ')}</span></div><button class="sy-fold" onclick="syEd(${gi})" aria-label="시스템 편집(이름·면적·저장·삭제·제품 추가)" aria-expanded="${window.SYED&&window.SYED[gi]?'true':'false'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><div class="sy-gact"><span class="sy-sgc">${g.idx.length}개</span><label class="carea sy-car"><span>면적 [m²]</span><input type="number" inputmode="decimal" placeholder="면적 ㎡" value="${esc(SY.groups[gi].area||'')}" onwheel="this.blur()" oninput="syGa(${gi},this.value)" aria-label="${esc(g.name)} 면적"></label><button class="zs1x sv" onclick="syGSave(${gi},this)">저장</button><button class="zdlx" onclick="syDelG(${gi})" aria-label="삭제">삭제</button><button class="all" onclick="syPick(${gi})">제품+</button></div><div class="sy-lcard"><div class="sy-lcc"><div class="sy-lo"><span class="sy-lt">LCC 사양</span>${[['cur','기존'],['base','범용'],['rec','추천']].map(([v,t])=>`<button type="button" class="${(SY.groups[gi].lr||'cur')==v?'on':''}" onclick="syLccSel(${gi},'${v}')">${t}</button>`).join('')}</div><button type="button" class="sy-ls" onclick="syToLcc(${gi})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 13l2 2 4-4"/></svg>LCC로 보내기</button></div>`;
    g.idx.forEach((i,k)=>{
     const c=L[i],p=PC(c.n),on=act==i,pk=p?(+p.mk||+p.pk||0):0,u=p?UN(p):'';
-    h+=`<div class="sy-t ${on?'on':''}" style="--lc:${syCol[k]}"><div class="sy-th" onclick="syAct(${i})"><span class="sy-tn">${k+1}</span><b class="sy-tl">${labs[i]}</b><span class="sy-tm">${esc(c.n)}${p?'':' <small>(DB에서 삭제됨)</small>'}</span>${p&&p.mf?`<span class="sy-mf">${esc(p.mf)}</span>`:''}<span class="sy-cv">${syIc.chev}</span></div>`;
+    h+=`<div class="sy-t ${on?'on':''}" style="--lc:${syCol[k]}"><div class="sy-th" onclick="syAct(${i})"><span class="sy-tn">${k+1}</span><span class="sy-sw"><select class="sy-sel" aria-label="단계" onclick="event.stopPropagation()" onchange="syLbL(${i},this.value)">${SYST.map(x=>`<option value="${x}"${labs[i]==x?' selected':''}>${x}</option>`).join('')}</select></span><span class="sy-tm">${esc(c.n)}${p?'':' <small>(DB에서 삭제됨)</small>'}</span>${p&&p.mf?`<span class="sy-mf">${esc(p.mf)}</span>`:''}<span class="sy-cv">${syIc.chev}</span></div>`;
     if(on&&p)h+=`<div class="sy-tb"><div><span>제품명</span><b>${esc(c.n)}</b></div><div><span>규격</span><b>${pk?F(pk)+u:'-'}</b></div><div><span>제조사</span><b>${esc(p.mf||'-')}</b></div></div>`;
-    if(on)h+=`<div class="sy-ctl"><span class="sy-cl">단계</span>${SYST.map(x=>`<button class="${labs[i]==x?'on':''}" onclick="syLbL(${i},'${x}')">${x}</button>`).join('')}<span class="sy-sp"></span><button class="rm" onclick="syRmL(${i})">삭제</button></div>`;
+    if(on)h+=`<div class="sy-ctl"><span class="sy-sp"></span><button class="rm" onclick="syRmL(${i})">삭제</button></div>`;
     if(on)h+=syBasis(i);
     h+=`</div>`;
    });
@@ -14850,5 +14850,32 @@ html body #lhd .lh-kpi .k1{flex:0 0 calc(var(--k)*310);padding-left:calc(var(--k
 html body #lhd .lh-kpi .k1 b{max-width:calc(var(--k)*215);font-size:calc(var(--k)*25)}
 html body #lhd .lh-kpi .k2{flex:0 0 calc(var(--k)*240)}
 html body #lhd .lh-kpi svg.ki{width:calc(var(--k)*46);height:calc(var(--k)*46)}
+</style>
+<style id=sy800c>
+html body #v3 .syp .sy-lcard>.sy-t{border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;margin:0 0 10px!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th{display:flex;align-items:center;gap:8px;min-height:54px;padding:8px 12px!important;border:0!important;border-radius:14px!important;color:#fff!important;background:linear-gradient(100deg,#4f9aee,#2f78dc)!important;box-shadow:0 4px 12px rgba(30,100,210,.25)}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-tn{flex:none;width:30px!important;height:30px!important;border-radius:50%!important;background:#fff!important;color:#2f78dc!important;box-shadow:none!important;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-tm{flex:1;min-width:0;color:#fff!important;font-weight:800!important;font-size:14px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-mf{background:rgba(255,255,255,.22)!important;color:#fff!important;border:0!important;flex:none}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-cv{color:#fff!important;flex:none}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-cv svg{stroke:#fff!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-th .sy-grip{background:rgba(255,255,255,.22)!important;color:#fff!important;border:0!important;border-radius:8px!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-sw{flex:none;position:relative;display:inline-block}
+html body #v3 .syp .sy-lcard>.sy-t .sy-sw::after{content:"";position:absolute;right:11px;top:50%;width:7px;height:7px;margin-top:-6px;border-right:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(45deg);pointer-events:none}
+html body #v3#v3#v3 .syp .sy-lcard>.sy-t .sy-th select.sy-sel{width:auto!important;height:34px!important;min-width:76px;margin:0!important;padding:0 28px 0 14px!important;border:1.5px solid rgba(255,255,255,.75)!important;border-radius:999px!important;background:rgba(255,255,255,.22) none!important;background-color:rgba(255,255,255,.22)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:14px!important;font-weight:800!important;font-family:inherit;-webkit-appearance:none;appearance:none;box-shadow:none!important;opacity:1!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-sel option{color:#0b2a66;background:#fff}
+html body #v3 .syp .sy-lcard>.sy-t .sy-tb{display:flex!important;flex-wrap:wrap;gap:6px;margin:8px 2px 0!important;padding:0!important;border:0!important;background:transparent!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-tb>div{display:inline-flex;gap:5px;align-items:baseline;padding:4px 10px;border:1px solid #d6e3f7;border-radius:999px;background:#f3f7ff;font-size:11px}
+html body #v3 .syp .sy-lcard>.sy-t .sy-tb span{color:#6a7da3}html body #v3 .syp .sy-lcard>.sy-t .sy-tb b{color:#14264d}
+html body #v3 .syp .sy-lcard>.sy-t .sy-ctl{display:flex!important;justify-content:flex-end;padding:6px 2px 0!important;margin:0!important;background:transparent!important;border:0!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-ctl .rm{width:auto!important;height:28px!important;padding:0 12px!important;border-radius:999px!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-card.sy-in{margin:8px 0 0!important;padding:10px!important;border:2px solid #52d683!important;border-radius:16px!important;background:#fff!important;box-shadow:0 0 0 3px rgba(82,214,131,.16)!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-hd{background:#f4f8ff!important;border:0!important;border-radius:12px!important;padding:8px 10px!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-f{background:#fff!important;border:1.5px solid #dbe6f8!important;border-radius:13px!important;padding:8px 9px 9px!important;box-shadow:none!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-f.need{background:#fff!important;border-color:#dbe6f8!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-fl{color:#0b2a66!important;font-weight:800!important;font-size:12.5px!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-iw{border:1.5px solid #cfdcf3!important;border-radius:11px!important;background:#fff!important;box-shadow:none!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-det{border:1.5px solid #dbe6f8!important;border-radius:13px!important;background:#fff!important}
+html body #v3 .syp .sy-lcard>.sy-t .sy-in .sy-rs2{border-radius:12px!important}
 </style>
 </body></html>
